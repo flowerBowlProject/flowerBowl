@@ -1,0 +1,23 @@
+spring:
+  profiles:
+    active:
+  devtools:
+    livereload:
+      enabled: true
+  datasource:
+    url: jdbc:mysql://127.0.0.1:포트번호/DB이름?serverTimezone=UTC&useUniCode=yes&characterEncoding=UTF-8
+    username: 사용자명
+    password: 비밀번호
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    database: mysql
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+        use_sql_comments: true
+    hibernate:
+      ddl-auto: update
+  mvc:
+    pathmatch:
+      matching-strategy : ant_path_matcher
