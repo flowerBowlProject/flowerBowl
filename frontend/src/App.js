@@ -1,11 +1,14 @@
-import logo from './logo.svg';
 import './App.css';
+import Header from './MainPage/Header';
+import Footer from './MainPage/Footer';
 
-function App() {
+
+const App =()=> {
   return (
     <div>
+      <Header/>
+      <Footer/>
     </div>
   );
 }
-s
 export default App;
