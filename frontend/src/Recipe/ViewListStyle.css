@@ -1,0 +1,45 @@
+.viewList-Box{
+    width: 80%;
+    height: 100%;
+    margin : 5% auto;
+    text-align: center;
+}
+
+/* 정렬 버튼 + 등록버튼 */
+.sortList{
+    overflow: hidden;
+}
+
+/* 정렬 버튼 */
+.sortList-left{
+    float: left;
+    margin-right: 50%;
+} 
+
+/* 등록 버튼 */
+.sortList-right{
+    float : right;
+    margin-bottom: 10px;
+}
+
+.view-register{
+    color : #F6C47B !important;
+    border-color : #F6C47B !important;
+}
+
+/* 리스트 */
+.viewList{
+    clear : both;
+    min-height: 800px;
+    border-top : 2px solid #F6C47B;
+    border-bottom : 2px solid #F6C47B;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+/* 더보기 버튼 */
+.moreButton{
+    margin: 20px auto !important;
+    color : white !important;
+    background-color : #F6C47B !important;
+}
