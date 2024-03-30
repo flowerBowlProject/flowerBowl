@@ -39,7 +39,10 @@ out/
 # Created by https://www.toptal.com/developers/gitignore/api/react,macos,windows,node
 # Edit at https://www.toptal.com/developers/gitignore?templates=react,macos,windows,node
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> ba4452e5d0e43628fe88b271e544ec0e61802765
 ### macOS ###
 # General
 .DS_Store
