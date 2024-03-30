@@ -1,0 +1,12 @@
+.input {
+    background: white;
+    /* padding: ".75rem .75rem"; */
+    border-color: var(--brown--color);
+    box-shadow: none;
+    width: 8%;
+    border-width: 2px;
+    border-radius: 5px;
+    font-size: "1rem";
+    font-family: "GowunBatang-Bold";
+    text-align: center;
+  }
