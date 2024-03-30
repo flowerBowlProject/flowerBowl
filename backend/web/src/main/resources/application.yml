@@ -5,9 +5,9 @@ spring:
     livereload:
       enabled: true
   datasource:
-    url: jdbc:mysql://127.0.0.1:포트번호/DB이름?serverTimezone=UTC&useUniCode=yes&characterEncoding=UTF-8
-    username: 사용자명
-    password: 비밀번호
+    url: jdbc:mysql://127.0.0.1:3306/flowerBowl?serverTimezone=UTC&useUniCode=yes&characterEncoding=UTF-8
+    username: neo
+    password: 1234
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     database: mysql
