@@ -5,6 +5,8 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import store from './Example/store'
 import { Provider } from 'react-redux'
+import { theme } from "./theme";
+import { ThemeProvider } from '@mui/material/styles';
 
 import {PersistGate} from 'redux-persist/integration/react';
 import {persistStore} from 'redux-persist';
@@ -14,9 +16,11 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <Provider store={store}>
     <PersistGate loading={null} persistor={persistor}>
+    <ThemeProvider theme={theme}>
       <React.StrictMode>
         <App />
       </React.StrictMode>
+      </ThemeProvider>
     </PersistGate>
   </Provider>
 );
