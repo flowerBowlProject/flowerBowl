@@ -20,7 +20,7 @@ public class Community {
     @Column(name = "community_title")
     private String communityTitle;
 
-    @Column(name = "community_content")
+    @Column(name = "community_content", columnDefinition = "TEXT")
     private String communityContent;
 
     @Column(name = "community_date")

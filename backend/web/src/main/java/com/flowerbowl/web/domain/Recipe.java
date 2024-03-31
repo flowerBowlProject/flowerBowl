@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.sql.Blob;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -35,11 +34,12 @@ public class Recipe {
     @Column(name = "recipe_sname")
     private String recipeSname;
 
-    @Column(name = "recipe_content")
+    @Column(name = "recipe_content", columnDefinition = "TEXT")
     private String recipeContent;
 
     @Column(name = "recipe_category")
-    private String recipeCategory;
+    @Enumerated(EnumType.STRING)
+    private Category recipeCategory;
 
     @Column(name = "recipe_writer")
     private String recipeWriter;

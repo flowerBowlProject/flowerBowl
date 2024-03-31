@@ -13,7 +13,7 @@ public class Banner {
     private Long bannerNo;
 
 
-    @Column(name = "banner_content") // 배너 내용은 별로 없을 거 같아서 varchar로 했습니다!
+    @Column(name = "banner_content")
     private String bannerContent;
 
 
