@@ -53,7 +53,10 @@ const RegisterRecipe = () => {
 
             <div className="recipeText-Box">
                 {/* 재료 작성란 */}
-
+                <div className="materialInput-Box" style={{borderBottom: "2px solid #CBA285", height: "2vw", width:"70%", margin : "1vw"}}>
+                재료 태그 작성란 - 컴포넌트 만들어서 넣을 예정
+                </div>
+                
 
                 {/* 레시피 || 클래스 상세 내용 작성란 */}
                 <ToastEditor/>
