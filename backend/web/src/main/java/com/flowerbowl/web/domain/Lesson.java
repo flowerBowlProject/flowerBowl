@@ -2,6 +2,7 @@ package com.flowerbowl.web.domain;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import org.hibernate.annotations.ColumnDefault;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -20,7 +21,7 @@ public class Lesson {
     @Column(name = "lesson_title")
     private String lessonTitle;
 
-    @Column(name = "lesson_content")
+    @Column(name = "lesson_content", columnDefinition = "TEXT")
     private String lessonContent;
 
     @Column(name = "lesson_price")
@@ -42,7 +43,8 @@ public class Lesson {
     private LocalDateTime lessonEnd;
 
     @Column(name = "lesson_category")
-    private String lessonCategory;
+    @Enumerated(EnumType.STRING)
+    private Category lessonCategory;
 
     @Column(name = "lesson_date") // 클래스 작성날짜
     private LocalDate lessonDate;
@@ -54,6 +56,7 @@ public class Lesson {
     private String lessonWriter;
 
     @Column(name = "lesson_delete_status")
+    @ColumnDefault("false")
     private Boolean lessonDeleteStatus;
 
     @Column(name = "lesson_views")

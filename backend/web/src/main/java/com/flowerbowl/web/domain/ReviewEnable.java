@@ -2,6 +2,7 @@ package com.flowerbowl.web.domain;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import org.hibernate.annotations.ColumnDefault;
 
 @Entity
 @Getter
@@ -12,7 +13,8 @@ public class ReviewEnable {
     @Column(name = "review_enable_no")
     private Long reviewEnableNo;
 
-    @Column(name = "review_enable") // table에 변수명 추가해 줘야함
+    @Column(name = "review_enable")
+    @ColumnDefault("false")
     private Boolean reviewEnable;
 
     @ManyToOne

@@ -17,10 +17,10 @@ public class Pay {
     @Column(name = "pay_code")
     private String payCode;
 
-    @Column(name = "pay_date") // 결제 날짜 같은 경우는 시간도 필요할거 같아서 localdatetime으로 했습니다
+    @Column(name = "pay_date")
     private LocalDateTime payDate;
 
-    @Column(name = "pay_price") // 일단 string인데 자료형 변경 물어봐야 됨
+    @Column(name = "pay_price")
     private String payPrice;
 
     @ManyToOne

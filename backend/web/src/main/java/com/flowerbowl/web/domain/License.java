@@ -15,7 +15,8 @@ public class License {
     @Column(name = "license_no")
     private Long licenseNo;
 
-    @Column(name = "license_status") // 기본값을 넣은건데 제외해도 될 것 같아요
+    @Column(name = "license_status")
+    @ColumnDefault("false")
     private Boolean licenseStatus;
 
     @Column(name = "license_date")

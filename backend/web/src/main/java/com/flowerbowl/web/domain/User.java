@@ -2,6 +2,7 @@ package com.flowerbowl.web.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -47,6 +48,7 @@ public class User {
     private String userFileOname;
 
     @Column(name = "user_wd_status")
+    @ColumnDefault("false")
     private Boolean userWdStatus;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
