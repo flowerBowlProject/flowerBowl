@@ -2,13 +2,12 @@ import React from 'react'
 import "./Inputbutton.css"
 
 
-const Inputbutton = ({text, i}) => {
+const Inputbutton = ({text, i, w}) => {
   return (
     <>
-    <button className={ i ? 'inputbutton' : 'outputbutton'} >
+    <button className= {`${w} ${i ? 'inputbutton' : 'outputbutton'}`} >
       {text}
     </button> 
     </>
 );}
 export default Inputbutton;
-
