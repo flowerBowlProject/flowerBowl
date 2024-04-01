@@ -1,0 +1,11 @@
+.communityList-Box{
+    width: 80%;
+    margin: 5% auto;
+}
+
+/* 페이지네이션 */
+.community-page{
+    margin: 5% auto;
+    display: flex;
+    justify-content: center;
+}
