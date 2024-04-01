@@ -1,0 +1,28 @@
+/* 카드 박스 */
+.card-Box {
+    max-width: 300px;
+    height: 400px;
+    margin: 5px;
+    box-shadow: none !important;
+    border: #F6C47B solid 4px;
+}
+
+/* 날짜 + icon 요소 */
+.detail-element{
+    overflow: hidden;
+    margin-bottom: 5px;
+}
+
+.views-date{
+    float: left;
+    color : #B9835C;
+    clear : both;
+}
+
+.views-icons{
+    float: right;
+}
+
+.views-title{
+    font-size: 25px;
+}
