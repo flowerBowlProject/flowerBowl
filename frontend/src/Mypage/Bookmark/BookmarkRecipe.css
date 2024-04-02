@@ -1,0 +1,41 @@
+.jb-division-line {
+  border-top: 1px solid var(--brown--color);
+  margin: 30px auto;
+  width: 80%;
+  position: relative;
+}
+
+.bookmark-content {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between; /* To evenly distribute items on each row */
+}
+
+.bookmark-content > * {
+  flex-basis: calc(25% - 20px); /* 25% width with some spacing between items */
+  margin-bottom: 20px; /* Adjust spacing between rows */
+  flex-grow: 0; /* Prevent items from growing beyond their specified width */
+}
+
+@media (max-width: 768px) {
+  .bookmark-content > * {
+    flex-basis: calc(25% - 10px); /* Adjust width for smaller screens */
+    margin-bottom: 10px; /* Adjust spacing between rows for smaller screens */
+  }
+}
+
+/* CSS for the button */
+.more-button {
+  position: fixed; /* Position relative to the viewport */
+  bottom: 20px; /* Distance from the bottom of the viewport */
+  left: 50%; /* Center horizontally */
+  transform: translateX(-50%); /* Center horizontally */
+  display: flex; /* Enable flexbox */
+  align-items: center; /* Center vertically */
+}
+
+@media (max-width: 768px) {
+  .more-button {
+    bottom: 10px; /* Adjust distance from the bottom for smaller screens */
+  }
+}
