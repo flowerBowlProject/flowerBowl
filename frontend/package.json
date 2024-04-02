@@ -2,6 +2,7 @@
   "name": "flowerbowlfront",
   "version": "0.1.0",
   "private": true,
+  "homepage":".",
   "dependencies": {
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.5",
@@ -11,8 +12,6 @@
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
-    "@toast-ui/editor-plugin-code-syntax-highlight": "^3.1.0",
-    "@toast-ui/react-editor": "^3.2.3",
     "modules": "^0.4.0",
     "node": "^18.20.0",
     "react": "^18.2.0",
@@ -50,5 +49,4 @@
   "devDependencies": {
     "@babel/plugin-proposal-private-property-in-object": "^7.18.0"
   }
-  
 }
