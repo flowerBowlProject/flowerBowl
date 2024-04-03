@@ -14,18 +14,18 @@ const RecipeReviewCard = ({list}) => {
         {/* 이미지 요청 api로 변경 필요 */}
         <CardMedia
           component="img"
-          height="300"
-          width="300"
+          height="250"
+          width="250"
           image="../Img/foodImg.jpeg"
           alt="레시피 사진"
-          sx={{ borderBottom: '#F6C47B solid 4px' }}
+          sx={{ borderBottom: '#F6C47B solid 2px' }}
         />
         <CardContent>
           <div className='detail-element'>
             <div className='views-date'> {list.date} </div>
             <div className='views-icons'>
-              <FavoriteIcon sx={{ color: 'main.or' }} /> {list.like_count}
-              <ChatBubbleIcon sx={{ color: 'main.or' }} /> {list.comment_count}
+              <FavoriteIcon sx={{ color: 'main.or', marginLeft:'1vw'}}/> {list.like_count}
+              <ChatBubbleIcon sx={{ color: 'main.or', marginLeft:'1vw'}} /> {list.comment_count}
             </div>
           </div>
           <div className='views-title'> {list.title} </div>
