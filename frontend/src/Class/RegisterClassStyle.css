@@ -1,0 +1,119 @@
+.registerClass-Box{
+    width: 80%;
+    margin: 5% auto;
+}
+
+/* 썸네일 선택 및 프리뷰 */
+.thumbnail{
+    font-size: 1rem;
+    width: 20%;
+    height: 15vw;
+}
+
+/* 사진 선택 전 */
+.register-thumbnail{
+    border: 2px solid #CBA285;
+    border-radius: 10%;
+    width: 15vw;
+    height: 15vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    font-size:1.5rem;
+}
+
+.thumbImg-preview{
+    width: 15vw;
+    height: 15vw;
+    border-radius: 10%;
+    border: 2px solid #CBA285;
+}
+
+input[type="file"]{
+    display: none;
+}
+
+/* 제목 */
+.register-title{
+    width: 50%;
+    height: 3vw;
+    font-size : 1.5rem;
+    margin: 0 5%;
+    border : none;
+    border-bottom: 2px solid #CBA285;
+    text-align: center;
+}
+
+input{
+    outline: none;
+}
+
+/* 가격 + 날짜 + 장소 작성란 */
+.classElement1-Box{
+    height: 8vw;
+    border-top: 2px solid #CBA285;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 1%;
+}
+
+.classElement2-Box{
+    height: 8vw;
+    border-bottom: 2px solid #CBA285;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.calendar-Box{
+    margin-left: 1vw;
+}
+
+/* 일자 전체 css */
+.css-1e4rf6n-MuiInputBase-root-MuiOutlinedInput-root{
+    width: 98%;
+}
+.css-10o2lyd-MuiStack-root{
+    flex-direction: row !important;
+    padding-top: 0 !important;
+    width: 100%;
+}
+
+/* 마감일 css */
+.css-10o2lyd-MuiStack-root>.MuiTextField-root, .css-10o2lyd-MuiStack-root>.MuiPickersTextField-root{
+    margin-top: 0 !important;
+}
+
+/* 주소 css */
+.address_register{
+    color : #CBA285 !important;
+    border-color : #CBA285 !important;
+    height: 4em;
+    
+}
+.css-y9fe0j-MuiFormControl-root-MuiTextField-root{
+    vertical-align: 0 !important;
+}
+
+.css-y9fe0j-MuiFormControl-root-MuiTextField-root:active{
+    border:#CBA285;
+}
+.css-ifxyz2-MuiButtonBase-root-MuiButton-root{
+    padding : 16.5px 14px !important;
+}
+
+/* 토스트 에디터 들어갈 박스 */
+.ClassText-Box{
+    height: 35vw;
+    margin-top: 1vw;
+    border-top : 2px solid #CBA285;
+    border-bottom: 2px solid #CBA285;
+}
+
+.register_button{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
