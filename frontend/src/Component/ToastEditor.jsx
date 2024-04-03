@@ -6,7 +6,7 @@ const ToastEditor = () => {
     const editorRef = useRef();
 
     return (
-        <div className='editor' style={{margin: "1% auto"}}>
+        <div className='editor' style={{margin: "1% auto", height:'500px'}}>
             <Editor
                 placeholder="내용을 입력해주세요."
                 initialValue=' '
