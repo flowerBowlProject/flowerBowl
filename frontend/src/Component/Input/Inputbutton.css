@@ -42,3 +42,10 @@
   box-shadow: none;
   outline: none;
 }
+
+.medium-large {
+  width: 80px;
+  height: 40px;
+  box-shadow: none;
+  outline: none;
+}

@@ -50,15 +50,25 @@ input{
 }
 
 /* 가격 + 날짜 + 장소 작성란 */
-.classElement-Box{
-    height: 10vw;
+.classElement1-Box{
+    height: 8vw;
+    border-top: 2px solid #CBA285;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 1%;
+}
+
+.classElement2-Box{
+    height: 8vw;
     border-bottom: 2px solid #CBA285;
     display: flex;
     align-items: center;
+    justify-content: center;
 }
 
 .calendar-Box{
-    margin-left: 0.5vw;
+    margin-left: 1vw;
 }
 
 /* 일자 전체 css */
@@ -80,8 +90,18 @@ input{
 .address_register{
     color : #CBA285 !important;
     border-color : #CBA285 !important;
-    width: 8vw;
-    height: 4.9vw;
+    height: 4em;
+    
+}
+.css-y9fe0j-MuiFormControl-root-MuiTextField-root{
+    vertical-align: 0 !important;
+}
+
+.css-y9fe0j-MuiFormControl-root-MuiTextField-root:active{
+    border:#CBA285;
+}
+.css-ifxyz2-MuiButtonBase-root-MuiButton-root{
+    padding : 16.5px 14px !important;
 }
 
 /* 토스트 에디터 들어갈 박스 */
@@ -92,3 +112,8 @@ input{
     border-bottom: 2px solid #CBA285;
 }
 
+.register_button{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
