@@ -1,6 +1,6 @@
-.jb-division-line {
-  border-top: 1px solid var(--brown--color);
-  margin: 30px auto;
+.division-line {
+  border-top: 2px solid var(--brown--color);
+  margin: 50px auto;
   width: 80%;
   position: relative;
 }
@@ -8,6 +8,7 @@
 .bookmark-content {
   display: flex;
   flex-wrap: wrap;
+  text-align: center;
   justify-content: space-between; /* To evenly distribute items on each row */
 }
 
@@ -24,18 +25,15 @@
   }
 }
 
-/* CSS for the button */
-.more-button {
-  position: fixed; /* Position relative to the viewport */
-  bottom: 20px; /* Distance from the bottom of the viewport */
-  left: 50%; /* Center horizontally */
-  transform: translateX(-50%); /* Center horizontally */
-  display: flex; /* Enable flexbox */
-  align-items: center; /* Center vertically */
-}
-
-@media (max-width: 768px) {
-  .more-button {
-    bottom: 10px; /* Adjust distance from the bottom for smaller screens */
-  }
+.add{
+  position: relative; /* Keep the button fixed at the bottom of the viewport */
+  bottom: 10px; /* Distance from the bottom of the viewport */
+  left: 50%; /* Start at 50% from the left of the viewport */
+  transform: translate(-50%, 0); /* Shift it back by 50% of its own width */
+  display: flex; /* Using flexbox for center alignment */
+  align-items: center; /* Center items vertically */
+  justify-content: center; /* Center items horizontally */
+  /* Ensure the button has some dimensions if it's not defined by its content */
+  min-width: 100px; /* Minimum width */ /* Padding for aesthetic spacing */
+  text-align: center; /* Ensure text within the button is centered */
 }

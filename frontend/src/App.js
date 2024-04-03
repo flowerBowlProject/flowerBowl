@@ -1,13 +1,12 @@
-import './App.css';
-import Header from './MainPage/Header';
-// import Footer from './MainPage/Footer';
-import BookmarkRecipe from './Mypage/Bookmark/BookmarkRecipe'
+import "./App.css";
 
-const App =()=> {
-  return(
-  <div>
-  <BookmarkRecipe/>
-  </div>
+import Profile from "./Mypage/Profile/Profile";
+
+const App = () => {
+  return (
+    <div>
+      <Profile />
+    </div>
   );
-}
+};
 export default App;

@@ -1,0 +1,31 @@
+.container {
+  display: grid;
+  grid-template-columns: 240px 1fr 2fr; /* Adjust 240px if the sidebar width is different */
+  gap: 16px;
+  padding: 16px;
+  min-height: 100vh; /* Ensuring the container takes minimum full height of the viewport */
+}
+
+.sidebar {
+  /* Adjustments may not be necessary, but you can control the width here if needed */
+}
+
+.profile,
+.form {
+  padding: 16px; /* Add padding if needed */
+}
+
+/* ... keep your other styles */
+
+/* You might also want to add media queries to handle responsiveness */
+@media (max-width: 768px) {
+  .container {
+    grid-template-columns: 1fr; /* Stack the grid items on small screens */
+  }
+
+  .sidebar,
+  .profile,
+  .form {
+    padding: 8px;
+  }
+}

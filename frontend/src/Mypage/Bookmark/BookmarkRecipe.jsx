@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import CardComp from "../../Component/CardComp";
 import Bookmark from "../../Component/Bookmark";
 import Inputbutton from "../../Component/Input/Inputbutton";
@@ -13,11 +13,10 @@ const BookmarkRecipe = () => {
   };
 
   const bookmarkComponents = Array.from({ length: 8 }, (_, index) => (
-    <Bookmark key={index} />
-  ));
-
-  const cardComponents = Array.from({ length: 8 }, (_, index) => (
-    <CardComp key={index} list={sampleRecipeData} />
+    <div key={index} className="bookmark-wrapper">
+      <Bookmark />
+      <CardComp list={sampleRecipeData} />
+    </div>
   ));
 
   return (
@@ -28,16 +27,17 @@ const BookmarkRecipe = () => {
       </div>
 
       {/* 구분선 */}
-      <div class="jb-division-line"></div>
+      <div class="division-line"></div>
 
       <div className="bookmark-content">
         {bookmarkComponents}
-        {cardComponents}
       </div>
 
-      <div class="jb-division-line"></div>
+      <div class="division-line"></div>
 
-      <Inputbutton className="more-button" text="더보기" i={true} w="medium" />
+      <div className= "add">
+      <Inputbutton text="더보기" i={true} w="medium" />
+      </div>
     </>
   );
 };
