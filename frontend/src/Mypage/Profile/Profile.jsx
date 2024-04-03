@@ -5,6 +5,8 @@ import PersonIcon from '@mui/icons-material/Person';
 import Tooltip from '@mui/material/Tooltip';
 import "./ProfileImage.css"
 import Withdrawl from './Withdraw'
+import Sidebar from '../Sidebar'
+import "./Profile.css"
 
 
 const Profile = () => {
@@ -13,6 +15,7 @@ const Profile = () => {
     
     {/* 사이드바 */}
     <div className = 'sidebar'>
+      <Sidebar />
     </div>
 
 
