@@ -57,12 +57,16 @@ a{
     font-size: 1.2rem;
 }
 
-.class-addr{
+.class-map{
     width: 50%;
     height: 20vw;
-    border: 1px solid #B9835C;
-    margin: 5% auto;
-    border-radius: 30px;
+    border-top: 1px solid #B9835C;
+    border-bottom: 1px solid #B9835C;
+    margin: 0 auto;
+}
+
+.class-addr{
+    text-align: center;
 }
 
 /* 클래스 내용 */
