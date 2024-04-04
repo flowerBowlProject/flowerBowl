@@ -99,7 +99,6 @@ function Sidebar(props) {
     </div>
   );
 
-
   const container =
     window !== undefined ? () => window().document.body : undefined;
 
