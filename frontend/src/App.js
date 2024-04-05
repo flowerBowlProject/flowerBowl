@@ -1,11 +1,13 @@
 import "./App.css";
 
-import Profile from "./Mypage/Profile/Profile";
+import Checkteachingclass from "./Mypage/Myclass/Checkteachingclass";
+import Sidebar from "./Mypage/Sidebar";
 
 const App = () => {
   return (
     <div>
-      <Profile />
+      {/* <Sidebar /> */}
+      <Checkteachingclass />
     </div>
   );
 };
