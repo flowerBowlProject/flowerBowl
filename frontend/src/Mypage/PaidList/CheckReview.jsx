@@ -1,8 +1,8 @@
 import { React, useState } from "react";
 import Inputbutton from "../../Component/Input/Inputbutton";
-import "./Checkteachingclass.css";
+import "./CheckReview.css";
 
-const Checkteachingclass = () => {
+const CheckReview = () => {
   // 정렬기능
   const [sortDirection, setSortDirection] = useState(null);
   const [sortDirectionRating, setSortDirectionRating] = useState(null);
@@ -73,8 +73,9 @@ const Checkteachingclass = () => {
     <>
       {/* 버튼들 */}
       <section className="buttons">
-        <Inputbutton text="수강클래스 조회" i={true} w="medium" />
-        <Inputbutton text="창작클래스 조회" i={false} w="medium" />
+        <Inputbutton text="리뷰 작성" i={false} w="medium" />
+        <Inputbutton text="리뷰 조회" i={true} w="medium" />
+        <Inputbutton text="결제 내역" i={false} w="medium" />
       </section>
 
       {/* 내용 */}
@@ -84,7 +85,7 @@ const Checkteachingclass = () => {
             <tr>
               <th>No</th>
               <th>
-                수강날짜
+                작성날짜
                 <button className="sort-button" onClick={toggleSortDirection}>
                   <span
                     className={
@@ -163,4 +164,4 @@ const Checkteachingclass = () => {
   );
 };
 
-export default Checkteachingclass;
+export default CheckReview;
