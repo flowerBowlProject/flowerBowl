@@ -1,5 +1,6 @@
 package com.flowerbowl.web.domain;
 
+import com.flowerbowl.web.dto.request.auth.SignUpRequestDTO;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
@@ -51,6 +52,9 @@ public class User {
     @ColumnDefault("false")
     private Boolean userWdStatus;
 
+//    @Column(name = "user_type")
+//    private String userType;
+
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Recipe> recipes = new ArrayList<>();
 
@@ -80,5 +84,26 @@ public class User {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<License> licenses = new ArrayList<>();
+
+    public User(SignUpRequestDTO dto) {
+        this.userId = dto.getUser_id();
+        this.userPw = dto.getUser_password();
+        this.userEmail = dto.getUser_email();
+        this.userNickname = dto.getUser_nickname();
+        this.userPhone = dto.getUser_phone();
+//        this.userType = "web";
+        this.userCreateDate = LocalDate.now();
+        this.userRole = Role.ROLE_USER;
+        this.userWdStatus = false; // @ColumnDefault("false")이 안 먹음
+    }
+
+    public User (String userId,String userEmail, String userType) {
+        this.userId = userId;
+        this.userEmail = userEmail;
+//        this.userType = userType;
+        this.userCreateDate = LocalDate.now();
+        this.userRole = Role.ROLE_USER;
+        this.userWdStatus = false;
+    }
 
 }
