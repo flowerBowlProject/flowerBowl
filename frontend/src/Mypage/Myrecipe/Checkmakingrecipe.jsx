@@ -1,25 +1,26 @@
 import { React, useState } from "react";
 import Inputbutton from "../../Component/Input/Inputbutton";
-import "./Checkteachingclass.css";
+import "./Checkmakingrecipe.css";
 
-const Checkteachingclass = () => {
+const Checkmakingrecipe = () => {
   // 정렬기능
   const [sortDirection, setSortDirection] = useState(null);
-  const [sortDirectionRating, setSortDirectionRating] = useState(null);
+  const [sortBookmark, setSortBookmark] = useState(null);
+  const [sortComment, setSortComment] = useState(null);
 
   // 받아올 테이블 데이터
   const [tableData, setTableData] = useState([
     {
       date: "2024/02/20",
       description: "화이트데이 초콜릿 만들기 클래스",
-      chef: "@내꿈은너야",
-      rating: 3,
+      bookmark: 800,
+      comment: 4861,
     },
     {
       date: "2023/12/25",
       description: "크리스마스 스페셜 만들기",
-      chef: "@메리크리스마스",
-      rating: 5,
+      bookmark: 495,
+      comment: 300,
     },
   ]);
 
@@ -46,14 +47,25 @@ const Checkteachingclass = () => {
     });
   };
 
-  //별점정렬
-  const toggleSortDirectionRating = () => {
-    setSortDirectionRating((prevDirection) => {
+  // 북마크정렬
+  const toggleSortBookmark = () => {
+    setSortBookmark((prevDirection) => {
       const newDirection = prevDirection === "asc" ? "desc" : "asc";
-      sortDataByAttribute("rating", newDirection); // Sort data after updating the direction
+      sortDataByAttribute("bookmark", newDirection); // Sort data after updating the direction
       return newDirection;
     });
   };
+
+  //댓글정렬
+  const toggleSortComment = () => {
+    setSortComment((prevDirection) => {
+      const newDirection = prevDirection === "asc" ? "desc" : "asc";
+      sortDataByAttribute("comment", newDirection); // Sort data after updating the direction
+      return newDirection;
+    });
+  };
+
+  //북마크, 댓글 정렬
   const sortDataByAttribute = (attribute, direction) => {
     const sortedData = [...tableData].sort((a, b) => {
       const valueA = a[attribute];
@@ -73,8 +85,8 @@ const Checkteachingclass = () => {
     <>
       {/* 버튼들 */}
       <section className="buttons">
-        <Inputbutton text="수강클래스 조회" i={true} w="medium" />
-        <Inputbutton text="창작클래스 조회" i={false} w="medium" />
+        <Inputbutton text="수강레시피 조회" i={false} w="medium" />
+        <Inputbutton text="창작레시피 조회" i={true} w="medium" />
       </section>
 
       {/* 내용 */}
@@ -96,19 +108,27 @@ const Checkteachingclass = () => {
                 </button>
               </th>
               <th>클래스명</th>
-              <th>쉐프</th>
               <th>
-                별점
-                <button
-                  className="sort-button"
-                  onClick={toggleSortDirectionRating}
-                >
+                북마크
+                <button className="sort-button" onClick={toggleSortBookmark}>
                   <span
                     className={
-                      sortDirectionRating === "asc" ? "arrow-up" : "arrow-down"
+                      sortBookmark === "asc" ? "arrow-up" : "arrow-down"
                     }
                   >
-                    {sortDirectionRating === "asc" ? "▲" : "▼"}
+                    {sortBookmark === "asc" ? "▲" : "▼"}
+                  </span>
+                </button>
+              </th>
+              <th>
+                댓글
+                <button className="sort-button" onClick={toggleSortComment}>
+                  <span
+                    className={
+                      sortComment === "asc" ? "arrow-up" : "arrow-down"
+                    }
+                  >
+                    {sortComment === "asc" ? "▲" : "▼"}
                   </span>
                 </button>
               </th>
@@ -123,21 +143,8 @@ const Checkteachingclass = () => {
                   <td>{item ? index + 1 : ""}</td>
                   <td>{item ? item.date : ""}</td>
                   <td>{item ? item.description : ""}</td>
-                  <td>{item ? item.chef : ""}</td>
-                  <td>
-                    {item ? (
-                      <>
-                        <span className="star-filled">
-                          {"★".repeat(item.rating)}
-                        </span>
-                        <span className="star-empty">
-                          {"☆".repeat(5 - item.rating)}
-                        </span>
-                      </>
-                    ) : (
-                      ""
-                    )}
-                  </td>
+                  <td>{item ? item.bookmark.toLocaleString() : ""}</td>
+                  <td>{item ? item.comment.toLocaleString() : ""}</td>
                   <td>
                     {item ? (
                       <Inputbutton text="삭제" i={false} w="small" />
@@ -163,4 +170,4 @@ const Checkteachingclass = () => {
   );
 };
 
-export default Checkteachingclass;
+export default Checkmakingrecipe;
