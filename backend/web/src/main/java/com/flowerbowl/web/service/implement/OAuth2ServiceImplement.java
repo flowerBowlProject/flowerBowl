@@ -20,7 +20,6 @@ import java.util.Map;
 public class OAuth2ServiceImplement extends DefaultOAuth2UserService {
 
     private final UserRepository userRepository;
-//    private final UserRepositoryImpl userRepositoryImpl;
 
     @Override
     @Transactional
@@ -36,13 +35,11 @@ public class OAuth2ServiceImplement extends DefaultOAuth2UserService {
             exception.printStackTrace();
         }
 
-//        User user = null;
         String userId = null;
 
         if (oauthClientName.equals("kakao")) {
             userId = "kakao_" + oAuth2User.getAttributes().get("id");
-//            user = new User(userId, null, "kakao");
-            userRepository.insertIfNotExists(userId);
+            userRepository.insertIfNotExists(userId, "ROLE_USER");
         }
 
         if (oauthClientName.equals("naver")) {
@@ -50,8 +47,7 @@ public class OAuth2ServiceImplement extends DefaultOAuth2UserService {
             userId = "naver_" + responseMap.get("id");
 //            String userEmail = responseMap.get("email");
 //            String user_phone = responseMap.get("mobile");
-//            user = new User(userId, userEmail, "naver");
-            userRepository.insertIfNotExists(userId);
+            userRepository.insertIfNotExists(userId, "ROLE_USER");
         }
 
         return new CustomOAuth2User(userId);
