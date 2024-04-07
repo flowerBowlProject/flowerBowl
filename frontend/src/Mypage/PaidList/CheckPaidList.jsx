@@ -81,7 +81,9 @@ const CheckPaidList = () => {
     <>
       {/* 버튼들 */}
       <section className="buttons">
-        <Inputbutton text="리뷰 작성" i={false} w="medium" />
+        <span className="write-review">
+          <Inputbutton text="리뷰 작성" i={false} w="medium" />
+        </span>
         <Inputbutton text="리뷰 조회" i={false} w="medium" />
         <Inputbutton text="결제 내역" i={true} w="medium" />
       </section>
@@ -118,7 +120,6 @@ const CheckPaidList = () => {
                   </span>
                 </button>
               </th>
-              <th></th>
               <th></th>
             </tr>
           </thead>

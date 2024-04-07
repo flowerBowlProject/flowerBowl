@@ -1,11 +1,11 @@
-import { React, useState } from "react";
+import { React, useState, useEffect } from "react";
 import Inputbutton from "../../Component/Input/Inputbutton";
 import "./CheckReview.css";
 
 const CheckReview = () => {
   // 정렬기능
-  const [sortDirection, setSortDirection] = useState(null);
-  const [sortDirectionRating, setSortDirectionRating] = useState(null);
+  const [sortDirection, setSortDirection] = useState("asc");
+  const [sortDirectionRating, setSortDirectionRating] = useState("asc");
 
   // 받아올 테이블 데이터
   const [tableData, setTableData] = useState([
@@ -24,20 +24,15 @@ const CheckReview = () => {
   ]);
 
   //   날짜정렬
-  const sortTableDataByDate = () => {
+  const sortTableDataByDate = (direction = "asc") => {
     const sortedData = [...tableData].sort((a, b) => {
       const dateA = new Date(a.date);
       const dateB = new Date(b.date);
-
-      if (sortDirection === "asc") {
-        return dateA - dateB;
-      } else {
-        return dateB - dateA;
-      }
+      return direction === "asc" ? dateB - dateA : dateA - dateB;
     });
-
     setTableData(sortedData);
   };
+
   const toggleSortDirection = () => {
     setSortDirection((prevDirection) => {
       const newDirection = prevDirection === "asc" ? "desc" : "asc";
@@ -45,6 +40,10 @@ const CheckReview = () => {
       return newDirection;
     });
   };
+
+  useEffect(() => {
+    sortTableDataByDate(sortDirection);
+  }, []);
 
   //별점정렬
   const toggleSortDirectionRating = () => {
@@ -73,7 +72,9 @@ const CheckReview = () => {
     <>
       {/* 버튼들 */}
       <section className="buttons">
-        <Inputbutton text="리뷰 작성" i={false} w="medium" />
+        <span className="write-review">
+          <Inputbutton text="리뷰 작성" i={false} w="medium" />
+        </span>
         <Inputbutton text="리뷰 조회" i={true} w="medium" />
         <Inputbutton text="결제 내역" i={false} w="medium" />
       </section>

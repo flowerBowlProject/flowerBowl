@@ -5,18 +5,6 @@ body {
   justify-content: center; /* Adjust this value based on the width of your sidebar */
 }
 
-.buttons .inputbutton {
-  width: auto;
-  margin-left: 7em;
-  margin-bottom: 3em;
-}
-
-.buttons .outputbutton {
-  width: auto;
-  margin-bottom: 3em;
-  margin-left: 2em;
-}
-
 /* 더보기버튼 */
 .bottom-add .inputbutton {
   margin-top: 5em;
@@ -53,23 +41,6 @@ body {
 
 .custom-table td {
   border: 1px solid var(--orange--color);
-}
-
-.custom-table td {
-  padding-top: 1.5em;
-  padding-bottom: 1.5em;
-  padding-left: 0.5em;
-  padding-right: 0.5em;
-}
-
-.custom-table th:nth-child(3),
-.custom-table td:nth-child(3) {
-  width: 30%;
-}
-
-.custom-table th:nth-child(4),
-.custom-table td:nth-child(4) {
-  width: 20%;
 }
 
 .custom-table tbody td {
@@ -120,7 +91,25 @@ body {
   color: var(--brown--color);
 }
 
-/* 콘텐트 중앙으로 */
+/* 클래스이름간격조정 */
+.custom-table td {
+  padding-top: 1.5em;
+  padding-bottom: 1.5em;
+  padding-left: 0.5em;
+  padding-right: 0.5em;
+}
+
+.custom-table th:nth-child(3),
+.custom-table td:nth-child(3) {
+  width: 30%;
+}
+
+.custom-table th:nth-child(4),
+.custom-table td:nth-child(4) {
+  width: 20%;
+}
+
+/* 메인컨텐트중앙 */
 .table-content {
   max-width: 1200px;
   margin-left: auto;

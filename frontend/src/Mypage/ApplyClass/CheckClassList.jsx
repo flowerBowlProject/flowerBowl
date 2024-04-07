@@ -1,27 +1,27 @@
 import { React, useState, useEffect } from "react";
 import Inputbutton from "../../Component/Input/Inputbutton";
-import "./Checkteachingclass.css";
+import "./CheckClassList.css";
 
-const Checkteachingclass = () => {
+const CheckClassList = () => {
   // 정렬기능
   const [sortDirection, setSortDirection] = useState("asc");
-  const [sortDirectionRating, setSortDirectionRating] = useState("asc");
 
   // 받아올 테이블 데이터
   const [tableData, setTableData] = useState([
     {
       date: "2024/02/20",
       description: "화이트데이 초콜릿 만들기 클래스",
-      chef: "@내꿈은너야",
-      rating: 3,
+      user: "@내꿈은너야",
+      phone: `010-8459-8114`,
     },
     {
       date: "2023/12/25",
       description: "크리스마스 스페셜 만들기",
-      chef: "@메리크리스마스",
-      rating: 5,
+      user: "@메리크리스마스",
+      phone: `010-5995-7519`,
     },
   ]);
+
 
   //   날짜정렬
   const sortTableDataByDate = (direction = "asc") => {
@@ -33,6 +33,10 @@ const Checkteachingclass = () => {
     setTableData(sortedData);
   };
 
+  useEffect(() => {
+    sortTableDataByDate(sortDirection);
+  }, []);
+
   const toggleSortDirection = () => {
     setSortDirection((prevDirection) => {
       const newDirection = prevDirection === "asc" ? "desc" : "asc";
@@ -41,41 +45,9 @@ const Checkteachingclass = () => {
     });
   };
 
-  useEffect(() => {
-    sortTableDataByDate(sortDirection);
-  }, []);
-
-  //별점정렬
-  const toggleSortDirectionRating = () => {
-    setSortDirectionRating((prevDirection) => {
-      const newDirection = prevDirection === "asc" ? "desc" : "asc";
-      sortDataByAttribute("rating", newDirection); // Sort data after updating the direction
-      return newDirection;
-    });
-  };
-  const sortDataByAttribute = (attribute, direction) => {
-    const sortedData = [...tableData].sort((a, b) => {
-      const valueA = a[attribute];
-      const valueB = b[attribute];
-
-      if (direction === "asc") {
-        return valueB - valueA; // Ascending order
-      } else {
-        return valueA - valueB; // Descending order
-      }
-    });
-
-    setTableData(sortedData);
-  };
-
   return (
     <>
-      {/* 버튼들 */}
-      <section className="buttons">
-        <Inputbutton text="수강클래스 조회" i={true} w="medium" />
-        <Inputbutton text="창작클래스 조회" i={false} w="medium" />
-      </section>
-
+      
       {/* 내용 */}
       <section className="table-content">
         <table className="custom-table">
@@ -83,7 +55,7 @@ const Checkteachingclass = () => {
             <tr>
               <th>No</th>
               <th>
-                수강날짜
+                구매날짜
                 <button className="sort-button" onClick={toggleSortDirection}>
                   <span
                     className={
@@ -95,24 +67,12 @@ const Checkteachingclass = () => {
                 </button>
               </th>
               <th>클래스명</th>
-              <th>쉐프</th>
-              <th>
-                별점
-                <button
-                  className="sort-button"
-                  onClick={toggleSortDirectionRating}
-                >
-                  <span
-                    className={
-                      sortDirectionRating === "asc" ? "arrow-up" : "arrow-down"
-                    }
-                  >
-                    {sortDirectionRating === "asc" ? "▲" : "▼"}
-                  </span>
-                </button>
-              </th>
+              <th>구매자명</th>
+              <th>핸드폰 번호</th>
+              <th></th>
             </tr>
           </thead>
+
           <tbody>
             {[...tableData, ...Array(8 - tableData.length)].map(
               (item, index) => (
@@ -120,17 +80,11 @@ const Checkteachingclass = () => {
                   <td>{item ? index + 1 : ""}</td>
                   <td>{item ? item.date : ""}</td>
                   <td>{item ? item.description : ""}</td>
-                  <td>{item ? item.chef : ""}</td>
+                  <td>{item ? item.user : ""}</td>
+                  <td>{item ? item.phone : ""}</td>
                   <td>
                     {item ? (
-                      <>
-                        <span className="star-filled">
-                          {"★".repeat(item.rating)}
-                        </span>
-                        <span className="star-empty">
-                          {"☆".repeat(5 - item.rating)}
-                        </span>
-                      </>
+                      <Inputbutton text="취소/환불" i={true} w="medium" />
                     ) : (
                       ""
                     )}
@@ -150,4 +104,4 @@ const Checkteachingclass = () => {
   );
 };
 
-export default Checkteachingclass;
+export default CheckClassList;
