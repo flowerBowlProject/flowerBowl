@@ -97,13 +97,5 @@ public class User {
         this.userWdStatus = false; // @ColumnDefault("false")이 안 먹음
     }
 
-    public User (String userId,String userEmail, String userType) {
-        this.userId = userId;
-        this.userEmail = userEmail;
-//        this.userType = userType;
-        this.userCreateDate = LocalDate.now();
-        this.userRole = Role.ROLE_USER;
-        this.userWdStatus = false;
-    }
 
 }

@@ -11,9 +11,9 @@ import org.springframework.stereotype.Repository;
 public interface UserRepository extends JpaRepository<User, Long> {
 
     @Modifying
-    @Query(value = "INSERT INTO user (user_id) SELECT :userId " +
+    @Query(value = "INSERT INTO user (user_id, user_role) SELECT :userId, :role " +
             "WHERE NOT EXISTS (SELECT 1 FROM user WHERE user_id = :userId)", nativeQuery = true)
-    void insertIfNotExists(@Param("userId") String userId);
+    void insertIfNotExists(@Param("userId") String userId, @Param("role") String role);
 
     User findByUserId(String userId);
 

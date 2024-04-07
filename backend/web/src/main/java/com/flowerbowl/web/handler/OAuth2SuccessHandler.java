@@ -1,5 +1,6 @@
 package com.flowerbowl.web.handler;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.flowerbowl.web.domain.CustomOAuth2User;
 import com.flowerbowl.web.provider.JwtProvider;
 import jakarta.servlet.ServletException;
@@ -11,12 +12,15 @@ import org.springframework.security.web.authentication.SimpleUrlAuthenticationSu
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 @Component
 @RequiredArgsConstructor
 public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
     private final JwtProvider jwtProvider;
+    private final ObjectMapper objectMapper;
 
     @Override
     public void onAuthenticationSuccess(
@@ -27,10 +31,13 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         String userId = oAuth2User.getName();
         String token = jwtProvider.create(userId);
 
-//        HttpHeaders httpHeaders = new HttpHeaders();
-//        httpHeaders.add("Authorization", "Bearer " + token);
-//        response.addHeader("Authorization", "Bearer " + token);
+        Map<String, Object> responseData = new HashMap<>();
+        responseData.put("access_token", token);
+        responseData.put("expirationTime", 3600);
 
-        response.sendRedirect("http://localhost:3000/auth/oauth-response?token=" + token + "/3600");
+        response.setHeader("Authorization", "Bearer " + token);
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        response.getWriter().write(objectMapper.writeValueAsString(responseData));
     }
 }
