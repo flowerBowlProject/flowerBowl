@@ -22,38 +22,21 @@ body {
 .custom-table th,
 .custom-table td {
   padding: 8px;
-  border: 1px solid var(--brown--color);
+  border: 1px solid #d3d3d3;
+
   color: var(--brown--color);
   border-left: none;
   border-right: none;
-  border-bottom: none;
   border-top: none;
 }
 
 .custom-table th,
 .custom-table tr:last-child td {
-  border-bottom: 2px solid var(--brown--color); /* Make the bottom border thicker and brown */
-}
-
-.custom-table th {
-  font-weight: bold;
-}
-
-.custom-table td {
-  border: 1px solid var(--orange--color);
-}
-
-.custom-table tbody td {
-  border-left: none;
-  border-right: none;
+  border-bottom: 2px solid var(--brown--color);
 }
 
 .custom-table tbody tr:not(:last-child) td {
-  border-bottom: 1px solid #d3d3d3; /* light gray for rows except the last one */
-}
-
-.custom-table tbody tr:last-child td {
-  border-bottom: 2px solid var(--brown--color); /* thicker brown line for the last row */
+  border-bottom: 1px solid #d3d3d3;
 }
 
 /* 회색줄 사이 간격 */
@@ -70,25 +53,16 @@ body {
   font-size: inherit;
 }
 
-.sort-button:focus {
-  outline: none;
-}
-
-/* 아이콘 색상 */
-.star-filled {
-  color: var(--orange--color);
-}
-
-.star-empty {
-  color: var(--orange--color);
-}
-
 .arrow-up {
   color: var(--brown--color);
 }
 
 .arrow-down {
   color: var(--brown--color);
+}
+
+.sort-button:focus {
+  outline: none;
 }
 
 /* 클래스이름간격조정 */
@@ -109,18 +83,48 @@ body {
   width: 20%;
 }
 
-/* 메인컨텐트 중앙 */
+/* 메인컨텐트중앙 */
 .table-content {
   max-width: 1200px;
   margin-left: auto;
   margin-right: auto;
 }
 
-.custom-table th:last-child,
-.custom-table td:last-child {
-  border-right: none;
-}
-
 .custom-table {
   width: 100%;
+}
+
+/* 첨부파일 */
+.attachment-image {
+  max-width: 100px;
+  max-height: 100px;
+  object-fit: cover;
+}
+
+/* 버튼 최종 조정 */
+.button-group .outputbutton {
+  margin-left: 1em;
+}
+
+.button-group .inputbutton {
+  margin-left: -3em;
+}
+
+.custom-table th:nth-child(3),
+.custom-table td:nth-child(3) {
+  width: 25%;
+}
+
+.inputbutton {
+  outline: none;
+  box-shadow: none;
+}
+
+.outputbutton {
+  outline: none;
+  box-shadow: none;
+}
+
+.custom-table td:last-child {
+  border: none;
 }

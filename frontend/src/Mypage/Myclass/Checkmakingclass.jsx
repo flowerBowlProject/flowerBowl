@@ -1,12 +1,12 @@
-import { React, useState } from "react";
+import { React, useState, useEffect } from "react";
 import Inputbutton from "../../Component/Input/Inputbutton";
 import "./Checkmakingclass.css";
 
 const Checkmakingclass = () => {
   // 정렬기능
-  const [sortDirection, setSortDirection] = useState(null);
-  const [sortBookmark, setSortBookmark] = useState(null);
-  const [sortComment, setSortComment] = useState(null);
+  const [sortDirection, setSortDirection] = useState("asc");
+  const [sortBookmark, setSortBookmark] = useState("asc");
+  const [sortComment, setSortComment] = useState("asc");
 
   // 받아올 테이블 데이터
   const [tableData, setTableData] = useState([
@@ -25,20 +25,15 @@ const Checkmakingclass = () => {
   ]);
 
   //   날짜정렬
-  const sortTableDataByDate = () => {
+  const sortTableDataByDate = (direction = "asc") => {
     const sortedData = [...tableData].sort((a, b) => {
       const dateA = new Date(a.date);
       const dateB = new Date(b.date);
-
-      if (sortDirection === "asc") {
-        return dateA - dateB;
-      } else {
-        return dateB - dateA;
-      }
+      return direction === "asc" ? dateB - dateA : dateA - dateB;
     });
-
     setTableData(sortedData);
   };
+
   const toggleSortDirection = () => {
     setSortDirection((prevDirection) => {
       const newDirection = prevDirection === "asc" ? "desc" : "asc";
@@ -46,6 +41,10 @@ const Checkmakingclass = () => {
       return newDirection;
     });
   };
+
+  useEffect(() => {
+    sortTableDataByDate(sortDirection);
+  }, []);
 
   // 북마크정렬
   const toggleSortBookmark = () => {
