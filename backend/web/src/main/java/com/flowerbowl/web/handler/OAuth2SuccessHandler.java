@@ -31,13 +31,14 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         String userId = oAuth2User.getName();
         String token = jwtProvider.create(userId);
 
-        Map<String, Object> responseData = new HashMap<>();
-        responseData.put("access_token", token);
-        responseData.put("expirationTime", 3600);
-
-        response.setHeader("Authorization", "Bearer " + token);
-        response.setContentType("application/json");
-        response.setCharacterEncoding("UTF-8");
-        response.getWriter().write(objectMapper.writeValueAsString(responseData));
+//        Map<String, Object> responseData = new HashMap<>();
+//        responseData.put("access_token", token);
+//        responseData.put("expirationTime", 3600);
+//
+//        response.setHeader("Authorization", "Bearer " + token);
+//        response.setContentType("application/json");
+//        response.setCharacterEncoding("UTF-8");
+//        response.getWriter().write(objectMapper.writeValueAsString(responseData));
+        response.sendRedirect("http://localhost:3000/auth/oauth-response?token=" + token + "&expirationTime=3600");
     }
 }
