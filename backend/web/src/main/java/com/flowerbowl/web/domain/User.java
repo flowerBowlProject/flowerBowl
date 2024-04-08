@@ -98,4 +98,27 @@ public class User {
     }
 
 
+    public void setUserFileSname(String userFileSname) {
+        this.userFileSname = userFileSname;
+    }
+
+    public void setUserFileOname(String userFileOname) {
+        this.userFileOname = userFileOname;
+    }
+
+    public void setUserPw(String userPw) {
+        this.userPw = userPw;
+    }
+
+    public void setUserNickname(String userNickname) {
+        this.userNickname = userNickname;
+    }
+
+    public void setUserEmail(String userEmail) {
+        this.userEmail = userEmail;
+    }
+
+    public void setUserPhone(String userPhone) {
+        this.userPhone = userPhone;
+    }
 }

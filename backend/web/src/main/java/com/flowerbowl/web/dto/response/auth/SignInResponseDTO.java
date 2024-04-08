@@ -24,9 +24,9 @@ public class SignInResponseDTO extends ResponseDTO {
 
     public static ResponseEntity<SignInResponseDTO> success(String access_token, Long user_no) {
         SignInResponseDTO body = new SignInResponseDTO(access_token, user_no);
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.add("Authorization", "Bearer " + access_token);
-        return ResponseEntity.status(HttpStatus.OK).headers(httpHeaders).body(body);
+//        HttpHeaders httpHeaders = new HttpHeaders();
+//        httpHeaders.add("Authorization", "Bearer " + access_token);
+        return ResponseEntity.status(HttpStatus.OK).body(body);
     }
 
     public static ResponseEntity<ResponseDTO> signInFail() {

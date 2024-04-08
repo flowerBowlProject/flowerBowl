@@ -52,9 +52,9 @@ public class AuthServiceImpl implements AuthService {
     public ResponseEntity<? super NicknameCheckResponseDTO> nickNameCheck(NicknameCheckRequestDTO dto) {
 
         try {
+
             String userNickname = dto.getUser_nickname();
             boolean isExistNickname = userRepository.existsByUserNickname(userNickname);
-
             if (isExistNickname){return NicknameCheckResponseDTO.duplicateNickname();}
 
 

@@ -10,6 +10,10 @@ public interface ResponseCode {
     String DUPLICATE_EMAIL = "DE"; // 회원 가입 시 중복 이메일
     String CERTIFICATION_FAIL = "CF"; // 회원 가입 시 이메일 인증 실패
     String SIGN_IN_FAIL = "SF"; // 로그인 실패
+    String INVALID_PASSWORD = "IP"; // 비밀 번호 유호성 검사 실패
+
+
+    String NOT_EXIST_USER = "NU"; // 존재하지 않은 유저 정보
 
 
     String MAIL_FAIL = "MF"; // 메일 발송 실패
