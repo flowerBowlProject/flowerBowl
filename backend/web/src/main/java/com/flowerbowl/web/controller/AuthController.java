@@ -20,33 +20,33 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/checkId")
-    public ResponseEntity<? super IdCheckResponseDTO> idCheck(@RequestBody @Valid IdCheckRequestDTO requestBody) {
+    public ResponseEntity<? super IdCheckResponseDto> idCheck(@RequestBody @Valid IdCheckRequestDto requestBody) {
         return authService.idCheck(requestBody);
     }
 
     @PostMapping("/checkNickname")
-    public ResponseEntity<? super NicknameCheckResponseDTO> nicknameCheck(@RequestBody @Valid NicknameCheckRequestDTO requestBody) {
+    public ResponseEntity<? super NicknameCheckResponseDto> nicknameCheck(@RequestBody @Valid NicknameCheckRequestDto requestBody) {
         return authService.nickNameCheck(requestBody);
     }
 
 
     @PostMapping("/sendEmail")
-    public ResponseEntity<? super EmailCertificationSendResponseDTO> emailCertificationSend(@RequestBody @Valid EmailCertificationSendRequestDTO requestBody) {
+    public ResponseEntity<? super EmailCertificationSendResponseDto> emailCertificationSend(@RequestBody @Valid EmailCertificationSendRequestDto requestBody) {
         return authService.emailCertificationSend(requestBody);
     }
 
     @PostMapping("/checkEmail")
-    public ResponseEntity<? super CheckCertificationResponseDTO> checkCertification(@RequestBody @Valid CheckCertificationRequestDTO requestBody) {
+    public ResponseEntity<? super CheckCertificationResponseDto> checkCertification(@RequestBody @Valid CheckCertificationRequestDto requestBody) {
         return authService.checkCertification(requestBody);
     }
 
     @PostMapping("/signUp")
-    public ResponseEntity<? super SignUpResponseDTO> signUp(@RequestBody @Valid SignUpRequestDTO requestBody) {
+    public ResponseEntity<? super SignUpResponseDto> signUp(@RequestBody @Valid SignUpRequestDto requestBody) {
         return authService.signUp(requestBody);
     }
 
     @PostMapping("/signIn")
-    public ResponseEntity<? super SignInResponseDTO> signIn(@RequestBody @Valid SignInRequestDTO requestBody) {
+    public ResponseEntity<? super SignInResponseDto> signIn(@RequestBody @Valid SignInRequestDto requestBody) {
         return authService.signIn(requestBody);
     }
 

@@ -11,7 +11,7 @@ import lombok.Setter;
 @Setter
 @Getter
 @NoArgsConstructor
-public class SignUpRequestDTO {
+public class SignUpRequestDto {
 
     @NotBlank
     @Pattern(regexp = "^[a-z0-9]{8,15}$", message = "소문자(a~z), 숫자(0~9)만 사용 가능, 8~15자로 작성해 주세요.")

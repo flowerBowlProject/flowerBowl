@@ -9,9 +9,11 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class EmailCertificationSendRequestDTO {
+public class SignInRequestDto {
 
-    private String user_id;
     @NotBlank
-    private String user_email;
+    private String user_id;
+
+    @NotBlank
+    private String user_password;
 }

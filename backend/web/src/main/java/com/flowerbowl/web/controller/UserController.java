@@ -1,9 +1,9 @@
 package com.flowerbowl.web.controller;
 
 
-import com.flowerbowl.web.dto.request.user.PatchProfileRequestDTO;
-import com.flowerbowl.web.dto.response.user.GetUserInfoResponseDTO;
-import com.flowerbowl.web.dto.response.user.PatchProfileResponseDTO;
+import com.flowerbowl.web.dto.request.user.PatchProfileRequestDto;
+import com.flowerbowl.web.dto.response.user.GetUserInfoResponseDto;
+import com.flowerbowl.web.dto.response.user.PatchProfileResponseDto;
 import com.flowerbowl.web.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -21,14 +21,14 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping("/info")
-    public ResponseEntity<? super GetUserInfoResponseDTO> getUserInfo(@AuthenticationPrincipal String userId) {
+    public ResponseEntity<? super GetUserInfoResponseDto> getUserInfo(@AuthenticationPrincipal String userId) {
         return userService.getUserInfo(userId);
     }
 
     @PatchMapping("/info")
-    public ResponseEntity<? super PatchProfileResponseDTO> PatchUserInfo(
+    public ResponseEntity<? super PatchProfileResponseDto> PatchUserInfo(
             @AuthenticationPrincipal String userId,
-            @RequestBody @Valid PatchProfileRequestDTO dto) {
+            @RequestBody @Valid PatchProfileRequestDto dto) {
         return userService.putUserProfile(dto,userId);
     }
 
