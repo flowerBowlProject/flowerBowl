@@ -38,7 +38,8 @@ public class AuthServiceImpl implements AuthService {
             String userId = dto.getUser_id();
             boolean isExistId = userRepository.existsByUserId(userId);
 
-            if (isExistId) {return IdCheckResponseDto.duplicateId();}
+            if (isExistId) return IdCheckResponseDto.duplicateId();
+
 
         } catch (Exception exception) {
             exception.printStackTrace();
@@ -55,7 +56,7 @@ public class AuthServiceImpl implements AuthService {
 
             String userNickname = dto.getUser_nickname();
             boolean isExistNickname = userRepository.existsByUserNickname(userNickname);
-            if (isExistNickname){return NicknameCheckResponseDto.duplicateNickname();}
+            if (isExistNickname) return NicknameCheckResponseDto.duplicateNickname();
 
 
         } catch (Exception exception) {
@@ -75,16 +76,19 @@ public class AuthServiceImpl implements AuthService {
             String userEmail = dto.getUser_email();
 
             boolean isExistEmail = userRepository.existsByUserEmail(userEmail);
-            if (isExistEmail) {return EmailCertificationSendResponseDto.duplicateEmail();}
+            if (isExistEmail) return EmailCertificationSendResponseDto.duplicateEmail();
+
 
             String certificationNum = EmailUtil.getRandomValue();
 
             boolean isSuccess = emailProvider.sendCertification(userEmail, certificationNum);
-            if (!isSuccess) {return EmailCertificationSendResponseDto.mailSendFail();}
+            if (!isSuccess) return EmailCertificationSendResponseDto.mailSendFail();
+
 
             // 이메일 인증하고 회원가입 안한 사람에 데이터를 지우기 위해 및 이메일 인증 기능을 여러 번 사용하고 이메일 인증 시 오류 예방를 위해 로직을 추가했습니다.
             boolean isExistData = emailCertificationRepository.existsByEmail(userEmail);
-            if (isExistData) {emailCertificationRepository.deleteByEmail(userEmail);}
+            if (isExistData) emailCertificationRepository.deleteByEmail(userEmail);
+
 
             EmailCertification emailCertification = new EmailCertification(userId, userEmail, certificationNum);
             emailCertificationRepository.save(emailCertification);
@@ -105,11 +109,15 @@ public class AuthServiceImpl implements AuthService {
             String certificationNum = dto.getCertification_num();
 
             EmailCertification emailCertification = emailCertificationRepository.findByEmail(userEmail);
-            if (emailCertification == null) {return CheckCertificationResponseDto.certificationFail();}
+            if (emailCertification == null) {
+                return CheckCertificationResponseDto.certificationFail();
+            }
 
             // email이랑 인증 번호 확인
             boolean isMatch = emailCertification.getEmail().equals(userEmail) && emailCertification.getCertificationNum().equals(certificationNum);
-            if (!isMatch) {return CheckCertificationResponseDto.certificationFail();}
+            if (!isMatch) {
+                return CheckCertificationResponseDto.certificationFail();
+            }
 
 
         } catch (Exception exception) {
@@ -161,14 +169,15 @@ public class AuthServiceImpl implements AuthService {
         try {
 
             String userId = dto.getUser_id();
+            log.info("userId={}", dto.getUser_id());
             User user = userRepository.findByUserId(userId);
-            if(user == null){return SignInResponseDto.signInFail();}
+            if (user == null) return SignInResponseDto.signInFail();
 
             user_no = user.getUserNo();
             String userPw = dto.getUser_password();
             String encodePw = user.getUserPw();
             boolean isMatch = passwordEncoder.matches(userPw, encodePw);
-            if (!isMatch){return SignInResponseDto.signInFail();}
+            if (!isMatch) return SignInResponseDto.signInFail();
 
             token = jwtProvider.create(userId);
 

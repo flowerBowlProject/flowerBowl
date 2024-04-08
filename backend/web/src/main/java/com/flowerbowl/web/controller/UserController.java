@@ -1,9 +1,10 @@
 package com.flowerbowl.web.controller;
 
 
+import com.flowerbowl.web.dto.request.user.FindUserIdRequestDto;
+import com.flowerbowl.web.dto.request.user.FindUserPwRequestDto;
 import com.flowerbowl.web.dto.request.user.PatchProfileRequestDto;
-import com.flowerbowl.web.dto.response.user.GetUserInfoResponseDto;
-import com.flowerbowl.web.dto.response.user.PatchProfileResponseDto;
+import com.flowerbowl.web.dto.response.user.*;
 import com.flowerbowl.web.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -26,10 +27,30 @@ public class UserController {
     }
 
     @PatchMapping("/info")
-    public ResponseEntity<? super PatchProfileResponseDto> PatchUserInfo(
+    public ResponseEntity<? super PatchProfileResponseDto> patchUserInfo(
             @AuthenticationPrincipal String userId,
             @RequestBody @Valid PatchProfileRequestDto dto) {
-        return userService.putUserProfile(dto,userId);
+        return userService.patchUserProfile(dto, userId);
     }
 
+    @PatchMapping("/withdrawal")
+    public ResponseEntity<? super PatchWdResponseDto> patchWd(
+            @AuthenticationPrincipal String userId) {
+
+        return userService.patchWd(userId);
+    }
+
+    @PostMapping("/findId")
+    public ResponseEntity<? super FindUserIdResponseDto> findId(
+            @RequestBody @Valid FindUserIdRequestDto dto) {
+
+        return userService.findId(dto);
+    }
+
+    @PostMapping("/findPw")
+    public ResponseEntity<? super FindUserPwResponseDto> findPw(
+            @RequestBody @Valid FindUserPwRequestDto dto){
+
+        return userService.findPw(dto);
+    }
 }

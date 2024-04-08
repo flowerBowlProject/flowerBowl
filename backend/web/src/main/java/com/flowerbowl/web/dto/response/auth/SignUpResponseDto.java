@@ -16,7 +16,7 @@ public class SignUpResponseDto extends ResponseDto {
 
     public static ResponseEntity<SignUpResponseDto> success (){
         SignUpResponseDto body = new SignUpResponseDto();
-        return ResponseEntity.status(HttpStatus.OK).body(body);
+        return ResponseEntity.status(HttpStatus.CREATED).body(body);
     }
 
     public static ResponseEntity<ResponseDto> duplicatedId(){
