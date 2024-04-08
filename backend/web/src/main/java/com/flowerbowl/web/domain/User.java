@@ -1,6 +1,6 @@
 package com.flowerbowl.web.domain;
 
-import com.flowerbowl.web.dto.request.auth.SignUpRequestDTO;
+import com.flowerbowl.web.dto.request.auth.SignUpRequestDto;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
@@ -85,7 +85,7 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<License> licenses = new ArrayList<>();
 
-    public User(SignUpRequestDTO dto) {
+    public User(SignUpRequestDto dto) {
         this.userId = dto.getUser_id();
         this.userPw = dto.getUser_password();
         this.userEmail = dto.getUser_email();

@@ -1,8 +1,8 @@
 package com.flowerbowl.web.service;
 
-import com.flowerbowl.web.dto.request.user.PatchProfileRequestDTO;
-import com.flowerbowl.web.dto.response.user.GetUserInfoResponseDTO;
-import com.flowerbowl.web.dto.response.user.PatchProfileResponseDTO;
+import com.flowerbowl.web.dto.request.user.PatchProfileRequestDto;
+import com.flowerbowl.web.dto.response.user.GetUserInfoResponseDto;
+import com.flowerbowl.web.dto.response.user.PatchProfileResponseDto;
 import org.springframework.http.ResponseEntity;
 
 public interface UserService {
@@ -10,12 +10,12 @@ public interface UserService {
     /**
      * @return 유저 정보
      */
-    ResponseEntity<? super GetUserInfoResponseDTO> getUserInfo(String userId);
+    ResponseEntity<? super GetUserInfoResponseDto> getUserInfo(String userId);
 
 
     /**
      * 
      * @return 유저 정보 수정
      */
-    ResponseEntity<? super PatchProfileResponseDTO> putUserProfile(PatchProfileRequestDTO dto, String userId);
+    ResponseEntity<? super PatchProfileResponseDto> putUserProfile(PatchProfileRequestDto dto, String userId);
 }

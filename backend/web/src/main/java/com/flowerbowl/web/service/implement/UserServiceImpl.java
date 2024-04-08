@@ -1,10 +1,10 @@
 package com.flowerbowl.web.service.implement;
 
 import com.flowerbowl.web.domain.User;
-import com.flowerbowl.web.dto.request.user.PatchProfileRequestDTO;
-import com.flowerbowl.web.dto.response.ResponseDTO;
-import com.flowerbowl.web.dto.response.user.GetUserInfoResponseDTO;
-import com.flowerbowl.web.dto.response.user.PatchProfileResponseDTO;
+import com.flowerbowl.web.dto.request.user.PatchProfileRequestDto;
+import com.flowerbowl.web.dto.response.ResponseDto;
+import com.flowerbowl.web.dto.response.user.GetUserInfoResponseDto;
+import com.flowerbowl.web.dto.response.user.PatchProfileResponseDto;
 import com.flowerbowl.web.repository.UserRepository;
 import com.flowerbowl.web.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -24,43 +24,43 @@ public class UserServiceImpl implements UserService {
     private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     @Override
-    public ResponseEntity<? super GetUserInfoResponseDTO> getUserInfo(String userId) {
+    public ResponseEntity<? super GetUserInfoResponseDto> getUserInfo(String userId) {
 
         User user = null;
 
         try {
 
             user = userRepository.findByUserId(userId);
-            if(user == null){return GetUserInfoResponseDTO.notExistUser();}
+            if(user == null){return GetUserInfoResponseDto.notExistUser();}
 
         } catch (Exception exception) {
             exception.printStackTrace();
-            return ResponseDTO.databaseError();
+            return ResponseDto.databaseError();
         }
 
-        return GetUserInfoResponseDTO.success(user);
+        return GetUserInfoResponseDto.success(user);
     }
 
     @Override
-    public ResponseEntity<? super PatchProfileResponseDTO> putUserProfile(
-            PatchProfileRequestDTO dto, String userId) {
+    public ResponseEntity<? super PatchProfileResponseDto> putUserProfile(
+            PatchProfileRequestDto dto, String userId) {
 
         try {
 
             User user = userRepository.findByUserId(userId);
             if (user == null) {
-                PatchProfileResponseDTO.noExistUser();}
+                PatchProfileResponseDto.noExistUser();}
 
             String userPw = dto.getUser_password();
             String encodePw = user.getUserPw();
             boolean isMatch = passwordEncoder.matches(userPw, encodePw);
-            if(!isMatch){return PatchProfileResponseDTO.invalidPw();}
+            if(!isMatch){return PatchProfileResponseDto.invalidPw();}
 
             boolean isExistNickname = userRepository.existsByUserNickname(dto.getNew_nickname());
-            if (isExistNickname){return PatchProfileResponseDTO.duplicateNickname();}
+            if (isExistNickname){return PatchProfileResponseDto.duplicateNickname();}
 
             boolean isExistEmail = userRepository.existsByUserNickname(dto.getNew_email());
-            if (isExistEmail){return PatchProfileResponseDTO.duplicateEmail();}
+            if (isExistEmail){return PatchProfileResponseDto.duplicateEmail();}
 
             String newPw = dto.getNew_pw();
             String newEncodePw = passwordEncoder.encode(newPw);
@@ -75,9 +75,9 @@ public class UserServiceImpl implements UserService {
 
         } catch (Exception exception) {
             exception.printStackTrace();
-            return ResponseDTO.databaseError();
+            return ResponseDto.databaseError();
         }
 
-        return PatchProfileResponseDTO.success();
+        return PatchProfileResponseDto.success();
     }
 }

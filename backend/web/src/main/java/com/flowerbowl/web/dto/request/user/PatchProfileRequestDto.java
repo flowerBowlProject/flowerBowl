@@ -9,7 +9,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class PatchProfileRequestDTO {
+public class PatchProfileRequestDto {
 
     @Pattern(regexp = "^[ㄱ-ㅎ가-힣a-zA-Z0-9]{2,10}$", message = "특수문자는 사용하지 못하며, 2~10자리 이어야 합니다.")
     private String new_nickname;
