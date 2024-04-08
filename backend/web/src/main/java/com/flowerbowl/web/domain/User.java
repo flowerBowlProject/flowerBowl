@@ -93,7 +93,7 @@ public class User {
         this.userPhone = dto.getUser_phone();
 //        this.userType = "web";
         this.userCreateDate = LocalDate.now();
-        this.userRole = Role.ROLE_USER;
+        this.userRole = Role.ROLE_CHEF;
         this.userWdStatus = false; // @ColumnDefault("false")이 안 먹음
     }
 
