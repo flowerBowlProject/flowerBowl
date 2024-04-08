@@ -3,7 +3,6 @@ package com.flowerbowl.web.config;
 
 import com.flowerbowl.web.filter.JwtAuthenticationFilter;
 import com.flowerbowl.web.handler.OAuth2SuccessHandler;
-import com.flowerbowl.web.service.implement.OAuth2ServiceImplement;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
