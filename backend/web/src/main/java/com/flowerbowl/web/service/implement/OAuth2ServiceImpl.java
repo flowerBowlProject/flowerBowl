@@ -17,7 +17,7 @@ import java.util.Map;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class OAuth2ServiceImplement extends DefaultOAuth2UserService {
+public class OAuth2ServiceImpl extends DefaultOAuth2UserService {
 
     private final UserRepository userRepository;
 

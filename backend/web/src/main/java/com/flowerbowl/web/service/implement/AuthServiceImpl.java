@@ -22,7 +22,7 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class AuthServiceImplement implements AuthService {
+public class AuthServiceImpl implements AuthService {
 
     private final EmailProvider emailProvider;
     private final JwtProvider jwtProvider;
