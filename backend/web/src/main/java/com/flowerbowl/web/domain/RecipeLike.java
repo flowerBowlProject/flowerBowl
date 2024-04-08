@@ -1,8 +1,10 @@
 package com.flowerbowl.web.domain;
 
 import jakarta.persistence.*;
+import lombok.Getter;
 
 @Entity
+@Getter
 public class RecipeLike {
 
     @Id
