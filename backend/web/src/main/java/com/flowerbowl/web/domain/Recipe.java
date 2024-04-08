@@ -1,7 +1,9 @@
 package com.flowerbowl.web.domain;
 
+import com.flowerbowl.web.common.StringListConverter;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -10,6 +12,7 @@ import java.util.List;
 
 @Entity
 @Getter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class Recipe {
@@ -26,7 +29,8 @@ public class Recipe {
     private LocalDate recipeDate;
 
     @Column(name = "recipe_stuff")
-    private String recipeStuff;
+    @Convert(converter = StringListConverter.class)
+    private List<String> recipeStuff;
 
     @Column(name = "recipe_oname")
     private String recipeOname;
@@ -54,10 +58,34 @@ public class Recipe {
     @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL)
     private List<RecipeLike> recipeLikes;
 
-    @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "recipe", cascade = CascadeType.REMOVE)
     private List<RecipeFile> recipeFiles;
 
     @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL)
     private List<Comment> comments;
+
+    public void updateTitle(String recipeTitle) {
+        this.recipeTitle = recipeTitle;
+    }
+
+    public void updateCategory(Category recipeCategory) {
+        this.recipeCategory = recipeCategory;
+    }
+
+    public void updateStuff(List<String> recipeStuff) {
+        this.recipeStuff = recipeStuff;
+    }
+
+    public void updateContent(String recipeContent) {
+        this.recipeContent = recipeContent;
+    }
+
+    public void updateOname(String recipeOname) {
+        this.recipeOname = recipeOname;
+    }
+
+    public void updateSname(String recipeSname) {
+        this.recipeSname = recipeSname;
+    }
 
 }
