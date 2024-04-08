@@ -41,10 +41,7 @@ function AdminSidebar(props) {
       <Toolbar />
       <List>
         <Divider sx={{ borderColor: "main.or", borderWidth: "1px" }} />
-        {[
-          "쉐프 신청 내역",
-          "배너 등록"
-        ].map((text, index) => (
+        {["쉐프 신청 내역", "배너 등록"].map((text, index) => (
           <React.Fragment key={text}>
             <ListItem
               key={text}
@@ -61,28 +58,27 @@ function AdminSidebar(props) {
                   justifyContent: "center",
                   width: "100%",
                   height: "60px",
+                  borderBottom: "1px solid",
+                  borderColor: "main.or",
+                  "&:hover": { backgroundColor: "main.or", color: "white" },
+                  "&:active": { backgroundColor: "main.or", color: "white" },
                   "&:hover": { backgroundColor: "main.or", color: "white" },
                   "&:active": { backgroundColor: "main.or", color: "white" },
                 }}
               >
-                <ListItemIcon></ListItemIcon>
                 <ListItemText
                   primary={text}
                   sx={{
                     "&:hover": { color: "white" },
                     "&:active": { color: "white" },
+                    textAlign: "center",
                   }}
                 />
               </ListItemButton>
             </ListItem>
 
-            {index <
-              [
-                "쉐프 신청 내역",
-                "배너 등록"
-              ].length -
-                1 && (
-              <Divider sx={{ borderColor: "main.or", borderWidth: "1px" }} />
+            {index < ["쉐프 신청 내역", "배너 등록"].length && (
+              <Divider sx={{ borderColor: "main.or" }} />
             )}
           </React.Fragment>
         ))}

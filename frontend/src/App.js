@@ -1,13 +1,13 @@
 import "./App.css";
 
-import AdminSidebar from "./Mypage/Admin/AdminSidebar";
+import RegisterReview from "./Mypage/PaidList/RegisterReview";
 import Sidebar from "./Mypage/Sidebar";
 
 const App = () => {
   return (
     <div>
       {/* <Sidebar /> */}
-      <AdminSidebar />
+      <RegisterReview />
     </div>
   );
 };
