@@ -12,17 +12,17 @@ import java.util.List;
 
 
 @Getter
-public class GetLessonLikeListResponseDTO extends ResponseDto {
+public class GetLessonLikeListResponseDto extends ResponseDto {
 
     private List<LikeLessonList> likeLessonList;
 
-    public GetLessonLikeListResponseDTO(List<LikeLessonList> likeLessonList) {
+    public GetLessonLikeListResponseDto(List<LikeLessonList> likeLessonList) {
         super();
         this.likeLessonList = likeLessonList;
     }
 
-    public static ResponseEntity<GetLessonLikeListResponseDTO> success(List<LikeLessonList> likeLessonList) {
-        GetLessonLikeListResponseDTO body = new GetLessonLikeListResponseDTO(likeLessonList);
+    public static ResponseEntity<GetLessonLikeListResponseDto> success(List<LikeLessonList> likeLessonList) {
+        GetLessonLikeListResponseDto body = new GetLessonLikeListResponseDto(likeLessonList);
         return ResponseEntity.status(HttpStatus.OK).body(body);
     }
 
