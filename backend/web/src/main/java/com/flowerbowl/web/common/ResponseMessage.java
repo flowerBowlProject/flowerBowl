@@ -13,9 +13,10 @@ public interface ResponseMessage {
     String DUPLICATE_EMAIL = "Duplicate Email"; // 회원 가입 시 중복 이메일
     String CERTIFICATION_FAIL = "Certification fail"; // 회원 가입 시 이메일 인증 실패
     String SIGN_IN_FAIL = "Login information mismatch"; // 로그인 실패
-
     String INVALID_PASSWORD = "Invalid Password"; // 비밀 번호 유호성 검사 실패
     String NOT_EXIST_USER = "This user does not exist"; // 로그인 실패
+    String NOT_EXIST_LESSON = "NL"; // 조회한 레슨에 갯수가 0개인 경우
+    String NOT_EXIST_RECIPE = "NR"; // 조회한 레시피에 갯수가 0개인 경우
 
 
     String MAIL_FAIL = "Mail Send Fail"; // 메일 발송 실패
