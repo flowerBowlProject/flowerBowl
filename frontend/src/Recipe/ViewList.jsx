@@ -25,7 +25,6 @@ const ViewList = ({name}) => {
             </div>
             <div className="viewList">
                 {/* 리스트 출력*/}
-                
                 {listData.length !== 0 && listData.map((data) => <div style={{position:'relative'}}> <Bookmark/> <RecipeReviewCard key={data.content_no} list={data}/> </div>)}
             </div>
             <Button className="moreButton"> 더보기 </Button>
