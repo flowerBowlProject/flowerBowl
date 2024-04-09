@@ -1,0 +1,143 @@
+/* 버튼들 */
+.all {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 2em;
+}
+
+/* 버튼들 */
+
+.buttons {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  margin-bottom: 0.1em;
+  margin-left: -35em;
+}
+
+.buttons .inputbutton {
+  height: 2.5em;
+}
+
+.buttons .outputbutton {
+  margin-left: 2em;
+  height: 2.5em;
+}
+
+.buttons .outputbutton:hover {
+  background-color: var(--orange--color);
+  color: white;
+}
+
+/* 구분선 */
+.division-line-br {
+  border-top: 2px solid var(--brown--color);
+  margin-top: 1em;
+  width: 60%;
+}
+
+.division-line-or {
+  border-top: 2px solid var(--orange--color);
+  margin: 1em 0;
+  width: 35%;
+  margin-left: 30em;
+}
+
+.division-line {
+  border-top: 2px solid var(--brown--color);
+  margin-top: 1em;
+  position: relative;
+}
+
+.teachingclass {
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  cursor: pointer;
+}
+
+.text-title,
+.text-content,
+.class-options {
+  text-align: center;
+  color: var(--brown--color);
+}
+
+.text-title {
+  font-weight: bold;
+  font-size: 1.2em;
+  justify-content: center;
+  align-items: center;
+  color: var(--brown--color);
+}
+
+.text-content {
+  color: var(--gray--color);
+}
+
+/* 평점 기능 - Adjust the Rating component if necessary */
+.rating {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+/* Adjust the textarea input size and alignment */
+.styled-input {
+  display: flex;
+  width: 90%; /* Responsive width */
+  margin: 20px auto;
+  justify-content: center;
+  border-radius: 5px;
+  resize: none;
+  height: 15em;
+  margin-top: 3em; /* 평점 아래쪽 여백 */
+  border: 1px solid #cccccc;
+  font-size: 15px;
+  background-color: var(--orange--color);
+  font-family: "GowunBatang-Regular";
+  color: white;
+}
+
+.styled-input::placeholder {
+  color: white;
+  text-align: center;
+  font-size: 1.5em;
+  font-family: "GowunBatang-Regular";
+  padding-top: 3em;
+}
+
+.input-content {
+  justify-content: center;
+  margin-top: 1em;
+  width: 40%;
+}
+
+/* 하단버튼 */
+
+.bottom-buttons .inputbutton {
+  margin-top: 1.5em;
+}
+
+.bottom-buttons .outputbutton {
+  margin-left: 1em;
+}
+
+/* 모달창 */
+.class-list-modal {
+  background-color: #fefefe;
+  padding: 20px;
+  margin-top: 20px;
+  border-radius: 5px;
+  width: 30%;
+  margin-left: auto;
+  margin-right: auto;
+  color: var(--brown--color);
+}
+
+.class-option {
+  padding: 10px;
+  cursor: pointer;
+}

@@ -1,0 +1,119 @@
+.body {
+  display: grid;
+  grid-template-columns: 1fr 2fr 3fr 3fr;
+  grid-template-rows: 2fr 5fr 1fr 2fr;
+  grid-template-areas:
+    "header header header header"
+    "sidebar profile id pw"
+    "sidebar change change withdraw"
+    "footer footer footer footer";
+}
+
+.sidebar {
+  grid-area: sidebar;
+}
+
+.profile {
+  grid-area: profile;
+  display: flex;
+  padding: 0.5em;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.id {
+  grid-area: id;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  color: var(--brown--color);
+}
+
+.id-input,
+.phone,
+.password,
+.changepassword,
+.checkpassword {
+  margin-top: 1em;
+}
+/* ... keep your other styles */
+.pw {
+  grid-area: pw;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  color: var(--brown--color);
+  margin-left: -5em;
+}
+
+.id .input,
+.pw .input {
+  margin-bottom: 2em;
+  margin-top: 0.3em;
+  width: 22em;
+  height: 3em;
+}
+
+.profile {
+  margin-left: -5em;
+  margin-right: 2em;
+}
+
+.changephoto {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.profile .userprofile {
+  margin-bottom: 6em;
+}
+
+.ProfileImage {
+  margin-bottom: 1.3em;
+  justify-content: center;
+}
+
+.profile .inputbutton {
+  margin-bottom: 1em;
+  align-items: center;
+  justify-content: center;
+}
+
+.id .inputbutton {
+  margin-bottom: 2em;
+}
+
+.nickname-button {
+  display: flex;
+  align-items: center;
+}
+
+.nickname {
+  margin-right: 0.3em;
+}
+
+.duplicate-check {
+  align-items: center;
+}
+
+.duplicate,
+.email {
+  margin-left: 3em;
+}
+
+.change {
+  grid-area: change;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-top: 1em;
+  margin-left: 20em;
+}
+
+.withdrawl {
+  grid-area: withdraw;
+  margin-top: 5em;
+}

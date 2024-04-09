@@ -11,8 +11,8 @@ const App =()=> {
     <Header/>
     <MainHomepage/>
     <Footer/> 
-   
     </>
   );
-}
+};
+
 export default App;
