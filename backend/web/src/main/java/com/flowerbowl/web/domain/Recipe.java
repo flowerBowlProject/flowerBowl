@@ -88,4 +88,8 @@ public class Recipe {
         this.recipeSname = recipeSname;
     }
 
+    public void updateView(Long recipeViews) {
+        this.recipeViews = recipeViews;
+    }
+
 }

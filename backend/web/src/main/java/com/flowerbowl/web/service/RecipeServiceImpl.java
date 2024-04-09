@@ -49,7 +49,7 @@ public class RecipeServiceImpl implements RecipeService {
                     request.getRecipeContent(),
                     request.getRecipeCategory(),
                     "홍길동",
-                    1L,
+                    0L,
                     user
             );
 
@@ -207,10 +207,15 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
+    @Transactional
     public ResponseEntity<? extends ResponseDto> getRecipeGuest(Long recipe_no) throws Exception {
         try {
             Recipe recipe = recipeRepository.findByRecipeNo(recipe_no);
             RecipeFile recipeFile = recipeFileRepository.findByRecipe_RecipeNo(recipe_no);
+
+            // 조회 수 증가
+            recipe.updateView(recipe.getRecipeViews() + 1);
+            recipeRepository.save(recipe);
 
             GetRecipeDto newDto = GetRecipeDto.builder()
                     .recipeNo(recipe.getRecipeNo())
@@ -239,6 +244,7 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
+    @Transactional
     public ResponseEntity<? extends ResponseDto> getRecipe(Long recipe_no) throws Exception {
         // 아직 token으로부터 사용자 정보를 얻어오는 부분이 없음 user_no을 받아와야 함
         try {
@@ -246,6 +252,10 @@ public class RecipeServiceImpl implements RecipeService {
 
             Recipe recipe = recipeRepository.findByRecipeNo(recipe_no);
             RecipeFile recipeFile = recipeFileRepository.findByRecipe_RecipeNo(recipe_no);
+
+            // 조회 수 증가
+            recipe.updateView(recipe.getRecipeViews() + 1);
+            recipeRepository.save(recipe);
 
             Long recipeNo = recipe.getRecipeNo();
 
