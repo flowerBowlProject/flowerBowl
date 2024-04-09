@@ -11,7 +11,7 @@
 }
 
 /* 사진 선택 전 */
-.recipe-thumbnail{
+.register-thumbnail{
     border: 2px solid #CBA285;
     border-radius: 10%;
     width: 15vw;
@@ -42,12 +42,12 @@ input[type="file"]{
     margin: 0 5%;
     border : none;
     border-bottom: 2px solid #CBA285;
+    text-align: center;
 }
 
 input{
     outline: none;
 }
-
 
 
 /* 토스트 에디터 들어갈 박스 */
