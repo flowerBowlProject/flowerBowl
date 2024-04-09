@@ -2,8 +2,8 @@ import React from 'react'
 import {AppBar,Toolbar,Typography,Container ,ButtonGroup,Grid,Link} from '@mui/material';
 import './Header.css';
 import Button_logo_style from './Button_logo_style';
-import Button_contain_style  from './Button_contain_style';
-import Button_outlined_style from './Button_outlined_style';
+import Button_contain_style  from '../Component/Button_contain_style';
+import Button_outlined_style from '../Component/Button_outlined_style';
 import Input_search from './Input_search';
 import { styled } from '@mui/material/styles';
 import { useState } from 'react';

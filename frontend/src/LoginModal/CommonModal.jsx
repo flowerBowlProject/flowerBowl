@@ -2,7 +2,7 @@ import React from 'react';
 import {Grid,Typography,Modal,Box,Link} from '@mui/material'
 import Input_member_style from './Input_member_style';
 import Input_member from './Input_member';
-import Button_contain_style from '../MainPage/Button_contain_style';
+import Button_contain_style from '../Component/Button_contain_style';
 import { useState } from 'react';
 import './CommonModal.css'
 const CommonModal=({open,name_1,name_2,helpertext_1,helpertext_2,but_name,text_1,text_2,text_3,api_login,type_pass,open_1,open_2,open_3})=>{
