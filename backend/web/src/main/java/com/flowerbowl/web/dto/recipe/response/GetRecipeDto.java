@@ -1,18 +1,26 @@
 package com.flowerbowl.web.dto.recipe.response;
 
+import com.flowerbowl.web.domain.Category;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Getter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class GetAllRecipesDto {
+public class GetRecipeDto {
 
     private Long recipeNo;
 
+    private String recipeOname;
+
     private String recipeSname;
+
+    private List<String> recipeFileOname;
+
+    private List<String> recipeFileSname;
 
     private String recipeTitle;
 
@@ -20,11 +28,11 @@ public class GetAllRecipesDto {
 
     private LocalDate recipeDate;
 
-    // 게시글 즐겨찾기 수
-    private Long recipeLikeCount;
+    private List<String> recipeStuff;
 
-    // 게시글 댓글 수
-    private Long recipeCommentCount;
+    private Category recipeCategory;
+
+    private String recipeContent;
 
     // 사용자 즐겨찾기 여부
     private Boolean recipeLikeStatus;
