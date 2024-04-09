@@ -51,7 +51,8 @@
     min-height: 8vw;
     align-items: center;
     display: grid;
-    grid-template-columns: 1fr 7.5fr 1.5fr;
+    grid-template-columns: 1fr 7.3fr 1.7fr;
+    width: 90%;
 }
 
 .commentParent-thumbnail:nth-child(1){
@@ -117,6 +118,7 @@
     color : #636363;
     cursor: pointer;
     border-bottom: 0.5px solid #636363;
+    font-size: 0.8rem;
 }
 
 .commentButton{
@@ -132,8 +134,7 @@
     display: grid;
     grid-template-columns:  0.2fr 1fr 6.7fr 1.7fr;
     width: 90%;
-    float: right;
-    margin-bottom: 1vw;
+    margin: 0 auto 1vw auto;
 }
 
 .commentChild-thumbnail:nth-child(2){
@@ -147,4 +148,9 @@
 .commentButtonChild-Box:nth-child(4){
     position: relative;
     margin-top: auto;
+}
+
+.comment-content::placeholder{
+    color : white;
+    align-items: center;
 }
