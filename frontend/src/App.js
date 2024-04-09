@@ -1,15 +1,18 @@
+import React from 'react'
 import './App.css';
-// import Header from './MainPage/Header';
-// import Footer from './MainPage/Footer';
-import Inputbutton from './Profile/Inputbutton';
-
+import CommonModal from './LoginModal/CommonModal';
+import Header from './MainPage/Header';
+import Footer from './MainPage/Footer';
+import MainHomepage from './MainPage/MainHomepage';
+import {TextField} from '@mui/material'
 const App =()=> {
-  return (
-    <div>
-      {/* <Header/>
-      <Footer/> */}
-      <Inputbutton/>
-    </div>
+  return (  
+    <>
+    <Header/>
+    <MainHomepage/>
+    <Footer/> 
+   
+    </>
   );
 }
 export default App;
