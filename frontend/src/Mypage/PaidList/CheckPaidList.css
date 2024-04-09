@@ -1,9 +1,4 @@
-body {
-  padding-top: 100px; /* Adjust this value based on the height of your header */
-  padding-bottom: 100px; /* Adjust this value based on the height of your footer */
-  padding-left: 100px;
-  justify-content: center; /* Adjust this value based on the width of your sidebar */
-}
+
 
 .buttons .inputbutton {
   width: 8%;
