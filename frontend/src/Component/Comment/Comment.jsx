@@ -13,6 +13,7 @@ const Comment = ({ props }) => {
         comment_date: "2024-04-05", comment_content: "댓글 내용1", parent_no: 1, comment_thumbnail:""},
         {comment_no:1, comment_writer: "작성자2",
         comment_date: "2024-04-05", comment_content: "댓글 내용2", parent_no: 0, comment_thumbnail:""}]);
+
     return (
         <>
             <div className="comment-Box">
