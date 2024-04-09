@@ -7,7 +7,7 @@ import store from './Example/store'
 import { Provider } from 'react-redux'
 import { theme } from "./theme";
 import { ThemeProvider } from '@mui/material/styles';
-
+import {BrowserRouter} from 'react-router-dom'
 import {PersistGate} from 'redux-persist/integration/react';
 import {persistStore} from 'redux-persist';
 
@@ -15,11 +15,13 @@ export const persistor = persistStore(store);
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <Provider store={store}>
+    <BrowserRouter>
     <PersistGate loading={null} persistor={persistor}>
     <ThemeProvider theme={theme}>
         <App />
       </ThemeProvider>
     </PersistGate>
+    </BrowserRouter>
   </Provider>
 );
 

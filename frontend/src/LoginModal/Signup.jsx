@@ -1,6 +1,6 @@
 import React from 'react'
 import {Grid,Typography,Modal,Box,TextField} from '@mui/material'
-import Button_contain_style from '../MainPage/Button_contain_style';
+import Button_contain_style from '../Component/Button_contain_style';
 import Input_search_style from '../MainPage/Input_search_style';
 const Form_Signup=({title,but_text,place_text,helper_text,but_exis})=>{
     return(
