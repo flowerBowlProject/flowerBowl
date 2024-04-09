@@ -20,14 +20,14 @@ public class RecipeController {
         return recipeService.createRecipe(request);
     }
 
-    @PutMapping("/{no}")
-    private ResponseEntity<? extends ResponseDto> updateRecipe(@RequestBody UpRecipeReqDto request, @PathVariable Long no) throws Exception {
-        return recipeService.updateRecipe(request, no);
+    @PutMapping("/{recipe_no}")
+    private ResponseEntity<? extends ResponseDto> updateRecipe(@RequestBody UpRecipeReqDto request, @PathVariable Long recipe_no) throws Exception {
+        return recipeService.updateRecipe(request, recipe_no);
     }
 
-    @DeleteMapping("/{no}")
-    private ResponseEntity<? extends ResponseDto> deleteRecipe(@PathVariable Long no) throws Exception {
-        return recipeService.deleteRecipe(no);
+    @DeleteMapping("/{recipe_no}")
+    private ResponseEntity<? extends ResponseDto> deleteRecipe(@PathVariable Long recipe_no) throws Exception {
+        return recipeService.deleteRecipe(recipe_no);
     }
 
     @GetMapping("/guest")
@@ -38,6 +38,16 @@ public class RecipeController {
     @GetMapping("")
     private ResponseEntity<? extends ResponseDto> getAllRecipes() throws Exception {
         return recipeService.getAllRecipes();
+    }
+
+    @GetMapping("/guest/{recipe_no}")
+    private ResponseEntity<? extends ResponseDto> getRecipeGuest(@PathVariable Long recipe_no) throws Exception {
+        return recipeService.getRecipeGuest(recipe_no);
+    }
+
+    @GetMapping("/{recipe_no}")
+    private ResponseEntity<? extends ResponseDto> getRecipe(@PathVariable Long recipe_no) throws Exception {
+        return recipeService.getRecipe(recipe_no);
     }
 
 }
