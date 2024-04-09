@@ -1,14 +1,13 @@
-import './App.css';
-import Header from './MainPage/Header';
-import Footer from './MainPage/Footer';
-import Profile from './Profile/Profile';
+import "./App.css";
+import RegisterBanner from "./Mypage/Admin/RegisterBanner";
+// import RegisterBanner from "./Mypage/Admin/RegisterBanner";
 
-const App =()=> {
+const App = () => {
   return (
-    <div>
-      <Profile/>
-    
-    </div>
+    <>
+      <RegisterBanner />;
+    </>
   );
-}
+};
+
 export default App;
