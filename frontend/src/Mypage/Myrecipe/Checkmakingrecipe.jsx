@@ -1,6 +1,7 @@
 import { React, useState, useEffect } from "react";
 import Inputbutton from "../../Component/Input/Inputbutton";
 import "./Checkmakingrecipe.css";
+import MyPageLayout from "../MyPageLayout";
 
 const Checkmakingrecipe = () => {
   // 정렬기능
@@ -81,7 +82,7 @@ const Checkmakingrecipe = () => {
   };
 
   return (
-    <>
+    <MyPageLayout>
       {/* 내용 */}
       <section className="table-content">
         <table className="custom-table">
@@ -159,7 +160,7 @@ const Checkmakingrecipe = () => {
       <section className="bottom-add">
         <Inputbutton text="더보기" i={true} w="large" />
       </section>
-    </>
+    </MyPageLayout>
   );
 };
 

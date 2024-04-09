@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Inputbutton from "../../Component/Input/Inputbutton";
 import Rating from "@mui/material/Rating";
 import "./RegisterReview.css";
+import MyPageLayout from "../MyPageLayout";
 
 const RegisterReview = () => {
   const [value, setValue] = useState(0);
@@ -26,81 +27,83 @@ const RegisterReview = () => {
   };
 
   return (
-    <div className="all">
-      {/* 버튼들 */}
-      <section className="buttons">
-        <span className="write-review">
-          <Inputbutton text="리뷰 작성" i={true} w="medium" />
-        </span>
-        <Inputbutton text="리뷰 조회" i={false} w="medium" />
-        <Inputbutton text="결제 내역" i={false} w="medium" />
-      </section>
-      <div className="division-line-br"></div>
+    <MyPageLayout>
+      <div className="all">
+        {/* 버튼들 */}
+        <section className="buttons">
+          <span className="write-review">
+            <Inputbutton text="리뷰 작성" i={true} w="medium" />
+          </span>
+          <Inputbutton text="리뷰 조회" i={false} w="medium" />
+          <Inputbutton text="결제 내역" i={false} w="medium" />
+        </section>
+        <div className="division-line-br"></div>
 
-      {/* 클래스 목록 */}
-      <section className="teachingclass">
-        <div className="division-line-or"></div>
-        <div className="text-title" onClick={() => setExpanded(!expanded)}>
-          {selectedTitle || "클래스 / 레시피 선택"}&emsp;
-          <span>{expanded ? "▲" : "▼"}</span>
-        </div>
-        {/* 선택 가능한 클래스 목록 */}
-        {expanded && (
-          <div className="class-list-modal">
-            {classList.map((cls, index) => (
-              <div
-                key={index}
-                className="class-option"
-                onClick={() => handleClassSelect(cls.title)}
-              >
-                {cls.title}
-              </div>
-            ))}
+        {/* 클래스 목록 */}
+        <section className="teachingclass">
+          <div className="division-line-or"></div>
+          <div className="text-title" onClick={() => setExpanded(!expanded)}>
+            {selectedTitle || "클래스 / 레시피 선택"}&emsp;
+            <span>{expanded ? "▲" : "▼"}</span>
           </div>
-        )}
+          {/* 선택 가능한 클래스 목록 */}
+          {expanded && (
+            <div className="class-list-modal">
+              {classList.map((cls, index) => (
+                <div
+                  key={index}
+                  className="class-option"
+                  onClick={() => handleClassSelect(cls.title)}
+                >
+                  {cls.title}
+                </div>
+              ))}
+            </div>
+          )}
 
-        <div className="division-line-or"></div>
-        <div className="text-content">
-          클래스 / 레시피는 어떠셨나요?
-          <br />
-          솔직한 리뷰를 남겨주세요.
+          <div className="division-line-or"></div>
+          <div className="text-content">
+            클래스 / 레시피는 어떠셨나요?
+            <br />
+            솔직한 리뷰를 남겨주세요.
+          </div>
+        </section>
+
+        {/* 평점기능 */}
+        <Rating
+          name="size-large"
+          value={value}
+          size="large"
+          onChange={(event, newValue) => {
+            setValue(newValue);
+          }}
+          sx={{
+            fontSize: "6em",
+            color: "main.or",
+            display: "flex",
+            justifyContent: "center",
+            "& .MuiRating-iconEmpty": {
+              color: "main.gr",
+            },
+          }}
+        />
+        <section />
+        <section className="input-content">
+          <div className="division-line"></div>
+          {/* 인풋창 */}
+          <textarea
+            className="styled-input"
+            placeholder="피드백을 남겨주세요."
+          ></textarea>
+        </section>
+        {/* 하단부 */}
+        <div className="division-line-br"></div>
+        <div className="bottom-buttons">
+          <Inputbutton text="등록" i={true} w="large" />
+          <Inputbutton text="취소" i={false} w="large" />
         </div>
-      </section>
-
-      {/* 평점기능 */}
-      <Rating
-        name="size-large"
-        value={value}
-        size="large"
-        onChange={(event, newValue) => {
-          setValue(newValue);
-        }}
-        sx={{
-          fontSize: "6em",
-          color: "main.or",
-          display: "flex",
-          justifyContent: "center",
-          "& .MuiRating-iconEmpty": {
-            color: "main.gr",
-          },
-        }}
-      />
-      <section />
-      <section className="input-content">
-        <div className="division-line"></div>
-        {/* 인풋창 */}
-        <textarea
-          className="styled-input"
-          placeholder="피드백을 남겨주세요."
-        ></textarea>
-      </section>
-      {/* 하단부 */}
-      <div className="division-line-br"></div>
-      <div className="bottom-buttons">
-        <Inputbutton text="등록" i={true} w="large" />
-        <Inputbutton text="취소" i={false} w="large" />
       </div>
-    </div>
+    </MyPageLayout>
   );
 };
 

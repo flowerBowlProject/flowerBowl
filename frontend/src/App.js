@@ -1,14 +1,13 @@
 import "./App.css";
-
-import RegisterReview from "./Mypage/PaidList/RegisterReview";
-import Sidebar from "./Mypage/Sidebar";
+import RegisterBanner from "./Mypage/Admin/RegisterBanner";
+// import RegisterBanner from "./Mypage/Admin/RegisterBanner";
 
 const App = () => {
   return (
-    <div>
-      {/* <Sidebar /> */}
-      <RegisterReview />
-    </div>
+    <>
+      <RegisterBanner />;
+    </>
   );
 };
+
 export default App;

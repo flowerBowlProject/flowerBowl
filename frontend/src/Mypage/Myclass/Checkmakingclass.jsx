@@ -1,6 +1,8 @@
 import { React, useState, useEffect } from "react";
 import Inputbutton from "../../Component/Input/Inputbutton";
 import "./Checkmakingclass.css";
+import MyPageLayout from "../MyPageLayout";
+
 
 const Checkmakingclass = () => {
   // 정렬기능
@@ -81,7 +83,7 @@ const Checkmakingclass = () => {
   };
 
   return (
-    <>
+    <MyPageLayout>
       {/* 버튼들 */}
       <section className="buttons">
         <Inputbutton text="수강클래스 조회" i={false} w="medium" />
@@ -165,7 +167,7 @@ const Checkmakingclass = () => {
       <section className="bottom-add">
         <Inputbutton text="더보기" i={true} w="large" />
       </section>
-    </>
+      </MyPageLayout>
   );
 };
 

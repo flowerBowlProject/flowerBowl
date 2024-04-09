@@ -1,6 +1,7 @@
 import { React, useState, useEffect } from "react";
 import Inputbutton from "../../Component/Input/Inputbutton";
 import "./CheckReview.css";
+import MyPageLayout from "../MyPageLayout";
 
 const CheckReview = () => {
   // 정렬기능
@@ -69,7 +70,7 @@ const CheckReview = () => {
   };
 
   return (
-    <>
+    <MyPageLayout>
       {/* 버튼들 */}
       <section className="buttons">
         <span className="write-review">
@@ -161,7 +162,7 @@ const CheckReview = () => {
       <section className="bottom-add">
         <Inputbutton text="더보기" i={true} w="large" />
       </section>
-    </>
+    </MyPageLayout>
   );
 };
 
