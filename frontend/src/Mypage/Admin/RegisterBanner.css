@@ -1,4 +1,5 @@
 .division-line {
+  display: flex;
   border-top: 2px solid var(--brown--color);
   width: 50em;
   position: relative;

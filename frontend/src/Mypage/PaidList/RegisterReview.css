@@ -6,6 +6,8 @@
   margin-top: 2em;
 }
 
+/* 버튼들 */
+
 .buttons {
   display: flex;
   justify-content: center;
@@ -28,6 +30,7 @@
   color: white;
 }
 
+/* 구분선 */
 .division-line-br {
   border-top: 2px solid var(--brown--color);
   margin-top: 1em;
@@ -111,6 +114,8 @@
   margin-top: 1em;
   width: 40%;
 }
+
+/* 하단버튼 */
 
 .bottom-buttons .inputbutton {
   margin-top: 1.5em;

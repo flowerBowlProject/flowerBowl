@@ -1,9 +1,10 @@
 import { React, useState, useEffect } from "react";
 import Inputbutton from "../../Component/Input/Inputbutton";
 import "./CheckClassList.css";
+import MyPageLayout from "../MyPageLayout";
 
 const CheckClassList = () => {
-  // 정렬기능
+  // 정렬기능k
   const [sortDirection, setSortDirection] = useState("asc");
 
   // 받아올 테이블 데이터
@@ -21,7 +22,6 @@ const CheckClassList = () => {
       phone: `010-5995-7519`,
     },
   ]);
-
 
   //   날짜정렬
   const sortTableDataByDate = (direction = "asc") => {
@@ -46,8 +46,7 @@ const CheckClassList = () => {
   };
 
   return (
-    <>
-      
+    <MyPageLayout>
       {/* 내용 */}
       <section className="table-content">
         <table className="custom-table">
@@ -100,7 +99,7 @@ const CheckClassList = () => {
       <section className="bottom-add">
         <Inputbutton text="더보기" i={true} w="large" />
       </section>
-    </>
+    </MyPageLayout>
   );
 };
 

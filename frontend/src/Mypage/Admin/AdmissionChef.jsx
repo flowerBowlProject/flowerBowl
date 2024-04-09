@@ -1,6 +1,7 @@
 import { React, useState, useEffect } from "react";
 import Inputbutton from "../../Component/Input/Inputbutton";
 import "./AdmissionChef.css";
+import MyPageAdminLayout from "../MyPageAdminLayout";
 
 const AdmissionChef = () => {
   // 정렬기능
@@ -43,7 +44,7 @@ const AdmissionChef = () => {
   };
 
   return (
-    <>
+    <MyPageAdminLayout>
       {/* 내용 */}
       <section className="table-content">
         <table className="custom-table">
@@ -107,7 +108,7 @@ const AdmissionChef = () => {
       <section className="bottom-add">
         <Inputbutton text="더보기" i={true} w="large" />
       </section>
-    </>
+    </MyPageAdminLayout>
   );
 };
 

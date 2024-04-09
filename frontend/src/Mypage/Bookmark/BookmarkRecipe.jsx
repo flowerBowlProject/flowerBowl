@@ -3,6 +3,8 @@ import CardComp from "../../Component/CardComp";
 import Bookmark from "../../Component/Bookmark";
 import Inputbutton from "../../Component/Input/Inputbutton";
 import "./BookmarkRecipe.css";
+import MyPageLayout from "../MyPageLayout";
+
 
 const BookmarkRecipe = () => {
   const sampleRecipeData = {
@@ -20,7 +22,7 @@ const BookmarkRecipe = () => {
   ));
 
   return (
-    <>
+    <MyPageLayout>
       <div className="bookmark-button">
         <Inputbutton text="레시피" i={true} w="medium" />
         <Inputbutton text="클래스" i={false} w="medium" />
@@ -38,7 +40,7 @@ const BookmarkRecipe = () => {
       <div className= "add">
       <Inputbutton text="더보기" i={true} w="medium" />
       </div>
-    </>
+      </MyPageLayout>
   );
 };
 

@@ -1,6 +1,7 @@
 import { React, useState, useEffect } from "react";
 import Inputbutton from "../../Component/Input/Inputbutton";
 import "./CheckPaidList.css";
+import MyPageLayout from "../MyPageLayout";
 
 const CheckPaidList = () => {
   // 정렬기능
@@ -78,7 +79,7 @@ const CheckPaidList = () => {
   };
 
   return (
-    <>
+    <MyPageLayout>
       {/* 버튼들 */}
       <section className="buttons">
         <span className="write-review">
@@ -151,7 +152,7 @@ const CheckPaidList = () => {
       <section className="bottom-add">
         <Inputbutton text="더보기" i={true} w="large" />
       </section>
-    </>
+    </MyPageLayout>
   );
 };
 
