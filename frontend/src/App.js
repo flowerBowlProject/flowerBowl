@@ -1,11 +1,16 @@
-import "./App.css";
-import RegisterBanner from "./Mypage/Admin/RegisterBanner";
-// import RegisterBanner from "./Mypage/Admin/RegisterBanner";
-
-const App = () => {
-  return (
+import React from 'react'
+import './App.css';
+import CommonModal from './LoginModal/CommonModal';
+import Header from './MainPage/Header';
+import Footer from './MainPage/Footer';
+import MainHomepage from './MainPage/MainHomepage';
+import {TextField} from '@mui/material'
+const App =()=> {
+  return (  
     <>
-      <RegisterBanner />;
+    <Header/>
+    <MainHomepage/>
+    <Footer/> 
     </>
   );
 };
