@@ -1,0 +1,30 @@
+.searchList-Box{
+    width: 80%;
+    margin: 5% auto;
+}
+
+.searchRecipe, .searchClass, .searchCommunity{
+}
+
+/* 레시피 검색 박스*/
+.searchList-title{
+    border-bottom: 2px solid #B9835C;
+    color: #F6C47B;
+    font-size:x-large;
+    padding-bottom: 0.5vw;
+    margin-bottom: 0.5vw;
+}
+
+.title-right{
+    float: right;
+    font-size:medium !important;
+    padding-top:1vw;
+}
+
+.searchList-body{
+    clear : both;
+    display: flex;
+    flex-wrap: wrap;
+    text-align: center;
+    margin-bottom: 5%;
+}
