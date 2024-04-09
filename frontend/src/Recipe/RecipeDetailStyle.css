@@ -1,0 +1,70 @@
+.recipeDetail-Box{
+    width: 80%;
+    margin: 5% auto;
+    border-top: 2px solid #B9835C;
+    border-bottom: 2px solid #B9835C;
+    min-height: 50vw;
+    
+}
+
+/* 레시피 썸네일 */
+.recipe-Img{
+    border-radius: 30px;
+    border: 2px solid #F6C47B;
+    width: 70%;
+    height: 350px;
+    margin: 2% auto;
+}
+
+/* 레시피 제목 + 작성자 + 작성일 */
+.recipe-element{
+    width: 68%;
+    margin: 2% auto;
+    overflow: hidden;
+
+}
+
+.recipe-title{
+    font-size: 1.5rem;
+    float: left;
+}
+
+.recipe-writerDate{
+    float: right;
+    padding-top: 1%;
+    color : #B0A695;
+}
+
+/* 재료 */
+.recipe-stuff{
+    clear : both;
+    width: 60%;
+    margin: 0 auto;
+    border-bottom: 1px solid #F6C47B;
+}
+/* 커뮤니티 내용 */
+.recipe-body{
+    margin: 40px auto;
+    font-size: 1.2rem;
+    padding: 0 5%;
+    min-height: 30vw;
+    width: 70%;
+}
+
+/* 북마크 */
+.recipe-bookmark{
+    justify-content: center;
+    display: flex;    
+    align-items: center;
+    width: 12vw;
+    border-radius: 10%;
+    margin: 0 auto;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* 수정+삭제 버튼 */
+.recipe-change{
+    display: flex;
+    justify-content: right;
+    margin: 2%0;
+}
