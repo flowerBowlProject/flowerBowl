@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import './RegisterClassStyle.css';
 import { Button, TextField } from '@mui/material';
-import Inputbutton from '../Component/Input/Inputbutton';
 import { address_key } from '../config';
 
 const AddressSearch = (props) => {
@@ -19,7 +18,6 @@ const AddressSearch = (props) => {
   }
 
   const searchAddress = () => {
-    console.log(address.lesson_address);
     axios.get('https://dapi.kakao.com/v2/local/search/address.json', {
       params: {
         query: address.lesson_address,
@@ -50,7 +48,7 @@ const AddressSearch = (props) => {
   }, []);
 
   return (
-    <div>
+    <div style={{display:'flex', justifyContent: 'center'}}>
       <TextField className="main_address" id="main_address" type="text" readOnly sx={{marginRight:'0.5vw'}} placeholder='클릭해 주소를 입력하세요.'
         onChange={(newValue) => setAddress((address) => ({ ...address, lesson_address: newValue }))}/>
       <Button className="address_register" variant="outlined" onClick={searchAddress}> 주소 등록 </Button>
