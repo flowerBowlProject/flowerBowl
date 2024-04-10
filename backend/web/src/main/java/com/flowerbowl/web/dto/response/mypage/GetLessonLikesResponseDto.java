@@ -2,7 +2,6 @@ package com.flowerbowl.web.dto.response.mypage;
 
 import com.flowerbowl.web.common.ResponseCode;
 import com.flowerbowl.web.common.ResponseMessage;
-import com.flowerbowl.web.dto.object.LikeLessonList;
 import com.flowerbowl.web.dto.object.LikeLessons;
 import com.flowerbowl.web.dto.response.ResponseDto;
 import lombok.Getter;
@@ -13,17 +12,17 @@ import java.util.List;
 
 
 @Getter
-public class GetLessonLikesListResponseDto extends ResponseDto {
+public class GetLessonLikesResponseDto extends ResponseDto {
 
     private List<LikeLessons> likeLessonList;
 
-    public GetLessonLikesListResponseDto(List<LikeLessons> likeLessonList) {
+    public GetLessonLikesResponseDto(List<LikeLessons> likeLessonList) {
         super();
         this.likeLessonList = likeLessonList;
     }
 
-    public static ResponseEntity<GetLessonLikesListResponseDto> success(List<LikeLessons> likeLessonList) {
-        GetLessonLikesListResponseDto body = new GetLessonLikesListResponseDto(likeLessonList);
+    public static ResponseEntity<GetLessonLikesResponseDto> success(List<LikeLessons> likeLessonList) {
+        GetLessonLikesResponseDto body = new GetLessonLikesResponseDto(likeLessonList);
         return ResponseEntity.status(HttpStatus.OK).body(body);
     }
 
