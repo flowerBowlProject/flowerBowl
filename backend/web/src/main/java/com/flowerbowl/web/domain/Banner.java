@@ -1,10 +1,13 @@
 package com.flowerbowl.web.domain;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.Setter;
 
 @Entity
 @Getter
+@Setter
 public class Banner {
 
     @Id
@@ -22,6 +25,6 @@ public class Banner {
 
 
     @Column(name = "banner_file_oname")
-    private String baanerFileOname;
+    private String bannerFileOname;
 
 }

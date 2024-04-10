@@ -1,11 +1,14 @@
 package com.flowerbowl.web.domain;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
 
 @Entity
 @Getter
+@Setter
 public class ReviewEnable {
 
     @Id

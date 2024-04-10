@@ -2,7 +2,9 @@ package com.flowerbowl.web.domain;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -11,6 +13,7 @@ import java.util.List;
 
 @Entity
 @Getter
+@Setter
 public class Lesson {
 
     @Id
@@ -37,9 +40,11 @@ public class Lesson {
     private String lessonAddr;
 
     @Column(name = "lesson_start")
+//    @DateTimeFormat(pattern = "yyyy-mm-dd'T'HH:mm")
     private LocalDateTime lessonStart;
 
     @Column(name = "lesson_end")
+//    @DateTimeFormat(pattern = "yyyy-mm-dd'T'HH:mm:ss")
     private LocalDateTime lessonEnd;
 
     @Column(name = "lesson_category")
