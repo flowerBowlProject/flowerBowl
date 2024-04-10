@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import './RegisterCommunityStyle.css';
 import ToastEditor from "../Component/ToastEditor";
 import { Editor } from "@toast-ui/react-editor";
-
+import Inputbutton from '../Component/Input/Inputbutton';
 const RegisterCommunity = () =>{
     const [registerData, setRegisterData] = useState({community_title: '', community_content:''});
 
