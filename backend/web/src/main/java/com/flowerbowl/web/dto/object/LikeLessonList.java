@@ -12,10 +12,10 @@ import lombok.Setter;
 @AllArgsConstructor
 @Setter
 public class LikeLessonList {
+
     private Long lesson_no;
     private String lesson_title;
     private String lesson_sname;
     private String lesson_oname;
-
 
 }
