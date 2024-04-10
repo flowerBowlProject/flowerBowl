@@ -1,5 +1,6 @@
 package com.flowerbowl.web.dto.recipe.response;
 
+import com.flowerbowl.web.dto.recipe.GetAllRecipesDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 

@@ -1,4 +1,4 @@
-package com.flowerbowl.web.dto.recipe.response;
+package com.flowerbowl.web.dto.recipe;
 
 import com.flowerbowl.web.domain.Category;
 import lombok.*;
