@@ -1,8 +1,8 @@
 import React from 'react'
 import './Footer.css';
 import {Grid,Typography,Box} from '@mui/material';
-import Button_contain_style  from './Button_contain_style';
-import Button_outlined_style from './Button_outlined_style';
+import Button_contain_style  from '../Component/Button_contain_style';
+import Button_outlined_style from '../Component/Button_outlined_style';
 import { useState } from 'react';
 const Text=({mainTitle,content_1,content_2})=>{
     return(
