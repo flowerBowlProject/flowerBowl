@@ -1,13 +1,8 @@
 package com.flowerbowl.web.dto.recipe.response;
 
-import com.flowerbowl.web.domain.Category;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
+import com.flowerbowl.web.dto.recipe.GetRecipeDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.time.LocalDate;
-import java.util.List;
 
 @Getter
 @NoArgsConstructor
