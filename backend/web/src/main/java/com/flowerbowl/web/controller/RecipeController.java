@@ -50,4 +50,9 @@ public class RecipeController {
         return recipeService.getRecipe(recipe_no);
     }
 
+    @PostMapping("/like/{recipe_no}")
+    private ResponseEntity<? extends ResponseDto> likeRecipe(@PathVariable Long recipe_no) throws Exception {
+        return recipeService.updateRecipeLike(recipe_no);
+    }
+
 }
