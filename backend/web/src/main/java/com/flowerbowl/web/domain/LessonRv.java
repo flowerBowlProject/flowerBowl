@@ -1,12 +1,17 @@
 package com.flowerbowl.web.domain;
 
+import com.flowerbowl.web.dto.request.review.InsertReviewRequestDto;
+import com.flowerbowl.web.dto.request.review.PatchReviewRequestDto;
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.time.LocalDate;
 
 @Entity
 @Getter
+@NoArgsConstructor
 public class LessonRv {
 
     @Id
@@ -30,6 +35,15 @@ public class LessonRv {
     @ManyToOne // LessonRv(many) to Lesson(one)
     @JoinColumn(name = "lesson_no") //
     private Lesson lesson;
+
+
+    public LessonRv(InsertReviewRequestDto dto, User user, Lesson lesson) {
+        this.lessonRvContent = dto.getReview_content();
+        this.lessonRvScore = dto.getReview_score();
+        this.lessonRvDate = LocalDate.now();
+        this.user = user;
+        this.lesson = lesson;
+    }
 
 }
 

@@ -10,4 +10,6 @@ import java.util.List;
 public interface LessonRepository extends JpaRepository<Lesson, Long> {
 
     List<Lesson> findAllByLessonNoIn(List<Long> lessonNos);
+
+    Lesson findByLessonNo(Long lessonNo);
 }
