@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class GetRecipeSuResDto extends ResponseDto {
+public class GetRecipeSuResDto extends RecipeResponseDto {
 
     private GetRecipeDto data;
 

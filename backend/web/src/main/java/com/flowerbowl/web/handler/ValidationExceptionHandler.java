@@ -2,7 +2,7 @@ package com.flowerbowl.web.handler;
 
 import com.flowerbowl.web.common.ResponseCode;
 import com.flowerbowl.web.common.ResponseMessage;
-import com.flowerbowl.web.dto.recipe.response.ResponseDto;
+import com.flowerbowl.web.dto.ResponseDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
