@@ -8,7 +8,7 @@ import java.util.List;
 
 @Getter
 @NoArgsConstructor
-public class GetAllRecipesSuResDto extends ResponseDto {
+public class GetAllRecipesSuResDto extends RecipeResponseDto {
 
     private List<GetAllRecipesDto> posts;
 
