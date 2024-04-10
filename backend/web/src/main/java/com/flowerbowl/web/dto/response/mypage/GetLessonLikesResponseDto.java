@@ -3,6 +3,7 @@ package com.flowerbowl.web.dto.response.mypage;
 import com.flowerbowl.web.common.ResponseCode;
 import com.flowerbowl.web.common.ResponseMessage;
 import com.flowerbowl.web.dto.object.LikeLessonList;
+import com.flowerbowl.web.dto.object.LikeLessons;
 import com.flowerbowl.web.dto.response.ResponseDto;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
@@ -12,17 +13,17 @@ import java.util.List;
 
 
 @Getter
-public class GetLessonLikeListResponseDTO extends ResponseDto {
+public class GetLessonLikesListResponseDto extends ResponseDto {
 
-    private List<LikeLessonList> likeLessonList;
+    private List<LikeLessons> likeLessonList;
 
-    public GetLessonLikeListResponseDTO(List<LikeLessonList> likeLessonList) {
+    public GetLessonLikesListResponseDto(List<LikeLessons> likeLessonList) {
         super();
         this.likeLessonList = likeLessonList;
     }
 
-    public static ResponseEntity<GetLessonLikeListResponseDTO> success(List<LikeLessonList> likeLessonList) {
-        GetLessonLikeListResponseDTO body = new GetLessonLikeListResponseDTO(likeLessonList);
+    public static ResponseEntity<GetLessonLikesListResponseDto> success(List<LikeLessons> likeLessonList) {
+        GetLessonLikesListResponseDto body = new GetLessonLikesListResponseDto(likeLessonList);
         return ResponseEntity.status(HttpStatus.OK).body(body);
     }
 
