@@ -5,7 +5,7 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class UpRecipeLikeSuResDto extends ResponseDto {
+public class UpRecipeLikeSuResDto extends RecipeResponseDto {
 
     private Long recipeLikeNo;
 

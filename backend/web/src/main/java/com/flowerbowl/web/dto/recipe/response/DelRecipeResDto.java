@@ -5,7 +5,7 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class DelRecipeResDto extends ResponseDto {
+public class DelRecipeResDto extends RecipeResponseDto {
 
     public DelRecipeResDto(String code, String message) {
         super(code, message);
