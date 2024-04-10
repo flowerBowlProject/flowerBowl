@@ -3,11 +3,12 @@ package com.flowerbowl.web.service;
 import com.flowerbowl.web.common.ResponseCode;
 import com.flowerbowl.web.common.ResponseMessage;
 import com.flowerbowl.web.domain.*;
-import com.flowerbowl.web.dto.recipe.CreateRecipeDto;
-import com.flowerbowl.web.dto.recipe.CreateRecipeFileDto;
+import com.flowerbowl.web.dto.recipe.*;
 import com.flowerbowl.web.dto.recipe.request.CrRecipeReqDto;
 import com.flowerbowl.web.dto.recipe.request.UpRecipeReqDto;
 import com.flowerbowl.web.dto.recipe.response.*;
+import com.flowerbowl.web.handler.RecipeNotFoundException;
+import com.flowerbowl.web.handler.UserNotFoundException;
 import com.flowerbowl.web.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,6 +22,7 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -37,7 +39,7 @@ public class RecipeServiceImpl implements RecipeService {
     public ResponseEntity<? extends ResponseDto> createRecipe(CrRecipeReqDto request) throws Exception {
         // 아직 token으로부터 사용자 정보를 얻어오는 부분이 없음
         try {
-            User user = userRepository.findByUserNo(1L);
+            User user = userRepository.findByUserNo(2L).orElseThrow(UserNotFoundException::new);
 
             // request의 값으로 recipe 생성
             CreateRecipeDto createRecipeDto = new CreateRecipeDto(
@@ -76,7 +78,7 @@ public class RecipeServiceImpl implements RecipeService {
         // 해당 레시피의 작성자가 token으로부터 얻은 사용자와 일치하는지 검증하는 코드 필요
         try {
             // 레시피 번호로 레시피 찾기
-            Recipe recipe = recipeRepository.findByRecipeNo(recipe_no);
+            Recipe recipe = recipeRepository.findByRecipeNo(recipe_no).orElseThrow(RecipeNotFoundException::new);
             // 레시피 번호로 레시피 파일 찾기
             RecipeFile recipeFile = recipeFileRepository.findByRecipe_RecipeNo(recipe_no);
 
@@ -114,7 +116,8 @@ public class RecipeServiceImpl implements RecipeService {
     public ResponseEntity<? extends ResponseDto> deleteRecipe(Long recipe_no) throws Exception {
         // 해당 레시피의 작성자가 token으로부터 얻은 사용자와 일치하는지 검증하는 코드 필요
         try {
-            recipeRepository.deleteByRecipeNo(recipe_no);
+            Recipe recipe = recipeRepository.findByRecipeNo(recipe_no).orElseThrow(RecipeNotFoundException::new);
+            recipeRepository.delete(recipe);
 
             DelRecipeResDto responseBody = new DelRecipeResDto(ResponseCode.SUCCESS, ResponseMessage.SUCCESS);
             return ResponseEntity.status(HttpStatus.OK).body(responseBody);
@@ -210,7 +213,7 @@ public class RecipeServiceImpl implements RecipeService {
     @Transactional
     public ResponseEntity<? extends ResponseDto> getRecipeGuest(Long recipe_no) throws Exception {
         try {
-            Recipe recipe = recipeRepository.findByRecipeNo(recipe_no);
+            Recipe recipe = recipeRepository.findByRecipeNo(recipe_no).orElseThrow(RecipeNotFoundException::new);
             RecipeFile recipeFile = recipeFileRepository.findByRecipe_RecipeNo(recipe_no);
 
             // 조회 수 증가
@@ -250,7 +253,7 @@ public class RecipeServiceImpl implements RecipeService {
         try {
             Long userNo = 1L;
 
-            Recipe recipe = recipeRepository.findByRecipeNo(recipe_no);
+            Recipe recipe = recipeRepository.findByRecipeNo(recipe_no).orElseThrow(RecipeNotFoundException::new);
             RecipeFile recipeFile = recipeFileRepository.findByRecipe_RecipeNo(recipe_no);
 
             // 조회 수 증가
@@ -287,6 +290,46 @@ public class RecipeServiceImpl implements RecipeService {
             log.error("Exception [Err_Where]: {}", e.getStackTrace()[0]);
 
             GetRecipeFaResDto responseBody = new GetRecipeFaResDto(ResponseCode.INTERNAL_SERVER_ERROR, ResponseMessage.INTERNAL_SERVER_ERROR);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseBody);
+        }
+    }
+
+    @Override
+    public ResponseEntity<? extends ResponseDto> updateRecipeLike(Long recipe_no) throws Exception {
+        // 아직 token으로부터 사용자 정보를 얻어오는 부분이 없음 user_no을 받아와야 함
+        try {
+            Long userNo = 1L;
+
+            Specification<RecipeLike> spec = (root, query, criteriaBuilder) -> null;
+            if (Objects.nonNull(recipe_no) && Objects.nonNull(userNo)) {
+                spec = RecipeLikeSpecification.equalRecipeNo(recipe_no).and(RecipeLikeSpecification.equalUserNo(userNo));
+            }
+
+            // recipe_like 테이블에 데이터가 있다면 그 데이터를 없다면 Optional.empty를 반환
+            Optional<RecipeLike> recipeLike = recipeLikeRepository.findOne(spec);
+
+            if (recipeLike.isPresent()) {
+                // 이미 즐겨찾기가 되어있으므로 즐겨찾기 해제(삭제)
+                recipeLikeRepository.delete(recipeLike.get());
+
+                DelRecipeLikeResDto responseBody = new DelRecipeLikeResDto(ResponseCode.SUCCESS, ResponseMessage.SUCCESS);
+                return ResponseEntity.status(HttpStatus.OK).body(responseBody);
+            }
+            // 즐겨찾기가 되어있지 않으므로 즐겨찾기 등록(생성)
+            User user = userRepository.findByUserNo(userNo).orElseThrow(UserNotFoundException::new);
+            Recipe recipe = recipeRepository.findByRecipeNo(recipe_no).orElseThrow(RecipeNotFoundException::new);
+
+            CreateRecipeLikeDto createRecipeLikeDto = new CreateRecipeLikeDto(recipe, user);
+
+            RecipeLike savedRecipeLike = recipeLikeRepository.save(createRecipeLikeDto.toEntity());
+
+            UpRecipeLikeSuResDto responseBody = new UpRecipeLikeSuResDto(ResponseCode.CREATED, ResponseMessage.CREATED, savedRecipeLike.getRecipeLikeNo());
+            return ResponseEntity.status(HttpStatus.CREATED).body(responseBody);
+        } catch (Exception e) {
+            log.error("Exception [Err_Msg]: {}", e.getMessage());
+            log.error("Exception [Err_Where]: {}", e.getStackTrace()[0]);
+
+            UpRecipeLikeFaResDto responseBody = new UpRecipeLikeFaResDto(ResponseCode.INTERNAL_SERVER_ERROR, ResponseMessage.INTERNAL_SERVER_ERROR);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseBody);
         }
     }

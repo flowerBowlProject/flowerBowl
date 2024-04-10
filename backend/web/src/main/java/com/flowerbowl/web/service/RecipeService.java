@@ -21,4 +21,6 @@ public interface RecipeService {
 
     public ResponseEntity<? extends ResponseDto> getRecipe(Long recipe_no) throws Exception;
 
+    public ResponseEntity<? extends ResponseDto> updateRecipeLike(Long recipe_no) throws Exception;
+
 }
