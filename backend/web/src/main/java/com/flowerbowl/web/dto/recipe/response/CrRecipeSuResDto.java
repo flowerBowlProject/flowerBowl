@@ -4,7 +4,7 @@ import lombok.*;
 
 @Getter
 @NoArgsConstructor
-public class CrRecipeSuResDto extends ResponseDto {
+public class CrRecipeSuResDto extends RecipeResponseDto {
 
     private Long recipeNo;
 

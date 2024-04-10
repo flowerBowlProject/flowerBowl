@@ -36,7 +36,7 @@ public class RecipeServiceImpl implements RecipeService {
     private final UserRepository userRepository;
 
     @Override
-    public ResponseEntity<? extends ResponseDto> createRecipe(CrRecipeReqDto request) throws Exception {
+    public ResponseEntity<? extends RecipeResponseDto> createRecipe(CrRecipeReqDto request) throws Exception {
         // 아직 token으로부터 사용자 정보를 얻어오는 부분이 없음
         try {
             User user = userRepository.findByUserNo(2L).orElseThrow(UserNotFoundException::new);
@@ -74,7 +74,7 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
-    public ResponseEntity<? extends ResponseDto> updateRecipe(UpRecipeReqDto request, Long recipe_no) throws Exception {
+    public ResponseEntity<? extends RecipeResponseDto> updateRecipe(UpRecipeReqDto request, Long recipe_no) throws Exception {
         // 해당 레시피의 작성자가 token으로부터 얻은 사용자와 일치하는지 검증하는 코드 필요
         try {
             // 레시피 번호로 레시피 찾기
@@ -113,7 +113,7 @@ public class RecipeServiceImpl implements RecipeService {
 
     @Override
     @Transactional
-    public ResponseEntity<? extends ResponseDto> deleteRecipe(Long recipe_no) throws Exception {
+    public ResponseEntity<? extends RecipeResponseDto> deleteRecipe(Long recipe_no) throws Exception {
         // 해당 레시피의 작성자가 token으로부터 얻은 사용자와 일치하는지 검증하는 코드 필요
         try {
             Recipe recipe = recipeRepository.findByRecipeNo(recipe_no).orElseThrow(RecipeNotFoundException::new);
@@ -131,7 +131,7 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
-    public ResponseEntity<? extends ResponseDto> getAllRecipesGuest() throws Exception {
+    public ResponseEntity<? extends RecipeResponseDto> getAllRecipesGuest() throws Exception {
         try {
             List<Recipe> recipes = recipeRepository.findAll();
 
@@ -165,7 +165,7 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
-    public ResponseEntity<? extends ResponseDto> getAllRecipes() throws Exception {
+    public ResponseEntity<? extends RecipeResponseDto> getAllRecipes() throws Exception {
         // 아직 token으로부터 사용자 정보를 얻어오는 부분이 없음 user_no을 받아와야 함
         try {
             Long userNo = 1L;
@@ -211,7 +211,7 @@ public class RecipeServiceImpl implements RecipeService {
 
     @Override
     @Transactional
-    public ResponseEntity<? extends ResponseDto> getRecipeGuest(Long recipe_no) throws Exception {
+    public ResponseEntity<? extends RecipeResponseDto> getRecipeGuest(Long recipe_no) throws Exception {
         try {
             Recipe recipe = recipeRepository.findByRecipeNo(recipe_no).orElseThrow(RecipeNotFoundException::new);
             RecipeFile recipeFile = recipeFileRepository.findByRecipe_RecipeNo(recipe_no);
@@ -248,7 +248,7 @@ public class RecipeServiceImpl implements RecipeService {
 
     @Override
     @Transactional
-    public ResponseEntity<? extends ResponseDto> getRecipe(Long recipe_no) throws Exception {
+    public ResponseEntity<? extends RecipeResponseDto> getRecipe(Long recipe_no) throws Exception {
         // 아직 token으로부터 사용자 정보를 얻어오는 부분이 없음 user_no을 받아와야 함
         try {
             Long userNo = 1L;
@@ -295,7 +295,7 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
-    public ResponseEntity<? extends ResponseDto> updateRecipeLike(Long recipe_no) throws Exception {
+    public ResponseEntity<? extends RecipeResponseDto> updateRecipeLike(Long recipe_no) throws Exception {
         // 아직 token으로부터 사용자 정보를 얻어오는 부분이 없음 user_no을 받아와야 함
         try {
             Long userNo = 1L;
