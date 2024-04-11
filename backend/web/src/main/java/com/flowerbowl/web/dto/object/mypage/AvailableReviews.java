@@ -1,4 +1,5 @@
-package com.flowerbowl.web.dto.object;
+package com.flowerbowl.web.dto.object.mypage;
+
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,12 +10,8 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Setter
-public class PayLessons {
+public class AvailableReviews {
 
+    private Long lesson_no;
     private String lesson_title;
-    private String lesson_writer;
-    private String pay_date;
-    private String review_score;
-
-
 }

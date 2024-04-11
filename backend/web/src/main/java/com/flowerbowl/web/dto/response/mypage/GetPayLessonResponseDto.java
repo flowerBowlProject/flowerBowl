@@ -1,6 +1,6 @@
 package com.flowerbowl.web.dto.response.mypage;
 
-import com.flowerbowl.web.dto.object.PayLessons;
+import com.flowerbowl.web.dto.object.mypage.PayLessons;
 import com.flowerbowl.web.dto.response.ResponseDto;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;

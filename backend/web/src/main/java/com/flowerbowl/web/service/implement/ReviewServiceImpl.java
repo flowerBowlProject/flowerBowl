@@ -2,10 +2,9 @@ package com.flowerbowl.web.service.implement;
 
 import com.flowerbowl.web.domain.Lesson;
 import com.flowerbowl.web.domain.LessonRv;
-import com.flowerbowl.web.domain.ReviewEnable;
 import com.flowerbowl.web.domain.User;
-import com.flowerbowl.web.dto.object.AvailableReviews;
-import com.flowerbowl.web.dto.object.WrittenReviews;
+import com.flowerbowl.web.dto.object.mypage.AvailableReviews;
+import com.flowerbowl.web.dto.object.mypage.WrittenReviews;
 import com.flowerbowl.web.dto.request.review.InsertReviewRequestDto;
 import com.flowerbowl.web.dto.request.review.PatchReviewRequestDto;
 import com.flowerbowl.web.dto.response.ResponseDto;

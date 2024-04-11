@@ -2,7 +2,7 @@ package com.flowerbowl.web.dto.response.mypage;
 
 import com.flowerbowl.web.common.ResponseCode;
 import com.flowerbowl.web.common.ResponseMessage;
-import com.flowerbowl.web.dto.object.LikeRecipes;
+import com.flowerbowl.web.dto.object.mypage.LikeRecipes;
 import com.flowerbowl.web.dto.response.ResponseDto;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
