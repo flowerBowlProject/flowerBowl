@@ -1,4 +1,4 @@
-package com.flowerbowl.web.dto.object;
+package com.flowerbowl.web.dto.object.mypage;
 
 
 import lombok.AllArgsConstructor;

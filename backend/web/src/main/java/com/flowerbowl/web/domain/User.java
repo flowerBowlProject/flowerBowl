@@ -6,6 +6,7 @@ import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -92,7 +93,7 @@ public class User {
         this.userNickname = dto.getUser_nickname();
         this.userPhone = dto.getUser_phone();
 //        this.userType = "web";
-        this.userCreateDate = LocalDate.now();
+        this.userCreateDate = LocalDate.now(ZoneId.of("Asia/Seoul"));
         this.userRole = Role.ROLE_CHEF;
         this.userWdStatus = false; // @ColumnDefault("false")이 안 먹음
     }

@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import java.time.LocalDate;
+import java.time.ZoneId;
 
 @Entity
 @Getter
@@ -40,7 +41,7 @@ public class LessonRv {
     public LessonRv(InsertReviewRequestDto dto, User user, Lesson lesson) {
         this.lessonRvContent = dto.getReview_content();
         this.lessonRvScore = dto.getReview_score();
-        this.lessonRvDate = LocalDate.now();
+        this.lessonRvDate = LocalDate.now(ZoneId.of("Asia/Seoul"));
         this.user = user;
         this.lesson = lesson;
     }
