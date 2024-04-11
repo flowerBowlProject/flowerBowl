@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import './CommentStyle.css';
-import Inputbutton from "../Input/Inputbutton";
 import CommentReply from "./CommentReply";
+import Button_outlined_style from "../Button_outlined_style";
+import Button_contain_style from "../Button_contain_style";
 
 const CommentParent = ({ data, isLast }) => {
     const [replyModal, setReplyModal] = useState(false);
@@ -12,9 +13,7 @@ const CommentParent = ({ data, isLast }) => {
 
     {/* 수정 버튼 클릭 시 - 해결 필요 */}
     const changeComment = () =>{
-        console.log("동작 진행");
         const commentContent = document.getElementById("comment-content");
-        console.log(commentContent.disabled);
         if(commentContent.disabled){
             commentContent.disabled = false;
         }
@@ -22,6 +21,10 @@ const CommentParent = ({ data, isLast }) => {
             {/* 변경된 내용 반영 api 연결 필요 */}
             commentContent.disabled = true;
         } 
+    }
+
+    {/* 댓글 삭제 */}
+    const handleDelete = () =>{
     }
     
     return (
@@ -42,8 +45,8 @@ const CommentParent = ({ data, isLast }) => {
                 <div className="commentButton-Box">
                     <div className="commentReply-register" onClick={registerReply}> 대댓글 </div>
                     <div className="commentButton">
-                        <Inputbutton text="수정" i={true} w="small" onClick={()=>changeComment()}/>&nbsp;
-                        <Inputbutton text="삭제" i={false} w="small" />
+                    <Button_outlined_style width='5vw' sx={{height:"2vw"}} variant='outlined' onClick={()=> changeComment()}>수정</Button_outlined_style> &nbsp;
+                    <Button_contain_style width='5vw' variant='contained' sx={{height:"2vw"}} onClick={handleDelete}>삭제</Button_contain_style>
                     </div>
                 </div>
             </div>
