@@ -5,7 +5,7 @@ import { Button, TextField } from '@mui/material';
 import { address_key } from '../config';
 
 const AddressSearch = (props) => {
-  const [address, setAddress] = useState({lesson_address: '', lesson_longitude: 0.0, lesson_latitude: 0.0});
+  const [address, setAddress] = useState({lesson_address: props.address, lesson_longitude: 0.0, lesson_latitude: 0.0});
 
 
   const handleAddressClick = () => {
@@ -49,7 +49,7 @@ const AddressSearch = (props) => {
 
   return (
     <div style={{display:'flex', justifyContent: 'center'}}>
-      <TextField className="main_address" id="main_address" type="text" readOnly sx={{marginRight:'0.5vw'}} placeholder='클릭해 주소를 입력하세요.'
+      <TextField className="main_address" id="main_address" type="text" readOnly sx={{marginRight:'0.5vw'}} placeholder='클릭해 주소를 입력하세요.' value={address.lesson_address}
         onChange={(newValue) => setAddress((address) => ({ ...address, lesson_address: newValue }))}/>
       <Button className="address_register" variant="outlined" onClick={searchAddress}> 주소 등록 </Button>
     </div>

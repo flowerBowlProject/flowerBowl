@@ -4,13 +4,13 @@ import { Editor } from '@toast-ui/react-editor';
 
 const ToastEditor = (props) => {
     const editorRef = useRef();
-    const [content, setContent] = useState('');
+    const [content, setContent] = useState(props.content);
+    console.log(content)
 
     const changeContent = () =>{
         const data = editorRef.current.getInstance().getHTML();
         setContent(data);
         props.getToastEditor(data);
-        console.log(data);
     }
 
     return (
@@ -18,15 +18,13 @@ const ToastEditor = (props) => {
             <Editor
                 onChange={changeContent}
                 placeholder="내용을 입력해주세요."
-                initialValue=' '
+                initialValue={content}
                 ref={editorRef}
                 previewStyle='vertical'
                 height='500px'
                 initialEditType='wysiwyg'
                 hideModeSwitch={true}
             />
-
-            
         </div>
     );
 

@@ -50,7 +50,7 @@ const ClassDetail = () => {
         .catch(err=>{
 
         })
-    })
+    },[])
 
     {/* 클래스 구매 */}
     const buyClass = () =>{
