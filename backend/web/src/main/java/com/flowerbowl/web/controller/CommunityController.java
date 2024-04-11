@@ -25,4 +25,9 @@ public class CommunityController {
         return communityService.updateCommunity(request, community_no);
     }
 
+    @DeleteMapping("{community_no}")
+    private ResponseEntity<? extends CommunityResponseDto> deleteCommunity(@PathVariable Long community_no) throws Exception {
+        return communityService.deleteCommunity(community_no);
+    }
+
 }
