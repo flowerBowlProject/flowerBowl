@@ -33,4 +33,12 @@ public class CommunityFile {
     @JoinColumn(name = "community_no")
     private Community community;
 
+    public void updateFileOname(List<String> communityFileOname) {
+        this.communityFileOname = communityFileOname;
+    }
+
+    public void updateFileSname(List<String> communitiyFileSname) {
+        this.communityFileSname = communitiyFileSname;
+    }
+
 }
