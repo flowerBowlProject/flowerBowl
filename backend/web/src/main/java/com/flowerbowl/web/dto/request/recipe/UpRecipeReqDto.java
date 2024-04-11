@@ -1,4 +1,4 @@
-package com.flowerbowl.web.dto.recipe.request;
+package com.flowerbowl.web.dto.request.recipe;
 
 import com.flowerbowl.web.domain.Category;
 import lombok.AllArgsConstructor;
@@ -8,7 +8,7 @@ import java.util.List;
 
 @Getter
 @AllArgsConstructor
-public class CrRecipeReqDto {
+public class UpRecipeReqDto {
 
     private String recipeTitle;
 
