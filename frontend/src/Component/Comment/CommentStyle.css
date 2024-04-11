@@ -105,7 +105,6 @@
 }
 
 .commentButton-Box:nth-child(3){
-    width: 100%;
     height: 100%;
     display: flex;
     position: relative;
@@ -123,8 +122,9 @@
 
 .commentButton{
     position: absolute;
-    align-items: center;
-    bottom:0
+    bottom:0;
+    right: 0;
+    display: flex;
 }
 
 /* 자식 댓글 css */
@@ -146,7 +146,7 @@
 }
 
 .commentButtonChild-Box:nth-child(4){
-    position: relative;
+    display: flex;
     margin-top: auto;
 }
 
