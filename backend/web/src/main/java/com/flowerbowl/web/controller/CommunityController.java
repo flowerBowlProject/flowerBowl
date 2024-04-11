@@ -1,14 +1,12 @@
 package com.flowerbowl.web.controller;
 
 import com.flowerbowl.web.dto.community.request.CrCommunityReqDto;
+import com.flowerbowl.web.dto.community.request.UpCommunityReqDto;
 import com.flowerbowl.web.dto.community.response.CommunityResponseDto;
 import com.flowerbowl.web.service.CommunityService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -20,6 +18,11 @@ public class CommunityController {
     @PostMapping("")
     private ResponseEntity<? extends CommunityResponseDto> createCommunity(@RequestBody CrCommunityReqDto request) throws Exception {
         return communityService.createCommunity(request);
+    }
+
+    @PutMapping("{community_no}")
+    private ResponseEntity<? extends CommunityResponseDto> updateCommunity(@RequestBody UpCommunityReqDto request, @PathVariable Long community_no) throws Exception {
+        return communityService.updateCommunity(request, community_no);
     }
 
 }

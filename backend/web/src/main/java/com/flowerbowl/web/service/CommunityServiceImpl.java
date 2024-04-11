@@ -3,13 +3,14 @@ package com.flowerbowl.web.service;
 import com.flowerbowl.web.common.ResponseCode;
 import com.flowerbowl.web.common.ResponseMessage;
 import com.flowerbowl.web.domain.Community;
+import com.flowerbowl.web.domain.CommunityFile;
 import com.flowerbowl.web.domain.User;
 import com.flowerbowl.web.dto.community.CreateCommunityDto;
 import com.flowerbowl.web.dto.community.CreateCommunityFileDto;
 import com.flowerbowl.web.dto.community.request.CrCommunityReqDto;
-import com.flowerbowl.web.dto.community.response.CommunityResponseDto;
-import com.flowerbowl.web.dto.community.response.CrCommunityFaResDto;
-import com.flowerbowl.web.dto.community.response.CrCommunitySuResDto;
+import com.flowerbowl.web.dto.community.request.UpCommunityReqDto;
+import com.flowerbowl.web.dto.community.response.*;
+import com.flowerbowl.web.handler.CommunityNotFoundException;
 import com.flowerbowl.web.handler.UserNotFoundException;
 import com.flowerbowl.web.repository.CommunityFileRepository;
 import com.flowerbowl.web.repository.CommunityRepository;
@@ -67,4 +68,38 @@ public class CommunityServiceImpl implements CommunityService {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseBody);
         }
     }
+
+    @Override
+    public ResponseEntity<? extends CommunityResponseDto> updateCommunity(UpCommunityReqDto request, Long community_no) throws Exception {
+        // 해당 커뮤니티 게시글의 작성자가 token으로부터 얻은 사용자와 일치하는지 검증하는 코드 필요
+        try {
+            // 커뮤니티 번호로 커뮤니티 찾기
+            Community community = communityRepository.findByCommunityNo(community_no).orElseThrow(CommunityNotFoundException::new);
+            // 커뮤니티 번호로 커뮤니티 파일 찾기
+            CommunityFile communityFile = communityFileRepository.findByCommunity_CommunityNo(community_no);
+
+            // 찾은 커뮤니티 게시글의 데이터를 수정
+            community.updateTitle(request.getCommunityTitle());
+            community.updateContent(request.getCommunityContent());
+
+            // 찾은 커뮤니티 파일의 데이터를 수정
+            communityFile.updateFileOname(request.getCommunityFileOname());
+            communityFile.updateFileSname(request.getCommunityFileSname());
+
+            // 수정된 커뮤니티 데이터 DB에 저장
+            Community result = communityRepository.save(community);
+            // 수정된 커뮤니티 파일 데이터 DB에 저장
+            communityFileRepository.save(communityFile);
+
+            UpCommunitySuResDto responseBody = new UpCommunitySuResDto(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, result.getCommunityNo());
+            return ResponseEntity.status(HttpStatus.OK).body(responseBody);
+        } catch (Exception e) {
+            log.error("Exception [Err_Msg]: {}", e.getMessage());
+            log.error("Exception [Err_Where]: {}", e.getStackTrace()[0]);
+
+            UpCommunityFaResDto responseBody = new UpCommunityFaResDto(ResponseCode.INTERNAL_SERVER_ERROR, ResponseMessage.INTERNAL_SERVER_ERROR);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseBody);
+        }
+    }
+
 }
