@@ -10,6 +10,7 @@ import com.flowerbowl.web.provider.EmailProvider;
 import com.flowerbowl.web.repository.UserRepository;
 import com.flowerbowl.web.service.UserService;
 import com.flowerbowl.web.util.EmailUtil;
+import com.flowerbowl.web.util.PwUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -138,7 +139,7 @@ public class UserServiceImpl implements UserService {
             User originPw = userRepository.findPwByIdAndEmail(userId, userEmail);
             if (originPw == null) return FindUserPwResponseDto.informationMismatch();
 
-            String randomPw = EmailUtil.getRandomValue();
+            String randomPw = PwUtil.getRandomPassword();
             emailProvider.sendCertification(userEmail, randomPw);
             String encodePw = passwordEncoder.encode(randomPw);
             userRepository.updatePw(encodePw, userEmail);
