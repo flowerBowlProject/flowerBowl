@@ -8,20 +8,22 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import { Button } from "@mui/material";
 import Pagination from '@mui/material/Pagination';
-
+import Button_outlined_style from "../Component/Button_outlined_style";
+import { useNavigate } from 'react-router-dom';
 
 const CommunityList = () => {
-    const [listData, setListData] = useState([{ community_title: '제목1', community_writer: '작성자1', community_date: '날짜1', community_views: 1 },
-    { community_title: '제목2', community_writer: '작성자2', community_date: '날짜2', community_views: 2 },
-    { community_title: '제목3', community_writer: '작성자3', community_date: '날짜3', community_views: 3 },
-    { community_title: '제목1', community_writer: '작성자1', community_date: '날짜1', community_views: 1 },
-    { community_title: '제목2', community_writer: '작성자2', community_date: '날짜2', community_views: 2 },
-    { community_title: '제목3', community_writer: '작성자3', community_date: '날짜3', community_views: 3 },
-    { community_title: '제목1', community_writer: '작성자1', community_date: '날짜1', community_views: 1 },
-    { community_title: '제목2', community_writer: '작성자2', community_date: '날짜2', community_views: 2 },
-    { community_title: '제목3', community_writer: '작성자3', community_date: '날짜3', community_views: 3 }]);
+    const [listData, setListData] = useState([{ community_no:1, community_title: '제목1', community_writer: '작성자1', community_date: '날짜1', community_views: 1 },
+    { community_no:2, community_title: '제목2', community_writer: '작성자2', community_date: '날짜2', community_views: 2 },
+    { community_no:3, community_title: '제목3', community_writer: '작성자3', community_date: '날짜3', community_views: 3 },
+    { community_no:3,community_title: '제목1', community_writer: '작성자1', community_date: '날짜1', community_views: 1 },
+    { community_no:3,community_title: '제목2', community_writer: '작성자2', community_date: '날짜2', community_views: 2 },
+    { community_no:3,community_title: '제목3', community_writer: '작성자3', community_date: '날짜3', community_views: 3 },
+    { community_no:3,community_title: '제목1', community_writer: '작성자1', community_date: '날짜1', community_views: 1 },
+    { community_no:3,community_title: '제목2', community_writer: '작성자2', community_date: '날짜2', community_views: 2 },
+    { community_no:3,community_title: '제목3', community_writer: '작성자3', community_date: '날짜3', community_views: 3 }]);
+
+    const navigate = useNavigate();
 
     const StyledTableCell = styled(TableCell)(() => ({
         [`&.${tableCellClasses.head}`]: {
@@ -37,42 +39,43 @@ const CommunityList = () => {
         },
     }));
 
-    const ColorButton = styled(Button)(() => ({
-        margin: '0 0 3% 98%',
-        fontSize: '1.3vw',
-        width: '8vw',
-        color: '#B9835C',
-        borderColor: '#B9835C',
-        '&:hover': {
-            backgroundColor: '#B9835C',
-            color: 'white',
-            borderColor: '#B9835C'
-        },
-    }));
+    {/* 커뮤니티 글쓰기로 이동 */}
+    const handleRegister = (e) =>{
+        e.preventDefault();
+        navigate('/registerCommunity');
+    }
+
+    {/* 디테일 페이지 조회 */}
+    const handleDetail = (community_no,e) =>{
+        e.preventDefault();
+        navigate('/communityDetail/'+community_no);
+    }
 
     return (
         <div className="communityList-Box">
-            <ColorButton variant="outlined">글쓰기</ColorButton>
+            <Button_outlined_style width='5vw' sx={{height:"2vw", float:"right"}} variant='outlined' onClick={(e)=>handleRegister(e)}>
+                    글쓰기
+                </Button_outlined_style>
 
             <TableContainer component={Paper} sx={{boxShadow: 'none'}}>
-                <Table sx={{ border: "none" }}>
+                <Table sx={{ border: "none"}}>
                     <TableHead>
                         <TableRow>
-                            <StyledTableCell>No</StyledTableCell>
-                            <StyledTableCell>제목</StyledTableCell>
-                            <StyledTableCell>글쓴이</StyledTableCell>
-                            <StyledTableCell>작성시간</StyledTableCell>
-                            <StyledTableCell>조회수</StyledTableCell>
+                            <StyledTableCell align="center" style={{width:"10%"}}>No</StyledTableCell>
+                            <StyledTableCell align="center" style={{width:"40%"}}>제목</StyledTableCell>
+                            <StyledTableCell align="center" style={{width:"20%"}}>글쓴이</StyledTableCell>
+                            <StyledTableCell align="center" style={{width:"20%"}}>작성시간</StyledTableCell>
+                            <StyledTableCell align="center" style={{width:"10%"}}>조회수</StyledTableCell>
                         </TableRow>
                     </TableHead>
-                    <TableBody >
+                    <TableBody>
                         {listData.map((listData, index) => (
-                            <StyledTableRow key={index} hover >
-                                <StyledTableCell>{index + 1}</StyledTableCell>
-                                <StyledTableCell>{listData.community_title}</StyledTableCell>
-                                <StyledTableCell>{listData.community_writer}</StyledTableCell>
-                                <StyledTableCell>{listData.community_date}</StyledTableCell>
-                                <StyledTableCell>{listData.community_views}</StyledTableCell>
+                            <StyledTableRow key={index} hover onClick={(e)=>handleDetail(listData.community_no,e)}>
+                                <StyledTableCell align="center">{index + 1}</StyledTableCell>
+                                <StyledTableCell align="center">{listData.community_title}</StyledTableCell>
+                                <StyledTableCell align="center">{listData.community_writer}</StyledTableCell>
+                                <StyledTableCell align="center">{listData.community_date}</StyledTableCell>
+                                <StyledTableCell align="center">{listData.community_views}</StyledTableCell>
                             </StyledTableRow>
                         ))}
                     </TableBody>
