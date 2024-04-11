@@ -103,4 +103,22 @@ public class CommunityServiceImpl implements CommunityService {
         }
     }
 
+    @Override
+    public ResponseEntity<? extends CommunityResponseDto> deleteCommunity(Long community_no) throws Exception {
+        // 해당 커뮤니티 게시글의 작성자가 token으로부터 얻은 사용자와 일치하는지 검증하는 코드 필요
+        try {
+            Community community = communityRepository.findByCommunityNo(community_no).orElseThrow(CommunityNotFoundException::new);
+            communityRepository.delete(community);
+
+            DelCommunityResDto responseBody = new DelCommunityResDto(ResponseCode.SUCCESS, ResponseMessage.SUCCESS);
+            return ResponseEntity.status(HttpStatus.OK).body(responseBody);
+        } catch (Exception e) {
+            log.error("Exception [Err_Msg]: {}", e.getMessage());
+            log.error("Exception [Err_Where]: {}", e.getStackTrace()[0]);
+
+            DelCommunityResDto responseBody = new DelCommunityResDto(ResponseCode.INTERNAL_SERVER_ERROR, ResponseMessage.INTERNAL_SERVER_ERROR);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseBody);
+        }
+    }
+
 }
