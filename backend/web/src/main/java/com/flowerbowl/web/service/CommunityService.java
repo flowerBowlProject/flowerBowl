@@ -1,8 +1,8 @@
 package com.flowerbowl.web.service;
 
-import com.flowerbowl.web.dto.community.request.CrCommunityReqDto;
-import com.flowerbowl.web.dto.community.request.UpCommunityReqDto;
-import com.flowerbowl.web.dto.community.response.CommunityResponseDto;
+import com.flowerbowl.web.dto.request.community.CrCommunityReqDto;
+import com.flowerbowl.web.dto.request.community.UpCommunityReqDto;
+import com.flowerbowl.web.dto.response.community.CommunityResponseDto;
 import org.springframework.http.ResponseEntity;
 
 public interface CommunityService {
