@@ -1,8 +1,8 @@
 package com.flowerbowl.web.controller;
 
-import com.flowerbowl.web.dto.recipe.request.CrRecipeReqDto;
-import com.flowerbowl.web.dto.recipe.request.UpRecipeReqDto;
-import com.flowerbowl.web.dto.recipe.response.RecipeResponseDto;
+import com.flowerbowl.web.dto.request.recipe.CrRecipeReqDto;
+import com.flowerbowl.web.dto.request.recipe.UpRecipeReqDto;
+import com.flowerbowl.web.dto.response.recipe.RecipeResponseDto;
 import com.flowerbowl.web.service.RecipeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

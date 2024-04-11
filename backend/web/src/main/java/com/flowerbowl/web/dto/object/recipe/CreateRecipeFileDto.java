@@ -1,4 +1,4 @@
-package com.flowerbowl.web.dto.recipe;
+package com.flowerbowl.web.dto.object.recipe;
 
 import com.flowerbowl.web.domain.Recipe;
 import com.flowerbowl.web.domain.RecipeFile;
