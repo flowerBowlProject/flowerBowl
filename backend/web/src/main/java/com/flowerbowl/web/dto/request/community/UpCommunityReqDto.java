@@ -1,4 +1,4 @@
-package com.flowerbowl.web.dto.community.request;
+package com.flowerbowl.web.dto.request.community;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
