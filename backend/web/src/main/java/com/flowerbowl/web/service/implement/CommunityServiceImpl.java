@@ -1,20 +1,21 @@
-package com.flowerbowl.web.service;
+package com.flowerbowl.web.service.implement;
 
 import com.flowerbowl.web.common.ResponseCode;
 import com.flowerbowl.web.common.ResponseMessage;
 import com.flowerbowl.web.domain.Community;
 import com.flowerbowl.web.domain.CommunityFile;
 import com.flowerbowl.web.domain.User;
-import com.flowerbowl.web.dto.community.CreateCommunityDto;
-import com.flowerbowl.web.dto.community.CreateCommunityFileDto;
-import com.flowerbowl.web.dto.community.request.CrCommunityReqDto;
-import com.flowerbowl.web.dto.community.request.UpCommunityReqDto;
-import com.flowerbowl.web.dto.community.response.*;
+import com.flowerbowl.web.dto.object.community.CreateCommunityDto;
+import com.flowerbowl.web.dto.object.community.CreateCommunityFileDto;
+import com.flowerbowl.web.dto.request.community.CrCommunityReqDto;
+import com.flowerbowl.web.dto.request.community.UpCommunityReqDto;
+import com.flowerbowl.web.dto.response.community.*;
 import com.flowerbowl.web.handler.CommunityNotFoundException;
 import com.flowerbowl.web.handler.UserNotFoundException;
 import com.flowerbowl.web.repository.CommunityFileRepository;
 import com.flowerbowl.web.repository.CommunityRepository;
 import com.flowerbowl.web.repository.UserRepository;
+import com.flowerbowl.web.service.CommunityService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
