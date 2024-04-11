@@ -141,10 +141,10 @@ const RegisterClass = () => {
 
             <div style={{ border: "1px solid #CBA285", marginBottom: "2%" }} />
             <div className="register_button">
-                <Button_outlined_style width='5vw' variant='outlined' onClick={handleRegister()}>
+                <Button_outlined_style width='5vw' sx={{height:"2vw"}} variant='outlined' onClick={handleRegister()}>
                     등록
                 </Button_outlined_style> &nbsp;
-                <Button_contain_style width='5vw' variant='contained' onClick={handleCancel()}>
+                <Button_contain_style width='5vw' sx={{height:"2vw"}} variant='contained' onClick={handleCancel()}>
                     취소
                 </Button_contain_style>
             </div>
