@@ -1,4 +1,4 @@
-package com.flowerbowl.web.dto.community;
+package com.flowerbowl.web.dto.object.community;
 
 import com.flowerbowl.web.domain.Community;
 import com.flowerbowl.web.domain.CommunityFile;
