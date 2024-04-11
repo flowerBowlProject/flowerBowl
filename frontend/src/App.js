@@ -5,7 +5,7 @@ import { ViewList, RegisterRecipe, RecipeDetail } from './Recipe/';
 import { CommunityDetail, RegisterCommunity, CommunityList } from './Community/';
 import { Routes, Route } from 'react-router-dom';
 import SearchList from './Search/SearchList';
-import { ClassDetail, RegisterClass } from './Class/'
+import { ClassDetail, RegisterClass, ModifyClass } from './Class/'
 import Profile from './Mypage/Profile/Profile'
 import { AdmissionChef, RegisterBanner } from './Mypage/Admin/'
 import CheckClassList from './Mypage/ApplyClass/CheckClassList';
@@ -22,11 +22,12 @@ const App = () => {
         <Route path='/viewList' element={<ViewList />} />
         <Route path='/registerRecipe' element={<RegisterRecipe />} />
         <Route path='/recipeDetail' element={<RecipeDetail />} />
-        <Route path='/communityDetail' element={<CommunityDetail />} />
+        <Route path='/communityDetail/:community_no' element={<CommunityDetail />} />
         <Route path='/registerCommunity' element={<RegisterCommunity />} />
         <Route path='/communityList' element={<CommunityList />} />
         <Route path='/searchList' element={<SearchList />} />
         <Route path='/classDetail/:lesson_no' element={<ClassDetail />} />
+        <Route path='/modifyClass/:lesson_no' element={<ModifyClass />} />
         <Route path='/registerClass' element={<RegisterClass />} />
         <Route path='/profile' element={<Profile />} />
         <Route path='/admissionChef' element={<AdmissionChef />} />
