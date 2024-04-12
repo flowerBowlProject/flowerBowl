@@ -55,10 +55,10 @@ public class WebConfig {
                 )
                 // HTTP 요청에 대한 권한 설정
                 .authorizeHttpRequests(request -> request
-                                .requestMatchers("/", "/api/banners",
+                                .requestMatchers("/", "/file/**",
                                         "/api/recipes/guest", "/api/recipes/guest/**",
                                         "/api/communities/guest/**", "/api/comments",
-                                        "/api/lessons/guest/**",
+                                        "/api/lessons/guest/**", "/api/banners",
                                         "/api/users/findId", "/api/users/findPw",
                                         "/oauth2/**", "/api/auth/**",
                                         "/api/lessons/guest", "/api/lessons/guest/**",
