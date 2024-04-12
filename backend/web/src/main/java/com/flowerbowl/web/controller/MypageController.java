@@ -6,8 +6,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -47,8 +48,43 @@ public class MypageController {
 
     @GetMapping("/api/chef/lessons")
     public ResponseEntity<? super GetMyLessonResponseDto> getMyLessons(
-            @AuthenticationPrincipal String userId){
+            @AuthenticationPrincipal String userId) {
 
         return mypageService.getMyLessons(userId);
+    }
+
+    @GetMapping("/api/chef/purchasers")
+    public ResponseEntity<? super GetPurchasersResponseDto> getPurchasers(
+            @AuthenticationPrincipal String userId) {
+
+        return mypageService.getPurchasers(userId);
+    }
+
+    @GetMapping("/api/mypage/pays")
+    public ResponseEntity<? super GetPaysResponseDto> getPays(
+            @AuthenticationPrincipal String userId) {
+
+        return mypageService.getPays(userId);
+    }
+
+    @DeleteMapping("/api/mypage/pays/{pay_no}")
+    public ResponseEntity<? super DeletePayByUserResponseDto> deletePayByUser(
+            @AuthenticationPrincipal String userId,
+            @PathVariable(name = "pay_no") Long payNo) {
+        log.info("id={}", userId);
+        log.info("no={}",payNo);
+
+        return mypageService.deletePayByUser(userId, payNo);
+
+    }
+
+    @DeleteMapping("/api/chef/mypage/pays/{pay_no}")
+    public ResponseEntity<? super DeletePayByChefResponseDto> deletePayByChef(
+            @AuthenticationPrincipal String userId,
+            @PathVariable(name = "pay_no") Long payNo) {
+        log.info("id={}", userId);
+        log.info("no={}",payNo);
+
+        return mypageService.deletePayByChef(userId, payNo);
     }
 }
