@@ -21,7 +21,7 @@ const App = () => {
         <Route path='/' element={<MainHomepage />} />
         <Route path='/viewList' element={<ViewList />} />
         <Route path='/registerRecipe' element={<RegisterRecipe />} />
-        <Route path='/recipeDetail' element={<RecipeDetail />} />
+        <Route path='/recipeDetail/:recipe_no' element={<RecipeDetail />} />
         <Route path='/communityDetail/:community_no' element={<CommunityDetail />} />
         <Route path='/registerCommunity' element={<RegisterCommunity />} />
         <Route path='/modifyCommunity/:community_no' element={<ModifyCommunity />} />
