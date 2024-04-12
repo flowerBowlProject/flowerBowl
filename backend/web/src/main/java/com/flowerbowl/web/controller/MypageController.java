@@ -1,6 +1,7 @@
 package com.flowerbowl.web.controller;
 
 import com.flowerbowl.web.dto.response.mypage.GetLessonLikesResponseDto;
+import com.flowerbowl.web.dto.response.mypage.GetRecipeLikesResponseDto;
 import com.flowerbowl.web.service.MypageService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,9 +20,16 @@ public class MypageController {
     private final MypageService mypageService;
 
     @GetMapping("/lesson/likes")
-    public ResponseEntity<? super GetLessonLikesResponseDto> getLessonLikeList(
+    public ResponseEntity<? super GetLessonLikesResponseDto> getLessonLikes(
             @AuthenticationPrincipal String userId) {
-        log.info("mypage컨트롤러 작동={}",userId);
-        return mypageService.getLessonLikeList(userId);
+
+        return mypageService.getLessonLikes(userId);
+    }
+
+    @GetMapping("/recipe/likes")
+    public ResponseEntity<? super GetRecipeLikesResponseDto> getRecipeLikes(
+            @AuthenticationPrincipal String userId) {
+
+        return mypageService.getRecipeLikes(userId);
     }
 }

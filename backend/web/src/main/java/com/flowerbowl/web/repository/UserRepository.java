@@ -32,7 +32,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
     boolean existsByUserNickname(String userNickname);
 
     @Query(value = "SELECT " +
-            "   l.lesson_no, l.lesson_title " +
+            "   l.lesson_no, " +
+            "   l.lesson_title " +
             "FROM " +
             "   user u" +
             "INNER JOIN " +
