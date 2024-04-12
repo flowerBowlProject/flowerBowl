@@ -14,15 +14,15 @@ import java.util.List;
 @Getter
 public class GetLessonLikesResponseDto extends ResponseDto {
 
-    private List<LikeLessons> likeLessonList;
+    private List<LikeLessons> likeLessons;
 
-    public GetLessonLikesResponseDto(List<LikeLessons> likeLessonList) {
+    public GetLessonLikesResponseDto(List<LikeLessons> likeLessons) {
         super();
-        this.likeLessonList = likeLessonList;
+        this.likeLessons = likeLessons;
     }
 
-    public static ResponseEntity<GetLessonLikesResponseDto> success(List<LikeLessons> likeLessonList) {
-        GetLessonLikesResponseDto body = new GetLessonLikesResponseDto(likeLessonList);
+    public static ResponseEntity<GetLessonLikesResponseDto> success(List<LikeLessons> likeLessons) {
+        GetLessonLikesResponseDto body = new GetLessonLikesResponseDto(likeLessons);
         return ResponseEntity.status(HttpStatus.OK).body(body);
     }
 
