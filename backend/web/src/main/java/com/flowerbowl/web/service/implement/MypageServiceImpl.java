@@ -178,5 +178,89 @@ public class MypageServiceImpl implements MypageService {
         return GetMyLessonResponseDto.success(myLessons);
     }
 
+    @Override
+    public ResponseEntity<? super GetPurchasersResponseDto> getPurchasers(String userId) {
+
+        List<PurchaserList> purchasers = new ArrayList<>();
+
+        try {
+
+            List<Object[]> dbResult = userRepository.findPurchaser(userId);
+            for (Object[] posts : dbResult) {
+                PurchaserList purchaser = new PurchaserList();
+                purchaser.setPay_date((String) posts[0]);
+                purchaser.setUser_nickname((String) posts[1]);
+                purchaser.setUser_phone((String) posts[2]);
+                purchaser.setLesson_title((String) posts[3]);
+                purchasers.add(purchaser);
+            }
+
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            return ResponseDto.databaseError();
+        }
+
+        return GetPurchasersResponseDto.success(purchasers);
+    }
+
+    @Override
+    public ResponseEntity<? super GetPaysResponseDto> getPays(String userId) {
+
+        List<Pays> pays = new ArrayList<>();
+
+        try {
+
+            List<Object[]> dbResult = userRepository.findPaysByUserId(userId);
+            for (Object[] posts : dbResult) {
+                Pays pay = new Pays();
+                pay.setPay_date((String) posts[0]);
+                pay.setPay_price((String) posts[1]);
+                pay.setLesson_title((String) posts[2]);
+                pay.setLesson_writer((String) posts[3]);
+                pays.add(pay);
+            }
+
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            return ResponseDto.databaseError();
+        }
+
+        return GetPaysResponseDto.success(pays);
+    }
+
+    @Override
+    public ResponseEntity<? super DeletePayByUserResponseDto> deletePayByUser(String userId, Long payNo) {
+
+        try {
+
+            int dbResult = userRepository.deletePayByUser(userId, payNo);
+            if(dbResult == 0) return DeletePayByUserResponseDto.notExistPayNo();
+
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            return ResponseDto.databaseError();
+        }
+
+        return DeletePayByUserResponseDto.success();
+    }
+
+    @Override
+    public ResponseEntity<? super DeletePayByChefResponseDto> deletePayByChef(String userId, Long payNo) {
+
+        try {
+
+
+            int dbResult = userRepository.deletePayByChef(userId, payNo);
+            if(dbResult == 0) return DeletePayByChefResponseDto.notExistPayNo();
+
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            return ResponseDto.databaseError();
+        }
+
+
+        return DeletePayByChefResponseDto.success();
+    }
+
 
 }

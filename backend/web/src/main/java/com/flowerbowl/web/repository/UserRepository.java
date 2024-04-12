@@ -15,6 +15,7 @@ import java.util.List;
 public interface UserRepository extends JpaRepository<User, Long> {
 
     @Modifying
+    @Transactional
     @Query(value = "INSERT INTO " +
             "   user (user_id, user_role) " + // , user_wd_status
             "SELECT " +
@@ -35,7 +36,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
             "   l.lesson_no, " +
             "   l.lesson_title " +
             "FROM " +
-            "   user u" +
+            "   USER u" +
             "INNER JOIN " +
             "   review_enable r ON u.user_no = r.user_no " +
             "INNER JOIN " +
@@ -114,14 +115,17 @@ public interface UserRepository extends JpaRepository<User, Long> {
     List<Object[]> findPaysByUserId(@Param("userId") String userId);
 
     @Transactional
+    @Modifying
     @Query(value = "DELETE FROM pay " +
             "WHERE user_no = ( " +
-            "    SELECT user_no  " +
-            "    FROM user  " +
-            "    WHERE user_id = :userId " +
-            ") " +
-            "AND pay_no = :payNo;", nativeQuery = true)
-    void deletePayByUser(@Param("userId") String userId, @Param("payNo") Long payNo);
+            "    SELECT " +
+            "       user_no  " +
+            "    FROM " +
+            "       USER  " +
+            "    WHERE " +
+            "       user_id = :userId) " +
+            "       AND pay_no = :payNo ", nativeQuery = true)
+    int deletePayByUser(@Param("userId") String userId, @Param("payNo") Long payNo);
 
 
     @Query(value = "SELECT " +
@@ -202,5 +206,17 @@ public interface UserRepository extends JpaRepository<User, Long> {
             "   user_email = :userEmail ", nativeQuery = true)
     void updatePw(@Param("randomPw") String randomPw, @Param("userEmail") String userEmail);
 
+    @Transactional
+    @Modifying
+    @Query(value = "DELETE FROM pay p " +
+            "WHERE  " +
+            "   p.lesson_no IN ( " +
+            "   SELECT l.lesson_no  " +
+            "   FROM  " +
+            "       lesson l " +
+            "       INNER JOIN USER u ON u.user_no = l.user_no  " +
+            "   WHERE  " +
+            "       user_id = :userId) AND p.pay_no = :payNo ", nativeQuery = true)
+    int deletePayByChef(@Param("userId") String userId, @Param("payNo") Long payNo);
 }
 
