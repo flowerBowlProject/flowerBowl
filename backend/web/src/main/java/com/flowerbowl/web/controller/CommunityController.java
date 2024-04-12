@@ -30,4 +30,9 @@ public class CommunityController {
         return communityService.deleteCommunity(community_no);
     }
 
+    @GetMapping("/list")
+    private ResponseEntity<? extends CommunityResponseDto> getAllCommunities(@RequestParam int page, @RequestParam int size) throws Exception {
+        return communityService.getAllCommunities(page - 1, size);
+    }
+
 }
