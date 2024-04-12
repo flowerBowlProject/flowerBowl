@@ -1,11 +1,9 @@
 package com.flowerbowl.web.service.implement;
 
 import com.flowerbowl.web.domain.*;
-import com.flowerbowl.web.dto.object.mypage.LikeLessons;
-import com.flowerbowl.web.dto.object.mypage.LikeRecipes;
+import com.flowerbowl.web.dto.object.mypage.*;
 import com.flowerbowl.web.dto.response.ResponseDto;
-import com.flowerbowl.web.dto.response.mypage.GetLessonLikesResponseDto;
-import com.flowerbowl.web.dto.response.mypage.GetRecipeLikesResponseDto;
+import com.flowerbowl.web.dto.response.mypage.*;
 import com.flowerbowl.web.repository.*;
 import com.flowerbowl.web.service.MypageService;
 import lombok.RequiredArgsConstructor;
@@ -41,7 +39,9 @@ public class MypageServiceImpl implements MypageService {
             User user = userRepository.findByUserId(userId);
             Long userNo = user.getUserNo();
             List<LessonLike> lessonLikeList = lessonLikeRepository.findAllByUser_UserNo(userNo);
-            if (lessonLikeList == null) {GetLessonLikesResponseDto.noExistLesson();}
+            if (lessonLikeList == null) {
+                GetLessonLikesResponseDto.noExistLesson();
+            }
 
 
             List<Long> lessonNos = new ArrayList<>();
@@ -50,8 +50,8 @@ public class MypageServiceImpl implements MypageService {
             }
 
             List<Lesson> lessonList = lessonRepository.findAllByLessonNoIn(lessonNos);
-            for(Lesson lesson : lessonList){
-                LikeLessons lessonLikeListByUser= new LikeLessons();
+            for (Lesson lesson : lessonList) {
+                LikeLessons lessonLikeListByUser = new LikeLessons();
                 lessonLikeListByUser.setLesson_no(lesson.getLessonNo());
                 lessonLikeListByUser.setLesson_title(lesson.getLessonTitle());
                 lessonLikeListByUser.setLesson_sname(lesson.getLessonSname());
@@ -77,7 +77,7 @@ public class MypageServiceImpl implements MypageService {
             User user = userRepository.findByUserId(userId);
             Long userNo = user.getUserNo();
             List<RecipeLike> recipeLikes = reviewLikeRepository.findAllByUser_UserNo(userNo);
-            if(recipeLikes == null) GetRecipeLikesResponseDto.noExistRecipe();
+            if (recipeLikes == null) GetRecipeLikesResponseDto.noExistRecipe();
 
             List<Long> recipeNos = new ArrayList<>();
             for (RecipeLike list : recipeLikes) {
@@ -85,7 +85,7 @@ public class MypageServiceImpl implements MypageService {
             }
 
             List<Recipe> recipes = recipeRepository.findAllByRecipeNoIn(recipeNos);
-            for (Recipe recipe : recipes){
+            for (Recipe recipe : recipes) {
                 LikeRecipes likeRecipesByUser = new LikeRecipes();
                 likeRecipesByUser.setRecipe_no(recipe.getRecipeNo());
                 likeRecipesByUser.setRecipe_title(recipe.getRecipeTitle());
@@ -100,6 +100,82 @@ public class MypageServiceImpl implements MypageService {
             return ResponseDto.databaseError();
         }
         return GetRecipeLikesResponseDto.success(likeRecipes);
+    }
+
+    @Override
+    public ResponseEntity<? super GetPayLessonResponseDto> getPayLessons(String userId) {
+
+        List<PayLessons> payLessons = new ArrayList<>();
+
+        try {
+
+            List<Object[]> dbResult = userRepository.findAllPayLesson(userId);
+            for (Object[] posts : dbResult) {
+                PayLessons lessons = new PayLessons();
+                lessons.setPay_date((String) posts[0]);
+                lessons.setLesson_title((String) posts[1]);
+                lessons.setLesson_writer((String) posts[2]);
+                lessons.setReview_score((Long) posts[3]);
+                payLessons.add(lessons);
+            }
+
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            return ResponseDto.databaseError();
+        }
+
+        return GetPayLessonResponseDto.success(payLessons);
+    }
+
+    @Override
+    public ResponseEntity<? super GetMyRecipeResponseDto> getMyRecipes(String userId) {
+
+        List<MyRecipes> myRecipes = new ArrayList<>();
+
+        try {
+
+            List<Object[]> dbResult = userRepository.findAllRecipeByUser(userId);
+            for (Object[] posts : dbResult) {
+                MyRecipes myRecipe = new MyRecipes();
+                myRecipe.setRecipe_date((String) posts[0]);
+                myRecipe.setRecipe_title((String) posts[1]);
+                myRecipe.setBookmark_cnt((Long) posts[2]);
+                myRecipe.setComment_cnt((Long) posts[3]);
+                myRecipes.add(myRecipe);
+            }
+
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            return ResponseDto.databaseError();
+        }
+
+
+        return GetMyRecipeResponseDto.success(myRecipes);
+    }
+
+    @Override
+    public ResponseEntity<? super GetMyLessonResponseDto> getMyLessons(String userId) {
+
+        List<MyLessons> myLessons = new ArrayList<>();
+
+        try {
+
+            List<Object[]> dbResult = userRepository.findAllLessonByUser(userId);
+            for (Object[] posts : dbResult) {
+                MyLessons myLesson = new MyLessons();
+                myLesson.setLesson_date((String) posts[0]);
+                myLesson.setLesson_title((String) posts[1]);
+                myLesson.setBookmark_cnt((Long) posts[2]);
+                myLesson.setReview_cnt((Long) posts[3]);
+                myLessons.add(myLesson);
+            }
+
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            return ResponseDto.databaseError();
+        }
+
+        return GetMyLessonResponseDto.success(myLessons);
     }
 
 

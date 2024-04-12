@@ -14,7 +14,7 @@ public class PayLessons {
     private String lesson_title;
     private String lesson_writer;
     private String pay_date;
-    private String review_score;
+    private Long review_score;
 
 
 }
