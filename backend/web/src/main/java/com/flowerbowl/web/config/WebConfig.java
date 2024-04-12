@@ -58,7 +58,7 @@ public class WebConfig {
                                 .requestMatchers("/", "/api/banners",
                                         "/api/recipes/guest", "/api/recipes/guest/**",
                                         "/api/communities/guest/**", "/api/comments",
-                                        "/api/lessons/guest/**", "",
+                                        "/api/lessons/guest/**",
                                         "/api/users/findId", "/api/users/findPw",
                                         "/oauth2/**", "/api/auth/**",
                                         "/api/lessons/guest", "/api/lessons/guest/**",

@@ -3,9 +3,9 @@ package com.flowerbowl.web.service.implement;
 import com.flowerbowl.web.domain.Lesson;
 import com.flowerbowl.web.domain.LessonLike;
 import com.flowerbowl.web.domain.User;
-import com.flowerbowl.web.dto.object.LikeLessonList;
+import com.flowerbowl.web.dto.object.mypage.LikeLessons;
 import com.flowerbowl.web.dto.response.ResponseDto;
-import com.flowerbowl.web.dto.response.mypage.GetLessonLikeListResponseDTO;
+import com.flowerbowl.web.dto.response.mypage.GetLessonLikesResponseDto;
 import com.flowerbowl.web.repository.LessonLikeRepository;
 import com.flowerbowl.web.repository.LessonRepository;
 import com.flowerbowl.web.repository.UserRepository;
@@ -32,15 +32,15 @@ public class MypageServiceImpl implements MypageService {
      * 개인적으로 로직이 너무 아쉬움 view 테이블로 하면 좋을 거 같음 나중에 리팩토링해보자
      */
     @Override
-    public ResponseEntity<? super GetLessonLikeListResponseDTO> getLessonLikeList(String userId) {
+    public ResponseEntity<? super GetLessonLikesResponseDto> getLessonLikeList(String userId) {
 
-        List<LikeLessonList> lessons = new ArrayList<>();
+        List<LikeLessons> lessons = new ArrayList<>();
 
         try {
             User user = userRepository.findByUserId(userId);
             Long userNo = user.getUserNo();
             List<LessonLike> lessonLikeList = lessonLikeRepository.findAllByUser_UserNo(userNo);
-            if (lessonLikeList == null) {GetLessonLikeListResponseDTO.noExistLesson();}
+            if (lessonLikeList == null) {GetLessonLikesResponseDto.noExistLesson();}
 
 
             List<Long> lessonNos = new ArrayList<>();
@@ -50,7 +50,7 @@ public class MypageServiceImpl implements MypageService {
 
             List<Lesson> lessonList = lessonRepository.findAllByLessonNoIn(lessonNos);
             for(Lesson lesson : lessonList){
-                LikeLessonList lessonLikeListByUser= new LikeLessonList();
+                LikeLessons lessonLikeListByUser= new LikeLessons();
                 lessonLikeListByUser.setLesson_no(lesson.getLessonNo());
                 lessonLikeListByUser.setLesson_title(lesson.getLessonTitle());
                 lessonLikeListByUser.setLesson_sname(lesson.getLessonSname());
@@ -63,6 +63,6 @@ public class MypageServiceImpl implements MypageService {
             return ResponseDto.databaseError();
         }
 
-        return GetLessonLikeListResponseDTO.success(lessons);
+        return GetLessonLikesResponseDto.success(lessons);
     }
 }
