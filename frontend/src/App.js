@@ -2,7 +2,7 @@ import React from 'react'
 import './App.css';
 import { Header, Footer, MainHomepage } from './MainPage/';
 import { ViewList, RegisterRecipe, RecipeDetail } from './Recipe/';
-import { CommunityDetail, RegisterCommunity, CommunityList } from './Community/';
+import { CommunityDetail, RegisterCommunity, CommunityList, ModifyCommunity } from './Community/';
 import { Routes, Route } from 'react-router-dom';
 import SearchList from './Search/SearchList';
 import { ClassDetail, RegisterClass, ModifyClass } from './Class/'
@@ -24,6 +24,7 @@ const App = () => {
         <Route path='/recipeDetail' element={<RecipeDetail />} />
         <Route path='/communityDetail/:community_no' element={<CommunityDetail />} />
         <Route path='/registerCommunity' element={<RegisterCommunity />} />
+        <Route path='/modifyCommunity/:community_no' element={<ModifyCommunity />} />
         <Route path='/communityList' element={<CommunityList />} />
         <Route path='/searchList' element={<SearchList />} />
         <Route path='/classDetail/:lesson_no' element={<ClassDetail />} />
