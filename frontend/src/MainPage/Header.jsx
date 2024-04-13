@@ -13,7 +13,8 @@ const Text_title=styled(Typography)(({theme})=>({
     color:theme.palette.main.br,
     fontWeight:'Bold',
     fontSize:'1.2em',
-    whiteSpace:'nowrap'
+    whiteSpace:'nowrap',
+    marginTop:'0.2vw'
 }));
 const Button_group=styled(ButtonGroup)(({theme})=>({
     color:theme.palette.main.or,
@@ -29,16 +30,19 @@ const Header =()=>{
    
     return(
         <AppBar sx={{backgroundColor:'main.yl'}} >
-            <Toolbar sx={{gap:1}}>
-                <Grid container >
-                    <Grid item xs>
-                    <img  width='2vw'  className='logoImg' src='../../images/logo.png' />
-                    </Grid><Grid xs item marginTop='0.5vh'>
-                    <Text_title>
-                        화반(花盤)
-                    </Text_title>
+            <Toolbar>
+                <Grid container xs >
+                    <Grid container  item xs={1.1}>
+                        <Grid>
+                            <img  width='2vw'  className='logoImg' src='../../images/logo.png' />
+                        </Grid>
+                        <Grid >
+                            <Text_title>
+                                        화반(花盤)
+                            </Text_title>
+                        </Grid>                    
                     </Grid>
-                    <Grid item xs={4}>
+                    <Grid item xs={3} >
                 <Button_group>
                     <Button_logo_style>
                         레시피
@@ -51,12 +55,12 @@ const Header =()=>{
                     </Button_logo_style>
                 </Button_group>
                     </Grid>
-                    <Grid item xs={3}>
-                    <Input_search width='20vw'  size='small'/>
+                    <Grid item xs={4} >
+                    <Input_search width='25vw' size='small' />
                     </Grid>
-                    <Grid container xs={4} ml='1vw' >
+                    <Grid container  xs={2} ml='13vw'  >
                         <Grid item>
-                                <Button_outlined_style width='5vw'  variant='outlined' sx={{marginLeft:'20vw'}} onClick={handleOpenSignup}>
+                                <Button_outlined_style width='5vw'  variant='outlined' sx={{height:'2vw',ml:'5vw'}} onClick={handleOpenSignup}>
                                     회원가입
                                 </Button_outlined_style>
                                 <Signup open={openSignup}>
@@ -64,7 +68,7 @@ const Header =()=>{
                                 </Signup>
                         </Grid>
                         <Grid item>
-                                <Button_contain_style width='5vw' variant='contained' sx={{marginLeft:'1vw'}} onClick={handleOpen}>
+                                <Button_contain_style width='5vw' variant='contained' sx={{marginLeft:'1vw',height:'2vw'}} onClick={handleOpen}>
                                 로그인
                                 </Button_contain_style>
                                 <CommonModal open={open} name_1='아이디' name_2='비밀번호' helpertext_1='8~15자로 작성해 주세요.' helpertext_2='영문,숫자,특수문자 포함 8~15자로 작성해 주세요.' but_name='로그인' text_1='회원가입'
