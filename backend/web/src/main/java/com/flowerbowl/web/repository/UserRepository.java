@@ -201,7 +201,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Modifying
     @Query(value = "UPDATE user " +
             "SET  " +
-            "   user_pw = :randomPw " +
+            "   user_pw = :randomPw," +
+            "   user_pw_changed = true " +
             "WHERE " +
             "   user_email = :userEmail ", nativeQuery = true)
     void updatePw(@Param("randomPw") String randomPw, @Param("userEmail") String userEmail);

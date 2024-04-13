@@ -42,7 +42,6 @@ public class WebConfig {
      * HttpSecurity 설정
      */
     @Bean
-
     protected SecurityFilterChain configure(HttpSecurity httpSecurity) throws Exception {
 
         httpSecurity.cors(cors -> cors
@@ -55,7 +54,7 @@ public class WebConfig {
                 )
                 // HTTP 요청에 대한 권한 설정
                 .authorizeHttpRequests(request -> request
-                                .requestMatchers("/", "/file/**",
+                                .requestMatchers("/**", "/file/**",
                                         "/api/recipes/guest", "/api/recipes/guest/**",
                                         "/api/communities/guest/**", "/api/comments",
                                         "/api/lessons/guest/**", "/api/banners",
@@ -65,7 +64,7 @@ public class WebConfig {
                                         "/api/search", "/api/search/**").permitAll() // 역할을 따른 경로 접근 제한 설정
 //                        .requestMatchers("/api/user/**").hasAnyRole("USER", "CHEF") // 나머지 요청은 인증된 사용자만 접근이 가능해서 필요가 없는 거 같음
                                 .requestMatchers("/api/chef/**",
-                                        "api/lessons/**","api/lessons").hasRole("CHEF")
+                                        "/api/lessons/**","/api/lessons").hasRole("CHEF")
                                 .requestMatchers("/api/admin/**").hasRole("ADMIN")
                                 .anyRequest().authenticated() // 나머지 요청은 인증된 사용자만 접근
                 )

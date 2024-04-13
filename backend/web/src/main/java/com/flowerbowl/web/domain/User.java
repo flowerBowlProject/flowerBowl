@@ -53,8 +53,9 @@ public class User {
     @ColumnDefault("false")
     private Boolean userWdStatus;
 
-//    @Column(name = "user_type")
-//    private String userType;
+    @Column(name = "user_pw_changed")
+    private Boolean userPwChanged;
+
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Recipe> recipes = new ArrayList<>();
@@ -86,16 +87,19 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<License> licenses = new ArrayList<>();
 
+    /**
+     * 유저 화원가입 시 필요한 생성자
+     */
     public User(SignUpRequestDto dto) {
         this.userId = dto.getUser_id();
         this.userPw = dto.getUser_password();
         this.userEmail = dto.getUser_email();
         this.userNickname = dto.getUser_nickname();
         this.userPhone = dto.getUser_phone();
-//        this.userType = "web";
         this.userCreateDate = LocalDate.now(ZoneId.of("Asia/Seoul"));
         this.userRole = Role.ROLE_CHEF;
         this.userWdStatus = false; // @ColumnDefault("false")이 안 먹음
+        this.userPwChanged = false;
     }
 
 
