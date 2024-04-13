@@ -39,9 +39,8 @@ public class UserServiceImpl implements UserService {
         try {
 
             user = userRepository.findByUserId(userId);
-            if (user == null) {
-                return GetUserInfoResponseDto.notExistUser();
-            }
+            if (user == null) return GetUserInfoResponseDto.notExistUser();
+
 
         } catch (Exception exception) {
             exception.printStackTrace();
@@ -120,7 +119,6 @@ public class UserServiceImpl implements UserService {
             userId = byUserEmail.getUserId();
 
 
-
         } catch (Exception exception) {
             exception.printStackTrace();
             return ResponseDto.databaseError();
@@ -136,8 +134,9 @@ public class UserServiceImpl implements UserService {
 
             String userEmail = dto.getUser_email();
             String userId = dto.getUser_id();
-            User originPw = userRepository.findPwByIdAndEmail(userId, userEmail);
-            if (originPw == null) return FindUserPwResponseDto.informationMismatch();
+            User user = userRepository.findPwByIdAndEmail(userId, userEmail);
+            if (user == null) return FindUserPwResponseDto.informationMismatch();
+
 
             String randomPw = PwUtil.getRandomPassword();
             emailProvider.sendCertification(userEmail, randomPw);
