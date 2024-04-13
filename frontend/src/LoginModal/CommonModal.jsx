@@ -21,11 +21,11 @@ const CommonModal=({open,name_1,name_2,helpertext_1,helpertext_2,but_name,text_1
                         <Button_contain_style width='15vw' sx={{ml:'12vw',mb:'2vw'}}>{but_name}</Button_contain_style>
                     </Grid>
                     <Grid item xs>
-                        <Typography  color='#ffffff' align='center' display='inline'sx={{ '&:hover': { cursor: "pointer",color:'main.or' } }}  ml='13vw' onClick=''  >{text_1}</Typography> 
+                        <Typography  color='#ffffff' align='center' display='inline'sx={{ '&:hover': { cursor: "pointer",color:'main.or' } }}  ml='13vw' onClick={handleOpenModal}  >{text_1}</Typography> 
                         <Typography  color='#ffffff' align='center' display='inline'  > | </Typography> 
                         <Typography  color='#ffffff' align='center' display='inline' sx={{ "&:hover": { cursor: "pointer",color:'main.or' } }}  onClick={handleOpenModal}>{text_2}</Typography> 
                         <Typography  color='#ffffff' align='center' display='inline' > | </Typography> 
-                        <Typography  color='#ffffff' align='center' display='inline'  sx={{ "&:hover": { cursor: "pointer",color:'main.or' } }} onClick=''>{text_3}</Typography> 
+                        <Typography  color='#ffffff' align='center' display='inline'  sx={{ "&:hover": { cursor: "pointer",color:'main.or' } }} onClick={handleOpenModal}>{text_3}</Typography> 
                     </Grid>
                     {api_login?
                     <Grid container xs direction='row' alignItems='center' mb='3vw' mt='2vw'>

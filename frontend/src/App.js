@@ -18,29 +18,28 @@ const App = () => {
     <>
     <Header />
     <Routes>
-        <Route path='/' element={<MainHomepage/>}>
-          <Route path='/viewList' element={<ViewList/>} />
-          <Route path='/registerRecipe' element={<RegisterRecipe/>} />
-          <Route path='/recipeDetail' element={<RecipeDetail/>} />
-          <Route path='/communityDetail' element={<CommunityDetail/>} />
-          <Route path='/registerCommunity' element={<RegisterCommunity/>} />
-          <Route path='/communityList' element={<CommunityList/>} />
-          <Route path='/searchList' element={<SearchList/>} />
-          <Route path='/classDetail' element={<ClassDetail/>} />
-          <Route path='/registerClass' element={<RegisterClass/>} />
-          <Route path='/profile' element={<Profile/>} />
-          <Route path='/admissionChef' element={<AdmissionChef/>} />
-          <Route path='/registerBanner' element={<RegisterBanner/>} />
-          <Route path='/checkClassList' element={<CheckClassList/>} />
-          <Route path='/bookmarkClass' element={<BookmarkClass/>} />
-          <Route path='/bookmarkRecipe' element={<BookmarkRecipe/>} />
-          <Route path='/checkmakingclass' element={<Checkmakingclass/>} />
-          <Route path='/checkteachingclass' element={<Checkteachingclass/>} />
-          <Route path='/checkmakingrecipe' element={<Checkmakingrecipe/>} />
-          <Route path='/checkPaidList' element={<CheckPaidList/>} />
-          <Route path='/checkReview' element={<CheckReview/>} />
-          <Route path='/registerReview' element={<RegisterReview/>} />
-        </Route>
+        <Route path='/' element={<MainHomepage/>} />
+        <Route path='/viewList' element={<ViewList/>} />
+        <Route path='/registerRecipe' element={<RegisterRecipe/>} />
+        <Route path='/recipeDetail' element={<RecipeDetail/>} />
+        <Route path='/communityDetail' element={<CommunityDetail/>} />
+        <Route path='/registerCommunity' element={<RegisterCommunity/>} />
+        <Route path='/communityList' element={<CommunityList/>} />
+        <Route path='/searchList' element={<SearchList/>} />
+        <Route path='/classDetail' element={<ClassDetail/>} />
+        <Route path='/registerClass' element={<RegisterClass/>} />
+        <Route path='/profile' element={<Profile/>} />
+        <Route path='/admissionChef' element={<AdmissionChef/>} />
+        <Route path='/registerBanner' element={<RegisterBanner/>} />
+        <Route path='/checkClassList' element={<CheckClassList/>} />
+        <Route path='/bookmarkClass' element={<BookmarkClass/>} />
+        <Route path='/bookmarkRecipe' element={<BookmarkRecipe/>} />
+        <Route path='/checkmakingclass' element={<Checkmakingclass/>} />
+        <Route path='/checkteachingclass' element={<Checkteachingclass/>} />
+        <Route path='/checkmakingrecipe' element={<Checkmakingrecipe/>} />
+        <Route path='/checkPaidList' element={<CheckPaidList/>} />
+        <Route path='/checkReview' element={<CheckReview/>} />
+        <Route path='/registerReview' element={<RegisterReview/>} />
     </Routes> 
     <Footer />
     </>
