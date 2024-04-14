@@ -3,7 +3,7 @@ import './CardCompStyle.css';
 import Card from '@mui/material/Card';
 import CardMedia from '@mui/material/CardMedia';
 import CardContent from '@mui/material/CardContent';
-import FavoriteIcon from '@mui/icons-material/Favorite';
+import TurnedInIcon from '@mui/icons-material/TurnedIn';
 import ChatBubbleIcon from '@mui/icons-material/ChatBubble';
 
 // 전체적으로 list의 element의 단어들을 api와 일치시켜야 함
@@ -23,8 +23,8 @@ const CardComp = ({list}) => {
         <CardContent>
           <div className='detail-element'>
             <div className='views-date'> {list.date} </div>
-            <div className='views-icons'>
-              <FavoriteIcon sx={{ color: 'main.or', marginLeft:'1vw'}}/> {list.like_count}
+            <div className='views-icons' style={{display:'flex', alignContent:'center'}}>
+              <TurnedInIcon sx={{ color: 'main.or', marginLeft:'1vw'}}/> {list.like_count}
               <ChatBubbleIcon sx={{ color: 'main.or', marginLeft:'1vw'}} /> {list.comment_count}
             </div>
           </div>

@@ -51,20 +51,22 @@ input{
 
 /* 가격 + 날짜 + 장소 작성란 */
 .classElement1-Box{
-    height: 8vw;
+    height: 6vw;
     border-top: 2px solid #CBA285;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-top: 1%;
+    margin-top: 2%;
+    padding-top: 1%;
 }
 
 .classElement2-Box{
-    height: 8vw;
+    height: 6vw;
     border-bottom: 2px solid #CBA285;
     display: flex;
     align-items: center;
     justify-content: center;
+    padding-bottom: 1%;
 }
 
 .calendar-Box{
@@ -102,14 +104,6 @@ input{
 }
 .css-ifxyz2-MuiButtonBase-root-MuiButton-root{
     padding : 16.5px 14px !important;
-}
-
-/* 토스트 에디터 들어갈 박스 */
-.ClassText-Box{
-    height: 35vw;
-    margin-top: 1vw;
-    border-top : 2px solid #CBA285;
-    border-bottom: 2px solid #CBA285;
 }
 
 .register_button{

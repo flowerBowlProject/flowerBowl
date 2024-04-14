@@ -4,14 +4,14 @@
 }
 
 /* 썸네일 선택 및 프리뷰 */
-.thumbnail{
+.recipeRegister-thumbnail{
     font-size: 1rem;
     width: 20%;
     height: 15vw;
 }
 
 /* 사진 선택 전 */
-.register-thumbnail{
+.recipeChoose-thumbnail{
     border: 2px solid #CBA285;
     border-radius: 10%;
     width: 15vw;
@@ -52,7 +52,7 @@ input{
 
 /* 토스트 에디터 들어갈 박스 */
 .recipeText-Box{
-    height: 35vw;
+    height: 570px;
     margin-top: 1vw;
     border-top : 2px solid #CBA285;
     border-bottom: 2px solid #CBA285;
