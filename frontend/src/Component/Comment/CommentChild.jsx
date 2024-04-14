@@ -1,8 +1,7 @@
 import React from "react";
 import './CommentStyle.css';
 import SubdirectoryArrowRightIcon from '@mui/icons-material/SubdirectoryArrowRight';
-import Button_outlined_style from "../Button_outlined_style";
-import Button_contain_style from "../Button_contain_style";
+import ButtonContain from "../ButtonContain";
 
 const CommentChild = ({ data, isLast }) => {
 
@@ -39,8 +38,8 @@ const CommentChild = ({ data, isLast }) => {
                     </textarea>
                 </div>
                 <div className="commentButtonChild-Box">
-                    <Button_outlined_style width='5vw' sx={{ height: "2vw" }} variant='outlined' onClick={() => changeComment()}>수정</Button_outlined_style> &nbsp;
-                    <Button_contain_style width='5vw' variant='contained' sx={{ height: "2vw" }} onClick={handleDelete}>삭제</Button_contain_style>
+                <ButtonContain size='large' text='로그인'/> &nbsp;
+                <ButtonContain size='large' text='로그인'/>
                 </div>
             </div>
             {isLast && <div style={{ border: "0.5px solid #B0A695", width: "90%", margin: "1vw auto 1vw auto" }} />}

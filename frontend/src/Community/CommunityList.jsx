@@ -9,10 +9,10 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import Pagination from '@mui/material/Pagination';
-import Button_outlined_style from "../Component/Button_outlined_style";
 import { useNavigate } from 'react-router-dom';
 import axios from "axios";
 import { url } from "../url";
+import ButtonContain from "../Component/ButtonContain";
 
 
 const CommunityList = () => {
@@ -67,9 +67,7 @@ const CommunityList = () => {
     return (
         <>
             <div className="communityList-Box">
-                <Button_outlined_style width='5vw' sx={{ height: "2vw", float: "right" }} variant='outlined' onClick={(e) => handleRegister(e)}>
-                    글쓰기
-                </Button_outlined_style>
+            <ButtonContain size='large' text='로그인'/>
 
                 <TableContainer component={Paper} sx={{ boxShadow: 'none' }}>
                     <Table sx={{ border: "none" }}>
