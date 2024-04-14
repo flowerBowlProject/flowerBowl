@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import './RegisterClassStyle.css';
 
 import Category from '../Component/Category';
@@ -14,16 +14,32 @@ import AddressSearch from "./AddressSearch";
 import  axios  from "axios";
 import { url } from "../url";
 import { useSelector } from 'react-redux';
+import { useLocation } from "react-router";
 
 const RegisterClass = () => {
     const accessToken = useSelector(state => state.persistedReducer.accessToken);
+    const location = useLocation();
+    const lesson_no = location.state?.lesson_no;
+
     {/* 등록 클래스 데이터 + 썸네일 + 썸네일 선택 여부 */ }
     const [registerData, setRegisterData] = useState({
-        lesson_title: '', lesson_category: '', lesson_price: 0, lesson_sname:'', lesson_oname:'',
-        lesson_address: '', lesson_content: '', lesson_longitude: 0.0, lesson_latitude: 0.0, lesson_start: '', lesson_end: '', lesson_URL: ''
+        lesson_title: '제목1', lesson_category: '밥', lesson_price: 0, lesson_sname:'', lesson_oname:'',
+        lesson_address: '주소1', lesson_content: '<div>내용1</div>', lesson_longitude:1.1, lesson_latitude: 1.1, lesson_start: '', lesson_end: '', lesson_URL: 'asd'
     });
     const [thumbnail, setThumbnail] = useState(null);
     const [selectedFile, setSelectedFile] = useState(null);
+    
+
+    useEffect(()=>{
+        {/* 수정할 정보 가져와 세팅 */}
+        axios.get(`${url}/lesson/user/${lesson_no}`)
+        .then(res=>{
+
+        })
+        .catch(err=>{
+
+        })
+    })
 
     {/* 썸네일 선택 및 변경 - 사진 업로드 과정 추가 필요 */}
     const chooseThumbnail = (e) => {
@@ -63,10 +79,9 @@ const RegisterClass = () => {
         setRegisterData((registerData) => ({ ...registerData, [name]: value }));
     }
 
-    {/* 클래스 등록 */}
+    {/* 클래스 수정 */}
     const handleRegister = () =>{
-        console.log(registerData);
-        axios.post(`${url}/api/lesson`, registerData, {
+        axios.post(`${url}/api/lessons/${lesson_no}`, registerData, {
             headers: {
                 Authorization: accessToken
             }
@@ -100,17 +115,17 @@ const RegisterClass = () => {
                             <input type='file' name='thumbImg' onChange={chooseThumbnail} />
                         </label>)}
                 </div>
-                <input className="register-title" type='text' placeholder="제목을 작성해 주세요." name="lesson_title" onChange={(e)=> setValue(e)}/>
+                <input className="register-title" type='text' placeholder="제목을 작성해 주세요." name="lesson_title" onChange={(e)=> setValue(e)} value={registerData.lesson_title}/>
 
                 {/* 카테고리 선택 */}
-                <Category getCategory={getCategory} />
+                <Category getCategory={getCategory} category={registerData.lesson_category}/>
             </div>
 
             {/* 가격 + 날짜 작성란 */}
             <div className="classElement1-Box">
                 {/* 가격 */}
                 <div className="classPrice">
-                    <TextField id="outlined-basic" label="가격" variant="outlined" type="number"
+                    <TextField id="outlined-basic" variant="outlined" type="number" value={registerData.lesson_price}
                         sx={{ width: '12vw' }} name="lesson_price" onChange={(e)=> setValue(e)} />
                 </div>
                 {/* 날짜 */}
@@ -131,18 +146,18 @@ const RegisterClass = () => {
 
             {/* 장소 */}
             <div className="classElement2-Box">
-                <AddressSearch getAddress={getAddress} />
-                <TextField id="outlined-basic" type="text" label="오픈 채팅" variant="outlined" readOnly sx={{ marginLeft: '1vw', width: '40vw' }} placeholder='오픈채팅 링크를 입력해 주세요.'
-                    name="lesson_URL" onChange={(e)=> setValue(e)} />
+                <AddressSearch getAddress={getAddress} address={registerData.lesson_address}/>
+                <TextField id="outlined-basic" type="text" variant="outlined" readOnly sx={{ marginLeft: '1vw', width: '40vw' }} placeholder='오픈채팅 링크를 입력해 주세요.'
+                    name="lesson_URL" onChange={(e)=> setValue(e)} value={registerData.lesson_URL} />
             </div>
 
             {/* 레시피 || 클래스 상세 내용 작성란 */}
-            <ToastEditor getToastEditor={getToastEditor}/>
+            <ToastEditor getToastEditor={getToastEditor} content={registerData.lesson_content}/>
 
             <div style={{ border: "1px solid #CBA285", marginBottom: "2%" }} />
             <div className="register_button">
                 <Button_outlined_style width='5vw' sx={{height:"2vw"}} variant='outlined' onClick={handleRegister()}>
-                    등록
+                    수정
                 </Button_outlined_style> &nbsp;
                 <Button_contain_style width='5vw' sx={{height:"2vw"}} variant='contained' onClick={handleCancel()}>
                     취소
