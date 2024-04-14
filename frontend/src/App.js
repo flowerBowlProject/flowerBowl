@@ -1,7 +1,7 @@
 import React from 'react'
 import './App.css';
 import { Header, Footer, MainHomepage } from './MainPage/';
-import { ViewList, RegisterRecipe, RecipeDetail } from './Recipe/';
+import { ViewList, RegisterRecipe, RecipeDetail, ModifyRecipe } from './Recipe/';
 import { CommunityDetail, RegisterCommunity, CommunityList, ModifyCommunity } from './Community/';
 import { Routes, Route } from 'react-router-dom';
 import SearchList from './Search/SearchList';
@@ -21,6 +21,7 @@ const App = () => {
         <Route path='/' element={<MainHomepage />} />
         <Route path='/viewList' element={<ViewList />} />
         <Route path='/registerRecipe' element={<RegisterRecipe />} />
+        <Route path='/modifyRecipe/:recipe_no' element={<ModifyRecipe />} />
         <Route path='/recipeDetail/:recipe_no' element={<RecipeDetail />} />
         <Route path='/communityDetail/:community_no' element={<CommunityDetail />} />
         <Route path='/registerCommunity' element={<RegisterCommunity />} />
