@@ -1,6 +1,7 @@
 .communityList-Box{
     width: 80%;
     margin: 5% auto;
+    min-height: 45vw;
 }
 
 /* 페이지네이션 */
