@@ -33,7 +33,6 @@ const RegisterRecipe = () => {
         setRegisterData((registerData) => ({ ...registerData, lesson_content: content}));
     }
 
-
     return (
         <div className="registerRecipe-Box">
 
@@ -62,7 +61,7 @@ const RegisterRecipe = () => {
                 재료 태그 작성란 - 컴포넌트 만들어서 넣을 예정
                 </div>
                 {/* 레시피 || 클래스 상세 내용 작성란 */}
-                <ToastEditor getToastEditor={getToastEditor}/>
+                <ToastEditor getToastEditor={getToastEditor} content={registerData.recipe_content}/>
             </div>
             
             {/* 조이님이 만들어주신 공통 컴포넌트 버튼 추가 필요 -> 등록 / 취소 버튼 */}

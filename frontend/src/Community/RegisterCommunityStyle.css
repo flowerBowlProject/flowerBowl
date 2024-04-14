@@ -3,12 +3,16 @@
     margin: 5% auto;
 }
 
-.community-title{
+.communityregister-title{
     font-size: 1.3rem;
-    width: 99%;
-    margin: 0.5vw auto;
+    width: 50%;
+    margin: 1% auto;
+    margin-top: 7%;
     text-align: center;
     border: none;
+    justify-content: center;
+    display: flex;
+    border-bottom: 2px solid #CBA285;
 }
 
 .communityText-Box{
