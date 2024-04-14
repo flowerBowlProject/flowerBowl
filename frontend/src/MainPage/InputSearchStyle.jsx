@@ -4,7 +4,7 @@ import {TextField} from '@mui/material';
 import { useState } from 'react';
 
 
-const Input_search_style=styled(TextField)(({ theme}) =>({
+const InputSearchStyle=styled(TextField)(({ theme}) =>({
     '& .MuiOutlinedInput-root': {
         '& fieldset': {
           border:`2px solid ${theme.palette.main.br}`,
@@ -18,4 +18,4 @@ const Input_search_style=styled(TextField)(({ theme}) =>({
           }
         }
 }));
-export default Input_search_style;
+export default InputSearchStyle;

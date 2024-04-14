@@ -1,6 +1,7 @@
 import { createTheme } from "@mui/material/styles";
 import './App.css';
 export const theme = createTheme({
+  
 	palette: {
       main: {
         yl: '#FEFBEC',
@@ -11,13 +12,15 @@ export const theme = createTheme({
       },
       secondary:{
         main: '#F6C47B',
-        
+      },
+      primary:{
+        main: '#ffffff'
       }
 },
     typography:{
         fontFamily: 'GowunBatang-Regular'
     },
-    shadows: 'none',
+    shadows: ['none','none','none','none','none'],
     Bu:{
       color:'inherit',
       border:'inherit',

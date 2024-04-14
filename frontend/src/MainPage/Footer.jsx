@@ -1,8 +1,8 @@
 import React from 'react'
 import './Footer.css';
 import {Grid,Typography,Box} from '@mui/material';
-import Button_contain_style  from '../Component/Button_contain_style';
-import Button_outlined_style from '../Component/Button_outlined_style';
+import ButtonContain from '../Component/ButtonContain';
+import ButtonOutlined from '../Component/ButtonOutlined';
 import { useState } from 'react';
 const Text=({mainTitle,content_1,content_2})=>{
     return(
@@ -42,10 +42,10 @@ const Footer =()=>{
                 <Text mainTitle='커뮤니티' content_1='커뮤니티 등록' content_2='커뮤니티 보러가기'/>
                 <Grid container direction='column' sm={1} gap='0.9vw'>
                     <Grid item>                    
-                        <Button_contain_style width='5vw'  variant='contained' sx={{height:'2vw'}}>로그인</Button_contain_style>
+                        <ButtonContain   variant='contained' size='large' text='로그인' />
                     </Grid>
                     <Grid item xl>
-                        <Button_outlined_style width='5vw' variant='outlined' sx={{height:'2vw'}}>회원가입</Button_outlined_style>
+                        <ButtonOutlined  variant='outlined' size='large' text='회원가입'/>
                     </Grid>
                 </Grid>
                 <Grid>
