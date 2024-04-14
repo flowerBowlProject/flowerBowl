@@ -4,14 +4,10 @@ import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import Grid from "@mui/material/Grid";
-import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import BookmarkIcon from "@mui/icons-material/Bookmark";
-import ImportContactsIcon from "@mui/icons-material/ImportContacts";
-import BlenderIcon from "@mui/icons-material/Blender";
-import PaymentIcon from "@mui/icons-material/Payment";
-import ListIcon from "@mui/icons-material/List";
+import AddCommentIcon from "@mui/icons-material/AddComment";
+import PersonAddIcon from "@mui/icons-material/PersonAdd";
+import { Link, Outlet } from "react-router-dom";
 import "./Sidebar.css";
-import {Link, Outlet} from "react-router-dom";
 
 const Row = ({ icon, name, isHovered, isFixed, link }) => {
   const color = isFixed || isHovered ? "main.wh" : "main.or";
@@ -38,25 +34,17 @@ const Row = ({ icon, name, isHovered, isFixed, link }) => {
   );
 };
 
-const Sidebar = ({ fixedItem = "" }) => {
+const AdminSidebar = ({ fixedItem = "" }) => {
   const items = [
-    { name: "프로필", icon: <AccountCircleIcon />, link: "/Mypage/profile" },
-    { name: "북마크", icon: <BookmarkIcon />, link: "/Mypage/bookmarkRecipe" },
     {
-      name: "마이 클래스",
-      icon: <ImportContactsIcon />,
-      link: "/Mypage/checkteachingclass",
+      name: "쉐프 신청 내역",
+      icon: <PersonAddIcon />,
+      link: "/Admin/admissionChef",
     },
     {
-      name: "마이 레시피",
-      icon: <BlenderIcon />,
-      link: "/Mypage/checkmakingrecipe",
-    },
-    { name: "결제 내역", icon: <PaymentIcon />, link: "/Mypage/checkPaidList" },
-    {
-      name: "클래스 신청 내역",
-      icon: <ListIcon />,
-      link: "/Mypage/checkClassList",
+      name: "배너 등록",
+      icon: <AddCommentIcon />,
+      link: "/Admin/registerBanner",
     },
   ];
 
@@ -67,7 +55,7 @@ const Sidebar = ({ fixedItem = "" }) => {
   }, [initialHoverIndex]);
 
   return (
-    <Grid container direction="column" mt="5vw">
+    <Grid container direction="column" mt="5.5vw" mb="45vh">
       {items.map((item, i) => {
         return (
           <Grid
@@ -80,7 +68,7 @@ const Sidebar = ({ fixedItem = "" }) => {
               borderTop:
                 i === 1 || i === 3 || i === 5 ? "none" : "2px solid #F6C47B",
               borderRight: "2px solid #F6C47B",
-              borderBottom: i === 1 || i === 3 ? "none" : "2px solid #F6C47B",
+              borderBottom: "2px solid #F6C47B",
               "&:hover": { backgroundColor: "main.or", color: "main.wh" },
             }}
           >
@@ -99,4 +87,4 @@ const Sidebar = ({ fixedItem = "" }) => {
   );
 };
 
-export default Sidebar;
+export default AdminSidebar;

@@ -1,7 +1,7 @@
 import { React, useState, useEffect } from "react";
-import Inputbutton from "../../Component/Input/Inputbutton";
 import "./CheckReview.css";
-import MyPageLayout from "../MyPageLayout";
+import Button_contain_style from "../../Component/Button_contain_style";
+import Button_outlined_style from "../../Component/Button_outlined_style";
 
 const CheckReview = () => {
   // 정렬기능
@@ -70,14 +70,14 @@ const CheckReview = () => {
   };
 
   return (
-    <MyPageLayout>
+    <>
       {/* 버튼들 */}
       <section className="buttons">
         <span className="write-review">
-          <Inputbutton text="리뷰 작성" i={false} w="medium" />
+          <Button_outlined_style>결제 내역</Button_outlined_style>
         </span>
-        <Inputbutton text="리뷰 조회" i={true} w="medium" />
-        <Inputbutton text="결제 내역" i={false} w="medium" />
+        <Button_contain_style>리뷰 조회</Button_contain_style>
+        <Button_outlined_style>리뷰 작성</Button_outlined_style>
       </section>
 
       {/* 내용 */}
@@ -143,13 +143,17 @@ const CheckReview = () => {
                   </td>
                   <td>
                     {item ? (
-                      <Inputbutton text="삭제" i={false} w="small" />
+                      <Button_outlined_style>삭제</Button_outlined_style>
                     ) : (
                       ""
                     )}
                   </td>
                   <td>
-                    {item ? <Inputbutton text="수정" i={true} w="small" /> : ""}
+                    {item ? (
+                      <Button_contain_style>수정</Button_contain_style>
+                    ) : (
+                      ""
+                    )}
                   </td>
                 </tr>
               )
@@ -160,9 +164,9 @@ const CheckReview = () => {
 
       {/* 더보기 버튼    */}
       <section className="bottom-add">
-        <Inputbutton text="더보기" i={true} w="large" />
+        <Button_contain_style>더보기</Button_contain_style>
       </section>
-    </MyPageLayout>
+    </>
   );
 };
 
