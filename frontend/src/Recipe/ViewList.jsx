@@ -3,7 +3,7 @@ import './ViewListStyle.css';
 import Button from '@mui/material/Button';
 import RecipeReviewCard from "../Component/CardComp";
 import Bookmark from "../Component/Bookmark";
-
+import { Outlet } from "react-router-dom";
 
 
 const ViewList = ({name}) => {

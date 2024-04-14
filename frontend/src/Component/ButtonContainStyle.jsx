@@ -1,7 +1,7 @@
 import React from 'react'
 import { styled } from '@mui/material/styles';
 import {Button} from '@mui/material';
-const Button_contain_style =styled(Button)(({theme,width})=>({
+const ButtonContainStyle =styled(Button)(({theme,width})=>({
     width: width,
     backgroundColor: theme.palette.main.or,
     color: '#ffffff',
@@ -14,4 +14,4 @@ const Button_contain_style =styled(Button)(({theme,width})=>({
       border: `2px solid #ffffff`
     }
   }));
-  export default Button_contain_style;
+  export default ButtonContainStyle;
