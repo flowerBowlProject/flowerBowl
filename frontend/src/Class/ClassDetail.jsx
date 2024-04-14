@@ -2,11 +2,10 @@ import React, { useEffect, useState } from "react";
 import './ClassDetailStyle.css';
 import TurnedInNotIcon from '@mui/icons-material/TurnedInNot';
 import TurnedInIcon from '@mui/icons-material/TurnedIn';
-import Button_contain_style from "../Component/Button_contain_style";
-import Button_outlined_style from "../Component/Button_outlined_style";
 import  axios  from "axios";
 import { useLocation } from "react-router";
 import { url } from "../url";
+import ButtonContain from "../Component/ButtonContain";
 
 const { kakao } = window;
 
@@ -100,9 +99,9 @@ const ClassDetail = () => {
                 {/* 수정/삭제 버튼 - 작성자인 경우에만 true로 버튼 표시 + 구매하기 버튼 - 작성자가 아닌 경우 노출 */}
                 <div className="class-change">
                     가격 : {classData.lesson_price} &nbsp;&nbsp;&nbsp;
-                    {false && <Button_contain_style width='5vw' variant='contained' sx={{height:"2vw"}} onClick={buyClass}>신청하기</Button_contain_style>}
-                    {true &&  <Button_outlined_style width='5vw' sx={{height:"2vw"}} variant='outlined' onClick={handleModify}>수정</Button_outlined_style>} &nbsp;&nbsp;
-                    {true &&  <Button_contain_style width='5vw' variant='contained' sx={{height:"2vw"}} onClick={handleDelete}>삭제</Button_contain_style>}
+                    {false && <ButtonContain size='large' text='로그인'/>}
+                    {true &&  <ButtonContain size='large' text='로그인'/>} &nbsp;&nbsp;
+                    {true &&  <ButtonContain size='large' text='로그인'/>}
                 </div>
             </div>
         </>

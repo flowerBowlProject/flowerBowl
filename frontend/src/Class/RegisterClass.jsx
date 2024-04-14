@@ -3,8 +3,6 @@ import './RegisterClassStyle.css';
 
 import Category from '../Component/Category';
 import ToastEditor from "../Component/ToastEditor";
-import Button_contain_style from '../Component/Button_contain_style';
-import Button_outlined_style from '../Component/Button_outlined_style';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -14,6 +12,7 @@ import AddressSearch from "./AddressSearch";
 import  axios  from "axios";
 import { url } from "../url";
 import { useSelector } from 'react-redux';
+import ButtonContain from "../Component/ButtonContain";
 
 const RegisterClass = () => {
     const accessToken = useSelector(state => state.persistedReducer.accessToken);
@@ -141,12 +140,8 @@ const RegisterClass = () => {
 
             <div style={{ border: "1px solid #CBA285", marginBottom: "2%" }} />
             <div className="register_button">
-                <Button_outlined_style width='5vw' sx={{height:"2vw"}} variant='outlined' onClick={handleRegister()}>
-                    등록
-                </Button_outlined_style> &nbsp;
-                <Button_contain_style width='5vw' sx={{height:"2vw"}} variant='contained' onClick={handleCancel()}>
-                    취소
-                </Button_contain_style>
+            <ButtonContain size='large' text='로그인'/> &nbsp;
+            <ButtonContain size='large' text='로그인'/>
             </div>
         </div>
     );

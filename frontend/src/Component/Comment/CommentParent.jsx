@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import './CommentStyle.css';
 import CommentReply from "./CommentReply";
-import Button_outlined_style from "../Button_outlined_style";
-import Button_contain_style from "../Button_contain_style";
+import ButtonContain from "../ButtonContain";
 
 const CommentParent = ({ data, isLast }) => {
     const [replyModal, setReplyModal] = useState(false);
@@ -45,8 +44,8 @@ const CommentParent = ({ data, isLast }) => {
                 <div className="commentButton-Box">
                     <div className="commentReply-register" onClick={registerReply}> 대댓글 </div>
                     <div className="commentButton">
-                    <Button_outlined_style width='5vw' sx={{height:"2vw"}} variant='outlined' onClick={()=> changeComment()}>수정</Button_outlined_style> &nbsp;
-                    <Button_contain_style width='5vw' variant='contained' sx={{height:"2vw"}} onClick={handleDelete}>삭제</Button_contain_style>
+                    <ButtonContain size='large' text='로그인'/> &nbsp;
+                    <ButtonContain size='large' text='로그인'/>
                     </div>
                 </div>
             </div>
