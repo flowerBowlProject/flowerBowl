@@ -1,7 +1,7 @@
 import { React, useState, useEffect } from "react";
-import Inputbutton from "../../Component/Input/Inputbutton";
+import Button_contain_style from "../../Component/Button_contain_style";
+import Button_outlined_style from "../../Component/Button_outlined_style";
 import "./AdmissionChef.css";
-import MyPageAdminLayout from "../MyPageAdminLayout";
 
 const AdmissionChef = () => {
   // 정렬기능
@@ -44,7 +44,7 @@ const AdmissionChef = () => {
   };
 
   return (
-    <MyPageAdminLayout>
+    <>
       {/* 내용 */}
       <section className="table-content">
         <table className="custom-table">
@@ -90,8 +90,8 @@ const AdmissionChef = () => {
                   <td className="button-group">
                     {item ? (
                       <>
-                        <Inputbutton text="신청 허가" i={true} w="large" />
-                        <Inputbutton text="신청 반려" i={false} w="large" />
+                        <Button_contain_style>신청 허가</Button_contain_style>
+                        <Button_outlined_style>신청 반려</Button_outlined_style>
                       </>
                     ) : (
                       ""
@@ -106,9 +106,9 @@ const AdmissionChef = () => {
 
       {/* 더보기 버튼    */}
       <section className="bottom-add">
-        <Inputbutton text="더보기" i={true} w="large" />
+        <Button_contain_style>더보기</Button_contain_style>
       </section>
-    </MyPageAdminLayout>
+    </>
   );
 };
 

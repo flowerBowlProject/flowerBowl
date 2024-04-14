@@ -1,7 +1,7 @@
 import { React, useState, useEffect } from "react";
-import Inputbutton from "../../Component/Input/Inputbutton";
 import "./CheckPaidList.css";
-import MyPageLayout from "../MyPageLayout";
+import Button_contain_style from "../../Component/Button_contain_style";
+import Button_outlined_style from "../../Component/Button_outlined_style";
 
 const CheckPaidList = () => {
   // 정렬기능
@@ -79,14 +79,14 @@ const CheckPaidList = () => {
   };
 
   return (
-    <MyPageLayout>
+    <>
       {/* 버튼들 */}
       <section className="buttons">
         <span className="write-review">
-          <Inputbutton text="리뷰 작성" i={false} w="medium" />
+          <Button_contain_style>결제 내역</Button_contain_style>
         </span>
-        <Inputbutton text="리뷰 조회" i={false} w="medium" />
-        <Inputbutton text="결제 내역" i={true} w="medium" />
+        <Button_outlined_style>리뷰 조회</Button_outlined_style>
+        <Button_outlined_style>리뷰 작성</Button_outlined_style>
       </section>
 
       {/* 내용 */}
@@ -136,7 +136,7 @@ const CheckPaidList = () => {
                   <td>{item ? formatCurrency(item.receipt) : ""}</td>
                   <td>
                     {item ? (
-                      <Inputbutton text="취소/환불" i={true} w="medium" />
+                      <Button_contain_style>취소/환불</Button_contain_style>
                     ) : (
                       ""
                     )}
@@ -150,9 +150,9 @@ const CheckPaidList = () => {
 
       {/* 더보기 버튼    */}
       <section className="bottom-add">
-        <Inputbutton text="더보기" i={true} w="large" />
+        <Button_contain_style>더보기</Button_contain_style>
       </section>
-    </MyPageLayout>
+    </>
   );
 };
 

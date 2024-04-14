@@ -1,6 +1,5 @@
 import React from "react";
 import Input from "../../Component/Input/Input";
-import Inputbutton from "../../Component/Input/Inputbutton";
 import PersonIcon from "@mui/icons-material/Person";
 import Tooltip from "@mui/material/Tooltip";
 import "./ProfileImage.css";
@@ -10,7 +9,7 @@ import MyPageLayout from "../MyPageLayout";
 
 const Profile = () => {
   return (
-    <MyPageLayout>
+    <MyPageLayout fixed="프로필">
       <div className="body">
         {/* 프로필 */}
         <div className="profile">
