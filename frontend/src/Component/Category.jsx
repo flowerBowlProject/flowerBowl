@@ -8,7 +8,7 @@ import Select from '@mui/material/Select';
 
 const Category = (props) => {
 
-  const [category, setCategory] = useState('');
+  const [category, setCategory] = useState(props.category);
   const handleChange = (e) => {
     setCategory(e.target.value);
     props.getCategory(e.target.value);
