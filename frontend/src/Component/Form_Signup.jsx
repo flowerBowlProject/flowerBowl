@@ -16,7 +16,7 @@ const Form_Signup=({title,but_text,place_text,helper_text,but_exis})=>{
                     </Grid>
                 </Grid>
                 <Grid xs item mt='0.2vw'>
-                    <Input_search_style sx={{width:'15vw'}} variant='outlined' size='small' placeholder={place_text} helperText={helper_text} />
+                <Input_search_style sx={{ width: '15vw' }}variant='outlined' size='small' placeholder={place_text} helperText={helper_text} />
                 </Grid>
         </Grid>
     );
