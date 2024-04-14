@@ -1,7 +1,6 @@
 import { React, useState, useEffect } from "react";
-import Inputbutton from "../../Component/Input/Inputbutton";
 import "./CheckClassList.css";
-import MyPageLayout from "../MyPageLayout";
+import Button_contain_style from "../../Component/Button_contain_style";
 
 const CheckClassList = () => {
   // 정렬기능k
@@ -46,7 +45,7 @@ const CheckClassList = () => {
   };
 
   return (
-    <MyPageLayout>
+    <>
       {/* 내용 */}
       <section className="table-content">
         <table className="custom-table">
@@ -83,7 +82,7 @@ const CheckClassList = () => {
                   <td>{item ? item.phone : ""}</td>
                   <td>
                     {item ? (
-                      <Inputbutton text="취소/환불" i={true} w="medium" />
+                      <Button_contain_style>취소/환불</Button_contain_style>
                     ) : (
                       ""
                     )}
@@ -97,9 +96,9 @@ const CheckClassList = () => {
 
       {/* 더보기 버튼    */}
       <section className="bottom-add">
-        <Inputbutton text="더보기" i={true} w="large" />
+        <Button_contain_style>더보기</Button_contain_style>
       </section>
-    </MyPageLayout>
+    </>
   );
 };
 
