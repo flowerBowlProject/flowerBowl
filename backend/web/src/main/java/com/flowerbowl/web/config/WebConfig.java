@@ -58,10 +58,9 @@ public class WebConfig {
                                 .requestMatchers("/", "/file/**",
                                         "/api/recipes/guest", "/api/recipes/guest/**",
                                         "/api/communities/guest/**", "/api/comments",
-                                        "/api/lessons/guest/**", "/api/banners",
+                                        "/api/guest/**", "/api/banners",
                                         "/api/users/findId", "/api/users/findPw",
                                         "/oauth2/**", "/api/auth/**",
-                                        "/api/lessons/guest", "/api/lessons/guest/**",
                                         "/api/search", "/api/search/**").permitAll() // 역할을 따른 경로 접근 제한 설정
 //                        .requestMatchers("/api/user/**").hasAnyRole("USER", "CHEF") // 나머지 요청은 인증된 사용자만 접근이 가능해서 필요가 없는 거 같음
                                 .requestMatchers("/api/chef/**",
