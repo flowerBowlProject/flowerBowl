@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import store from './Example/store'
+import store from './persistStore';
 import { Provider } from 'react-redux'
 import { theme } from "./theme";
 import { ThemeProvider } from '@mui/material/styles';

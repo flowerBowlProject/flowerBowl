@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from "react";
 import './RegisterCommunityStyle.css';
 import ToastEditor from "../Component/ToastEditor";
-import Button_outlined_style from "../Component/Button_outlined_style";
-import Button_contain_style from "../Component/Button_contain_style";
 import { url } from "../url";
 import { useSelector } from 'react-redux';
 import { useLocation } from "react-router";
 import  axios  from "axios";
+import ButtonContain from "../Component/ButtonContain";
 
 const RegisterCommunity = () =>{
     const accessToken = useSelector(state => state.persistedReducer.accessToken);
@@ -70,12 +69,8 @@ const RegisterCommunity = () =>{
 
             {/* 등록 + 취소 버튼 컴포넌트 위치 */}
             <div className="register_button" style={{marginTop:"2%"}}>
-            <Button_outlined_style width='5vw' sx={{height:"2vw"}} variant='outlined' onClick={handleRegister()}>
-                    등록
-                </Button_outlined_style> &nbsp;
-                <Button_contain_style width='5vw' sx={{height:"2vw"}} variant='contained' onClick={handleCancel()}>
-                    취소
-                </Button_contain_style>
+            <ButtonContain size='large' text='로그인'/> &nbsp;
+            <ButtonContain size='large' text='로그인'/>
             </div>
         </div>
     );
