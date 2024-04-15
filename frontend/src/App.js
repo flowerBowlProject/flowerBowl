@@ -16,7 +16,7 @@ import {
 import { Routes, Route } from "react-router-dom";
 import SearchList from "./Search/SearchList";
 import { ClassDetail, RegisterClass, ModifyClass } from "./Class/";
-import Profile from "./Mypage/Profile/Profile";
+import Profilepage from "./Mypage/Profile/Profilepage";
 import { AdmissionChef, RegisterBanner } from "./Mypage/Admin/";
 import CheckClassList from "./Mypage/ApplyClass/CheckClassList";
 import { BookmarkClass, BookmarkRecipe } from "./Mypage/Bookmark/";
@@ -52,7 +52,7 @@ const App = () => {
         <Route path="/registerClass" element={<RegisterClass />} />
 
         <Route path="/Mypage" element={<Sidebar />}>
-          <Route path="profile" element={<Profile />} />
+          <Route path="profile" element={<Profilepage />} />
           <Route path="checkClassList" element={<CheckClassList />} />
           <Route path="bookmarkClass" element={<BookmarkClass />} />
           <Route path="bookmarkRecipe" element={<BookmarkRecipe />} />
