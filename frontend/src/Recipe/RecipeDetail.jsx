@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import './RecipeDetailStyle.css';
 import TurnedInNotIcon from '@mui/icons-material/TurnedInNot';
 import TurnedInIcon from '@mui/icons-material/TurnedIn';
-import Inputbutton from "../Component/Input/Inputbutton";
 import Comment from "../Component/Comment/Comment";
 
 const RecipeDetail = () => {
@@ -39,8 +38,8 @@ const RecipeDetail = () => {
                     <TurnedInIcon sx={{ fontSize: '60px', color: 'main.or' }} />} 스크랩 </div>
                 {/* 수정/삭제 버튼 - 작성자인 경우에만 true로 버튼 표시 */}
                 <div className="recipe-change">
-                    {true && <Inputbutton variant="outlined" text="수정" i={false} w="medium-large" />} &nbsp;
-                    {true && <Inputbutton variant="outlined" text="삭제" i={true} w="medium-large" />}
+                    {true && <ButtonContain size='large' text='로그인'/>} &nbsp;
+                    {true && <ButtonContain size='large' text='로그인'/>}
                 </div>
             </div>
             <div>
