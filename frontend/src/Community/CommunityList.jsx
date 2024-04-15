@@ -12,7 +12,7 @@ import Pagination from '@mui/material/Pagination';
 import { useNavigate } from 'react-router-dom';
 import axios from "axios";
 import { url } from "../url";
-import ButtonContain from "../Component/ButtonContain";
+import ButtonOutlined from "../Component/ButtonOutlined";
 
 
 const CommunityList = () => {
@@ -22,11 +22,11 @@ const CommunityList = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        axios.get(`${url}/api/communities/list?page=1&size=10`)
+        axios.get(`${url}/api/communities/list?page=${curPage}&size=10`)
             .then(res => {
-                console.log(res.data);
                 setListData(res.data.posts);
                 setPageInfo(res.data.pageInfo);
+                console.log(res);
             })
             .catch(err => {
                 console.log(err);
@@ -61,8 +61,10 @@ const CommunityList = () => {
 
     {/* 페이지네이션 */}
     const pageChange = (e) =>{
-        setCurPage(e.page);
-        axios.get(`${url}/api/communities/list?page=1&size=10`)
+        const checkPage = Number(e.target.outerText);
+        console.log(checkPage);
+        setCurPage(checkPage);
+        axios.get(`${url}/api/communities/list?page=${checkPage}&size=10`)
         .then(res => {
             setListData(res.data.posts);
             setPageInfo(res.data.pageInfo);
@@ -75,7 +77,10 @@ const CommunityList = () => {
     return (
         <>
             <div className="communityList-Box">
-            <ButtonContain size='large' text='로그인'/>
+                <div style={{float:'right'}} onClick={handleRegister}>
+                    <ButtonOutlined size='large' text='글쓰기'/>
+                </div>
+            
 
                 <TableContainer component={Paper} sx={{ boxShadow: 'none' }}>
                     <Table sx={{ border: "none" }}>
@@ -90,7 +95,7 @@ const CommunityList = () => {
                         </TableHead>
                         <TableBody>
                             {listData.map((listData, index) => (
-                                <StyledTableRow key={index} hover onClick={(e) => handleDetail(listData.community_no, e)}>
+                                <StyledTableRow key={index} hover onClick={(e) => handleDetail(listData.communityNo, e)}>
                                     <StyledTableCell align="center">{index + 1}</StyledTableCell>
                                     <StyledTableCell align="center">{listData.communityTitle}</StyledTableCell>
                                     <StyledTableCell align="center">{listData.communityWriter}</StyledTableCell>
@@ -101,11 +106,9 @@ const CommunityList = () => {
                         </TableBody>
                     </Table>
                 </TableContainer>
-
-
             </div>
+
             <div className="community-page">
-                {/* 전체 게시물 페이지 수로 count 변경 필요 */}
                 <Pagination count={Math.ceil(pageInfo.totalElement/10)}
                 page = {curPage}
                 onChange={pageChange} />
