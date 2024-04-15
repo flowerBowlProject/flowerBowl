@@ -1,6 +1,6 @@
 import { React, useState, useEffect } from "react";
-import Button_contain_style from "../../Component/Button_contain_style";
-import Button_outlined_style from "../../Component/Button_outlined_style";
+import ButtonContain from "../../Component/ButtonContain";
+import ButtonOutlined from "../../Component/ButtonOutlined";
 import "./Checkteachingclass.css";
 
 const Checkteachingclass = () => {
@@ -73,8 +73,8 @@ const Checkteachingclass = () => {
     <>
       {/* 버튼들 */}
       <section className="buttons">
-        <Button_contain_style>수강클래스 조회</Button_contain_style>
-        <Button_outlined_style>창작클래스 조회</Button_outlined_style>
+        <ButtonContain size="medium" text="수강클래스 조회" />
+        <ButtonOutlined size="medium" text="창작클래스 조회" />
       </section>
 
       {/* 내용 */}
@@ -145,7 +145,7 @@ const Checkteachingclass = () => {
 
       {/* 더보기 버튼    */}
       <section className="bottom-add">
-        <Button_contain_style>더보기</Button_contain_style>
+        <ButtonContain size="medium" text="더보기" />
       </section>
     </>
   );
