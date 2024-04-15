@@ -1,7 +1,7 @@
 import { React, useState, useEffect } from "react";
 import "./CheckReview.css";
-import Button_contain_style from "../../Component/Button_contain_style";
-import Button_outlined_style from "../../Component/Button_outlined_style";
+import ButtonContain from "../../Component/ButtonContain";
+import ButtonOutlined from "../../Component/ButtonOutlined";
 
 const CheckReview = () => {
   // 정렬기능
@@ -74,10 +74,10 @@ const CheckReview = () => {
       {/* 버튼들 */}
       <section className="buttons">
         <span className="write-review">
-          <Button_outlined_style>결제 내역</Button_outlined_style>
+          <ButtonOutlined size="medium" text="결제 내역" />
         </span>
-        <Button_contain_style>리뷰 조회</Button_contain_style>
-        <Button_outlined_style>리뷰 작성</Button_outlined_style>
+        <ButtonContain size="medium" text="리뷰 조회" />
+        <ButtonOutlined size="medium" text="리뷰 작성" />
       </section>
 
       {/* 내용 */}
@@ -143,17 +143,13 @@ const CheckReview = () => {
                   </td>
                   <td>
                     {item ? (
-                      <Button_outlined_style>삭제</Button_outlined_style>
+                      <ButtonOutlined size="VerySmall" text="삭제" />
                     ) : (
                       ""
                     )}
                   </td>
                   <td>
-                    {item ? (
-                      <Button_contain_style>수정</Button_contain_style>
-                    ) : (
-                      ""
-                    )}
+                    {item ? <ButtonContain size="VerySmall" text="수정" /> : ""}
                   </td>
                 </tr>
               )
@@ -164,7 +160,7 @@ const CheckReview = () => {
 
       {/* 더보기 버튼    */}
       <section className="bottom-add">
-        <Button_contain_style>더보기</Button_contain_style>
+        <ButtonContain size="medium" text="더보기" />
       </section>
     </>
   );

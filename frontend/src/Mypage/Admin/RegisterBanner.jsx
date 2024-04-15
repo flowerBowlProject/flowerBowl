@@ -1,7 +1,7 @@
 import React from "react";
 import FileDropArea from "./FileDropArea";
 import TextInput from "./TextInput";
-import Button_contain_style from "../../Component/Button_contain_style";
+import ButtonContain from "../../Component/ButtonContain";
 import "./RegisterBanner.css";
 
 const RegisterBanner = () => {
@@ -11,7 +11,7 @@ const RegisterBanner = () => {
       <FileDropArea />
       <TextInput />
       <div className="fileadd">
-        <Button_contain_style>등록</Button_contain_style>
+        <ButtonContain size="medium" text="등록" />
       </div>
       <div class="division-line"></div>
     </>

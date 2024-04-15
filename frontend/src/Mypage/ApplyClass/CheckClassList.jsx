@@ -1,6 +1,6 @@
 import { React, useState, useEffect } from "react";
 import "./CheckClassList.css";
-import Button_contain_style from "../../Component/Button_contain_style";
+import ButtonContain from "../../Component/ButtonContain";
 
 const CheckClassList = () => {
   // 정렬기능k
@@ -82,7 +82,7 @@ const CheckClassList = () => {
                   <td>{item ? item.phone : ""}</td>
                   <td>
                     {item ? (
-                      <Button_contain_style>취소/환불</Button_contain_style>
+                      <ButtonContain size="small" text="취소/환불" />
                     ) : (
                       ""
                     )}
@@ -96,7 +96,7 @@ const CheckClassList = () => {
 
       {/* 더보기 버튼    */}
       <section className="bottom-add">
-        <Button_contain_style>더보기</Button_contain_style>
+        <ButtonContain size="medium" text="더보기" />
       </section>
     </>
   );

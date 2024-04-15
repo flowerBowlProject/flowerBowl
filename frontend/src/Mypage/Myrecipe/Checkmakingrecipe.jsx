@@ -1,6 +1,6 @@
 import { React, useState, useEffect } from "react";
-import Button_contain_style from "../../Component/Button_contain_style";
-import Button_outlined_style from "../../Component/Button_outlined_style";
+import ButtonContain from "../../Component/ButtonContain";
+import ButtonOutlined from "../../Component/ButtonOutlined";
 import "./Checkmakingrecipe.css";
 
 const Checkmakingrecipe = () => {
@@ -141,17 +141,13 @@ const Checkmakingrecipe = () => {
                   <td>{item ? item.comment.toLocaleString() : ""}</td>
                   <td>
                     {item ? (
-                      <Button_outlined_style>삭제</Button_outlined_style>
+                      <ButtonOutlined size="VerySmall" text="삭제" />
                     ) : (
                       ""
                     )}
                   </td>
                   <td>
-                    {item ? (
-                      <Button_contain_style>수정</Button_contain_style>
-                    ) : (
-                      ""
-                    )}
+                    {item ? <ButtonContain size="VerySmall" text="수정" /> : ""}
                   </td>
                 </tr>
               )
@@ -162,7 +158,7 @@ const Checkmakingrecipe = () => {
 
       {/* 더보기 버튼    */}
       <section className="bottom-add">
-        <Button_contain_style>더보기</Button_contain_style>
+        <ButtonContain size="medium" text="더보기" />
       </section>
     </>
   );

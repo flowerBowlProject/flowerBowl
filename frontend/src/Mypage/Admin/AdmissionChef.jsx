@@ -1,6 +1,6 @@
 import { React, useState, useEffect } from "react";
-import Button_contain_style from "../../Component/Button_contain_style";
-import Button_outlined_style from "../../Component/Button_outlined_style";
+import ButtonContain from "../../Component/ButtonContain";
+import ButtonOutlined from "../../Component/ButtonOutlined";
 import "./AdmissionChef.css";
 
 const AdmissionChef = () => {
@@ -90,8 +90,8 @@ const AdmissionChef = () => {
                   <td className="button-group">
                     {item ? (
                       <>
-                        <Button_contain_style>신청 허가</Button_contain_style>
-                        <Button_outlined_style>신청 반려</Button_outlined_style>
+                        <ButtonContain size="medium" text="신청 허가" />
+                        <ButtonOutlined size="medium" text="신청 반려" />
                       </>
                     ) : (
                       ""
@@ -106,7 +106,7 @@ const AdmissionChef = () => {
 
       {/* 더보기 버튼    */}
       <section className="bottom-add">
-        <Button_contain_style>더보기</Button_contain_style>
+        <ButtonContain size="medium" text="더보기" />
       </section>
     </>
   );
