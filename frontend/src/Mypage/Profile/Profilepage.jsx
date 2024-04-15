@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import Form_Signup from "../../Component/Form_Signup";
-import Button_contain_style from "../../Component/Button_contain_style";
+import FormSignup from "../../Component/Form_Signup";
+import Buttoncontain from "../../Component/ButtonContain";
 import PersonIcon from "@mui/icons-material/Person";
 import Tooltip from "@mui/material/Tooltip";
 import "./ProfileImage.css";
@@ -47,9 +47,11 @@ const Profile = () => {
             position: "absolute",
           }}
         />
-        <Button_contain_style onClick={openFileSelector}>
-          사진 변경
-        </Button_contain_style>
+        <Buttoncontain
+          onClick={openFileSelector}
+          size="small"
+          text="사진 변경"
+        />
         <input
           type="file"
           id="fileInput"
@@ -72,9 +74,11 @@ const Profile = () => {
             </div>
           </Tooltip>
         </div>
-        <Button_contain_style onClick={openFileSelector}>
-          쉐프 신청
-        </Button_contain_style>
+        <Buttoncontain
+          onClick={openFileSelector}
+          size="small"
+          text="쉐프 신청"
+        />
         <input
           type="file"
           id="fileInput"
@@ -84,54 +88,54 @@ const Profile = () => {
       </Grid>
       {/* 폼형태 */}
       <Grid container xs direcion="row" mt="2vw">
-        <Form_Signup
+        <FormSignup
           sx={{ mb: "-10em" }}
           title="아이디"
           place_text="jean1030"
           helper_text="8~15자로 작성해주세요. 중복된 아이디입니다."
           but_exis={false}
-        ></Form_Signup>
-        <Form_Signup
+        ></FormSignup>
+        <FormSignup
           sx={{ mb: "-10em" }}
           title="닉네임"
           but_text="중복확인"
           place_text="치킨나라피자공주"
           helper_text="중복된 닉네임입니다."
           but_exis={true}
-        ></Form_Signup>
-        <Form_Signup
+        ></FormSignup>
+        <FormSignup
           sx={{ mb: "-10em" }}
           title="휴대폰 번호"
           place_text="010-8495-9515"
           helper_text="올바른 휴대폰 번호를 입력해 주세요."
           but_exis={false}
-        ></Form_Signup>
-        <Form_Signup
+        ></FormSignup>
+        <FormSignup
           sx={{ mb: "-10em" }}
           title="이메일"
           but_text="이메일 인증"
           place_text="jean1030@naver.com"
           but_exis={true}
-        ></Form_Signup>
+        ></FormSignup>
       </Grid>
 
       <Grid container xs direcion="row" mt="2vw">
-        <Form_Signup title="비밀번호" place_text="*****"></Form_Signup>
-        <Form_Signup
+        <FormSignup title="비밀번호" pass_exis={true}></FormSignup>
+        <FormSignup
           title="새 비밀번호 변경"
-          place_text="******"
+          pass_exis={true}
           helper_text="영문, 숫자, 특수문자 포함 8~15자로 작성해주세요."
-        ></Form_Signup>
-        <Form_Signup
+        ></FormSignup>
+        <FormSignup
           title="새 비밀번호 확인"
-          place_text="******"
+          pass_exis={true}
           helper_text="비밀번호가 일치하지 않습니다."
-        ></Form_Signup>
+        ></FormSignup>
       </Grid>
 
       {/* 변경버튼 */}
       <Grid item xs={12} mt="3vw" mb="0.5vw">
-        <Button_contain_style>변경</Button_contain_style>
+        <Buttoncontain size="medium" text="변경" />
       </Grid>
 
       {/* 회원 탈퇴 버튼 */}
