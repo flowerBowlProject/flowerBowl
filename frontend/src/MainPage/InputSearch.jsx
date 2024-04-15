@@ -1,5 +1,5 @@
 import React from 'react'
-import Input_search_style from './InputSearchStyle';
+import InputSearchStyle from './InputSearchStyle';
 import { useState } from 'react';
 import SearchIcon from '@mui/icons-material/Search';
 import {InputAdornment,Grid} from '@mui/material';
@@ -10,7 +10,7 @@ const InputSearch=({icon_boolean,width})=>{
     }
     return(
         <>
-        <Input_search_style sx={{width:{width},ml:'12vw'}} size='small' InputProps={{endAdornment:(
+        <InputSearchStyle sx={{width:{width},ml:'12vw'}} size='small' InputProps={{endAdornment:(
             <InputAdornment position='end'>
                 <SearchIcon  />
             </InputAdornment>)}} value={text_search} onChange={handleChange} />

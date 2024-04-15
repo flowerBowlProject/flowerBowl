@@ -1,21 +1,20 @@
 import React from "react";
 import FileDropArea from "./FileDropArea";
 import TextInput from "./TextInput";
-import Inputbutton from "../../Component/Input/Inputbutton";
+import Button_contain_style from "../../Component/Button_contain_style";
 import "./RegisterBanner.css";
-import MyPageAdminLayout from "../MyPageAdminLayout";
 
 const RegisterBanner = () => {
   return (
-    <MyPageAdminLayout>
+    <>
       <div class="division-line"></div>
       <FileDropArea />
       <TextInput />
       <div className="fileadd">
-        <Inputbutton text="등록" i={true} w="large" />
+        <Button_contain_style>등록</Button_contain_style>
       </div>
       <div class="division-line"></div>
-    </MyPageAdminLayout>
+    </>
   );
 };
 
