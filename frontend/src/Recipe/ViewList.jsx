@@ -1,15 +1,29 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import './ViewListStyle.css';
 import Button from '@mui/material/Button';
 import RecipeReviewCard from "../Component/CardComp";
 import Bookmark from "../Component/Bookmark";
-import { Outlet } from "react-router-dom";
-
+import { useNavigate } from 'react-router-dom';
+import axios from "axios";
+import { url } from "../url";
 
 const ViewList = ({name}) => {
-    const [listData, setListData] = useState([{user_id: 1, content_no : 1, title: '제목1', date: '날짜1', like_count: 1, comment_count : 1},
-    {user_id: 2, content_no : 2, title: '제목2', date: '날짜2', like_count: 2, comment_count : 2}, 
-    {user_id: 1, content_no : 3, title: '제목3', date: '날짜3', like_count: 3, comment_count : 3}]);
+    const [listData, setListData] = useState([]);
+
+    useEffect(()=>{
+        if(name == "레시피"){
+            {/* 로그인 구현 이후 if문 추가 필요 - 현재는 비로그인 기준 */}
+            axios.get(`${url}/api/recipes/guest`)
+            .then(res=>{
+                console.log(res);
+            })
+            .catch(err=>{
+                console.log(err);
+            })
+        }else{
+
+        }
+    },[])
 
     return(
         <div className="viewList-Box">
@@ -25,7 +39,7 @@ const ViewList = ({name}) => {
             </div>
             <div className="viewList">
                 {/* 리스트 출력*/}
-                {listData.length !== 0 && listData.map((data) => <div style={{position:'relative'}}> <Bookmark/> <RecipeReviewCard key={data.content_no} list={data}/> </div>)}
+                {listData.length !== 0 && listData.map((data, index) => <div style={{position:'relative'}}> <Bookmark/> <RecipeReviewCard key={index} list={data}/> </div>)}
             </div>
             <Button className="moreButton"> 더보기 </Button>
         </div>

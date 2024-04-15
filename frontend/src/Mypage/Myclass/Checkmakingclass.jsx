@@ -1,6 +1,6 @@
 import { React, useState, useEffect } from "react";
-import Button_contain_style from "../../Component/Button_contain_style";
-import Button_outlined_style from "../../Component/Button_outlined_style";
+import ButtonContain from "../../Component/ButtonContain";
+import ButtonOutlined from "../../Component/ButtonOutlined";
 import "./Checkmakingclass.css";
 
 const Checkmakingclass = () => {
@@ -85,8 +85,8 @@ const Checkmakingclass = () => {
     <>
       {/* 버튼들 */}
       <section className="buttons">
-        <Button_outlined_style>수강클래스 조회</Button_outlined_style>
-        <Button_contain_style>창작클래스 조회</Button_contain_style>
+        <ButtonOutlined size="medium" text="수강클래스 조회" />
+        <ButtonContain size="medium" text="창작클래스 조회" />
       </section>
 
       {/* 내용 */}
@@ -147,17 +147,13 @@ const Checkmakingclass = () => {
                   <td>{item ? item.comment.toLocaleString() : ""}</td>
                   <td>
                     {item ? (
-                      <Button_outlined_style>삭제</Button_outlined_style>
+                      <ButtonOutlined size="VerySmall" text="삭제" />
                     ) : (
                       ""
                     )}
                   </td>
                   <td>
-                    {item ? (
-                      <Button_contain_style>수정</Button_contain_style>
-                    ) : (
-                      ""
-                    )}
+                    {item ? <ButtonContain size="VerySmall" text="수정" /> : ""}
                   </td>
                 </tr>
               )
@@ -168,7 +164,7 @@ const Checkmakingclass = () => {
 
       {/* 더보기 버튼    */}
       <section className="bottom-add">
-        <Button_contain_style>더보기</Button_contain_style>
+        <ButtonContain size="medium" text="더보기" />
       </section>
     </>
   );

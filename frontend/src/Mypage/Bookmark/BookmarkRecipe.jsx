@@ -1,8 +1,8 @@
 import React from "react";
 import CardComp from "../../Component/CardComp";
 import Bookmark from "../../Component/Bookmark";
-import Button_contain_style from "../../Component/Button_contain_style";
-import Button_outlined_style from "../../Component/Button_outlined_style";
+import ButtonContain from "../../Component/ButtonContain";
+import ButtonOutlined from "../../Component/ButtonOutlined";
 import "./BookmarkRecipe.css";
 
 const BookmarkRecipe = () => {
@@ -23,8 +23,8 @@ const BookmarkRecipe = () => {
   return (
     <>
       <div className="bookmark-button">
-        <Button_contain_style>레시피</Button_contain_style>
-        <Button_outlined_style>클래스</Button_outlined_style>
+        <ButtonContain size="medium" text="레시피" />
+        <ButtonOutlined size="medium" text="클래스" />
       </div>
 
       {/* 구분선 */}
@@ -35,7 +35,7 @@ const BookmarkRecipe = () => {
       <div class="division-line"></div>
 
       <div className="add">
-        <Button_contain_style>더보기</Button_contain_style>
+        <ButtonContain size="large" text="더보기" />
       </div>
     </>
   );
