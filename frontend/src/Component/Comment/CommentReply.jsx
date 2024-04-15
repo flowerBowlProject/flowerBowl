@@ -1,11 +1,9 @@
 import React, { useState } from "react";
 import './CommentStyle.css';
-import Inputbutton from "../Input/Inputbutton";
 import SubdirectoryArrowRightIcon from '@mui/icons-material/SubdirectoryArrowRight';
-import Button_outlined_style from "../Button_outlined_style";
-import Button_contain_style from "../Button_contain_style";
 import  axios  from "axios";
 import { url } from "../../url";
+import ButtonContain from "../ButtonContain";
 
 const CommentReply = ({registerReply}) => {
     const [data, setData] = useState({comment_no:1, comment_writer: "작성자1",
@@ -37,8 +35,8 @@ const CommentReply = ({registerReply}) => {
                     <textarea className="comment-content" id="comment-content" placeholder="대댓글을 작성해 주세요."/>
                 </div>
                 <div className="commentButtonChild-Box">
-                <Button_outlined_style width='5vw' sx={{ height: "2vw" }} variant='outlined' onClick={() => registerComment()}>등록</Button_outlined_style> &nbsp;
-                    <Button_contain_style width='5vw' variant='contained' sx={{ height: "2vw" }} onClick={registerReply}>취소</Button_contain_style>
+                <ButtonContain size='large' text='로그인'/> &nbsp;
+                <ButtonContain size='large' text='로그인'/>
                 </div>
             </div>
             {true && <div style={{ border: "0.5px solid #B0A695", width: "90%", margin: "1vw auto 1vw auto" }} />}

@@ -1,7 +1,7 @@
 import { React, useState, useEffect } from "react";
-import Inputbutton from "../../Component/Input/Inputbutton";
+import Button_contain_style from "../../Component/Button_contain_style";
+import Button_outlined_style from "../../Component/Button_outlined_style";
 import "./Checkteachingclass.css";
-import MyPageLayout from "../MyPageLayout";
 
 const Checkteachingclass = () => {
   // 정렬기능
@@ -70,11 +70,11 @@ const Checkteachingclass = () => {
   };
 
   return (
-    <MyPageLayout>
+    <>
       {/* 버튼들 */}
       <section className="buttons">
-        <Inputbutton text="수강클래스 조회" i={true} w="medium" />
-        <Inputbutton text="창작클래스 조회" i={false} w="medium" />
+        <Button_contain_style>수강클래스 조회</Button_contain_style>
+        <Button_outlined_style>창작클래스 조회</Button_outlined_style>
       </section>
 
       {/* 내용 */}
@@ -145,9 +145,9 @@ const Checkteachingclass = () => {
 
       {/* 더보기 버튼    */}
       <section className="bottom-add">
-        <Inputbutton text="더보기" i={true} w="large" />
+        <Button_contain_style>더보기</Button_contain_style>
       </section>
-    </MyPageLayout>
+    </>
   );
 };
 

@@ -4,7 +4,7 @@ import { Pagination } from "@mui/material";
 import CommentParent from "./CommentParent";
 import CommentChild from "./CommentChild";
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
-import Button_outlined_style from "../Button_outlined_style";
+import ButtonContain from "../ButtonContain";
 
 // props로 게시판 종류와 게시글 번호를 넘겨 받아 조회 요청 진행
 const Comment = ({ props }) => {
@@ -26,7 +26,7 @@ const Comment = ({ props }) => {
                 {/* 댓글 작성란 */}
                 <div className="comment-register">
                     <textarea className="comment-write" placeholder="댓글을 작성하세요."/>
-                    <Button_outlined_style width='5vw' sx={{height:"4vw"}} variant='outlined' onClick={handleRegister}>등록</Button_outlined_style>
+                    <ButtonContain size='large' text='로그인'/>
                 </div>
                 
                 <div style={{width:"90%", margin:"2% auto", display:'flex', alignContent:'center'}}>
