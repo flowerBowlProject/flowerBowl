@@ -1,5 +1,6 @@
 package com.flowerbowl.web.dto.response.search;
 
+import com.flowerbowl.web.dto.object.search.PageInfo;
 import com.flowerbowl.web.dto.object.search.RecipeShortDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -12,5 +13,6 @@ import java.util.List;
 public class SearchRecipeResponseDto extends ResponseDto {
     private String code;
     private String message;
-    private List<RecipeShortDto> recipeShortDtoList = new ArrayList<>();
+    private PageInfo pageInfo;
+    private List<RecipeShortDto> recipes = new ArrayList<>();
 }

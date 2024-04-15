@@ -16,4 +16,6 @@ public interface AdminLicenseJpaDataRepository extends JpaRepository<License, Lo
     License findByUser_UserNo(Long user_userNo);
     void deleteLicenseByLicenseNo(Long license_no);
     License findLicenseByLicenseNo(Long license_no);
+
+    Long countLicenseByUser_UserNo(Long user_no);
 }

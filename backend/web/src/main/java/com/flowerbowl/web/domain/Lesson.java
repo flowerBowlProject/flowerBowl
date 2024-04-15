@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -38,9 +39,11 @@ public class Lesson {
     @Column(name = "lesson_addr")
     private String lessonAddr;
 
+//    @DateTimeFormat(pattern = "yyyy-mm-dd'T'HH:mm")
     @Column(name = "lesson_start")
     private LocalDateTime lessonStart;
 
+//    @DateTimeFormat(pattern = "yyyy-mm-dd'T'HH:mm")
     @Column(name = "lesson_end")
     private LocalDateTime lessonEnd;
 

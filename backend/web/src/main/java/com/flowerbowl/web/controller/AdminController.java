@@ -29,7 +29,7 @@ public class AdminController {
 
     // 관리자 쉐프거절
     @DeleteMapping(value = "chefs/{license_no}")
-    public ResponseEntity<ResponseDto> DeleteVariable(@PathVariable Long license_no){
+    public ResponseEntity<ResponseDto> DeleteVariable(@PathVariable(value = "license_no") Long license_no){
         return adminService.chefRefuse(license_no);
     }
 

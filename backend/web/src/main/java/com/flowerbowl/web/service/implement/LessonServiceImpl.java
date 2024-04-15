@@ -5,6 +5,7 @@ import com.flowerbowl.web.domain.Lesson;
 import com.flowerbowl.web.domain.Pay;
 import com.flowerbowl.web.domain.ReviewEnable;
 import com.flowerbowl.web.domain.User;
+import com.flowerbowl.web.dto.object.lesson.PageInfo;
 import com.flowerbowl.web.dto.response.lesson.ResponseDto;
 import com.flowerbowl.web.dto.object.lesson.LessonResponseDto;
 import com.flowerbowl.web.dto.object.lesson.PayInfo;
@@ -13,10 +14,12 @@ import com.flowerbowl.web.dto.request.lesson.LessonRequestDto;
 import com.flowerbowl.web.dto.response.lesson.FindAllResponseDto;
 import com.flowerbowl.web.dto.response.lesson.FindOneResponseDto;
 import com.flowerbowl.web.dto.response.lesson.PaymentInfoResponseDto;
+import com.flowerbowl.web.repository.UserRepository;
 import com.flowerbowl.web.repository.lesson.*;
 import com.flowerbowl.web.service.LessonService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,18 +35,17 @@ import java.util.List;
 @RequiredArgsConstructor
 public class LessonServiceImpl implements LessonService {
     private final LessonsRepository lessonsRepository;
-    private final LessonUserRepository lessonUserRepository;
     private final MuziLessonLikeRepository muziLessonLikeRepository;
     private final PayRepository payRepository;
     private final PayJpaRepository payJpaRepository;
     private final LessonJpaDataRepository lessonJpaDataRepository;
     private final JpaReviewEnableRepository jpaReviewEnableRepository;
+    private final UserRepository userRepository;
 
     // 클래스 등록
-    // JWT 토큰 parsing해서 user_id의 정보를 따로 얻어와야함
     @Transactional
     @Override
-    public ResponseEntity<ResponseDto> LessonCreate(CreateRequestDto createRequestDto){
+    public ResponseEntity<ResponseDto> LessonCreate(CreateRequestDto createRequestDto, String userId){
         try{
             Lesson lesson = new Lesson();
             lesson.setLessonTitle(createRequestDto.getLesson_title());
@@ -64,11 +66,13 @@ public class LessonServiceImpl implements LessonService {
             lesson.setLessonSname(createRequestDto.getLesson_sname());
             lesson.setLessonOname(createRequestDto.getLesson_oname());
 
-            // user_no : token으로 부터 받아오기
-            Long user_no = 1L;
-            User user = lessonUserRepository.findUserByUserNo(user_no);
+//            User user = lessonUserRepository.findUserByUserNo(user_no);
+            User user = userRepository.findByUserId(userId);
+            if(user == null){
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseDto("FA", "userId에 대응되는 user가 없습니다."));
+            }
             lesson.setUser(user);
-            lesson.setLessonWriter(user.getUserNickname()); // 1L을 바꿔줘야함
+            lesson.setLessonWriter(user.getUserNickname());
 
             lessonsRepository.LessonCreate(lesson);
 
@@ -82,9 +86,17 @@ public class LessonServiceImpl implements LessonService {
     // 클래스 수정
     @Transactional
     @Override
-    public ResponseEntity<ResponseDto> LessonModify(LessonRequestDto lessonRequestDto, Long lesson_no){
+    public ResponseEntity<ResponseDto> LessonModify(LessonRequestDto lessonRequestDto, Long lesson_no, String userId){
         try{
             Lesson lesson = lessonsRepository.findByLesson_no(lesson_no);
+            if(lesson == null) return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseDto("FA", "lesson_no에 대응되는 lesson이 없습니다."));
+            User user = userRepository.findByUserId(userId);
+            if(user == null){
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseDto("FA", "userId에 대응되는 user가 없습니다."));
+            }
+            if(lesson.getUser().getUserId() != userId){
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseDto("FA", "해당하는 user가 작성한 lesson이 아닙니다."));
+            }
             lesson.setLessonTitle(lessonRequestDto.getLesson_title());
             lesson.setLessonPrice(lessonRequestDto.getLesson_price());
             lesson.setLessonSname(lessonRequestDto.getLesson_sname());
@@ -105,12 +117,19 @@ public class LessonServiceImpl implements LessonService {
     // 클래스 삭제 // 실제 삭제가 아닌 값의 변경
     @Transactional
     @Override
-    public ResponseEntity<ResponseDto> lessonDelete(Long lesson_no){
+    public ResponseEntity<ResponseDto> lessonDelete(Long lesson_no, String userId){
         try{
             if(!lessonJpaDataRepository.existsLessonByLessonNo(lesson_no)){
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseDto("FA","해당하는 lesson_no을 가진 클래스가 없습니다."));
             }
+            User user = userRepository.findByUserId(userId);
+            if(user == null){
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseDto("FA", "userId에 대응되는 user가 없습니다."));
+            }
             Lesson lesson = lessonJpaDataRepository.findLessonByLessonNo(lesson_no);
+            if(lesson.getUser().getUserId() != userId){
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseDto("FA", "해당하는 user가 작성한 lesson이 아닙니다."));
+            }
             lesson.setLessonDeleteStatus(true);
             return ResponseEntity.status(HttpStatus.OK).body(new ResponseDto());
         }catch (Exception e){
@@ -120,40 +139,49 @@ public class LessonServiceImpl implements LessonService {
     }
 
     // 모든 클래스 조회(로그인) // 즐겨찾기 여부도 포함해서
-    @Transactional
     @Override
-    public ResponseEntity<? super FindAllResponseDto> findAll(Long user_no, Pageable pageable){
+    public ResponseEntity<? super FindAllResponseDto> findAll(Pageable pageable, String userId){
         try{
-            List<LessonShortDto> list = lessonJpaDataRepository.findAllByOrderByLessonNoDesc(pageable)
-                    .map(LessonShortDto::guestFrom).getContent();
+            User user = userRepository.findByUserId(userId);
+            if(user == null){
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseDto("FA", "해당하는 userId를 가진 user가 없습니다."));
+            }
+//            Long user_no = user.getUserNo(); // 이거 바꿔줘야 함
+//            List<LessonShortDto> list = lessonJpaDataRepository.findAllByOrderByLessonNoDesc(pageable)
+//                    .map(LessonShortDto::from).getContent();
+            Page<Lesson> page = lessonJpaDataRepository.findAllByOrderByLessonNoDesc(pageable);
+            PageInfo pageInfo = new PageInfo(page.getTotalPages(), page.getTotalElements());
+            List<LessonShortDto> list = page.map(LessonShortDto::from).getContent();
             for(LessonShortDto tmp : list){
                 Long lesson_no = tmp.getLesson_no();
                 Long likes_no = muziLessonLikeRepository.countLessonLikeByLesson_LessonNo(lesson_no);
                 tmp.setLesson_likes_num(likes_no);
-                boolean like_status = muziLessonLikeRepository.existsByUser_UserNoAndLesson_LessonNo(user_no, lesson_no);
+                boolean like_status = muziLessonLikeRepository.existsByUser_UserNoAndLesson_LessonNo(user.getUserNo(), lesson_no);
                 tmp.setLesson_likes_status(like_status);
             }
-            return ResponseEntity.status(HttpStatus.OK).body(new FindAllResponseDto("SU", "success", list));
+            return ResponseEntity.status(HttpStatus.OK).body(new FindAllResponseDto("SU", "success",pageInfo, list));
         }catch (Exception e){
-            log.info("LessonService findAll exception : {}",e.getMessage());
+            log.info("LessonService findAll exception e.getMessage() : {}",e.getMessage());
+            log.info("e.getStackTrace() : {}",e.getStackTrace());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseDto("ISE", "Internal Server Error"));
         }
     }
 
     // 모든 클래스 조회(비로그인) // 이거 위랑 합칠 수 있는지 고민
-    @Transactional
     @Override
     public ResponseEntity<? super FindAllResponseDto> findAllGuest(Pageable pageable){
         try{
-            List<LessonShortDto> list = lessonJpaDataRepository.findAllByOrderByLessonNoDesc(pageable)
-                    .map(LessonShortDto::guestFrom).getContent();
-
+//            List<LessonShortDto> list = lessonJpaDataRepository.findAllByOrderByLessonNoDesc(pageable)
+//                    .map(LessonShortDto::from).getContent();
+            Page<Lesson> page = lessonJpaDataRepository.findAllByOrderByLessonNoDesc(pageable);
+            PageInfo pageInfo = new PageInfo(page.getTotalPages(), page.getTotalElements());
+            List<LessonShortDto> list = page.map(LessonShortDto::from).getContent();
             for(LessonShortDto tmp : list){
                 Long likes_num = muziLessonLikeRepository.countLessonLikeByLesson_LessonNo(tmp.getLesson_no());
                 tmp.setLesson_likes_num(likes_num);
             }
 
-            return ResponseEntity.status(HttpStatus.OK).body(new FindAllResponseDto("SU", "success", list));
+            return ResponseEntity.status(HttpStatus.OK).body(new FindAllResponseDto("SU", "success", pageInfo, list));
         }catch (Exception e){
             log.info("LessonService findAllGuest exception : {}",e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseDto("ISE", "Internal Server Error"));
@@ -162,9 +190,10 @@ public class LessonServiceImpl implements LessonService {
 
     // 특정 클래스 조회(로그인) // 즐겨찾기 목록
     @Override
-    public ResponseEntity<? super FindOneResponseDto> findOneResponseDto(Long lesson_no, Long user_no){
+    public ResponseEntity<? super FindOneResponseDto> findOneResponseDto(Long lesson_no, String userId){
 //    public void findOneResponseDto(Long lesson_no){
         try{
+            Long user_no = 1L;
             // 해당하는 lesson이 없는 경우
             if(!lessonJpaDataRepository.existsLessonByLessonNo(lesson_no)){
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseDto("FA","해당하는 lesson_no을 가진 클래스가 없습니다."));
@@ -206,7 +235,7 @@ public class LessonServiceImpl implements LessonService {
     // 구매 정보 저장 + 구매 정보를 넘격줘야함
     @Override
     @Transactional
-    public ResponseEntity<? super PaymentInfoResponseDto> buyLesson(Long lesson_no, Long user_no){
+    public ResponseEntity<? super PaymentInfoResponseDto> buyLesson(Long lesson_no, String userId){
         try{
             // 해당 클래스가 없는 경우
             if(!lessonJpaDataRepository.existsLessonByLessonNo(lesson_no)){
@@ -214,8 +243,11 @@ public class LessonServiceImpl implements LessonService {
             }
             // 구매 정보 저장
             Pay pay = new Pay();
-            // user
-            User user = lessonUserRepository.findUserByUserNo(user_no);
+            User user = userRepository.findByUserId(userId);
+            if(user == null){
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseDto("FA", "해당하는 user_id를 가진 유저가 없습니다."));
+            }
+//            User user = userRepository.findUserByUserNo(user_no);
             pay.setUser(user);
             // lesson
             Lesson lesson = lessonsRepository.findByLesson_no(lesson_no);
@@ -225,7 +257,7 @@ public class LessonServiceImpl implements LessonService {
             pay.setPayPrice(lesson.getLessonPrice());
             // pay_code
             Long cntPay = payRepository.countAllByPayNoGreaterThan(-1L);
-            String pay_code = LocalDate.now().toString() + "_" + cntPay;
+            String pay_code = LocalDate.now().toString() + "_" + cntPay; // ex) 2019-09-19_lesson_no;
             pay.setPayCode(pay_code);
             System.out.println(pay.getLesson().getLessonNo());
 
