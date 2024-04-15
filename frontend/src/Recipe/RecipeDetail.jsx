@@ -3,6 +3,7 @@ import './RecipeDetailStyle.css';
 import TurnedInNotIcon from '@mui/icons-material/TurnedInNot';
 import TurnedInIcon from '@mui/icons-material/TurnedIn';
 import Comment from "../Component/Comment/Comment";
+import ButtonContain from "../Component/ButtonContain";
 
 const RecipeDetail = () => {
     const [recipeData, setRecipeData] = useState({
