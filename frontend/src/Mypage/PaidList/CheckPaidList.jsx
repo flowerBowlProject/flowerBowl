@@ -2,6 +2,7 @@ import { React, useState, useEffect } from "react";
 import "./CheckPaidList.css";
 import ButtonContain from "../../Component/ButtonContain";
 import ButtonOutlined from "../../Component/ButtonOutlined";
+import { Link } from "react-router-dom";
 
 const CheckPaidList = () => {
   // 정렬기능
@@ -82,11 +83,21 @@ const CheckPaidList = () => {
     <>
       {/* 버튼들 */}
       <section className="buttons">
-        <span className="write-review">
-          <ButtonContain size="medium" text="결제 내역" />
+        <span className="paidlist">
+          <Link to="/mypage/checkPaidList">
+            <ButtonContain size="medium" text="결제 내역" />
+          </Link>
         </span>
-        <ButtonOutlined size="medium" text="리뷰 조회" />
-        <ButtonOutlined size="medium" text="리뷰 작성" />
+        <span className="review">
+          <Link to="/mypage/checkReview">
+            <ButtonOutlined size="medium" text="리뷰 조회" />
+          </Link>
+        </span>
+        <span className="register">
+          <Link to="/mypage/registerReview">
+            <ButtonOutlined size="medium" text="리뷰 작성" />
+          </Link>
+        </span>
       </section>
 
       {/* 내용 */}

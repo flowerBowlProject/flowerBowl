@@ -24,6 +24,11 @@ const ButtonContain = ({ text, size, handleClick }) => {
         width: "5vw",
         height: "2vw",
       };
+    } else if (size === "doubleLarge") {
+      return {
+        width: "7vw",
+        height: "2vw",
+      };
     } else if (size === "veryLarge") {
       return {
         width: "15vw",

@@ -1,4 +1,3 @@
-
 /* 더보기버튼 */
 .bottom-add .inputbutton {
   margin-top: 5em;
@@ -106,8 +105,7 @@
 /* 메인컨텐트 중앙 */
 .table-content {
   max-width: 1200px;
-  margin-left: auto;
-  margin-right: auto;
+  text-align: center;
 }
 
 .custom-table th:last-child,

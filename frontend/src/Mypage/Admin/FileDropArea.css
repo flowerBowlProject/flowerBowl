@@ -1,15 +1,13 @@
 .drop-area {
   border: 2px dashed #cccccc;
   border-radius: 20px;
-  width: 50em;
+  width: 35em;
   height: 20em; /* 대형 정사각형 크기 조절 */
   display: flex;
   align-items: center;
   justify-content: center;
   text-align: center;
   cursor: pointer; /* 입력창과의 간격 */
-  margin-left: 30em;
-  margin-top: 10em;
 }
 
 .drop-area.active {

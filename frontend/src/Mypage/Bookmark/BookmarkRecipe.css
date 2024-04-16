@@ -39,9 +39,12 @@
 .add {
   position: relative;
   bottom: 0.5em;
-  left: 3em;
   display: flex;
   align-items: center;
   justify-content: center;
   text-align: center;
+}
+
+.bookmark-button {
+  margin-bottom: 1em;
 }

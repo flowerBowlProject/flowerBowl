@@ -1,15 +1,11 @@
-.text-input-container {
-  width: 50em;
-}
 
 .text-input {
-  width: 59em;
+  width: 40em;
   height: 10em;
   padding: 10px;
   border: 1px solid #cccccc;
   border-radius: 10px;
-  display: inline-block;
+  display: flex;
   text-align: center;
-  margin-top: 2em;
-  margin-left: 36em;
+  justify-content: center;
 }
