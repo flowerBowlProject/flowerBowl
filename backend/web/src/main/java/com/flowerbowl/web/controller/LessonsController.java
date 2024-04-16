@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -26,35 +27,35 @@ public class LessonsController {
     // 클래스 등록
     // POST
     @PostMapping(value = "/lessons")
-    public ResponseEntity<ResponseDto> lessonsRegister(@RequestBody CreateRequestDto createRequestDto){
-        return lessonService.LessonCreate(createRequestDto);
+    public ResponseEntity<ResponseDto> lessonsRegister(@AuthenticationPrincipal String userId, @RequestBody CreateRequestDto createRequestDto){
+//        System.out.println("lessons 등록 test");
+        return lessonService.LessonCreate(createRequestDto, userId);
     }
 
     // 클래스 수정
     // PUT
     @PutMapping(value = "/lessons/{lesson_no}")
-    public ResponseEntity<ResponseDto> lessonsModify(@RequestBody LessonRequestDto lessonRequestDto, @PathVariable Long lesson_no){
-        return lessonService.LessonModify(lessonRequestDto, lesson_no);
+    public ResponseEntity<ResponseDto> lessonsModify(@AuthenticationPrincipal String userId, @RequestBody LessonRequestDto lessonRequestDto, @PathVariable Long lesson_no){
+        return lessonService.LessonModify(lessonRequestDto, lesson_no, userId);
     }
     // 클래스 삭제
     // PUT
     @PutMapping(value = "/lessons")
-    public ResponseEntity<ResponseDto> lessonsDelete(@RequestBody DeleteRequestDto deleteRequestDto){
-        return lessonService.lessonDelete(deleteRequestDto.getLesson_no());
+    public ResponseEntity<ResponseDto> lessonsDelete(@AuthenticationPrincipal String userId, @RequestBody DeleteRequestDto deleteRequestDto){
+        return lessonService.lessonDelete(deleteRequestDto.getLesson_no(), userId);
     }
 
     // 전체 클래스 조회 (로그인)
     // GET
     @GetMapping("/user/lessons")
-    public ResponseEntity<? super FindAllResponseDto> lessonsFindAll(@PageableDefault(page = 0, size = 8) Pageable pageable){
-        Long user_no = 1L;
-        return lessonService.findAll(user_no, pageable);
+    public ResponseEntity<? super FindAllResponseDto> lessonsFindAll(@AuthenticationPrincipal String userId, @PageableDefault(page = 1, size = 8) Pageable pageable){
+        return lessonService.findAll(pageable, userId);
     }
 
     // 전체 클래스 조회 (비로그인)
     // GET
     @GetMapping("/guest/lessons") // guest
-    public ResponseEntity<? super FindAllResponseDto> lessonsFindAllGuest(@PageableDefault(page = 0, size = 8) Pageable pageable){
+    public ResponseEntity<? super FindAllResponseDto> lessonsFindAllGuest(@PageableDefault(page = 1, size = 8) Pageable pageable){
 //   public FindAllResponseDto lessonsFindAllGuest(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "8") int size){
         return lessonService.findAllGuest(pageable);
     }
@@ -62,9 +63,8 @@ public class LessonsController {
     // 특정 클래스 조회 (로그인)
     // GET
     @GetMapping("/user/lessons/{lesson_no}")
-    public ResponseEntity<? super FindOneResponseDto> lessonsFindOne(@PathVariable Long lesson_no){
-        Long user_no = 1L; // JWT 토큰으로 부터 받아와야함
-        return lessonService.findOneResponseDto(lesson_no, user_no);
+    public ResponseEntity<? super FindOneResponseDto> lessonsFindOne(@AuthenticationPrincipal String userId, @PathVariable Long lesson_no){
+        return lessonService.findOneResponseDto(lesson_no, userId);
     }
     // 특정 클래스 조회 (비로그인)
     // GET
@@ -76,8 +76,7 @@ public class LessonsController {
     // 클래스 구매 // review_enable에도 넣어줘야함
     // POST
     @PostMapping(value = "/lessons/buy")
-    public ResponseEntity<? super PaymentInfoResponseDto> lessonsBuy(@RequestBody PaymentInfoRequestDto paymentInfoRequestDto){
-        Long user_no = 1L; // JWT 토큰으로 부터 값을 받아와야함
-        return lessonService.buyLesson(paymentInfoRequestDto.getLesson_no(), user_no);
+    public ResponseEntity<? super PaymentInfoResponseDto> lessonsBuy(@AuthenticationPrincipal String userId, @RequestBody PaymentInfoRequestDto paymentInfoRequestDto){
+        return lessonService.buyLesson(paymentInfoRequestDto.getLesson_no(), userId);
     }
 }

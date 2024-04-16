@@ -10,12 +10,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 
 public interface LessonService {
-    ResponseEntity<ResponseDto> LessonCreate(CreateRequestDto createRequestDto);
-    ResponseEntity<ResponseDto> LessonModify(LessonRequestDto lessonRequestDto, Long lesson_no);
-    ResponseEntity<ResponseDto> lessonDelete(Long lesson_no);
-    ResponseEntity<? super FindAllResponseDto> findAll(Long user_no, Pageable pageable);
+    ResponseEntity<ResponseDto> LessonCreate(CreateRequestDto createRequestDto, String userId);
+    ResponseEntity<ResponseDto> LessonModify(LessonRequestDto lessonRequestDto, Long lesson_no, String userId);
+    ResponseEntity<ResponseDto> lessonDelete(Long lesson_no, String userId);
+    ResponseEntity<? super FindAllResponseDto> findAll(Pageable pageable, String userId);
     ResponseEntity<? super FindAllResponseDto> findAllGuest(Pageable pageable);
-    ResponseEntity<? super FindOneResponseDto> findOneResponseDto(Long lesson_no, Long user_no);
+    ResponseEntity<? super FindOneResponseDto> findOneResponseDto(Long lesson_no, String userId);
     ResponseEntity<? super FindOneResponseDto> findOneGuestResponseDto(Long lesson_no);
-    ResponseEntity<? super PaymentInfoResponseDto> buyLesson(Long lesson_no, Long user_no);
+    ResponseEntity<? super PaymentInfoResponseDto> buyLesson(Long lesson_no, String userId);
 }

@@ -87,7 +87,7 @@ public class RecipeServiceImpl implements RecipeService {
             // 찾은 레시피의 데이터을 수정
             recipe.updateTitle(request.getRecipeTitle());
             recipe.updateCategory(request.getRecipeCategory());
-            recipe.updateStuff(request.getRecipeStuff());
+//            recipe.updateStuff(request.getRecipeStuff());
             recipe.updateContent(request.getRecipeContent());
             recipe.updateOname(request.getRecipeOname());
             recipe.updateSname(request.getRecipeSname());
