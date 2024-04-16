@@ -141,13 +141,13 @@ const Checkmakingrecipe = () => {
                   <td>{item ? item.comment.toLocaleString() : ""}</td>
                   <td>
                     {item ? (
-                      <ButtonOutlined size="VerySmall" text="삭제" />
+                      <ButtonOutlined size="verySmall" text="삭제" />
                     ) : (
                       ""
                     )}
                   </td>
                   <td>
-                    {item ? <ButtonContain size="VerySmall" text="수정" /> : ""}
+                    {item ? <ButtonContain size="verySmall" text="수정" /> : ""}
                   </td>
                 </tr>
               )
