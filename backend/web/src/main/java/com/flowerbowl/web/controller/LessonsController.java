@@ -1,10 +1,7 @@
 package com.flowerbowl.web.controller;
 
+import com.flowerbowl.web.dto.request.lesson.*;
 import com.flowerbowl.web.dto.response.lesson.ResponseDto;
-import com.flowerbowl.web.dto.request.lesson.CreateRequestDto;
-import com.flowerbowl.web.dto.request.lesson.DeleteRequestDto;
-import com.flowerbowl.web.dto.request.lesson.LessonRequestDto;
-import com.flowerbowl.web.dto.request.lesson.PaymentInfoRequestDto;
 import com.flowerbowl.web.dto.response.lesson.FindAllResponseDto;
 import com.flowerbowl.web.dto.response.lesson.FindOneResponseDto;
 import com.flowerbowl.web.dto.response.lesson.PaymentInfoResponseDto;
@@ -35,7 +32,7 @@ public class LessonsController {
     // 클래스 수정
     // PUT
     @PutMapping(value = "/lessons/{lesson_no}")
-    public ResponseEntity<ResponseDto> lessonsModify(@AuthenticationPrincipal String userId, @RequestBody LessonRequestDto lessonRequestDto, @PathVariable Long lesson_no){
+    public ResponseEntity<ResponseDto> lessonsModify(@AuthenticationPrincipal String userId, @RequestBody LessonRequestDto lessonRequestDto, @PathVariable(value = "lesson_no") Long lesson_no){
         return lessonService.LessonModify(lessonRequestDto, lesson_no, userId);
     }
     // 클래스 삭제
@@ -69,7 +66,7 @@ public class LessonsController {
     // 특정 클래스 조회 (비로그인)
     // GET
     @GetMapping("/guest/lessons/{lesson_no}")
-    public ResponseEntity<? super FindOneResponseDto> lessonsFindOneGuest(@PathVariable Long lesson_no){
+    public ResponseEntity<? super FindOneResponseDto> lessonsFindOneGuest(@PathVariable(value = "lesson_no") Long lesson_no){
         return lessonService.findOneGuestResponseDto(lesson_no);
     }
 
@@ -78,5 +75,16 @@ public class LessonsController {
     @PostMapping(value = "/lessons/buy")
     public ResponseEntity<? super PaymentInfoResponseDto> lessonsBuy(@AuthenticationPrincipal String userId, @RequestBody PaymentInfoRequestDto paymentInfoRequestDto){
         return lessonService.buyLesson(paymentInfoRequestDto.getLesson_no(), userId);
+    }
+    // 클래스 즐겨찾기 등록 // POST
+    @PostMapping(value = "/user/lessons/like")
+    public ResponseEntity<ResponseDto> lessonLike(@AuthenticationPrincipal String userId, @RequestBody LessonLikeRequestDto lessonLikeRequestDto){
+        return lessonService.LessonLike(lessonLikeRequestDto.getLesson_no(), userId);
+    }
+
+    // 클래스 즐겨찾기 해제 // DELETE
+    @DeleteMapping(value = "/user/lessons/like/{lesson_no}")
+    public ResponseEntity<ResponseDto> lessonUnlike(@AuthenticationPrincipal String userId, @PathVariable(value = "lesson_no") Long lesson_no){
+        return lessonService.LessonUnlike(lesson_no, "test");
     }
 }
