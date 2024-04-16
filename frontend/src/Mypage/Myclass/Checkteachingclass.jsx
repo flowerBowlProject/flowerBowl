@@ -2,6 +2,7 @@ import { React, useState, useEffect } from "react";
 import ButtonContain from "../../Component/ButtonContain";
 import ButtonOutlined from "../../Component/ButtonOutlined";
 import "./Checkteachingclass.css";
+import { Link } from "react-router-dom";
 
 const Checkteachingclass = () => {
   // 정렬기능
@@ -73,8 +74,16 @@ const Checkteachingclass = () => {
     <>
       {/* 버튼들 */}
       <section className="buttons">
-        <ButtonContain size="medium" text="수강클래스 조회" />
-        <ButtonOutlined size="medium" text="창작클래스 조회" />
+        <span className="checktclass">
+          <Link to="/mypage/checkteachingclass">
+            <ButtonContain size="doubleLarge" text="수강클래스 조회" />
+          </Link>
+        </span>
+        <span className="checkmclass">
+          <Link to="/mypage/checkmakingclass">
+            <ButtonOutlined size="doubleLarge" text="창작클래스 조회" />
+          </Link>
+        </span>
       </section>
 
       {/* 내용 */}

@@ -7,13 +7,18 @@ import "./RegisterBanner.css";
 const RegisterBanner = () => {
   return (
     <>
-      <div class="division-line"></div>
-      <FileDropArea />
-      <TextInput />
-      <div className="fileadd">
-        <ButtonContain size="medium" text="등록" />
+      <div className="division-line"></div>
+      <div className="dragdrop">
+        <FileDropArea />
       </div>
-      <div class="division-line"></div>
+      <div className="inputbanner">
+        <TextInput />
+      </div>
+
+      <div className="fileadd">
+        <ButtonContain size="doubleLarge" text="등록" />
+      </div>
+      <div className="division-line"></div>
     </>
   );
 };

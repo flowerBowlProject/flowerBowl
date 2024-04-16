@@ -1,4 +1,6 @@
-
+.admissionall {
+  margin-left: -4em;
+}
 /* 더보기버튼 */
 .bottom-add .inputbutton {
   margin-top: 5em;
@@ -95,30 +97,11 @@
   object-fit: cover;
 }
 
-/* 버튼 최종 조정 */
-.button-group .outputbutton {
-  margin-left: 1em;
+.bottom-add {
+  margin-bottom: 1em;
+  margin-top: 1em;
 }
 
-.button-group .inputbutton {
-  margin-left: -3em;
-}
-
-.custom-table th:nth-child(3),
-.custom-table td:nth-child(3) {
-  width: 25%;
-}
-
-.inputbutton {
-  outline: none;
-  box-shadow: none;
-}
-
-.outputbutton {
-  outline: none;
-  box-shadow: none;
-}
-
-.custom-table td:last-child {
-  border: none;
+.adcl {
+  margin-left: 1.5em;
 }

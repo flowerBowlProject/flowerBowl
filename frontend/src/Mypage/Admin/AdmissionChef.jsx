@@ -46,68 +46,74 @@ const AdmissionChef = () => {
   return (
     <>
       {/* 내용 */}
-      <section className="table-content">
-        <table className="custom-table">
-          <thead>
-            <tr>
-              <th>No</th>
-              <th>
-                신청일자
-                <button className="sort-button" onClick={toggleSortDirection}>
-                  <span
-                    className={
-                      sortDirection === "asc" ? "arrow-up" : "arrow-down"
-                    }
-                  >
-                    {sortDirection === "asc" ? "▲" : "▼"}
-                  </span>
-                </button>
-              </th>
-              <th>신청자</th>
-              <th>첨부파일</th>
-              <th></th>
-            </tr>
-          </thead>
+      <div className="admissionall">
+        <section className="table-content">
+          <table className="custom-table">
+            <thead>
+              <tr>
+                <th>No</th>
+                <th>
+                  신청일자
+                  <button className="sort-button" onClick={toggleSortDirection}>
+                    <span
+                      className={
+                        sortDirection === "asc" ? "arrow-up" : "arrow-down"
+                      }
+                    >
+                      {sortDirection === "asc" ? "▲" : "▼"}
+                    </span>
+                  </button>
+                </th>
+                <th>신청자</th>
+                <th>첨부파일</th>
+                <th></th>
+              </tr>
+            </thead>
 
-          <tbody>
-            {[...tableData, ...Array(8 - tableData.length)].map(
-              (item, index) => (
-                <tr key={index}>
-                  <td>{item ? index + 1 : ""}</td>
-                  <td>{item ? item.date : ""}</td>
-                  <td>{item ? item.user : ""}</td>
-                  <td>
-                    {item && item.file ? (
-                      <img
-                        src={item.file}
-                        alt="첨부파일"
-                        className="attachment-image"
-                      />
-                    ) : (
-                      ""
-                    )}
-                  </td>
-                  <td className="button-group">
-                    {item ? (
-                      <>
-                        <ButtonContain size="medium" text="신청 허가" />
-                        <ButtonOutlined size="medium" text="신청 반려" />
-                      </>
-                    ) : (
-                      ""
-                    )}
-                  </td>
-                </tr>
-              )
-            )}
-          </tbody>
-        </table>
-      </section>
+            <tbody>
+              {[...tableData, ...Array(8 - tableData.length)].map(
+                (item, index) => (
+                  <tr key={index}>
+                    <td>{item ? index + 1 : ""}</td>
+                    <td>{item ? item.date : ""}</td>
+                    <td>{item ? item.user : ""}</td>
+                    <td>
+                      {item && item.file ? (
+                        <img
+                          src={item.file}
+                          alt="첨부파일"
+                          className="attachment-image"
+                        />
+                      ) : (
+                        ""
+                      )}
+                    </td>
+                    <td className="button-group">
+                      {item ? (
+                        <>
+                          <span className="adok">
+                            <ButtonContain size="medium" text="신청 허가" />
+                          </span>
+                          <span className="adcl">
+                            <ButtonOutlined size="medium" text="신청 반려" />
+                          </span>
+                        </>
+                      ) : (
+                        ""
+                      )}
+                    </td>
+                  </tr>
+                )
+              )}
+            </tbody>
+          </table>
+        </section>
 
-      {/* 더보기 버튼    */}
-      <section className="bottom-add">
-        <ButtonContain size="medium" text="더보기" />
-      </section>
+        {/* 더보기 버튼    */}
+        <section className="bottom-add">
+          <ButtonContain size="medium" text="더보기" />
+        </section>
+      </div>
     </>
   );
 };
