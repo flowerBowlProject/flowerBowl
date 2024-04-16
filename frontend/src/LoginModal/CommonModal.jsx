@@ -20,9 +20,10 @@ const CommonModal=({open,name_1,name_2,helpertext_1,helpertext_2,but_name,text_1
         <Modal open={open}>
             <Box bgcolor='main.br' mt='10vw' mx='30vw' border='3px solid #F6C47B' borderRadius={1} width='40vw' height='30vw'>
                 <Grid container direction='column' mt='2vw'>
-                    <InputMember name={name_1} helpertext={helpertext_1}/>
-                    <InputMember type_pass={type_pass} name={name_2} helpertext={helpertext_2}/>
-                    <Grid item xs textAlign='center'>
+                    {name_1?<InputMember name={name_1} helpertext={helpertext_1}/>:<Grid item height='3.5vw' />}
+                    <InputMember type_pass={type_pass} name={name_2} helpertext={helpertext_2} />
+                    {name_1?null:<Grid item height='3.5vw' />}
+                    <Grid item textAlign='center'>
                         <Button_contain_style width='15vw' sx={{mb:'2vw'}}>{but_name}</Button_contain_style>
                     </Grid>
                     <Grid item xs textAlign='center' >

@@ -114,7 +114,6 @@ const Header = () => {
                 <CommonModal
                   open={open[2]}
                   handleOpen={handleOpen}
-                  name_1="이름"
                   name_2="이메일"
                   helpertext_2="이메일 형식에 맞춰 작성해 주세요."
                   but_name="아이디 찾기"

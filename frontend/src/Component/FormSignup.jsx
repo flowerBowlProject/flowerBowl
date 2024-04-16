@@ -9,12 +9,31 @@ const FormSignup = ({
   helper_text,
   but_exis,
   pass_exis,
+  size
 }) => {
+  const handleSize=()=>{
+    if(size==='joy'){
+        return{
+          xs_1:11.1,
+          ml:'2.5vw',
+          height:'null',
+          mt:'null'
+        }
+    }else if(size==='towel'){
+        return{
+          xs_1:6,
+          ml:'1vw',
+          height:'4vw',
+          mt:'1.5vw',
+      }
+    }
+  }
+  const form_size=handleSize()
   return (
     <Grid item xs={5}>
-      <Grid container direction="column" mt="1vw" ml="2.5vw">
+      <Grid container direction="column" mt={form_size.mt} ml={form_size.ml}>
         <Grid container xs direction="row">
-          <Grid item xs={11.1}>
+          <Grid item xs={form_size.xs_1}>
             <Typography color="main.br" variant="h6">
               {title}
             </Typography>
@@ -31,7 +50,7 @@ const FormSignup = ({
             ) : null}
           </Grid>
         </Grid>
-        <Grid xs item mt="0.2vw">
+        <Grid xs item mt="0.2vw" height={form_size.height}>
           <Input_search_style
             type={pass_exis ? "password" : "text"}
             sx={{ width: "20vw" }}
