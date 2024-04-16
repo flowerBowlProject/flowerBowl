@@ -56,5 +56,9 @@ public class Community {
         this.communityContent = communityContent;
     }
 
+    public void updateView(Long communityViews) {
+        this.communityViews = communityViews;
+    }
+
 }
 
