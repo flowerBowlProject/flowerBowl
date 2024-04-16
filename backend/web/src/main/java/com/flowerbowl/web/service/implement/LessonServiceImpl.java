@@ -1,10 +1,7 @@
 package com.flowerbowl.web.service.implement;
 
+import com.flowerbowl.web.domain.*;
 import com.flowerbowl.web.dto.object.lesson.LessonShortDto;
-import com.flowerbowl.web.domain.Lesson;
-import com.flowerbowl.web.domain.Pay;
-import com.flowerbowl.web.domain.ReviewEnable;
-import com.flowerbowl.web.domain.User;
 import com.flowerbowl.web.dto.object.lesson.PageInfo;
 import com.flowerbowl.web.dto.response.lesson.ResponseDto;
 import com.flowerbowl.web.dto.object.lesson.LessonResponseDto;
@@ -193,7 +190,6 @@ public class LessonServiceImpl implements LessonService {
     public ResponseEntity<? super FindOneResponseDto> findOneResponseDto(Long lesson_no, String userId){
 //    public void findOneResponseDto(Long lesson_no){
         try{
-//            Long user_no = 1L;
             User user = userRepository.findByUserId(userId);
             // 해당하는 lesson이 없는 경우
             if(!lessonJpaDataRepository.existsLessonByLessonNo(lesson_no)){
@@ -288,4 +284,45 @@ public class LessonServiceImpl implements LessonService {
         }
     }
 
+    // 클래스 즐겨찾기 등록
+    @Override
+    @Transactional
+    public ResponseEntity<ResponseDto> LessonLike(Long lesson_no, String userId){
+        try {
+            User user = userRepository.findByUserId(userId);
+            Lesson lesson = lessonsRepository.findByLesson_no(lesson_no);
+            if(user == null) return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseDto("FA","해당하는 userId를 가진 유저가 없습니다."));
+            if(lesson == null) return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseDto("FA","해당하는 lesson_no에 해당하는 lesson이 없습니다."));
+            Boolean like_status = muziLessonLikeRepository.existsByUser_UserNoAndLesson_LessonNo(user.getUserNo(), lesson_no);
+            if(like_status){
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseDto("FA","해당유저는 이미 즐겨찾기를 했습니다."));
+            }
+            LessonLike lessonLike = new LessonLike(user, lesson);
+            muziLessonLikeRepository.save(lessonLike);
+            return ResponseEntity.status(HttpStatus.OK).body(new ResponseDto());
+        } catch (Exception e){
+            log.info("LessonService LessonLike error : {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseDto("ISE", "Internal Server Error"));
+        }
+    }
+
+    // 클래스 즐겨찾기 해제
+    @Override
+    @Transactional
+    public ResponseEntity<ResponseDto> LessonUnlike(Long lesson_no, String userId){
+        try {
+            User user = userRepository.findByUserId(userId);
+            Lesson lesson = lessonsRepository.findByLesson_no(lesson_no);
+            if(user == null) return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseDto("FA","해당하는 userId를 가진 유저가 없습니다."));
+            if(lesson == null) return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseDto("FA","해당하는 lesson_no에 해당하는 lesson이 없습니다."));
+            Boolean like_status = muziLessonLikeRepository.existsByUser_UserNoAndLesson_LessonNo(user.getUserNo(), lesson_no);
+            if(like_status == false) return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseDto("FA","해당 유저는 즐겨찾기를 하고 있지 않습니다."));
+            LessonLike lessonLike = muziLessonLikeRepository.findLessonLikeByLesson_LessonNoAndUser_UserNo(lesson_no, user.getUserNo());
+            muziLessonLikeRepository.delete(lessonLike);
+            return ResponseEntity.status(HttpStatus.OK).body(new ResponseDto());
+        } catch (Exception e){
+            log.info("LessonService LessonUnlike error : {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseDto("ISE", "Internal Server Error"));
+        }
+    }
 }

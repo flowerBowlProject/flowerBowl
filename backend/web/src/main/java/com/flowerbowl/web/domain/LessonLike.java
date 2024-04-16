@@ -1,11 +1,18 @@
 package com.flowerbowl.web.domain;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
 @Entity
+@NoArgsConstructor
 public class LessonLike {
+    public LessonLike(User user, Lesson lesson){
+        this.user = user;
+        this.lesson = lesson;
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
