@@ -4,8 +4,7 @@ import {
   Typography,
   Container,
   ButtonGroup,
-  Grid,
-  Link,
+  Grid
 } from "@mui/material";
 import "./Header.css";
 import ButtonLogoStyle from "../Component/ButtonLogoStyle";
@@ -17,6 +16,8 @@ import { useState } from "react";
 import CommonModal from "../LoginModal/CommonModal";
 import Signup from "../LoginModal/Signup";
 import ButtonGroupText from "../Component/ButtonGroupText";
+import {useNavigate,Link} from 'react-router-dom';
+
 const TextTitle = styled(Typography)(({ theme }) => ({
   color: theme.palette.main.br,
   fontWeight: "Bold",
@@ -26,6 +27,7 @@ const TextTitle = styled(Typography)(({ theme }) => ({
 }));
 
 const Header = () => {
+  const navigate=useNavigate();
   const [open, setOpen] = useState([false, false, false, false]);
   const handleOpen = (event) => {
     const innerText = event.target.innerText;
@@ -36,12 +38,21 @@ const Header = () => {
       setOpen([false, false, false, true]);
     console.log(innerText);
   };
-
+  const goClass=()=>{
+    navigate('/viewList');
+  }
+  const goRecipe=()=>{
+    navigate('/viewList')
+  }
+  const goComunity=()=>{
+    navigate('/communityList');
+  }
   return (
     <AppBar sx={{ backgroundColor: "main.yl" }}>
       <Toolbar>
         <Grid container>
           <Grid item xs={1.1}>
+          <Link to='/'  style={{textDecoration:'none'}}>
             <Grid container alignItems="center">
               <Grid item>
                 <img
@@ -51,15 +62,20 @@ const Header = () => {
                 />
               </Grid>
               <Grid item>
-                <TextTitle>화반(花盤)</TextTitle>
+                <TextTitle  mb='0.3vw'>
+                  
+                    화반(花盤)
+                  
+                </TextTitle>
               </Grid>
             </Grid>
+            </Link>  
           </Grid>
           <Grid item xs={3}>
             <ButtonGroupText>
-              <ButtonLogoStyle>레시피</ButtonLogoStyle>
-              <ButtonLogoStyle>클래스</ButtonLogoStyle>
-              <ButtonLogoStyle>커뮤니티</ButtonLogoStyle>
+              <ButtonLogoStyle onClick={goClass}>레시피</ButtonLogoStyle>
+              <ButtonLogoStyle onClick={goRecipe}>클래스</ButtonLogoStyle>
+              <ButtonLogoStyle onClick={goComunity}>커뮤니티</ButtonLogoStyle>
             </ButtonGroupText>
           </Grid>
           <Grid item xs={4}>
