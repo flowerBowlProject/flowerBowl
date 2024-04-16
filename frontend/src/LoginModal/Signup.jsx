@@ -11,8 +11,10 @@ const Signup = ({ open }) => {
         border="3px solid #F6C47B"
         bgcolor="#ffffff"
         borderRadius={1}
+        width="50vw"
+        height='35vw'
       >
-        <Grid container xs direcion="column" mt="2vw">
+        <Grid container direction="row" mt="2vw" justifyContent="center">
           <FormSignup
             title="아이디"
             but_text="중복확인"
@@ -45,18 +47,17 @@ const Signup = ({ open }) => {
             title="휴대폰 번호"
             place_text="휴대폰번호를 입력하세요."
           />
-          <Grid item xs={12} mt="3vw" mb="0.5vw">
-            <ButtonContainStyle sx={{ ml: "12vw" }} width="15vw">
+
+          <Grid item xs={12} mt="3vw" mb="0.5vw"  textAlign='center'>
+            <ButtonContainStyle  width="15vw">
               회원가입
             </ButtonContainStyle>
           </Grid>
-          <Grid item xs mb="3vw">
-            <Typography
-              color="main.br"
-              align="center"
-              display="inline"
-              ml="13vw"
-              onClick=""
+          <Grid item xs={12} mb="3vw"  textAlign='center'>
+            <ButtonGroup
+              color="secondary"
+              variant="text"
+              sx={{ color: "main.or"}}
             >
               로그인
             </Typography>
