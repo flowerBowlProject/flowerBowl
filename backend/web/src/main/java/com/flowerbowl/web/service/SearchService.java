@@ -9,9 +9,7 @@ import org.springframework.http.ResponseEntity;
 
 public interface SearchService {
     ResponseEntity<? super SearchAllResponseDto> searchAll(Pageable pageable, String keyword);
-
-    ResponseEntity<? super SearchRecipeResponseDto> searchRecipe(org.springframework.data.domain.Pageable pageable, String keyword);
-
-    ResponseEntity<? super SearchLessonResponseDto> searchLesson(org.springframework.data.domain.Pageable pageable, String keyword);
+    ResponseEntity<? super SearchRecipeResponseDto> searchRecipe(Pageable pageable, String keyword);
+    ResponseEntity<? super SearchLessonResponseDto> searchLesson(Pageable pageable, String keyword);
     ResponseEntity<? super SearchCommunityResponseDto> searchCommunity(Pageable pageable, String keyword);
 }

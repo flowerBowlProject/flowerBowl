@@ -59,8 +59,11 @@ public class AdminServiceImpl implements AdminService {
         log.info("user_no : {}",user_no);
         try{
             //   user_no이 존재하지 않는 경우
-            if(!adminLicenseJpaDataRepository.existsLicenseByUser_UserNo(user_no)){
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseDto("BR", "해당 유저는 신청목록에 없습니다."));
+            Long cnt = adminLicenseJpaDataRepository.countLicenseByUser_UserNo(user_no);
+            if(cnt == 0){
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseDto("FA", "해당 유저는 신청목록에 없습니다."));
+            }else if(cnt >= 2){
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseDto("ISE", "DB error : 해당 유저에 대한 license 정보가 2번 이상 있습니다."));
             }
             // 이거 jpa data가 아닌 jpa로
 //            License license = jpaLicenseRepository.findByUserNo(user_no);

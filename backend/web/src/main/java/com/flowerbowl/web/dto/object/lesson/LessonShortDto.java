@@ -31,15 +31,15 @@ public class LessonShortDto {
                 .lesson_likes_status(false) // 이거 수정해야함 // 서비스에서
                 .build();
     }
-    public static LessonShortDto guestFrom(Lesson lesson){
-        return LessonShortDto.builder()
-                .lesson_no(lesson.getLessonNo())
-                .lesson_title(lesson.getLessonTitle())
-                .lesson_date(lesson.getLessonDate())
-                .lesson_oname(lesson.getLessonOname())
-                .lesson_sname(lesson.getLessonSname())
-                .lesson_writer(lesson.getLessonWriter())
-                .lesson_likes_status(false) // 비로그인이므로 false
-                .build();
-    }
+//    public static LessonShortDto guestFrom(Lesson lesson){
+//        return LessonShortDto.builder()
+//                .lesson_no(lesson.getLessonNo())
+//                .lesson_title(lesson.getLessonTitle())
+//                .lesson_date(lesson.getLessonDate())
+//                .lesson_oname(lesson.getLessonOname())
+//                .lesson_sname(lesson.getLessonSname())
+//                .lesson_writer(lesson.getLessonWriter())
+//                .lesson_likes_status(false) // 비로그인이므로 false
+//                .build();
+//    }
 }

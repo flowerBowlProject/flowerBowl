@@ -1,6 +1,7 @@
 package com.flowerbowl.web.dto.response.search;
 
 import com.flowerbowl.web.dto.object.search.CommunityShortDto;
+import com.flowerbowl.web.dto.object.search.PageInfo;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -12,5 +13,6 @@ import java.util.List;
 public class SearchCommunityResponseDto extends ResponseDto {
     private String code;
     private String message;
-    private List<CommunityShortDto> communityShortDtos = new ArrayList<>();
+    private PageInfo pageInfo;
+    private List<CommunityShortDto> communities = new ArrayList<>();
 }

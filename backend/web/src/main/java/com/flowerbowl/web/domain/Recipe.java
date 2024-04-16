@@ -75,6 +75,9 @@ public class Recipe {
     public void updateStuff(List<String> recipeStuff) {
         this.recipeStuff = recipeStuff;
     }
+//    public void updateStuff(String recipeStuff) {
+//        this.recipeStuff = recipeStuff;
+//    }
 
     public void updateContent(String recipeContent) {
         this.recipeContent = recipeContent;

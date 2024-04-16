@@ -8,5 +8,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface JpaDataCommunityRepository extends JpaRepository<Community, Long> {
+//    Page<Community> findAllByCommunityTitleContainingOrCommunityContentContainingOrderByCommunityNoDesc(String keyword1, String keyword2, Pageable pageable);
     Page<Community> findAllByCommunityTitleContainingOrCommunityContentContainingOrderByCommunityNoDesc(String keyword1, String keyword2, Pageable pageable);
 }
