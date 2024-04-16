@@ -14,17 +14,17 @@ const FormSignup = ({
     <Grid item xs={5}>
       <Grid container direction="column" mt="1vw" ml="2.5vw">
         <Grid container xs direction="row">
-          <Grid item xs={5}>
+          <Grid item xs={11.1}>
             <Typography color="main.br" variant="h6">
               {title}
             </Typography>
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={0.9}>
             {but_exis ? (
               <ButtonContainStyle
                 width="5vw"
                 size="small"
-                sx={{ height: "1vw", ml: "1vw" }}
+                sx={{ height: "1vw", ml: "3.2vw" }}
               >
                 {but_text}
               </ButtonContainStyle>
@@ -34,7 +34,7 @@ const FormSignup = ({
         <Grid xs item mt="0.2vw">
           <Input_search_style
             type={pass_exis ? "password" : "text"}
-            sx={{ width: "15vw" }}
+            sx={{ width: "20vw" }}
             variant="outlined"
             size="small"
             placeholder={place_text}
