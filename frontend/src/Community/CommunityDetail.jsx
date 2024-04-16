@@ -1,20 +1,25 @@
 import React, { useEffect, useState } from "react";
 import './CommunityDetailStyle.css';
 import { useLocation } from "react-router";
+import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import  axios  from "axios";
 import { url } from "../url";
 import Comment from "../Component/Comment/Comment";
 import ButtonContain from "../Component/ButtonContain";
+import ButtonOutlined from "../Component/ButtonOutlined";
 
 const CommunityDetail = () => {
-    const [communityData, setCommunityData] = useState({ community_title: '커뮤니티 제목', community_content: '커뮤니티 내용' });
+    const [communityData, setCommunityData] = useState({ communityTitle: '커뮤니티 제목', communityContent: '커뮤니티 내용' });
 
     const location = useLocation();
-    const community_no = location.state?.community_no;
+    const navigate = useNavigate();
+    const communityNo = location.state?.community_no;
+    const accessToken = useSelector(state => state.persistedReducer.accessToken);
 
     {/* 데이터 불러오기 */}
     useEffect(()=>{
-        axios.get(`${url}/api/communities/${community_no}`)
+        axios.get(`${url}/api/communities/${communityNo}`)
         .then(res=>{
             console.log(res);
         })
@@ -24,22 +29,37 @@ const CommunityDetail = () => {
     },[])
 
     {/* 커뮤니티 수정 */}
-    const handleModify = () =>{
+    const handleModify = (e) =>{
+        e.preventDefault();
+        navigate('/modifyCommunity/' + communityNo);
     }
 
     {/* 커뮤니티 삭제 */}
     const handleDelete = () =>{
+        {/* alert 창 띄우기 */}
+        axios.delete(`${url}/api/communities/${communityNo}`,
+        {
+            headers:{
+                Authorization: accessToken
+            }
+        })
+        .then(res=>{
+
+        })
+        .catch(err=>{
+
+        })
     }
 
     return (
         <>
             <div className="communityDetail-Box">
-                <div className="community-title"> {communityData.community_title} </div>
-                <div className='community-body'>{communityData.community_content}</div>
+                <div className="community-title"> {communityData.communityTitle} </div>
+                <div className='community-body'>{communityData.communityContent}</div>
                 {/* 수정/삭제 버튼 - 작성자인 경우에만 true로 버튼 표시 */}
                 <div className="community-change">
-                    {true &&  <ButtonContain size='large' text='로그인'/>} &nbsp;
-                    {true && <ButtonContain size='large' text='로그인'/>}
+                    {true &&  <ButtonOutlined size='large' text='수정' handleClick={handleModify}/>} &nbsp;
+                    {true && <ButtonContain size='large' text='삭제'handleClick={handleDelete}/>}
                 </div>
             </div>
             <div>
