@@ -97,7 +97,7 @@ public class User {
         this.userNickname = dto.getUser_nickname();
         this.userPhone = dto.getUser_phone();
         this.userCreateDate = LocalDate.now(ZoneId.of("Asia/Seoul"));
-        this.userRole = Role.ROLE_CHEF;
+        this.userRole = Role.ROLE_USER;
         this.userWdStatus = false; // @ColumnDefault("false")이 안 먹음
         this.userPwChanged = false;
     }
