@@ -193,13 +193,14 @@ public class LessonServiceImpl implements LessonService {
     public ResponseEntity<? super FindOneResponseDto> findOneResponseDto(Long lesson_no, String userId){
 //    public void findOneResponseDto(Long lesson_no){
         try{
-            Long user_no = 1L;
+//            Long user_no = 1L;
+            User user = userRepository.findByUserId(userId);
             // 해당하는 lesson이 없는 경우
             if(!lessonJpaDataRepository.existsLessonByLessonNo(lesson_no)){
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseDto("FA","해당하는 lesson_no을 가진 클래스가 없습니다."));
             }
             Lesson lesson = lessonJpaDataRepository.findLessonByLessonNo(lesson_no);
-            Boolean like_status = muziLessonLikeRepository.existsByUser_UserNoAndLesson_LessonNo(user_no, lesson_no);
+            Boolean like_status = muziLessonLikeRepository.existsByUser_UserNoAndLesson_LessonNo(user.getUserNo(), lesson_no);
             LessonResponseDto lessonResponseDto = new LessonResponseDto(lesson);
             lessonResponseDto.setLesson_likes_status(like_status);
             Long likes_no = muziLessonLikeRepository.countLessonLikeByLesson_LessonNo(lesson_no);
