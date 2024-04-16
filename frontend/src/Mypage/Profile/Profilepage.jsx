@@ -1,12 +1,11 @@
 import React, { useState } from "react";
 import FormSignup from "../../Component/FormSignup";
-import Buttoncontain from "../../Component/ButtonContain";
 import PersonIcon from "@mui/icons-material/Person";
 import Tooltip from "@mui/material/Tooltip";
 import "./ProfileImage.css";
 import Withdrawl from "./Withdraw";
 import { Grid } from "@mui/material";
-
+import ButtonContain from '../../Component/ButtonContain'
 
 const Profile = () => {
   return (
