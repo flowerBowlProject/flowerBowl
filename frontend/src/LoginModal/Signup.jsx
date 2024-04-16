@@ -1,8 +1,18 @@
 import React from "react";
-import { Grid, Typography, Modal, Box, TextField } from "@mui/material";
+import { Grid, Button, Modal, Box, ButtonGroup} from "@mui/material";
 import ButtonContainStyle from "../Component/ButtonContainStyle";
 import FormSignup from "../Component/FormSignup";
-const Signup = ({ open }) => {
+import styled from "@emotion/styled";
+const ButtonLoginStyle =styled(Button)(({theme})=>({
+  color: theme.palette.main.br,
+  border: 'inherit',
+  whiteSpace:'nowrap',
+  '&:hover': {
+    color: theme.palette.main.or,
+    backgroundColor: 'transparent'
+  }
+}));
+const Signup = ({ open,handleOpen }) => {
   return (
     <Modal open={open}>
       <Box
@@ -21,70 +31,54 @@ const Signup = ({ open }) => {
             place_text="아이디를 입력하세요"
             helper_text="8~15자로 작성해 주세요."
             but_exis={true}
+            size='towel'
           />
           <FormSignup
             title="닉네임"
             but_text="중복확인"
             place_text="닉네임을 입력하세요"
             but_exis={true}
+            size='towel'
           />
           <FormSignup
             title="비밀번호"
             place_text="비밀번호를 입력하세요"
             helper_text="영문,숫자,특수문자 포함 8~15자로 작성해 주세요."
+            size='towel'
           />
           <FormSignup
             title="이메일"
             but_text="이메일인증"
             place_text="이메일을 입력하세요"
             but_exis={true}
+            size='towel'
           />
           <FormSignup
             title="비밀번호 확인"
             place_text="비밀번호를 입력하세요"
+            size='towel'
           />
           <FormSignup
             title="휴대폰 번호"
             place_text="휴대폰번호를 입력하세요."
+            size='towel'
           />
 
-          <Grid item xs={12} mt="3vw" mb="0.5vw"  textAlign='center'>
+          <Grid item xs={12} mt="4vw" mb="0.5vw"  textAlign='center'>
             <ButtonContainStyle  width="15vw">
               회원가입
             </ButtonContainStyle>
           </Grid>
-          <Grid item xs={12} mb="3vw"  textAlign='center'>
+          <Grid item xs={12} mb="3vw"   textAlign='center'>
             <ButtonGroup
               color="secondary"
               variant="text"
               sx={{ color: "main.or"}}
             >
-              로그인
-            </Typography>
-            <Typography color="main.br" align="center" display="inline">
-              {" "}
-              |{" "}
-            </Typography>
-            <Typography
-              color="main.br"
-              align="center"
-              display="inline"
-              onClick=""
-            >
-              아이디 찾기
-            </Typography>
-            <Typography color="main.br" align="center" display="inline">
-              {" "}
-              |{" "}
-            </Typography>
-            <Typography
-              color="main.br"
-              align="center"
-              display="inline"
-              onClick=""
-            >
-              비밀번호 찾기
-            </Typography>
+            <ButtonLoginStyle onClick={handleOpen}>로그인</ButtonLoginStyle>
+            <ButtonLoginStyle onClick={handleOpen}>아이디 찾기</ButtonLoginStyle>
+            <ButtonLoginStyle onClick={handleOpen}>비밀번호 찾기</ButtonLoginStyle>
+            </ButtonGroup>
           </Grid>
         </Grid>
       </Box>
