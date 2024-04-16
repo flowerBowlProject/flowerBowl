@@ -66,7 +66,7 @@ const CheckClassList = () => {
               </th>
               <th>클래스명</th>
               <th>구매자명</th>
-              <th>핸드폰 번호</th>
+              <th>휴대폰 번호</th>
               <th></th>
             </tr>
           </thead>

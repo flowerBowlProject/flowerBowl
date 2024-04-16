@@ -1,10 +1,19 @@
 .ProfileImage {
-    width: 100px;
-    height: 100px; 
-    border-radius: 70%;
-    overflow: hidden;
-    background-color: var(--yellow-color);
-    border-style: solid;
-    border-color: var(--brown--color);
-    border-width: 1px;
+  width: 100px;
+  height: 100px;
+  border-radius: 70%;
+  overflow: hidden;
+  background-color: var(--yellow-color);
+  border-style: solid;
+  border-color: var(--brown--color);
+  border-width: 1px;
+}
+
+.withdrawl {
+  /* 모니터일때 */
+  /* margin-left: 20em;
+  margin-top: 11em; */
+  margin-left: 18em;
+  margin-top: 9em;
+  margin-bottom: 10em;
 }
