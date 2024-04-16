@@ -18,4 +18,6 @@ public interface LessonService {
     ResponseEntity<? super FindOneResponseDto> findOneResponseDto(Long lesson_no, String userId);
     ResponseEntity<? super FindOneResponseDto> findOneGuestResponseDto(Long lesson_no);
     ResponseEntity<? super PaymentInfoResponseDto> buyLesson(Long lesson_no, String userId);
+    ResponseEntity<ResponseDto> LessonLike(Long lesson_no, String userId);
+    ResponseEntity<ResponseDto> LessonUnlike(Long lesson_no, String userId);
 }
