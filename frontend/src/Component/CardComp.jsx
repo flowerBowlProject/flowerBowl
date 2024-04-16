@@ -21,9 +21,9 @@ const CardComp = ({title, like_count, date, comment_count, sname, onClick}) => {
           component="img"
           height="250"
           width="250"
-          image={`${url}/sname`}
+          image="../images/mookuk.jpeg"
           alt="레시피 사진"
-          sx={{ borderBottom: '#F6C47B solid 2px' }}
+          sx={{ borderBottom: "#F6C47B solid 2px" }}
         />
         <CardContent>
           <div className='detail-element'>
@@ -36,8 +36,8 @@ const CardComp = ({title, like_count, date, comment_count, sname, onClick}) => {
           <div className='views-title'> {title} </div>
         </CardContent>
       </Card>
-      </div>
+    </div>
   );
-}
+};
 
 export default CardComp;

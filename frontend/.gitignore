@@ -1,0 +1,3 @@
+#파일제외
+src/Component/Comment/CommentReply.jsx
+src/Recipe/RecipeDetail.jsx
