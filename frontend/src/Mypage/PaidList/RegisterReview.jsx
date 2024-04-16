@@ -3,6 +3,7 @@ import Rating from "@mui/material/Rating";
 import "./RegisterReview.css";
 import ButtonContain from "../../Component/ButtonContain";
 import ButtonOutlined from "../../Component/ButtonOutlined";
+import { Link } from "react-router-dom";
 
 const RegisterReview = () => {
   const [value, setValue] = useState(0);
@@ -30,13 +31,22 @@ const RegisterReview = () => {
     <div className="all">
       {/* 버튼들 */}
       <section className="buttons">
-        <span className="write-review">
-          <ButtonOutlined size="medium" text="결제 내역" />
+        <span className="rgPaidlist">
+          <Link to="/mypage/checkPaidList">
+            <ButtonOutlined size="medium" text="결제 내역" />
+          </Link>
         </span>
-        <ButtonOutlined size="medium" text="리뷰 조회" />
-        <ButtonContain size="medium" text="리뷰 작성" />
+        <span className="rgReview">
+          <Link to="/mypage/checkReview">
+            <ButtonOutlined size="medium" text="리뷰 조회" />
+          </Link>
+        </span>
+        <span className="rgRegister">
+          <Link to="/mypage/registerReview">
+            <ButtonContain size="medium" text="리뷰 작성" />
+          </Link>
+        </span>
       </section>
-      <div className="division-line-br"></div>
 
       {/* 클래스 목록 */}
       <section className="teachingclass">
@@ -98,8 +108,12 @@ const RegisterReview = () => {
       {/* 하단부 */}
       <div className="division-line-br"></div>
       <div className="bottom-buttons">
-        <ButtonOutlined size="medium" text="등록" />
-        <ButtonContain size="medium" text="취소" />
+        <span className="rgok">
+          <ButtonOutlined size="medium" text="등록" />
+        </span>
+        <span className="rgcl">
+          <ButtonContain size="medium" text="취소" />
+        </span>
       </div>
     </div>
   );

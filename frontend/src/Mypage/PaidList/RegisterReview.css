@@ -3,10 +3,21 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 2em;
 }
 
 /* 버튼들 */
+/* 위 버튼 3개 */
+.buttons .rgPaidlist {
+  margin-left: -25em;
+}
+
+.buttons .rgReview {
+  margin-left: 1em;
+}
+
+.buttons .rgRegister {
+  margin-left: 1em;
+}
 
 .buttons {
   display: flex;
@@ -16,37 +27,16 @@
   margin-left: -35em;
 }
 
-.buttons .inputbutton {
-  height: 2.5em;
-}
-
-.buttons .outputbutton {
-  margin-left: 2em;
-  height: 2.5em;
-}
-
-.buttons .outputbutton:hover {
-  background-color: var(--orange--color);
-  color: white;
-}
-
-/* 구분선 */
-.division-line-br {
-  border-top: 2px solid var(--brown--color);
-  margin-top: 1em;
-  width: 60%;
-}
-
 .division-line-or {
   border-top: 2px solid var(--orange--color);
   margin: 1em 0;
   width: 35%;
-  margin-left: 30em;
+  transform: translateX(90%);
 }
 
 .division-line {
   border-top: 2px solid var(--brown--color);
-  margin-top: 1em;
+  margin-top: 0em;
   position: relative;
 }
 
@@ -88,12 +78,11 @@
 .styled-input {
   display: flex;
   width: 90%; /* Responsive width */
-  margin: 20px auto;
   justify-content: center;
   border-radius: 5px;
   resize: none;
   height: 15em;
-  margin-top: 3em; /* 평점 아래쪽 여백 */
+  margin-top: 1em;
   border: 1px solid #cccccc;
   font-size: 15px;
   background-color: var(--orange--color);
@@ -111,18 +100,7 @@
 
 .input-content {
   justify-content: center;
-  margin-top: 1em;
   width: 40%;
-}
-
-/* 하단버튼 */
-
-.bottom-buttons .inputbutton {
-  margin-top: 1.5em;
-}
-
-.bottom-buttons .outputbutton {
-  margin-left: 1em;
 }
 
 /* 모달창 */
@@ -140,4 +118,18 @@
 .class-option {
   padding: 10px;
   cursor: pointer;
+}
+
+/* 하단버튼 */
+.bottom-buttons {
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+
+.bottom-buttons .rgok {
+  margin-left: -1em;
+}
+
+.bottom-buttons .rgcl {
+  margin-left: 1em;
 }
