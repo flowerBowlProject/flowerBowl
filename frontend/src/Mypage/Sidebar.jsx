@@ -11,7 +11,7 @@ import BlenderIcon from "@mui/icons-material/Blender";
 import PaymentIcon from "@mui/icons-material/Payment";
 import ListIcon from "@mui/icons-material/List";
 import "./Sidebar.css";
-import {Link, Outlet} from "react-router-dom";
+import { Link, Outlet } from "react-router-dom";
 
 const Row = ({ icon, name, isHovered, isFixed, link }) => {
   const color = isFixed || isHovered ? "main.wh" : "main.or";
@@ -67,34 +67,43 @@ const Sidebar = ({ fixedItem = "" }) => {
   }, [initialHoverIndex]);
 
   return (
-    <Grid container direction="column" mt="5vw">
-      {items.map((item, i) => {
-        return (
-          <Grid
-            item
-            key={i}
-            width="18vw"
-            onMouseEnter={() => setHoverIndex(i)}
-            onMouseLeave={() => setHoverIndex(initialHoverIndex)}
-            sx={{
-              borderTop:
-                i === 1 || i === 3 || i === 5 ? "none" : "2px solid #F6C47B",
-              borderRight: "2px solid #F6C47B",
-              borderBottom: i === 1 || i === 3 ? "none" : "2px solid #F6C47B",
-              "&:hover": { backgroundColor: "main.or", color: "main.wh" },
-            }}
-          >
-            <Row
-              name={item.name}
-              icon={item.icon}
-              isFixed={i === initialHoverIndex}
-              isHovered={hoverIndex === i}
-              link={item.link}
-            />
-          </Grid>
-        );
-      })}
-      <Outlet />
+    <Grid container direction="row">
+      <Grid item xs={2.5}>
+        <Grid container direction="column" mt="5vw">
+          {items.map((item, i) => {
+            return (
+              <Grid
+                item
+                key={i}
+                width="18vw"
+                onMouseEnter={() => setHoverIndex(i)}
+                onMouseLeave={() => setHoverIndex(initialHoverIndex)}
+                sx={{
+                  borderTop:
+                    i === 1 || i === 3 || i === 5
+                      ? "none"
+                      : "2px solid #F6C47B",
+                  borderRight: "2px solid #F6C47B",
+                  borderBottom:
+                    i === 1 || i === 3 ? "none" : "2px solid #F6C47B",
+                  "&:hover": { backgroundColor: "main.or", color: "main.wh" },
+                }}
+              >
+                <Row
+                  name={item.name}
+                  icon={item.icon}
+                  isFixed={i === initialHoverIndex}
+                  isHovered={hoverIndex === i}
+                  link={item.link}
+                />
+              </Grid>
+            );
+          })}
+        </Grid>
+      </Grid>
+      <Grid item xs={9.5} mt="5vw">
+        <Outlet />
+      </Grid>
     </Grid>
   );
 };
