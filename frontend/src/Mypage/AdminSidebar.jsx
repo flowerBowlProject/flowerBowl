@@ -55,34 +55,42 @@ const AdminSidebar = ({ fixedItem = "" }) => {
   }, [initialHoverIndex]);
 
   return (
-    <Grid container direction="column" mt="5.5vw" mb="45vh">
-      {items.map((item, i) => {
-        return (
-          <Grid
-            item
-            key={i}
-            width="18vw"
-            onMouseEnter={() => setHoverIndex(i)}
-            onMouseLeave={() => setHoverIndex(initialHoverIndex)}
-            sx={{
-              borderTop:
-                i === 1 || i === 3 || i === 5 ? "none" : "2px solid #F6C47B",
-              borderRight: "2px solid #F6C47B",
-              borderBottom: "2px solid #F6C47B",
-              "&:hover": { backgroundColor: "main.or", color: "main.wh" },
-            }}
-          >
-            <Row
-              name={item.name}
-              icon={item.icon}
-              isFixed={i === initialHoverIndex}
-              isHovered={hoverIndex === i}
-              link={item.link}
-            />
-          </Grid>
-        );
-      })}
-      <Outlet />
+    <Grid container direction="row">
+      <Grid item xs={3} >
+        <Grid container direction="column" mt="5.5vw" mb="45vh">
+          {items.map((item, i) => {
+            return (
+              <Grid
+                item
+                key={i}
+                width="18vw"
+                onMouseEnter={() => setHoverIndex(i)}
+                onMouseLeave={() => setHoverIndex(initialHoverIndex)}
+                sx={{
+                  borderTop:
+                    i === 1 || i === 3 || i === 5
+                      ? "none"
+                      : "2px solid #F6C47B",
+                  borderRight: "2px solid #F6C47B",
+                  borderBottom: "2px solid #F6C47B",
+                  "&:hover": { backgroundColor: "main.or", color: "main.wh" },
+                }}
+              >
+                <Row
+                  name={item.name}
+                  icon={item.icon}
+                  isFixed={i === initialHoverIndex}
+                  isHovered={hoverIndex === i}
+                  link={item.link}
+                />
+              </Grid>
+            );
+          })}
+        </Grid>
+        </Grid>
+        <Grid item xs={9} mt='5vw'>
+          <Outlet />
+        </Grid>
     </Grid>
   );
 };
