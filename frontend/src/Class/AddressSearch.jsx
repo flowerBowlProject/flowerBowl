@@ -11,15 +11,6 @@ const AddressSearch = (props) => {
     lesson_latitude: 0.0,
   });
 
-  const handleAddressClick = () => {
-    new window.daum.Postcode({
-      oncomplete: (data) => {
-        document.getElementById("main_address").value = data.address;
-        setAddress((address) => ({ ...address, lesson_address: data.address }));
-      },
-    }).open();
-  };
-
   const searchAddress = () => {
     axios
       .get("https://dapi.kakao.com/v2/local/search/address.json", {
@@ -52,14 +43,22 @@ const AddressSearch = (props) => {
   };
 
   useEffect(() => {
-    document
-      .getElementById("main_address")
-      .addEventListener("click", handleAddressClick);
-
+    const mainAddressElement = document.getElementById("main_address");
+    if (!mainAddressElement) return; // 요소가 존재하지 않으면 함수 종료
+  
+    const handleAddressClick = () => {
+      new window.daum.Postcode({
+        oncomplete: (data) => {
+          mainAddressElement.value = data.address;
+          setAddress((address) => ({ ...address, lesson_address: data.address }));
+        },
+      }).open();
+    };
+  
+    mainAddressElement.addEventListener("click", handleAddressClick);
+  
     return () => {
-      document
-        .getElementById("main_address")
-        .removeEventListener("click", handleAddressClick);
+      mainAddressElement.removeEventListener("click", handleAddressClick);
     };
   }, []);
 
