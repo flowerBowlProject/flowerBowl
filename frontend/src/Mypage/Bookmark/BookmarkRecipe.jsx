@@ -4,6 +4,7 @@ import Bookmark from "../../Component/Bookmark";
 import ButtonContain from "../../Component/ButtonContain";
 import ButtonOutlined from "../../Component/ButtonOutlined";
 import "./BookmarkRecipe.css";
+import { Link } from "react-router-dom";
 
 const BookmarkRecipe = () => {
   const sampleRecipeData = {
@@ -23,8 +24,18 @@ const BookmarkRecipe = () => {
   return (
     <>
       <div className="bookmark-button">
-        <ButtonContain size="medium" text="레시피" />
-        <ButtonOutlined size="medium" text="클래스" />
+        <Link to="/mypage/bookmarkRecipe">
+          <ButtonContain size="medium" text="레시피" />
+        </Link>
+        <span className="classbutton">
+          <Link to="/mypage/bookmarkClass">
+            <ButtonOutlined
+              size="medium"
+              text="클래스"
+              className="classbutton"
+            />
+          </Link>
+        </span>
       </div>
 
       {/* 구분선 */}

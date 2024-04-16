@@ -1,5 +1,5 @@
-import React, { useCallback, useState } from 'react';
-import './FileDropArea.css';
+import React, { useCallback, useState } from "react";
+import "./FileDropArea.css";
 
 function FileDropArea() {
   const [dragActive, setDragActive] = useState(false);
@@ -8,9 +8,9 @@ function FileDropArea() {
   const handleDrag = useCallback((event) => {
     event.preventDefault();
     event.stopPropagation();
-    if (event.type === 'dragenter' || event.type === 'dragover') {
+    if (event.type === "dragenter" || event.type === "dragover") {
       setDragActive(true);
-    } else if (event.type === 'dragleave') {
+    } else if (event.type === "dragleave") {
       setDragActive(false);
     }
   }, []);
@@ -21,20 +21,18 @@ function FileDropArea() {
     event.stopPropagation();
     setDragActive(false);
     const files = event.dataTransfer.files;
-    // 파일 처리 로직을 여기에 추가하세요.
     console.log(files);
   }, []);
 
   // 파일 선택 핸들러
   const handleFileSelect = useCallback((event) => {
     const files = event.target.files;
-    // 파일 처리 로직을 여기에 추가하세요.
     console.log(files);
   }, []);
 
   return (
     <div
-      className={`drop-area ${dragActive ? 'active' : ''}`}
+      className={`drop-area ${dragActive ? "active" : ""}`}
       onDragEnter={handleDrag}
       onDragOver={handleDrag}
       onDragLeave={handleDrag}
@@ -50,7 +48,7 @@ function FileDropArea() {
         id="fileinput"
         multiple
         onInput={handleFileSelect}
-        style={{ display: 'none' }}
+        style={{ display: "none" }}
       />
       <label htmlFor="fileinput">파일 선택</label>
     </div>
