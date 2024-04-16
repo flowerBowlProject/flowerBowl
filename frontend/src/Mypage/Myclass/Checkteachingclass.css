@@ -1,3 +1,10 @@
+.checktclass {
+  margin-left: 10em;
+}
+
+.checkmclass {
+  margin-left: 1em;
+}
 
 
 .buttons .inputbutton {
@@ -23,7 +30,7 @@
 .custom-table {
   width: 100%;
   border-collapse: collapse;
-  text-align: left;
+  text-align: center;
 }
 
 .custom-table th,
@@ -53,7 +60,6 @@
 .custom-table td {
   padding-top: 1.5em;
   padding-bottom: 1.5em;
-  padding-left: 0.5em;
   padding-right: 0.5em;
 }
 
@@ -128,5 +134,11 @@
 }
 
 .custom-table {
-  width: 100%;
+  width: 90%;
+}
+
+.bottom-add {
+  margin-top: 1em;
+  margin-bottom: 1em;
+  text-align: center;
 }

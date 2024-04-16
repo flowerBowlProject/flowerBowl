@@ -2,6 +2,7 @@ import { React, useState, useEffect } from "react";
 import "./CheckReview.css";
 import ButtonContain from "../../Component/ButtonContain";
 import ButtonOutlined from "../../Component/ButtonOutlined";
+import { Link } from "react-router-dom";
 
 const CheckReview = () => {
   // 정렬기능
@@ -73,11 +74,21 @@ const CheckReview = () => {
     <>
       {/* 버튼들 */}
       <section className="buttons">
-        <span className="write-review">
-          <ButtonOutlined size="medium" text="결제 내역" />
+        <span className="paidlist">
+          <Link to="/mypage/checkPaidList">
+            <ButtonOutlined size="medium" text="결제 내역" />
+          </Link>
         </span>
-        <ButtonContain size="medium" text="리뷰 조회" />
-        <ButtonOutlined size="medium" text="리뷰 작성" />
+        <span className="review">
+          <Link to="/mypage/checkReview">
+            <ButtonContain size="medium" text="리뷰 조회" />
+          </Link>
+        </span>
+        <span className="register">
+          <Link to="/mypage/registerReview">
+            <ButtonOutlined size="medium" text="리뷰 작성" />
+          </Link>
+        </span>
       </section>
 
       {/* 내용 */}
@@ -143,13 +154,13 @@ const CheckReview = () => {
                   </td>
                   <td>
                     {item ? (
-                      <ButtonOutlined size="VerySmall" text="삭제" />
+                      <ButtonOutlined size="verySmall" text="삭제" />
                     ) : (
                       ""
                     )}
                   </td>
                   <td>
-                    {item ? <ButtonContain size="VerySmall" text="수정" /> : ""}
+                    {item ? <ButtonContain size="verySmall" text="수정" /> : ""}
                   </td>
                 </tr>
               )
