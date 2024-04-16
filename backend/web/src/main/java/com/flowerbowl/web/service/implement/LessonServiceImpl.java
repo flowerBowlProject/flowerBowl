@@ -159,7 +159,6 @@ public class LessonServiceImpl implements LessonService {
             return ResponseEntity.status(HttpStatus.OK).body(new FindAllResponseDto("SU", "success",pageInfo, list));
         }catch (Exception e){
             log.info("LessonService findAll exception e.getMessage() : {}",e.getMessage());
-            log.info("e.getStackTrace() : {}",e.getStackTrace());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseDto("ISE", "Internal Server Error"));
         }
     }
