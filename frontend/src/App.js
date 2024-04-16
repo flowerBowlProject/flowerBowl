@@ -2,7 +2,7 @@ import React from "react";
 import "./App.css";
 import { Header, Footer, MainHomepage } from "./MainPage/";
 import {
-  ViewList,
+  RecipeList,
   RegisterRecipe,
   RecipeDetail,
   ModifyRecipe,
@@ -15,7 +15,7 @@ import {
 } from "./Community/";
 import { Routes, Route } from "react-router-dom";
 import SearchList from "./Search/SearchList";
-import { ClassDetail, RegisterClass, ModifyClass } from "./Class/";
+import { ClassDetail, RegisterClass, ModifyClass, ClassList } from "./Class/";
 import Profilepage from "./Mypage/Profile/Profilepage";
 import { AdmissionChef, RegisterBanner } from "./Mypage/Admin/";
 import CheckClassList from "./Mypage/ApplyClass/CheckClassList";
@@ -32,7 +32,7 @@ const App = () => {
       <Header />
       <Routes>
         <Route path="/" element={<MainHomepage />} />
-        <Route path="/viewList" element={<ViewList />} />
+        <Route path="/recipeList" element={<RecipeList/>} />
         <Route path="/registerRecipe" element={<RegisterRecipe />} />
         <Route path="/modifyRecipe/:recipe_no" element={<ModifyRecipe />} />
         <Route path="/recipeDetail/:recipe_no" element={<RecipeDetail />} />
@@ -50,6 +50,7 @@ const App = () => {
         <Route path="/classDetail/:lesson_no" element={<ClassDetail />} />
         <Route path="/modifyClass/:lesson_no" element={<ModifyClass />} />
         <Route path="/registerClass" element={<RegisterClass />} />
+        <Route path="/classList" element={<ClassList/>}/>
 
         <Route path="/Mypage" element={<Sidebar />}>
           <Route path="profile" element={<Profilepage />} />
