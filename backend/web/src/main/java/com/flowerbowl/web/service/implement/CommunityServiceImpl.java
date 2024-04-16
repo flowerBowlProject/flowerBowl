@@ -5,10 +5,7 @@ import com.flowerbowl.web.common.ResponseMessage;
 import com.flowerbowl.web.domain.Community;
 import com.flowerbowl.web.domain.CommunityFile;
 import com.flowerbowl.web.domain.User;
-import com.flowerbowl.web.dto.object.community.CommunityPageInfo;
-import com.flowerbowl.web.dto.object.community.CreateCommunityDto;
-import com.flowerbowl.web.dto.object.community.CreateCommunityFileDto;
-import com.flowerbowl.web.dto.object.community.GetAllCommunitiesDto;
+import com.flowerbowl.web.dto.object.community.*;
 import com.flowerbowl.web.dto.request.community.CrCommunityReqDto;
 import com.flowerbowl.web.dto.request.community.UpCommunityReqDto;
 import com.flowerbowl.web.dto.response.community.*;
@@ -26,6 +23,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -173,6 +171,38 @@ public class CommunityServiceImpl implements CommunityService {
             log.error("Exception [Err_Where]: {}", e.getStackTrace()[0]);
 
             GetAllCommunitiesFaResDto responseBody = new GetAllCommunitiesFaResDto(ResponseCode.INTERNAL_SERVER_ERROR, ResponseMessage.INTERNAL_SERVER_ERROR);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseBody);
+        }
+    }
+
+    @Override
+    @Transactional
+    public ResponseEntity<? extends CommunityResponseDto> getCommunity(Long community_no) throws Exception {
+        try {
+            Community community = communityRepository.findByCommunityNo(community_no).orElseThrow(CommunityNotFoundException::new);
+            CommunityFile communityFile = communityFileRepository.findByCommunity_CommunityNo(community_no);
+
+            // 조회 수 증가
+            community.updateView(community.getCommunityViews() + 1);
+            communityRepository.save(community);
+
+            GetCommunityDto newDto = GetCommunityDto.builder()
+                    .communityNo(community.getCommunityNo())
+                    .communityTitle(community.getCommunityTitle())
+                    .communityWriter(community.getCommunityWriter())
+                    .communityDate(community.getCommunityDate())
+                    .communityContent(community.getCommunityContent())
+                    .communityFileOname(communityFile.getCommunityFileOname())
+                    .communityFileSname(communityFile.getCommunityFileSname())
+                    .build();
+
+            GetCommunitySuResDto responseBody = new GetCommunitySuResDto(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, newDto);
+            return ResponseEntity.status(HttpStatus.OK).body(responseBody);
+        } catch (Exception e) {
+            log.error("Exception [Err_Msg]: {}", e.getMessage());
+            log.error("Exception [Err_Where]: {}", e.getStackTrace()[0]);
+
+            GetCommunityFaResDto responseBody = new GetCommunityFaResDto(ResponseCode.INTERNAL_SERVER_ERROR, ResponseMessage.INTERNAL_SERVER_ERROR);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseBody);
         }
     }

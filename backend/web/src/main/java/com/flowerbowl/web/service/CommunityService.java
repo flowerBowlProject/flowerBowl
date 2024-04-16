@@ -15,4 +15,6 @@ public interface CommunityService {
 
     public ResponseEntity<? extends CommunityResponseDto> getAllCommunities(int page, int size) throws Exception;
 
+    public ResponseEntity<? extends CommunityResponseDto> getCommunity(Long community_no) throws Exception;
+
 }

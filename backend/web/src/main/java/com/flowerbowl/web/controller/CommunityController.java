@@ -35,4 +35,9 @@ public class CommunityController {
         return communityService.getAllCommunities(page - 1, size);
     }
 
+    @GetMapping("/detail/{community_no}")
+    private ResponseEntity<? extends CommunityResponseDto> getCommunity(@PathVariable Long community_no) throws Exception {
+        return communityService.getCommunity(community_no);
+    }
+
 }
