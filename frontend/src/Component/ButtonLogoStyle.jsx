@@ -8,6 +8,7 @@ const ButtonLogoStyle =styled(Button)(({theme})=>({
     '&:hover': {
       color: theme.palette.main.br,
       border: 'none',
+      borderBottom: `1px solid ${theme.palette.main.br}`,
       backgroundColor: 'transparent'
     }
   }));
