@@ -1,17 +1,21 @@
 package com.flowerbowl.web.config;
 
 
+import com.flowerbowl.web.common.JwtError;
 import com.flowerbowl.web.filter.JwtAuthenticationFilter;
+import com.flowerbowl.web.handler.CustomAccessDeniedHandler;
 import com.flowerbowl.web.handler.OAuth2SuccessHandler;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.CsrfConfigurer;
@@ -79,6 +83,7 @@ public class WebConfig {
                 )
                 .exceptionHandling(exceptionHandling -> exceptionHandling
                         .authenticationEntryPoint(new FailedAuthenticationEntryPoint())
+                        .accessDeniedHandler(new CustomAccessDeniedHandler())
                 )
                 // JwtAuthenticationFilter를 UsernamePasswordAuthenticationFilter 이전에 추가
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
@@ -115,10 +120,37 @@ class FailedAuthenticationEntryPoint implements AuthenticationEntryPoint {
     public void commence(HttpServletRequest request, HttpServletResponse response,
                          AuthenticationException authException) throws IOException, ServletException {
 
-        response.setContentType("application/json");
-        response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-        log.info("requestURL{}", request.getRequestURL());
-        response.getWriter().write("{\"code\": \"NP\", \"message\": \"No Permission\"}");
+        String exception = (String) request.getAttribute("exception");
+        log.info("requestURL={}", request.getRequestURL());
+        log.info("exception Values={}", exception);
 
+        if (exception != null && exception.equals("IT")) {
+            setResponse(response, JwtError.INVALID_TOKEN);
+        } else if (exception != null && exception.equals("NS")) {
+            setResponse(response, JwtError.NOT_SUPPORT_TOKEN);
+        } else if (exception != null && exception.equals("ET")) {
+            setResponse(response, JwtError.EXPIRED_TOKEN);
+        } else {
+            setResponse(response, JwtError.NOT_EXIST_TOKEN);
+        }
+
+//        response.setContentType("application/json; charset=UTF-8");
+//        response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+//        log.info("requestURL{}", request.getRequestURL());
+//        response.getWriter().write("{\"code\": \"NP\", \"message\": \"No Permission\"}");
+
+    }
+
+
+    private void setResponse(HttpServletResponse response, JwtError jwtError) throws IOException {
+
+        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        response.setContentType("application/json; charset=UTF-8");
+
+        JSONObject responseJson = new JSONObject();
+        responseJson.put("code", jwtError.getCode());
+        responseJson.put("message", jwtError.getMessage());
+
+        response.getWriter().print(responseJson);
     }
 }
