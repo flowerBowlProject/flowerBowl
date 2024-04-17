@@ -27,4 +27,5 @@
     flex-wrap: wrap;
     text-align: center;
     margin-bottom: 5%;
+    min-height: 10vw;
 }
