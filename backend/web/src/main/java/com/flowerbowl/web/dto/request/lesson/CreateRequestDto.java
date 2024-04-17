@@ -5,6 +5,7 @@ import com.flowerbowl.web.domain.Category;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Getter
@@ -18,11 +19,11 @@ public class CreateRequestDto {
     private Double lesson_longitude; // 경도
     private Double lesson_latitude; // 위도
 //    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
-    private LocalDateTime lesson_start;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
+    private LocalDate lesson_start;
 //    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
-    private LocalDateTime lesson_end;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
+    private LocalDate lesson_end;
     private Category lesson_category;
     private String lesson_URL;
     // form data저장
