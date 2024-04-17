@@ -12,6 +12,6 @@ public interface JpaDataLessonRepository extends JpaRepository<Lesson, Long> {
     Lesson findLessonByLessonNo(Long lesson_no);
 //    Page<Lesson> findAllByLessonNoGreaterThanOOrderByLessonNoDesc(int cmp, Pageable pageable);
     Page<Lesson> findAllByOrderByLessonNoDesc(Pageable pageable);
-    Page<Lesson> findAllByLessonTitleContainingOrLessonContentContainingOrderByLessonNo(String query1, String query2, Pageable pageable);
+    Page<Lesson> findAllByLessonTitleContainingOrLessonContentContainingOrderByLessonNo(String keyword1, String keyword2, Pageable pageable);
     Page<Lesson> findAllByLessonTitleContaining(String query2, Pageable pageable);
 }
