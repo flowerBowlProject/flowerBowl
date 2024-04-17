@@ -41,11 +41,11 @@ public class Lesson {
 
 //    @DateTimeFormat(pattern = "yyyy-mm-dd'T'HH:mm")
     @Column(name = "lesson_start")
-    private LocalDateTime lessonStart;
+    private LocalDate lessonStart;
 
 //    @DateTimeFormat(pattern = "yyyy-mm-dd'T'HH:mm")
     @Column(name = "lesson_end")
-    private LocalDateTime lessonEnd;
+    private LocalDate lessonEnd;
 
     @Column(name = "lesson_category")
     @Enumerated(EnumType.STRING)

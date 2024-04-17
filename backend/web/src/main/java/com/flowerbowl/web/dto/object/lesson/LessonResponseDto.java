@@ -14,12 +14,13 @@ public class LessonResponseDto {
     private String lesson_title;
     private String lesson_price;
     private LocalDate lesson_date;
-    private LocalDateTime lesson_start;
-    private LocalDateTime lesson_end;
+    private LocalDate lesson_start;
+    private LocalDate lesson_end;
     private String lesson_sname;
     private String lesson_oname;
     private Long lesson_likes_num; // 이건 query로 넣어줘야 함
     private String lesson_writer;
+    private String lesson_URL;
     private String lesson_addr;
     private Double lesson_longitude; // 경도
     private Double lesson_latitude; // 위도
@@ -42,5 +43,6 @@ public class LessonResponseDto {
         lesson_latitude = lesson.getLessonLatitude();
         lesson_category = lesson.getLessonCategory();
         lesson_contents = lesson.getLessonContent();
+        lesson_URL = lesson.getLessonURL();
     }
 }

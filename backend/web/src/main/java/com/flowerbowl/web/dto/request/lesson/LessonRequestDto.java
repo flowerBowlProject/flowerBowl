@@ -4,7 +4,7 @@ import com.flowerbowl.web.domain.Category;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -16,8 +16,8 @@ public class LessonRequestDto {
     private String lesson_addr;
     private Double lesson_longitude; // 경도
     private Double lesson_latitude; // 위도
-    private LocalDateTime lesson_start;
-    private LocalDateTime lesson_end;
+    private LocalDate lesson_start;
+    private LocalDate lesson_end;
     private Category lesson_category;
     private String lesson_URL;
     // form data저장

@@ -25,7 +25,6 @@ public class LessonsController {
     // POST
     @PostMapping(value = "/lessons")
     public ResponseEntity<ResponseDto> lessonsRegister(@AuthenticationPrincipal String userId, @RequestBody CreateRequestDto createRequestDto){
-//        System.out.println("lessons 등록 test");
         return lessonService.LessonCreate(createRequestDto, userId);
     }
 
