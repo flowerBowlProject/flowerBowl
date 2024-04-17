@@ -25,7 +25,6 @@ public class LessonsController {
     // POST
     @PostMapping(value = "/lessons")
     public ResponseEntity<ResponseDto> lessonsRegister(@AuthenticationPrincipal String userId, @RequestBody CreateRequestDto createRequestDto){
-//        System.out.println("lessons 등록 test");
         return lessonService.LessonCreate(createRequestDto, userId);
     }
 
@@ -45,14 +44,14 @@ public class LessonsController {
     // 전체 클래스 조회 (로그인)
     // GET
     @GetMapping("/user/lessons")
-    public ResponseEntity<? super FindAllResponseDto> lessonsFindAll(@AuthenticationPrincipal String userId, @PageableDefault(page = 1, size = 8) Pageable pageable){
+    public ResponseEntity<? super FindAllResponseDto> lessonsFindAll(@AuthenticationPrincipal String userId, @PageableDefault(page = 0, size = 8) Pageable pageable){
         return lessonService.findAll(pageable, userId);
     }
 
     // 전체 클래스 조회 (비로그인)
     // GET
     @GetMapping("/guest/lessons") // guest
-    public ResponseEntity<? super FindAllResponseDto> lessonsFindAllGuest(@PageableDefault(page = 1, size = 8) Pageable pageable){
+    public ResponseEntity<? super FindAllResponseDto> lessonsFindAllGuest(@PageableDefault(page = 0, size = 8) Pageable pageable){
 //   public FindAllResponseDto lessonsFindAllGuest(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "8") int size){
         return lessonService.findAllGuest(pageable);
     }

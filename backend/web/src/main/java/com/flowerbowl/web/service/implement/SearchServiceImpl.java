@@ -42,10 +42,6 @@ public class SearchServiceImpl implements SearchService {
 //    public ResponseEntity<? super AllResponseDto> searchAll(String query){
     public ResponseEntity<? super SearchAllResponseDto> searchAll(Pageable pageable, String keyword){
         try{
-//            List<RecipeShortDto> recipeList = jpaDataRecipeRepository.findAllByRecipeTitleContainingOrRecipeContentContainingOrRecipeStuffContainingOrderByRecipeNoDesc(keyword, keyword, keyword, pageable)
-//                    .map(RecipeShortDto::from).getContent();
-//            List<RecipeShortDto> recipeList = jpaDataRecipeRepository.findAllByRecipeTitleContainingOrRecipeContentContainingOrderByRecipeNoDesc(keyword, keyword, pageable)
-//                    .map(RecipeShortDto::from).getContent(); //
             List<RecipeShortDto> recipeList = jpaDataRecipeRepository.recipeSearch(keyword, pageable)
                     .map(RecipeShortDto::from).getContent();
             List<LessonShortDto> lessonList = jpaDataLessonRepository.findAllByLessonTitleContainingOrLessonContentContainingOrderByLessonNo(keyword, keyword, pageable)
@@ -53,7 +49,6 @@ public class SearchServiceImpl implements SearchService {
             List<CommunityShortDto> communityList = jpaDataCommunityRepository.findAllByCommunityTitleContainingOrCommunityContentContainingOrderByCommunityNoDesc(keyword, keyword, pageable)
                     .map(CommunityShortDto::from).getContent();
             return ResponseEntity.status(HttpStatus.OK).body(new SearchAllResponseDto("SU", "success", recipeList, lessonList, communityList));
-//            return ResponseEntity.status(HttpStatus.OK).body(new SearchAllResponseDto("SU", "success", lessonList, communityList));
         }catch (Exception e){
             log.info("SearchService searchLesson exception : {}",e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseDto("ISE", "Internal Server Error"));
@@ -80,7 +75,7 @@ public class SearchServiceImpl implements SearchService {
     @Override
     public ResponseEntity<? super SearchLessonResponseDto> searchLesson(Pageable pageable, String keyword){
         try{
-            Page<Lesson> page = jpaDataLessonRepository.findAllByLessonTitleContainingOrLessonContentContainingOrderByLessonNo(keyword,keyword, pageable);
+            Page<Lesson> page = jpaDataLessonRepository.findAllByLessonTitleContainingOrLessonContentContainingOrderByLessonNo(keyword, keyword, pageable);
             PageInfo pageInfo = new PageInfo(page.getTotalPages(), page.getTotalElements());
             List<LessonShortDto> lessonList = page.map(LessonShortDto::from).getContent();
 //            List<LessonShortDto> lessonShortDtoList = jpaDataLessonRepository.findAllByLessonTitleContainingOrLessonContentContainingOrderByLessonNo(keyword, keyword, pageable)
