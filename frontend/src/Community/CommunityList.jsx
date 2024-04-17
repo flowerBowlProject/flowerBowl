@@ -9,7 +9,7 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import Pagination from '@mui/material/Pagination';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import axios from "axios";
 import { url } from "../url";
 import ButtonOutlined from "../Component/ButtonOutlined";
@@ -20,9 +20,23 @@ const CommunityList = () => {
     const [pageInfo, setPageInfo] = useState([]);
     const [curPage, setCurPage] = useState(1);
     const navigate = useNavigate();
+    const location = useLocation();
+    const keyword = (location.state && location.state.keyword) || '';
 
     useEffect(() => {
-        axios.get(`${url}/api/communities/list?page=${curPage}&size=10`)
+        console.log(keyword);
+        if(keyword !== '') {
+            axios.get(`${url}/api/search/communities?keyword=${keyword}&size=8`)
+            .then(res => {
+                setListData(res.data.communities);
+                //setPageInfo(res.data.pageInfo);
+                console.log(res);
+            })
+            .catch(err => {
+                console.log(err);
+            })
+        }else{
+            axios.get(`${url}/api/communities/list?page=${curPage}&size=10`)
             .then(res => {
                 setListData(res.data.posts);
                 setPageInfo(res.data.pageInfo);
@@ -31,6 +45,8 @@ const CommunityList = () => {
             .catch(err => {
                 console.log(err);
             })
+        }
+        
     },[])
 
     const StyledTableCell = styled(TableCell)(() => ({
@@ -80,7 +96,6 @@ const CommunityList = () => {
                 <div style={{float:'right'}} onClick={handleRegister}>
                     <ButtonOutlined size='large' text='글쓰기'/>
                 </div>
-            
 
                 <TableContainer component={Paper} sx={{ boxShadow: 'none' }}>
                     <Table sx={{ border: "none" }}>
@@ -95,12 +110,12 @@ const CommunityList = () => {
                         </TableHead>
                         <TableBody>
                             {listData.map((listData, index) => (
-                                <StyledTableRow key={index} hover onClick={(e) => handleDetail(listData.communityNo, e)}>
+                                <StyledTableRow key={index} hover onClick={(e) => handleDetail(listData.community_no, e)}>
                                     <StyledTableCell align="center">{index + 1}</StyledTableCell>
-                                    <StyledTableCell align="center">{listData.communityTitle}</StyledTableCell>
-                                    <StyledTableCell align="center">{listData.communityWriter}</StyledTableCell>
-                                    <StyledTableCell align="center">{listData.communityDate}</StyledTableCell>
-                                    <StyledTableCell align="center">{listData.communityViews}</StyledTableCell>
+                                    <StyledTableCell align="center">{listData.community_title}</StyledTableCell>
+                                    <StyledTableCell align="center">{listData.community_writer}</StyledTableCell>
+                                    <StyledTableCell align="center">{listData.community_date}</StyledTableCell>
+                                    <StyledTableCell align="center">{listData.community_views}</StyledTableCell>
                                 </StyledTableRow>
                             ))}
                         </TableBody>
