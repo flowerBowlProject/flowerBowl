@@ -16,8 +16,5 @@ public class SpringConfig {
         this.em = em;
     }
 
-    @Bean
-    public PageableHandlerMethodArgumentResolverCustomizer customizer(){
-        return p -> p.setOneIndexedParameters(true);
-    }
+
 }
