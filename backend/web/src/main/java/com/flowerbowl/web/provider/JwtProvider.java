@@ -1,16 +1,19 @@
 package com.flowerbowl.web.provider;
 
 
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.time.Instant;
 
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import com.flowerbowl.web.common.JwtError;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Encoders;
 import io.jsonwebtoken.security.Keys;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -26,7 +29,8 @@ public class JwtProvider {
     private String secretKey;
 
     /**
-     *  초기에 시크릿 키 만들고 사용은 따로 안함
+     * 초기에 시크릿 키 만들고 사용은 따로 안함
+     *
      * @return secretKey
      */
     private String jwtSecretKeyMaker() {
@@ -36,10 +40,7 @@ public class JwtProvider {
 
     public String create(String userId) {
 
-        /*
-         * jwt 토큰 만료기간은 1시간으로 지정
-         */
-        Date expiredData = Date.from(Instant.now().plus(1, ChronoUnit.HOURS));
+        Date expiredData = Date.from(Instant.now().plus(1, ChronoUnit.HOURS)); // 만로 시간은 1시간
         Key key = Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
         System.out.println(secretKey);
 
@@ -60,7 +61,7 @@ public class JwtProvider {
     /**
      * JWT를 검증
      */
-    public String validate(String jwt) {
+    public String validate(String jwt, HttpServletRequest request) {
 
         String subject = null;
         Key key = Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
@@ -73,11 +74,31 @@ public class JwtProvider {
                     .getBody()
                     .getSubject();
 
+        } catch (SecurityException | MalformedJwtException | IllegalArgumentException exception) {
+            request.setAttribute("exception", JwtError.INVALID_TOKEN.getCode());
+            log.error("Jwt Exception [Err_Msg]: {}", exception.getMessage());
+            log.error("class={}", exception.getClass());
+            return null;
+        } catch (ExpiredJwtException exception) {
+            request.setAttribute("exception", JwtError.EXPIRED_TOKEN.getCode());
+            log.error("Jwt Exception [Err_Msg]: {}", exception.getMessage());
+            log.error("class={}", exception.getClass());
+            return null;
+        } catch (UnsupportedJwtException exception) {
+            request.setAttribute("exception", JwtError.NOT_SUPPORT_TOKEN.getCode());
+            log.error("Jwt Exception [Err_Msg]: {}", exception.getMessage());
+            log.error("class={}", exception.getClass());
+            return null;
         } catch (Exception exception) {
-            exception.printStackTrace();
+            request.setAttribute("exception", JwtError.NOT_EXIST_TOKEN.getCode());
+            log.error("Jwt Exception [Err_Msg]: {}", exception.getMessage());
+            log.error("class={}", exception.getClass());
             return null;
         }
-
+//        catch (Exception exception) {
+//            exception.printStackTrace();
+//            return null;
+//        }
         return subject;
     }
 }
