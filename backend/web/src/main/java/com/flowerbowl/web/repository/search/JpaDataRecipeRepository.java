@@ -14,8 +14,6 @@ import java.util.List;
 public interface JpaDataRecipeRepository extends JpaRepository<Recipe, Long> {
 //     Page<Recipe> findAllByRecipeTitleContainingOrRecipeContentContainingOrRecipeStuffContainingOrderByRecipeNoDesc(String query, String keyword2, String keyword3, Pageable pageable);
 //     Page<Recipe> findAllByRecipeTitleContainingOrRecipeContentContainingOrderByRecipeNoDesc(String query, String keyword3, Pageable pageable);
-     Page<Recipe> findByRecipeTitleContainingOrRecipeContentContainingOrderByRecipeNo(String keyword1, String keyword2, Pageable pageable);
-
      @Query(value = "select * from Recipe r where "
              + "r.recipe_title like %:keyword% or "
              + "r.recipe_content like %:keyword% or "

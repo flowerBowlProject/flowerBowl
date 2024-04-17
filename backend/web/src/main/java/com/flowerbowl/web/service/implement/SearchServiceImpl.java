@@ -42,25 +42,13 @@ public class SearchServiceImpl implements SearchService {
 //    public ResponseEntity<? super AllResponseDto> searchAll(String query){
     public ResponseEntity<? super SearchAllResponseDto> searchAll(Pageable pageable, String keyword){
         try{
-//            List<RecipeShortDto> recipeList = jpaDataRecipeRepository.findAllByRecipeTitleContainingOrRecipeContentContainingOrRecipeStuffContainingOrderByRecipeNoDesc(keyword, keyword, keyword, pageable)
-//                    .map(RecipeShortDto::from).getContent();
-//            List<RecipeShortDto> recipeList = jpaDataRecipeRepository.findAllByRecipeTitleContainingOrRecipeContentContainingOrderByRecipeNoDesc(keyword, keyword, pageable)
-//                    .map(RecipeShortDto::from).getContent(); //
-            List<RecipeShortDto> recipeList = jpaDataRecipeRepository.recipeSearch(keyword,pageable)
+            List<RecipeShortDto> recipeList = jpaDataRecipeRepository.recipeSearch(keyword, pageable)
                     .map(RecipeShortDto::from).getContent();
-//            List<RecipeShortDto> testList = jpaDataRecipeRepository.findByRecipeTitleContainingOrRecipeContentContainingOrderByRecipeNo(keyword, keyword, pageable)
-//                    .map(RecipeShortDto::from).getContent();
-//            List<RecipeShortDto> recipeList = jpaDataRecipeRepository.recipeSearch(keyword, keyword, keyword, pageable)
-//              .map(RecipeShortDto::from).getContent();
             List<LessonShortDto> lessonList = jpaDataLessonRepository.findAllByLessonTitleContainingOrLessonContentContainingOrderByLessonNo(keyword, keyword, pageable)
                     .map(LessonShortDto::from).getContent();
             List<CommunityShortDto> communityList = jpaDataCommunityRepository.findAllByCommunityTitleContainingOrCommunityContentContainingOrderByCommunityNoDesc(keyword, keyword, pageable)
                     .map(CommunityShortDto::from).getContent();
-            // test
-            PageInfo testInfo = new PageInfo(1, 1L);
-//            return ResponseEntity.status(HttpStatus.OK).body(new SearchRecipeResponseDto("SU", "test", testInfo, testList));
             return ResponseEntity.status(HttpStatus.OK).body(new SearchAllResponseDto("SU", "success", recipeList, lessonList, communityList));
-//            return ResponseEntity.status(HttpStatus.OK).body(new SearchAllResponseDto("SU", "success", lessonList, communityList));
         }catch (Exception e){
             log.info("SearchService searchLesson exception : {}",e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseDto("ISE", "Internal Server Error"));
