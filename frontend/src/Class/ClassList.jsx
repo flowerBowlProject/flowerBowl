@@ -67,7 +67,7 @@ const ViewList = () => {
                     <div style={{position:'relative'}}>
                         <Bookmark sx={{cursor:'point'}} onClick={(e)=>clickBookmark(e, data.lesson_no)}/>
                         <RecipeReviewCard key={index} onClick={(e)=> clickDetail(e, data.lesson_no)}
-                            title={data.lesson_title} like_count={data.lesson_likes_num} comment_count={0} sname={data.lesson_sname} date={data.lesson_date}/>
+                            title={data.lesson_title} like_count={data.lesson_likes_num} comment_count={0} sname={data.lesson_sname} date={data.lesson_date} type={false}/>
                     </div>)}
             </div>
             <Button className="moreButton"> 더보기 </Button>
