@@ -16,7 +16,7 @@ const BookmarkClass = () => {
 
   const bookmarkComponents = Array.from({ length: 8 }, (_, index) => (
     <div key={index} className="bookmark-wrapper">
-      <Bookmark />
+      <Bookmark check={true} />
       <CardComp list={sampleRecipeData} />
     </div>
   ));
