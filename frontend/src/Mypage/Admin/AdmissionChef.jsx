@@ -51,8 +51,8 @@ const AdmissionChef = () => {
           <table className="custom-table">
             <thead>
               <tr>
-                <th>No</th>
-                <th>
+                <th className="no">No</th>
+                <th className="applyDate">
                   신청일자
                   <button className="sort-button" onClick={toggleSortDirection}>
                     <span
@@ -64,8 +64,8 @@ const AdmissionChef = () => {
                     </span>
                   </button>
                 </th>
-                <th>신청자</th>
-                <th>첨부파일</th>
+                <th className="applyer">신청자</th>
+                <th className="attachFile">첨부파일</th>
                 <th></th>
               </tr>
             </thead>
@@ -76,7 +76,7 @@ const AdmissionChef = () => {
                   <tr key={index}>
                     <td>{item ? index + 1 : ""}</td>
                     <td>{item ? item.date : ""}</td>
-                    <td>{item ? item.user : ""}</td>
+                    <td className="applyer">{item ? item.user : ""}</td>
                     <td>
                       {item && item.file ? (
                         <img
