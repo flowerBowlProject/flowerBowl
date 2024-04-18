@@ -222,4 +222,52 @@ public interface UserRepository extends JpaRepository<User, Long> {
             "   WHERE  " +
             "       user_id = :userId) AND p.pay_no = :payNo ", nativeQuery = true)
     int deletePayByChef(@Param("userId") String userId, @Param("payNo") Long payNo);
+
+    @Query(value = "SELECT " +
+            "   l.lesson_no, " +
+            "   DATE_FORMAT(l.lesson_date, '%Y-%m-%d') as lesson_date, " +
+            "   l.lesson_title, " +
+            "   l.lesson_oname, " +
+            "   l.lesson_sname, " +
+            "   (SELECT COUNT(*) FROM lesson_like ll WHERE l.lesson_no = ll.lesson_no) AS lesson_like_cnt " +
+            "FROM  " +
+            "   lesson l " +
+            "WHERE  " +
+            "   lesson_no IN (SELECT  " +
+            "       lesson_no " +
+            "   FROM  " +
+            "       lesson_like " +
+            "   WHERE  " +
+            "       user_no IN (SELECT  " +
+            "           user_no  " +
+            "       FROM  " +
+            "           USER " +
+            "       WHERE  " +
+            "           user_id = :userId))", nativeQuery = true)
+    List<Object[]> findAllLikeLesson(@Param("userId") String userId);
+
+    @Query(value = "SELECT  " +
+            "   r.recipe_no, " +
+            "   r.recipe_title, " +
+            "   r.recipe_sname, " +
+            "   r.recipe_oname, " +
+            "   DATE_FORMAT(r.recipe_date, '%Y-%m-%d') as recipe_date, " +
+            "   (SELECT COUNT(*) FROM recipe_like rl WHERE r.recipe_no = rl.recipe_no) AS recipe_like_cnt, " +
+            "   (SELECT COUNT(*) FROM COMMENT c WHERE c.recipe_no = r.recipe_no) AS comment_cnt " +
+            "FROM " +
+            "   recipe r " +
+            "WHERE  " +
+            "   r.recipe_no IN ( " +
+            "       SELECT " +
+            "           recipe_no " +
+            "       FROM " +
+            "           recipe_like " +
+            "       WHERE  " +
+            "           user_no IN (SELECT " +
+            "               user_no " +
+            "           FROM " +
+            "               USER " +
+            "           WHERE  " +
+            "               user_id = :userId))", nativeQuery = true)
+    List<Object[]> findAllLikeRecipe(@Param("userId") String userId);
 }
