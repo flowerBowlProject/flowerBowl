@@ -31,7 +31,8 @@ const FormSignup = ({
           xs_1:11.1,
           ml:'2.5vw',
           height:'null',
-          mt:'null'
+          mt:'null',
+          height_2:'3vw'
         }
     }else if(size==='towel'){
         return{

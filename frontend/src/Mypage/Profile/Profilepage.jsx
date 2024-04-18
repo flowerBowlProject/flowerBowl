@@ -10,11 +10,50 @@ import ButtonContainStyle from "../../Component/ButtonContainStyle";
 
 const Profile = () => {
   const [imageFile, setImageFile] = useState(null);
-
+  const [passConfirm,setPassConfirm]=useState('');
+  const [butDisable,setButDisable]=useState([true,true,true,true,true]);
+  const butBoolean=butDisable[0]||butDisable[1]||butDisable[2]||butDisable[3]||butDisable[4]
   const handleChangeImage = (event) => {
     setImageFile(event.target.files[0]);
   };
+  const handleConsole=()=>{
+    console.log(butDisable)
+  }
+  const handleBut= (type,bool)=>{
+    switch(type){
+      case 'id':
+        setButDisable(prevState =>{
+            prevState[0]=bool;
+            return [...prevState];
+        })
+        break;
+      case 'pw':
+        setButDisable(prevState =>{
+          prevState[1]=bool;
+          return [...prevState];
+      })
+      break;
+      case 'email':
+        setButDisable(prevState =>{
+          prevState[2]=bool;
+          return [...prevState];
+      })
+      break;
+      case 'tel':
+        setButDisable(prevState =>{
+          prevState[4]=bool;
+          return [...prevState];
+      })
+      break;
+      default:
+        setButDisable(prevState =>{
+          prevState[3]=bool;
+          return [...prevState];
+      })
+      break;
 
+    }
+  }
   return (
     <>
       <Grid container direction="row">
@@ -80,7 +119,9 @@ const Profile = () => {
                     size="joy"
                     title="아이디"
                     place_text="jean1030"
-                    helper_text="8~15자로 작성해 주세요. 중복된 아이디입니다."
+                    helper_text="8~15자로 작성해 주세요."
+                    vaild='id'
+                    handleBut={handleBut}
                   />
                 </Grid>
                 <Grid item>
@@ -89,8 +130,8 @@ const Profile = () => {
                     title="닉네임"
                     but_text="중복확인"
                     place_text="치킨나라피자공주"
-                    helper_text="중복된 닉네임입니다."
                     but_exis={true}
+                    
                   />
                 </Grid>
                 <Grid item>
@@ -100,6 +141,8 @@ const Profile = () => {
                     place_text="010-8495-9515"
                     helper_text="올바른 휴대폰 번호를 입력해 주세요."
                     but_exis={false}
+                    vaild='tel'
+                    handleBut={handleBut}
                   />
                 </Grid>
                 <Grid item>
@@ -109,6 +152,9 @@ const Profile = () => {
                     but_text="이메일 인증"
                     place_text="jean1030@naver.com"
                     but_exis={true}
+                    helper_text="올바른 이메일을 입력해 주세요."
+                    vaild='email'
+                    handleBut={handleBut}
                   />
                 </Grid>
               </Grid>
@@ -117,7 +163,7 @@ const Profile = () => {
             {/* 모니터일 때 ml=18em */}
             <Grid item ml="15em" mb="2em" mt="2.5em">
               <div className="change">
-                <ButtonContain text="변경" size="medium" />
+                <ButtonContain text="변경" size="medium"  disable={butBoolean} />
               </div>
             </Grid>
           </Grid>
@@ -134,6 +180,10 @@ const Profile = () => {
                 title="새 비밀번호 변경"
                 place_text="******"
                 helper_text="영문, 숫자, 특수문자 포함 8~15자로 작성해주세요."
+                pass_exis={true}
+                vaild='pw'
+                setPass={setPassConfirm}
+                handleBut={handleBut}
               />
             </Grid>
             <Grid item height="7em">
@@ -142,6 +192,10 @@ const Profile = () => {
                 title="새 비밀번호 확인"
                 place_text="******"
                 helper_text="비밀번호가 일치하지 않습니다."
+                pass_exis={true}
+                vaild={passConfirm}
+                pass_confirm={true}
+                handleBut={handleBut}
               />
             </Grid>
             <Grid item>
