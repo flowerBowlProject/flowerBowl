@@ -10,14 +10,16 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import axios from "axios";
 import { url } from "../url";
 
+
 const SearchList = () => {
-    const navigate = useNavigate();
+    const navigator = useNavigate();
     const location = useLocation();
-    const keyword = '제목';//location.state.keyword;
+    const params = new URLSearchParams(location.search);
+    const keyword = params.get('keyword');
 
     const [searchRecipeList, setSearchRecipeList] = useState([]);
     const [searchClassList, setSearchClassList] = useState([]);
@@ -38,7 +40,7 @@ const SearchList = () => {
     }));
 
     useEffect(()=>{
-        axios.get(`${url}/api/search?keyword=제목&size=4`)
+        axios.get(`${url}/api/search?keyword=${keyword}&size=4`)
         .then(res=>{
             console.log(res.data);
             setCommunityList(res.data.community); // 매치 완료
@@ -53,19 +55,19 @@ const SearchList = () => {
     {/* 레시피 디테일 페이지 조회 */ }
     const handleRecipeDetail = (recipe_no, e) => {
         e.preventDefault();
-        navigate('/recipeDetail/' + recipe_no);
+        navigator(`/recipeDetail/${recipe_no}`);
     }
 
     {/* 클래스 디테일 페이지 조회 */ }
     const handleClassDetail = (lesson_no, e) => {
         e.preventDefault();
-        navigate('/classDetail/' + lesson_no);
+        navigator(`/classDetail/${lesson_no}`)
     }
 
     {/* 커뮤니티 디테일 페이지 조회 */ }
     const handleCommunityDetail = (community_no, e) => {
         e.preventDefault();
-        navigate('/communityDetail/' + community_no);
+        navigator(`/communityDetail/${community_no}`)
     }
 
     {/* 더보기 버튼 클릭 */}
@@ -78,7 +80,7 @@ const SearchList = () => {
     }
 
     const handleMoreCommunity = () =>{
-        navigate('/communityList', {state:{keyword:keyword}});
+        navigator('/communityList', {state:{keyword:keyword}});
     }
 
     return (
