@@ -16,8 +16,8 @@ const ButtonLoginStyle =styled(Button)(({theme})=>({
   }));
 
 const CommonModal=({open,name_1,name_2,helpertext_1,helpertext_2,but_name,text_1,text_2,text_3,api_login,type_pass,handleOpen,vaildTest_1,vaildTest_2})=>{
-    const [butDisable,setButDisable]=useState(false);
-    const [butDisable_2,setButDisable_2]=useState(false);
+    const [butDisable,setButDisable]=useState(true);
+    const [butDisable_2,setButDisable_2]=useState(true);
     return(
         <Modal open={open}>
             <Box bgcolor='main.br' mt='10vw' mx='30vw' border='3px solid #F6C47B' borderRadius={1} width='40vw' height='30vw'>
