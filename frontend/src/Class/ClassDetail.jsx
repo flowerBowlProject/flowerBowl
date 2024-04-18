@@ -3,11 +3,10 @@ import './ClassDetailStyle.css';
 import TurnedInNotIcon from '@mui/icons-material/TurnedInNot';
 import TurnedInIcon from '@mui/icons-material/TurnedIn';
 import axios from "axios";
-import { useLocation } from "react-router";
 import { url } from "../url";
 import ButtonContain from "../Component/ButtonContain";
 import { useSelector } from "react-redux";
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import ButtonOutlined from "../Component/ButtonOutlined";
 
 
@@ -18,6 +17,8 @@ const ClassDetail = () => {
     const { lesson_no } = useParams();
     const [writer, setWriter] = useState(false);
     const accessToken = useSelector(state => state.persistedReducer.accessToken);
+
+    const navigator = useNavigate();
 
     useEffect(() => {
         if (accessToken === '') {
@@ -58,14 +59,19 @@ const ClassDetail = () => {
 
     {/* 클래스 구매 */ }
     const buyClass = () => {
+
     }
 
     {/* 클래스 수정 */ }
-    const handleModify = () => {
+    const handleModify = (e) => {
+        console.log('수정');
+        navigator(`/modifyClass/${lesson_no}`);
     }
 
     {/* 클래스 삭제 */ }
     const handleDelete = () => {
+        {/* alert로 삭제 여부 재확인 */}
+
     }
 
     return (
@@ -104,9 +110,9 @@ const ClassDetail = () => {
                 {/* 수정/삭제 버튼 - 작성자인 경우에만 true로 버튼 표시 + 구매하기 버튼 - 작성자가 아닌 경우 노출 */}
                 <div className="class-change">
                     가격 : {classData.lesson_price} &nbsp;&nbsp;&nbsp;
-                    {false && <ButtonContain size='large' text='구매' />}
-                    {true && <ButtonOutlined size='large' text='수정' />} &nbsp;&nbsp;
-                    {true && <ButtonContain size='large' text='삭제' />}
+                    {false && <ButtonContain size='large' text='구매' onClick={buyClass}/>}
+                    {true && <ButtonOutlined size='large' text='수정' handleClick={handleModify}/>} &nbsp;&nbsp;
+                    {true && <ButtonContain size='large' text='삭제' onClick={handleDelete}/>}
                 </div>
             </div>
         </>
