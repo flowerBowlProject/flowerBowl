@@ -1,15 +1,21 @@
 package com.flowerbowl.web.filter;
 
+import com.flowerbowl.web.common.JwtError;
 import com.flowerbowl.web.domain.Role;
 import com.flowerbowl.web.domain.User;
 import com.flowerbowl.web.provider.JwtProvider;
 import com.flowerbowl.web.repository.UserRepository;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.SignatureException;
+import io.jsonwebtoken.UnsupportedJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
@@ -33,7 +39,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final JwtProvider jwtProvider;
     private final UserRepository userRepository;
 
-    /*
+    /**
      * bearer Token
      * 필터에서 접근 주체에 정보를 컨트롤러에 넘겨줘야 된다. 그런데 바로 넘길 수 없어서 context를 만들어서 넘겨준다
      * 토큰 관련 context를 만들고 context에 토큰을 만들고 해당 context를 유저 정보 관련 context에 넘긴다
@@ -50,7 +56,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 return;
             }
 
-            String userId = jwtProvider.validate(token);
+            String userId = jwtProvider.validate(token, request);
             if (userId == null) {
                 filterChain.doFilter(request, response);
                 return;
@@ -58,7 +64,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
             User user = userRepository.findByUserId(userId);
             Role role = user.getUserRole(); // role: ROLE_ADMIN, ROLE_USER, ROLE_CHEF
-            System.out.println("role.getRole() = " + role.getRole());
 
             List<GrantedAuthority> authorities = new ArrayList<>();
             authorities.add(new SimpleGrantedAuthority(role.getRole()));
@@ -79,12 +84,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             exception.printStackTrace();
         }
 
-        log.info("JwtAuthenticationFilter 필터 작동");
         filterChain.doFilter(request, response);
 
     }
 
-    /*
+    /**
      * request로 부터 jwt 토큰 값이 정상인지 확인 후 가져오는 메소드
      */
     private String parserBearerToken(HttpServletRequest request) {
@@ -92,14 +96,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String authorization = request.getHeader("Authorization");
 
         boolean hasAuthorization = StringUtils.hasText(authorization); // null, 길이가 0, 공백으로 이루어 있는 지 검사
-        if (!hasAuthorization) {
-            return null;
-        }
+        if (!hasAuthorization) return null;
+
 
         boolean isBearer = authorization.startsWith("Bearer "); // authorization이 bearer 인증 방식 인지 학인
-        if (!isBearer) {
-            return null;
-        }
+        if (!isBearer) return null;
+
 
         return authorization.substring(7);
     }
