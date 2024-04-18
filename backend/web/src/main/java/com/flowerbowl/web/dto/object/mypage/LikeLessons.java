@@ -17,5 +17,7 @@ public class LikeLessons {
     private String lesson_title;
     private String lesson_sname;
     private String lesson_oname;
+    private String lesson_date;
+    private Long lesson_like_cnt;
 
 }

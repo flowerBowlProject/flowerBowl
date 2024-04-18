@@ -36,28 +36,21 @@ public class MypageServiceImpl implements MypageService {
         List<LikeLessons> lessons = new ArrayList<>();
 
         try {
-            User user = userRepository.findByUserId(userId);
-            Long userNo = user.getUserNo();
-            List<LessonLike> lessonLikeList = lessonLikeRepository.findAllByUser_UserNo(userNo);
-            if (lessonLikeList == null) {
-                GetLessonLikesResponseDto.noExistLesson();
+
+            List<Object[]> dbResult = userRepository.findAllLikeLesson(userId);
+            if (dbResult == null) GetLessonLikesResponseDto.noExistLesson();
+
+            for (Object[] posts : dbResult) {
+                LikeLessons lesson = new LikeLessons();
+                lesson.setLesson_no((Long) posts[0]);
+                lesson.setLesson_date((String) posts[1]);
+                lesson.setLesson_title((String) posts[2]);
+                lesson.setLesson_oname((String) posts[3]);
+                lesson.setLesson_sname((String) posts[4]);
+                lesson.setLesson_like_cnt((Long) posts[5]);
+                lessons.add(lesson);
             }
 
-
-            List<Long> lessonNos = new ArrayList<>();
-            for (LessonLike list : lessonLikeList) {
-                lessonNos.add(list.getLesson().getLessonNo());
-            }
-
-            List<Lesson> lessonList = lessonRepository.findAllByLessonNoIn(lessonNos);
-            for (Lesson lesson : lessonList) {
-                LikeLessons lessonLikeListByUser = new LikeLessons();
-                lessonLikeListByUser.setLesson_no(lesson.getLessonNo());
-                lessonLikeListByUser.setLesson_title(lesson.getLessonTitle());
-                lessonLikeListByUser.setLesson_sname(lesson.getLessonSname());
-                lessonLikeListByUser.setLesson_oname(lesson.getLessonOname());
-                lessons.add(lessonLikeListByUser);
-            }
 
         } catch (Exception exception) {
             exception.printStackTrace();
@@ -74,24 +67,19 @@ public class MypageServiceImpl implements MypageService {
 
         try {
 
-            User user = userRepository.findByUserId(userId);
-            Long userNo = user.getUserNo();
-            List<RecipeLike> recipeLikes = reviewLikeRepository.findAllByUser_UserNo(userNo);
-            if (recipeLikes == null) GetRecipeLikesResponseDto.noExistRecipe();
+            List<Object[]> dbResult = userRepository.findAllLikeRecipe(userId);
+            if (dbResult == null) GetRecipeLikesResponseDto.noExistRecipe();
 
-            List<Long> recipeNos = new ArrayList<>();
-            for (RecipeLike list : recipeLikes) {
-                recipeNos.add(list.getRecipe().getRecipeNo());
-            }
-
-            List<Recipe> recipes = recipeRepository.findAllByRecipeNoIn(recipeNos);
-            for (Recipe recipe : recipes) {
-                LikeRecipes likeRecipesByUser = new LikeRecipes();
-                likeRecipesByUser.setRecipe_no(recipe.getRecipeNo());
-                likeRecipesByUser.setRecipe_title(recipe.getRecipeTitle());
-                likeRecipesByUser.setRecipe_oname(recipe.getRecipeOname());
-                likeRecipesByUser.setRecipe_sname(recipe.getRecipeSname());
-                likeRecipes.add(likeRecipesByUser);
+            for (Object[] posts : dbResult) {
+                LikeRecipes recipe = new LikeRecipes();
+                recipe.setRecipe_no((Long) posts[0]);
+                recipe.setRecipe_title((String) posts[1]);
+                recipe.setRecipe_sname((String) posts[2]);
+                recipe.setRecipe_oname((String) posts[3]);
+                recipe.setRecipe_date((String) posts[4]);
+                recipe.setRecipe_like_cnt((Long) posts[5]);
+                recipe.setComment_cnt((Long) posts[6]);
+                likeRecipes.add(recipe);
             }
 
 
@@ -234,7 +222,7 @@ public class MypageServiceImpl implements MypageService {
         try {
 
             int dbResult = userRepository.deletePayByUser(userId, payNo);
-            if(dbResult == 0) return DeletePayByUserResponseDto.notExistPayNo();
+            if (dbResult == 0) return DeletePayByUserResponseDto.notExistPayNo();
 
         } catch (Exception exception) {
             exception.printStackTrace();
@@ -251,7 +239,7 @@ public class MypageServiceImpl implements MypageService {
 
 
             int dbResult = userRepository.deletePayByChef(userId, payNo);
-            if(dbResult == 0) return DeletePayByChefResponseDto.notExistPayNo();
+            if (dbResult == 0) return DeletePayByChefResponseDto.notExistPayNo();
 
         } catch (Exception exception) {
             exception.printStackTrace();
