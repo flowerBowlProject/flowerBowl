@@ -55,9 +55,9 @@ const Footer =()=>{
                     </Grid>
                 </Grid>
                 <Text mainTitle='레시피' content_1='레시피 등록' content_2='레시피 보러가기' Link_1={
-                    '/registerRecipe'} Link_2={'/viewList'}/>
+                    '/registerRecipe'} Link_2={'/recipeList'}/>
                 <Text mainTitle='클래스' content_1='클래스 등록' content_2='클래스 보러가기' Link_1={
-                    '/registerClass'} Link_2={'/viewList'}/>
+                    '/registerClass'} Link_2={'/classList'}/>
                 <Text mainTitle='커뮤니티' content_1='커뮤니티 등록' content_2='커뮤니티 보러가기'
                 Link_1={'/registerCommunity'} Link_2={'/communityList'}/>
                 <Grid container direction='column' sm={1} gap='0.9vw'>

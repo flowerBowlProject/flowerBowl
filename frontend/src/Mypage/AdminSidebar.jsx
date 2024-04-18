@@ -6,17 +6,17 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import Grid from "@mui/material/Grid";
 import AddCommentIcon from "@mui/icons-material/AddComment";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
-import { Link, Outlet } from "react-router-dom";
+import { NavLink, Outlet } from "react-router-dom";
 import "./Sidebar.css";
 
 const Row = ({ icon, name, isHovered, isFixed, link }) => {
   const color = isFixed || isHovered ? "main.wh" : "main.or";
   return (
-    <Link to={link} className="underlink">
+    <NavLink to={link} style={{textDecoration:'none'}} className={({isActive})=>isActive? 'selected':'unselected'} >
       <ListItem
         sx={{
-          backgroundColor: isFixed || isHovered ? "main.or" : "transparent",
-          color: color,
+          backgroundColor: isFixed || isHovered ? "main.or" : "inherit",
+          color: isFixed || isHovered ? "main.wh" : "inherit",
           "&:hover": {
             backgroundColor: "main.or",
             color: "main.wh",
@@ -26,11 +26,11 @@ const Row = ({ icon, name, isHovered, isFixed, link }) => {
         <ListItemButton
           sx={{ "&:hover": { border: "none", backgroundColor: "transparent" } }}
         >
-          <ListItemIcon sx={{ color: color }}>{icon}</ListItemIcon>
-          <ListItemText primary={name} sx={{ color: color }} />
+          <ListItemIcon sx={{ color: isFixed || isHovered ? "main.wh" : "inherit" }}>{icon}</ListItemIcon>
+          <ListItemText primary={name} sx={{ color: isFixed || isHovered ? "main.wh" : "inherit" }} />
         </ListItemButton>
       </ListItem>
-    </Link>
+    </NavLink>
   );
 };
 
