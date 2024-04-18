@@ -1,6 +1,6 @@
 import ButtonContainStyle from "./ButtonContainStyle";
 
-const ButtonContain = ({ text, size, handleClick }) => {
+const ButtonContain = ({ text, size, handleClick,disable=false }) => {
   const handleSize = (size) => {
     if (size === "verySmall") {
       return {
@@ -43,6 +43,7 @@ const ButtonContain = ({ text, size, handleClick }) => {
       variant="contained"
       size={sizeStyle.size}
       sx={{ height: sizeStyle.height }}
+      disabled={disable}
     >
       {text}
     </ButtonContainStyle>

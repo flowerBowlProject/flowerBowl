@@ -4,3 +4,11 @@
 .link{
         text-decoration: 'none';
 }
+.focused{
+        color: #B9835C;
+        border-bottom: 1px solid #B9835C;
+        background-color: 'transparent';
+}
+.unSelected{
+        color:#F6C47B;
+}
