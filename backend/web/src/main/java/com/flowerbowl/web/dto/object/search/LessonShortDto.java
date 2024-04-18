@@ -16,7 +16,7 @@ public class LessonShortDto {
     private LocalDate lesson_date;
     private String lesson_oname;
     private String lesson_sname;
-    private Long lesson_likes_num;
+//    private Long lesson_likes_num; // ??
     private String lesson_writer;
     private Boolean lesson_likes_status;
 
