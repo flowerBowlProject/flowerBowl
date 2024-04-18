@@ -5,6 +5,7 @@ const ButtonLogoStyle =styled(Button)(({theme})=>({
     color: 'inherit',
     border: 'inherit',
     whiteSpace:'nowrap',
+    backgroundColor: 'transparent',
     '&:hover': {
       color: theme.palette.main.br,
       border: 'none',

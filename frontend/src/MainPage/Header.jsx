@@ -16,8 +16,7 @@ import { useState } from "react";
 import CommonModal from "../LoginModal/CommonModal";
 import Signup from "../LoginModal/Signup";
 import ButtonGroupText from "../Component/ButtonGroupText";
-import {useNavigate,Link} from 'react-router-dom';
-
+import {useNavigate,Link,NavLink} from 'react-router-dom';
 const TextTitle = styled(Typography)(({ theme }) => ({
   color: theme.palette.main.br,
   fontWeight: "Bold",
@@ -25,9 +24,7 @@ const TextTitle = styled(Typography)(({ theme }) => ({
   whiteSpace: "nowrap",
   marginTop: "0.2vw",
 }));
-
 const Header = () => {
-  const navigate=useNavigate();
   const [open, setOpen] = useState([false, false, false, false]);
   const handleOpen = (event) => {
     const innerText = event.target.innerText;
@@ -38,15 +35,6 @@ const Header = () => {
       setOpen([false, false, false, true]);
     console.log(innerText);
   };
-  const goClass=()=>{
-    navigate('/viewList');
-  }
-  const goRecipe=()=>{
-    navigate('/viewList')
-  }
-  const goComunity=()=>{
-    navigate('/communityList');
-  }
   return (
     <AppBar sx={{ backgroundColor: "main.yl" }}>
       <Toolbar>
@@ -72,10 +60,10 @@ const Header = () => {
             </Link>  
           </Grid>
           <Grid item xs={3}>
-            <ButtonGroupText>
-              <ButtonLogoStyle onClick={goClass}>레시피</ButtonLogoStyle>
-              <ButtonLogoStyle onClick={goRecipe}>클래스</ButtonLogoStyle>
-              <ButtonLogoStyle onClick={goComunity}>커뮤니티</ButtonLogoStyle>
+            <ButtonGroupText >
+            <NavLink to='/recipeList' style={{textDecoration:'none'}} className={({isActive})=>isActive?"focused":"unFocused"}><ButtonLogoStyle>레시피</ButtonLogoStyle></NavLink>
+            <NavLink to='/classList' style={{textDecoration:'none'}} className={({isActive})=>isActive?"focused":"unFocused"}><ButtonLogoStyle>클래스</ButtonLogoStyle></NavLink>
+            <NavLink to='/communityList' style={{textDecoration:'none'}} className={({isActive})=>isActive?"focused":"unFocused"}><ButtonLogoStyle>커뮤니티</ButtonLogoStyle></NavLink>
             </ButtonGroupText>
           </Grid>
           <Grid item xs={4}>
@@ -110,6 +98,8 @@ const Header = () => {
                   text_3="비밀번호 찾기"
                   api_login={true}
                   type_pass={true}
+                  vaildTest_1='id'
+                  vaildTest_2='pw'
                 />
                 <CommonModal
                   open={open[2]}
@@ -120,6 +110,7 @@ const Header = () => {
                   text_1="회원가입"
                   text_2="로그인"
                   text_3="비밀번호 찾기"
+                  vaildTest_2='email'
                   api_login={false}
                   type_pass={false}
                 />
@@ -134,6 +125,8 @@ const Header = () => {
                   text_1="회원가입"
                   text_2="아이디 찾기"
                   text_3="로그인"
+                  vaildTest_1='id'
+                  vaildTest_2='email'
                   api_login={false}
                   type_pass={false}
                 />

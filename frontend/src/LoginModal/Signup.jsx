@@ -1,4 +1,4 @@
-import React from "react";
+import React,{useState} from "react";
 import { Grid, Button, Modal, Box, ButtonGroup} from "@mui/material";
 import ButtonContainStyle from "../Component/ButtonContainStyle";
 import FormSignup from "../Component/FormSignup";
@@ -13,11 +13,51 @@ const ButtonLoginStyle =styled(Button)(({theme})=>({
   }
 }));
 const Signup = ({ open,handleOpen }) => {
+  const [passConfirm,setPassConfirm]=useState('');
+  const [butDisable,setButDisable]=useState([true,true,true,true,true]);
+  const handleConsole=()=>{
+    console.log(butDisable)
+  }
+  const handleBut= (type,bool)=>{
+    switch(type){
+      case 'id':
+        setButDisable(prevState =>{
+            prevState[0]=bool;
+            return [...prevState];
+        })
+        break;
+      case 'pw':
+        setButDisable(prevState =>{
+          prevState[1]=bool;
+          return [...prevState];
+      })
+      break;
+      case 'email':
+        setButDisable(prevState =>{
+          prevState[2]=bool;
+          return [...prevState];
+      })
+      break;
+      case 'tel':
+        setButDisable(prevState =>{
+          prevState[4]=bool;
+          return [...prevState];
+      })
+      break;
+      default:
+        setButDisable(prevState =>{
+          prevState[3]=bool;
+          return [...prevState];
+      })
+      break;
+
+    }
+  }
   return (
     <Modal open={open}>
       <Box
-        mt="10vw"
-        mx="30vw"
+        mt="7vw"
+        mx="25vw"
         border="3px solid #F6C47B"
         bgcolor="#ffffff"
         borderRadius={1}
@@ -32,6 +72,8 @@ const Signup = ({ open,handleOpen }) => {
             helper_text="8~15자로 작성해 주세요."
             but_exis={true}
             size='towel'
+            vaild='id'
+            handleBut={handleBut}
           />
           <FormSignup
             title="닉네임"
@@ -39,33 +81,49 @@ const Signup = ({ open,handleOpen }) => {
             place_text="닉네임을 입력하세요"
             but_exis={true}
             size='towel'
+            handleBut={handleBut}
           />
           <FormSignup
             title="비밀번호"
             place_text="비밀번호를 입력하세요"
             helper_text="영문,숫자,특수문자 포함 8~15자로 작성해 주세요."
             size='towel'
+            vaild='pw'
+            pass_exis='true'
+            setPass={setPassConfirm}
+            handleBut={handleBut}
           />
           <FormSignup
             title="이메일"
             but_text="이메일인증"
             place_text="이메일을 입력하세요"
+            helper_text='이메일 형식이 맞지 않습니다.'
             but_exis={true}
             size='towel'
+            vaild='email'  
+            handleBut={handleBut}
           />
           <FormSignup
             title="비밀번호 확인"
             place_text="비밀번호를 입력하세요"
+            helper_text="비밀번호가 일치하지 않습니다."
             size='towel'
+            pass_exis='true'
+            vaild={passConfirm}
+            pass_confirm={true}
+            handleBut={handleBut}
           />
           <FormSignup
             title="휴대폰 번호"
             place_text="휴대폰번호를 입력하세요."
             size='towel'
+            helper_text='휴대폰 번호 형식이 맞지 않습니다.'
+            vaild='tel'
+            handleBut={handleBut}
           />
 
-          <Grid item xs={12} mt="4vw" mb="0.5vw"  textAlign='center'>
-            <ButtonContainStyle  width="15vw">
+          <Grid item xs={12} mt="3vw" mb="0.5vw"  textAlign='center'>
+            <ButtonContainStyle  width="15vw"  disabled={butDisable[0]||butDisable[1]||butDisable[2]||butDisable[3]||butDisable[4]}>
               회원가입
             </ButtonContainStyle>
           </Grid>
