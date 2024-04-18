@@ -2,10 +2,16 @@ import { configureStore, current } from "@reduxjs/toolkit";
 import { persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 
+
+
+
 export const initialState = {
   member: { memberNo: "" },
   accessToken: "",
+  vaildationTest: false
 };
+
+
 
 const reducer = (currentState, action) => {
   if (currentState === undefined) {

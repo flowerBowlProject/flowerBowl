@@ -1,7 +1,8 @@
-import React from "react";
+import React,{useState} from "react";
 import { Grid, Typography } from "@mui/material";
 import ButtonContainStyle from "./ButtonContainStyle.jsx";
 import Input_search_style from "../MainPage/InputSearchStyle.jsx";
+import { validation,validationPassConfirm } from "../Hook/Validation.jsx";
 const FormSignup = ({
   title,
   but_text,
@@ -9,8 +10,21 @@ const FormSignup = ({
   helper_text,
   but_exis,
   pass_exis,
-  size
+  size,
+  vaild,
+  setPass,
+  pass_confirm,
+  handleBut=()=>{}
 }) => {
+  const [validTest,setValidTest]= useState(false);
+  const [text,setText]= useState('');
+  const handleChange=(e)=>{
+    const value=e.target.value;
+    setText(value);
+    if(setPass!=null)
+    setPass(value);
+    handleBut(vaild,pass_confirm?validationPassConfirm(value,vaild):validation(value,vaild))
+  }
   const handleSize=()=>{
     if(size==='joy'){
         return{
@@ -25,6 +39,7 @@ const FormSignup = ({
           ml:'1vw',
           height:'4vw',
           mt:'1.5vw',
+          height_2:'5vw'
       }
     }
   }
@@ -50,14 +65,16 @@ const FormSignup = ({
             ) : null}
           </Grid>
         </Grid>
-        <Grid xs item mt="0.2vw" height={form_size.height}>
+        <Grid xs item mt="0.2vw" height={form_size.height} >
           <Input_search_style
             type={pass_exis ? "password" : "text"}
-            sx={{ width: "20vw" }}
+            sx={{ width: "20vw",height:form_size.height_2 }}
             variant="outlined"
             size="small"
+            onBlur={()=>setValidTest(true)}
+            onChange={handleChange}
             placeholder={place_text}
-            helperText={helper_text}
+            helperText={validTest?pass_confirm?validationPassConfirm(text,vaild)?helper_text:'':validation(text,vaild)?helper_text:'':''}
           />
         </Grid>
       </Grid>

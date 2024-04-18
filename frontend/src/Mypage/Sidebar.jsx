@@ -11,16 +11,16 @@ import BlenderIcon from "@mui/icons-material/Blender";
 import PaymentIcon from "@mui/icons-material/Payment";
 import ListIcon from "@mui/icons-material/List";
 import "./Sidebar.css";
-import { Link, Outlet } from "react-router-dom";
+import { Link, Outlet,NavLink } from "react-router-dom";
 
 const Row = ({ icon, name, isHovered, isFixed, link }) => {
   const color = isFixed || isHovered ? "main.wh" : "main.or";
   return (
-    <Link to={link} className="underlink">
+    <NavLink to={link} style={{textDecoration:'none'}} className={({isActive})=>isActive? 'selected':'unselected'} >
       <ListItem
         sx={{
-          backgroundColor: isFixed || isHovered ? "main.or" : "transparent",
-          color: color,
+          backgroundColor: isFixed || isHovered ? "main.or" : "inherit",
+          color: isFixed || isHovered ? "main.wh" : "inherit",
           "&:hover": {
             backgroundColor: "main.or",
             color: "main.wh",
@@ -30,11 +30,11 @@ const Row = ({ icon, name, isHovered, isFixed, link }) => {
         <ListItemButton
           sx={{ "&:hover": { border: "none", backgroundColor: "transparent" } }}
         >
-          <ListItemIcon sx={{ color: color }}>{icon}</ListItemIcon>
-          <ListItemText primary={name} sx={{ color: color }} />
+          <ListItemIcon sx={{ color: isFixed || isHovered ? "main.wh" : "inherit" }}>{icon}</ListItemIcon>
+          <ListItemText primary={name} sx={{ color: isFixed || isHovered ? "main.wh" : "inherit" }} />
         </ListItemButton>
       </ListItem>
-    </Link>
+    </NavLink>
   );
 };
 
