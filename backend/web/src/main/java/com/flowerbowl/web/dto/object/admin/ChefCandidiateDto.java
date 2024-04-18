@@ -12,5 +12,6 @@ public class ChefCandidiateDto{
     private Boolean license_status;
     private LocalDateTime license_date;
     private String license_sname;
+    private String license_oname;
     private Long user_no;
 }
