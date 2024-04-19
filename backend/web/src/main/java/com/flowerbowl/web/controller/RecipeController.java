@@ -22,13 +22,13 @@ public class RecipeController {
     }
 
     @PutMapping("/{recipe_no}")
-    private ResponseEntity<? extends RecipeResponseDto> updateRecipe(@RequestBody UpRecipeReqDto request, @PathVariable Long recipe_no) throws Exception {
-        return recipeService.updateRecipe(request, recipe_no);
+    private ResponseEntity<? extends RecipeResponseDto> updateRecipe(@RequestBody UpRecipeReqDto request, @PathVariable Long recipe_no, @AuthenticationPrincipal String userId) throws Exception {
+        return recipeService.updateRecipe(request, recipe_no, userId);
     }
 
     @DeleteMapping("/{recipe_no}")
-    private ResponseEntity<? extends RecipeResponseDto> deleteRecipe(@PathVariable Long recipe_no) throws Exception {
-        return recipeService.deleteRecipe(recipe_no);
+    private ResponseEntity<? extends RecipeResponseDto> deleteRecipe(@PathVariable Long recipe_no, @AuthenticationPrincipal String userId) throws Exception {
+        return recipeService.deleteRecipe(recipe_no, userId);
     }
 
     @GetMapping("/guest")
