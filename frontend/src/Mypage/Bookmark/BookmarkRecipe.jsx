@@ -17,51 +17,47 @@ const BookmarkRecipe = () => {
   );
 
   useEffect(() => {
-    //로그인한 상태
-    axios
-      .get(`${url}/api/mypage/recipe/likes`)
-      .then((res) => {
-        console.log(res);
-        setListData(res.data.likeRecipes);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }, []);
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(`${url}/api/mypage/recipe/likes`, {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
+        setListData(response.data.likeRecipes);
+        //코드 확인
+        // console.log(response.data.likeRecipes);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        setListData([]);
+      }
+    };
+    fetchData();
+  }, [accessToken]);
 
-  //북마크 동작
-  const clickBookmark = (e, recipeNo) => {
-    axios
-      .post(`${url}/api/recipes/like/${recipeNo}`, {
-        headers: {
-          Authorization: accessToken,
-        },
-      })
-      .then((res) => {
-        const bookmark = res.data.recipeLikeNo == undefined ? true : false;
-        console.log(bookmark);
+  //북마크 해제 하는 걸로 다시 짜자!!!
+  const clickBookmark = async (e, recipeNo) => {
+    try {
+      const response = await axios.post(
+        `${url}/api/recipes/like/${recipeNo}`,
+        {},
         {
-          /* recipe_like_no 여부에 따른 t/f 관리 진행 */
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
         }
-      })
-      .catch((err) => {
-        {
-          /* 토큰 만료에 대한 처리 진행 */
-        }
-      });
+      );
+      const bookmark = response.data.recipeLikeNo === undefined ? true : false;
+      console.log("Bookmark state:", bookmark);
+    } catch (error) {
+      console.error("Error in bookmark toggle:", error);
+    }
   };
 
   // 상세페이지 이동
   const clickDetail = (e, recipeNo) => {
     navigator(`/recipeDetail/${recipeNo}`);
   };
-
-  // const sampleRecipeData = {
-  //   date: "2020-01-01",
-  //   comment_count: 123,
-  //   like_count: 456,
-  //   title: "시원한 소고기 무국",
-  // };
 
   return (
     <>
@@ -80,12 +76,10 @@ const BookmarkRecipe = () => {
         </span>
       </div>
 
-      {/* 구분선 */}
       <div className="division-line"></div>
 
       <div className="bookmark-content">
-        {/* 리스트 출력 */}
-        {listData.length !== 0 &&
+        {listData.length > 0 ? (
           listData.map((data, index) => (
             <div key={index} style={{ position: "relative" }}>
               <Bookmark
@@ -95,14 +89,17 @@ const BookmarkRecipe = () => {
               />
               <RecipeReviewCard
                 onClick={(e) => clickDetail(e, data.recipeNo)}
-                title={data.recipeTitle}
-                like_count={data.recipeLikeCount}
-                comment_count={data.recipeCommentCount}
-                sname={data.recipeSname}
-                date={data.recipeDate}
+                title={data.recipe_title}
+                like_count={data.recipe_like_cnt}
+                comment_count={data.comment_cnt}
+                sname={data.recipe_sname}
+                date={data.recipe_date}
               />
             </div>
-          ))}
+          ))
+        ) : (
+          <p>No recipes liked yet.</p>
+        )}
       </div>
 
       <div className="division-line"></div>
