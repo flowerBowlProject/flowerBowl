@@ -8,7 +8,6 @@ import storage from "redux-persist/lib/storage";
 export const initialState = {
   member: { memberNo: "" },
   accessToken: "",
-  vaildationTest: false
 };
 
 
@@ -37,7 +36,7 @@ const persistConfig = {
 
 const persistedReducer = persistReducer(persistConfig, reducer);
 const store = configureStore({
-  reducer: { persistedReducer },
+  reducer:  persistedReducer ,
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: false,

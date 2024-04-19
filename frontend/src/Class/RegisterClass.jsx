@@ -109,8 +109,8 @@ const RegisterClass = () => {
             <div className="classElement1-Box">
                 {/* 가격 */}
                 <div className="classPrice">
-                    <TextField id="outlined-basic" label="가격" variant="outlined" type="number"
-                        sx={{ width: '12vw' }} name="lesson_price" onChange={(e)=> setValue(e)} />
+                    <TextField id="outlined-basic" label="가격" variant="outlined" type="number" 
+                        sx={{ width: '12vw', }} name="lesson_price" onChange={(e)=> setValue(e)} />
                 </div>
                 {/* 날짜 */}
                 <div className="calendar-Box">
