@@ -7,6 +7,7 @@ import com.flowerbowl.web.dto.object.recipe.*;
 import com.flowerbowl.web.dto.request.recipe.CrRecipeReqDto;
 import com.flowerbowl.web.dto.request.recipe.UpRecipeReqDto;
 import com.flowerbowl.web.dto.response.recipe.*;
+import com.flowerbowl.web.handler.DoesNotMatchException;
 import com.flowerbowl.web.handler.RecipeNotFoundException;
 import com.flowerbowl.web.handler.UserNotFoundException;
 import com.flowerbowl.web.repository.*;
@@ -74,13 +75,17 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
-    public ResponseEntity<? extends RecipeResponseDto> updateRecipe(UpRecipeReqDto request, Long recipe_no) throws Exception {
-        // 해당 레시피의 작성자가 token으로부터 얻은 사용자와 일치하는지 검증하는 코드 필요
+    public ResponseEntity<? extends RecipeResponseDto> updateRecipe(UpRecipeReqDto request, Long recipe_no, String userId) throws Exception {
         try {
+            User user = userRepository.findByUserId(userId);
             // 레시피 번호로 레시피 찾기
             Recipe recipe = recipeRepository.findByRecipeNo(recipe_no).orElseThrow(RecipeNotFoundException::new);
             // 레시피 번호로 레시피 파일 찾기
             RecipeFile recipeFile = recipeFileRepository.findByRecipe_RecipeNo(recipe_no);
+
+            if (!user.getUserNo().equals(recipe.getUser().getUserNo())) {
+                throw new DoesNotMatchException();
+            }
 
             // request의 값이 비어있는지 체크가 필요할까...?고민 중
             // 찾은 레시피의 데이터을 수정
@@ -113,10 +118,15 @@ public class RecipeServiceImpl implements RecipeService {
 
     @Override
     @Transactional
-    public ResponseEntity<? extends RecipeResponseDto> deleteRecipe(Long recipe_no) throws Exception {
-        // 해당 레시피의 작성자가 token으로부터 얻은 사용자와 일치하는지 검증하는 코드 필요
+    public ResponseEntity<? extends RecipeResponseDto> deleteRecipe(Long recipe_no, String userId) throws Exception {
         try {
+            User user = userRepository.findByUserId(userId);
             Recipe recipe = recipeRepository.findByRecipeNo(recipe_no).orElseThrow(RecipeNotFoundException::new);
+
+            if (!user.getUserNo().equals(recipe.getUser().getUserNo())) {
+                throw new DoesNotMatchException();
+            }
+
             recipeRepository.delete(recipe);
 
             DelRecipeResDto responseBody = new DelRecipeResDto(ResponseCode.SUCCESS, ResponseMessage.SUCCESS);
