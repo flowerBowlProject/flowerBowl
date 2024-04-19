@@ -6,6 +6,7 @@ import com.flowerbowl.web.dto.response.recipe.RecipeResponseDto;
 import com.flowerbowl.web.service.RecipeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -16,8 +17,8 @@ public class RecipeController {
     private final RecipeService recipeService;
 
     @PostMapping("")
-    private ResponseEntity<? extends RecipeResponseDto> createRecipe(@RequestBody CrRecipeReqDto request) throws Exception {
-        return recipeService.createRecipe(request);
+    private ResponseEntity<? extends RecipeResponseDto> createRecipe(@RequestBody CrRecipeReqDto request, @AuthenticationPrincipal String userId) throws Exception {
+        return recipeService.createRecipe(request, userId);
     }
 
     @PutMapping("/{recipe_no}")
@@ -36,8 +37,8 @@ public class RecipeController {
     }
 
     @GetMapping("")
-    private ResponseEntity<? extends RecipeResponseDto> getAllRecipes() throws Exception {
-        return recipeService.getAllRecipes();
+    private ResponseEntity<? extends RecipeResponseDto> getAllRecipes(@AuthenticationPrincipal String userId) throws Exception {
+        return recipeService.getAllRecipes(userId);
     }
 
     @GetMapping("/guest/{recipe_no}")
@@ -46,13 +47,13 @@ public class RecipeController {
     }
 
     @GetMapping("/{recipe_no}")
-    private ResponseEntity<? extends RecipeResponseDto> getRecipe(@PathVariable Long recipe_no) throws Exception {
-        return recipeService.getRecipe(recipe_no);
+    private ResponseEntity<? extends RecipeResponseDto> getRecipe(@PathVariable Long recipe_no, @AuthenticationPrincipal String userId) throws Exception {
+        return recipeService.getRecipe(recipe_no, userId);
     }
 
     @PostMapping("/like/{recipe_no}")
-    private ResponseEntity<? extends RecipeResponseDto> likeRecipe(@PathVariable Long recipe_no) throws Exception {
-        return recipeService.updateRecipeLike(recipe_no);
+    private ResponseEntity<? extends RecipeResponseDto> likeRecipe(@PathVariable Long recipe_no, @AuthenticationPrincipal String userId) throws Exception {
+        return recipeService.updateRecipeLike(recipe_no, userId);
     }
 
 }
