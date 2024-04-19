@@ -2,9 +2,11 @@ package com.flowerbowl.web.domain;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
+@NoArgsConstructor
 public class EmailCertification {
 
     @Id
@@ -21,4 +23,9 @@ public class EmailCertification {
     @Column(name = "certification_num")
     private String certificationNum;
 
+    public EmailCertification(String id, String email, String certificationNum) {
+        this.id = id;
+        this.email = email;
+        this.certificationNum = certificationNum;
+    }
 }

@@ -1,7 +1,10 @@
 package com.flowerbowl.web.domain;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.sql.Blob;
 import java.time.LocalDate;
@@ -10,6 +13,9 @@ import java.util.List;
 
 @Entity
 @Getter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Community {
 
     @Id
@@ -41,6 +47,18 @@ public class Community {
 
     @OneToMany(mappedBy = "community", cascade = CascadeType.ALL)
     private List<Comment> comments = new ArrayList<>();
+
+    public void updateTitle(String communityTitle) {
+        this.communityTitle = communityTitle;
+    }
+
+    public void updateContent(String communityContent) {
+        this.communityContent = communityContent;
+    }
+
+    public void updateView(Long communityViews) {
+        this.communityViews = communityViews;
+    }
 
 }
 
