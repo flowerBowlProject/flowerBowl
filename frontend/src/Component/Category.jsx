@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Box from '@mui/material/Box';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
@@ -8,7 +8,12 @@ import Select from '@mui/material/Select';
 
 const Category = (props) => {
 
-  const [category, setCategory] = useState(props.category);
+  const [category, setCategory] = useState('');
+
+  useEffect(()=>{
+    setCategory(props.setCategory);
+  },[props.setCategory])
+
   const handleChange = (e) => {
     setCategory(e.target.value);
     props.getCategory(e.target.value);
