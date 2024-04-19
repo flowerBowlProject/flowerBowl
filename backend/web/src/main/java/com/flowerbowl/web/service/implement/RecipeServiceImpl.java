@@ -37,10 +37,9 @@ public class RecipeServiceImpl implements RecipeService {
     private final UserRepository userRepository;
 
     @Override
-    public ResponseEntity<? extends RecipeResponseDto> createRecipe(CrRecipeReqDto request) throws Exception {
-        // 아직 token으로부터 사용자 정보를 얻어오는 부분이 없음
+    public ResponseEntity<? extends RecipeResponseDto> createRecipe(CrRecipeReqDto request, String userId) throws Exception {
         try {
-            User user = userRepository.findByUserNo(2L).orElseThrow(UserNotFoundException::new);
+            User user = userRepository.findByUserId(userId);
 
             // request의 값으로 recipe 생성
             CreateRecipeDto createRecipeDto = new CreateRecipeDto(
@@ -51,7 +50,7 @@ public class RecipeServiceImpl implements RecipeService {
                     request.getRecipeSname(),
                     request.getRecipeContent(),
                     request.getRecipeCategory(),
-                    "홍길동",
+                    user.getUserNickname(),
                     0L,
                     user
             );
@@ -87,7 +86,7 @@ public class RecipeServiceImpl implements RecipeService {
             // 찾은 레시피의 데이터을 수정
             recipe.updateTitle(request.getRecipeTitle());
             recipe.updateCategory(request.getRecipeCategory());
-//            recipe.updateStuff(request.getRecipeStuff());
+            recipe.updateStuff(request.getRecipeStuff());
             recipe.updateContent(request.getRecipeContent());
             recipe.updateOname(request.getRecipeOname());
             recipe.updateSname(request.getRecipeSname());
@@ -166,10 +165,9 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
-    public ResponseEntity<? extends RecipeResponseDto> getAllRecipes() throws Exception {
-        // 아직 token으로부터 사용자 정보를 얻어오는 부분이 없음 user_no을 받아와야 함
+    public ResponseEntity<? extends RecipeResponseDto> getAllRecipes(String userId) throws Exception {
         try {
-            Long userNo = 1L;
+            Long userNo = userRepository.findByUserId(userId).getUserNo();
 
             List<Recipe> recipes = recipeRepository.findAll();
 
@@ -200,7 +198,6 @@ public class RecipeServiceImpl implements RecipeService {
 
             GetAllRecipesSuResDto responseBody = new GetAllRecipesSuResDto(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, posts);
             return ResponseEntity.status(HttpStatus.OK).body(responseBody);
-
         } catch (Exception e) {
             log.error("Exception [Err_Msg]: {}", e.getMessage());
             log.error("Exception [Err_Where]: {}", e.getStackTrace()[0]);
@@ -217,6 +214,14 @@ public class RecipeServiceImpl implements RecipeService {
             Recipe recipe = recipeRepository.findByRecipeNo(recipe_no).orElseThrow(RecipeNotFoundException::new);
             RecipeFile recipeFile = recipeFileRepository.findByRecipe_RecipeNo(recipe_no);
 
+            // recipeFile이 null일 경우
+            List<String> recipeFileOname = null;
+            List<String> recipeFileSname = null;
+            if (recipeFile != null) {
+                recipeFileOname = recipeFile.getRecipeFileOname();
+                recipeFileSname = recipeFile.getRecipeFileSname();
+            }
+
             // 조회 수 증가
             recipe.updateView(recipe.getRecipeViews() + 1);
             recipeRepository.save(recipe);
@@ -225,8 +230,8 @@ public class RecipeServiceImpl implements RecipeService {
                     .recipeNo(recipe.getRecipeNo())
                     .recipeOname(recipe.getRecipeOname())
                     .recipeSname(recipe.getRecipeSname())
-                    .recipeFileOname(recipeFile.getRecipeFileOname())
-                    .recipeFileSname(recipeFile.getRecipeFileSname())
+                    .recipeFileOname(recipeFileOname)
+                    .recipeFileSname(recipeFileSname)
                     .recipeTitle(recipe.getRecipeTitle())
                     .recipeWriter(recipe.getRecipeWriter())
                     .recipeDate(recipe.getRecipeDate())
@@ -236,7 +241,7 @@ public class RecipeServiceImpl implements RecipeService {
                     .recipeLikeStatus(false)
                     .build();
 
-            GetRecipeSuResDto responseBody = new GetRecipeSuResDto(ResponseCode.SUCCESS, ResponseMessage.SUCCESS,newDto);
+            GetRecipeSuResDto responseBody = new GetRecipeSuResDto(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, newDto);
             return ResponseEntity.status(HttpStatus.OK).body(responseBody);
         } catch (Exception e) {
             log.error("Exception [Err_Msg]: {}", e.getMessage());
@@ -249,13 +254,20 @@ public class RecipeServiceImpl implements RecipeService {
 
     @Override
     @Transactional
-    public ResponseEntity<? extends RecipeResponseDto> getRecipe(Long recipe_no) throws Exception {
-        // 아직 token으로부터 사용자 정보를 얻어오는 부분이 없음 user_no을 받아와야 함
+    public ResponseEntity<? extends RecipeResponseDto> getRecipe(Long recipe_no, String userId) throws Exception {
         try {
-            Long userNo = 1L;
+            Long userNo = userRepository.findByUserId(userId).getUserNo();
 
             Recipe recipe = recipeRepository.findByRecipeNo(recipe_no).orElseThrow(RecipeNotFoundException::new);
             RecipeFile recipeFile = recipeFileRepository.findByRecipe_RecipeNo(recipe_no);
+
+            // recipeFile이 null일 경우
+            List<String> recipeFileOname = null;
+            List<String> recipeFileSname = null;
+            if (recipeFile != null) {
+                recipeFileOname = recipeFile.getRecipeFileOname();
+                recipeFileSname = recipeFile.getRecipeFileSname();
+            }
 
             // 조회 수 증가
             recipe.updateView(recipe.getRecipeViews() + 1);
@@ -272,8 +284,8 @@ public class RecipeServiceImpl implements RecipeService {
                     .recipeNo(recipeNo)
                     .recipeOname(recipe.getRecipeOname())
                     .recipeSname(recipe.getRecipeSname())
-                    .recipeFileOname(recipeFile.getRecipeFileOname())
-                    .recipeFileSname(recipeFile.getRecipeFileSname())
+                    .recipeFileOname(recipeFileOname)
+                    .recipeFileSname(recipeFileSname)
                     .recipeTitle(recipe.getRecipeTitle())
                     .recipeWriter(recipe.getRecipeWriter())
                     .recipeDate(recipe.getRecipeDate())
@@ -284,7 +296,7 @@ public class RecipeServiceImpl implements RecipeService {
                     .recipeLikeStatus(recipeLikeRepository.findOne(spec).isPresent())
                     .build();
 
-            GetRecipeSuResDto responseBody = new GetRecipeSuResDto(ResponseCode.SUCCESS, ResponseMessage.SUCCESS,newDto);
+            GetRecipeSuResDto responseBody = new GetRecipeSuResDto(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, newDto);
             return ResponseEntity.status(HttpStatus.OK).body(responseBody);
         } catch (Exception e) {
             log.error("Exception [Err_Msg]: {}", e.getMessage());
@@ -296,10 +308,9 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
-    public ResponseEntity<? extends RecipeResponseDto> updateRecipeLike(Long recipe_no) throws Exception {
-        // 아직 token으로부터 사용자 정보를 얻어오는 부분이 없음 user_no을 받아와야 함
+    public ResponseEntity<? extends RecipeResponseDto> updateRecipeLike(Long recipe_no, String userId) throws Exception {
         try {
-            Long userNo = 1L;
+            Long userNo = userRepository.findByUserId(userId).getUserNo();
 
             Specification<RecipeLike> spec = (root, query, criteriaBuilder) -> null;
             if (Objects.nonNull(recipe_no) && Objects.nonNull(userNo)) {
