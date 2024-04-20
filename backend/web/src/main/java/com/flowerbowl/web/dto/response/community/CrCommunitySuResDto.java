@@ -7,11 +7,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class CrCommunitySuResDto extends CommunityResponseDto {
 
-    private Long communityNo;
+    private Long community_no;
 
     public CrCommunitySuResDto(String code, String message, Long communityNo) {
         super(code, message);
-        this.communityNo = communityNo;
+        this.community_no = communityNo;
     }
 
 }
