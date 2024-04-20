@@ -27,4 +27,5 @@ public interface ResponseMessage {
 
     String MAIL_FAIL = "Mail Send Fail"; // 메일 발송 실패
     String INTERNAL_SERVER_ERROR = "Internal Server Error"; // 500 에러
+    String DOES_NOT_MATCH = "Does Not Match"; // 두 비교군이 일치하지 않는 경우
 }

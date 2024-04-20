@@ -14,6 +14,7 @@ import com.flowerbowl.web.repository.*;
 import com.flowerbowl.web.service.RecipeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.ListUtils;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -41,6 +42,9 @@ public class RecipeServiceImpl implements RecipeService {
     public ResponseEntity<? extends RecipeResponseDto> createRecipe(CrRecipeReqDto request, String userId) throws Exception {
         try {
             User user = userRepository.findByUserId(userId);
+            if (user == null) {
+                throw new UserNotFoundException();
+            }
 
             // request의 값으로 recipe 생성
             CreateRecipeDto createRecipeDto = new CreateRecipeDto(
@@ -65,9 +69,13 @@ public class RecipeServiceImpl implements RecipeService {
 
             CrRecipeSuResDto responseBody = new CrRecipeSuResDto(ResponseCode.CREATED, ResponseMessage.CREATED, recipe.getRecipeNo());
             return ResponseEntity.status(HttpStatus.CREATED).body(responseBody);
+        } catch (UserNotFoundException e) {
+            logPrint(e);
+
+            CrRecipeFaResDto responseBody = new CrRecipeFaResDto(ResponseCode.NOT_EXIST_USER, ResponseMessage.NOT_EXIST_USER);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(responseBody);
         } catch (Exception e) {
-            log.error("Exception [Err_Msg]: {}", e.getMessage());
-            log.error("Exception [Err_Where]: {}", e.getStackTrace()[0]);
+            logPrint(e);
 
             CrRecipeFaResDto responseBody = new CrRecipeFaResDto(ResponseCode.INTERNAL_SERVER_ERROR, ResponseMessage.INTERNAL_SERVER_ERROR);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseBody);
@@ -78,6 +86,9 @@ public class RecipeServiceImpl implements RecipeService {
     public ResponseEntity<? extends RecipeResponseDto> updateRecipe(UpRecipeReqDto request, Long recipe_no, String userId) throws Exception {
         try {
             User user = userRepository.findByUserId(userId);
+            if (user == null) {
+                throw new UserNotFoundException();
+            }
             // 레시피 번호로 레시피 찾기
             Recipe recipe = recipeRepository.findByRecipeNo(recipe_no).orElseThrow(RecipeNotFoundException::new);
             // 레시피 번호로 레시피 파일 찾기
@@ -107,9 +118,23 @@ public class RecipeServiceImpl implements RecipeService {
 
             UpRecipeSuResDto responseBody = new UpRecipeSuResDto(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, result.getRecipeNo());
             return ResponseEntity.status(HttpStatus.OK).body(responseBody);
+        } catch (UserNotFoundException e) {
+            logPrint(e);
+
+            UpRecipeFaResDto responseBody = new UpRecipeFaResDto(ResponseCode.NOT_EXIST_USER, ResponseMessage.NOT_EXIST_USER);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(responseBody);
+        } catch (RecipeNotFoundException e) {
+            logPrint(e);
+
+            UpRecipeFaResDto responseBody = new UpRecipeFaResDto(ResponseCode.NOT_EXIST_RECIPE, ResponseMessage.NOT_EXIST_RECIPE);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(responseBody);
+        } catch (DoesNotMatchException e) {
+            logPrint(e);
+
+            UpRecipeFaResDto responseBody = new UpRecipeFaResDto(ResponseCode.DOES_NOT_MATCH, ResponseMessage.DOES_NOT_MATCH);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseBody);
         } catch (Exception e) {
-            log.error("Exception [Err_Msg]: {}", e.getMessage());
-            log.error("Exception [Err_Where]: {}", e.getStackTrace()[0]);
+            logPrint(e);
 
             UpRecipeFaResDto responseBody = new UpRecipeFaResDto(ResponseCode.INTERNAL_SERVER_ERROR, ResponseMessage.INTERNAL_SERVER_ERROR);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseBody);
@@ -121,6 +146,9 @@ public class RecipeServiceImpl implements RecipeService {
     public ResponseEntity<? extends RecipeResponseDto> deleteRecipe(Long recipe_no, String userId) throws Exception {
         try {
             User user = userRepository.findByUserId(userId);
+            if (user == null) {
+                throw new UserNotFoundException();
+            }
             Recipe recipe = recipeRepository.findByRecipeNo(recipe_no).orElseThrow(RecipeNotFoundException::new);
 
             if (!user.getUserNo().equals(recipe.getUser().getUserNo())) {
@@ -131,9 +159,23 @@ public class RecipeServiceImpl implements RecipeService {
 
             DelRecipeResDto responseBody = new DelRecipeResDto(ResponseCode.SUCCESS, ResponseMessage.SUCCESS);
             return ResponseEntity.status(HttpStatus.OK).body(responseBody);
+        } catch (UserNotFoundException e) {
+            logPrint(e);
+
+            DelRecipeResDto responseBody = new DelRecipeResDto(ResponseCode.NOT_EXIST_USER, ResponseMessage.NOT_EXIST_USER);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(responseBody);
+        } catch (RecipeNotFoundException e) {
+            logPrint(e);
+
+            DelRecipeResDto responseBody = new DelRecipeResDto(ResponseCode.NOT_EXIST_RECIPE, ResponseMessage.NOT_EXIST_RECIPE);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(responseBody);
+        } catch (DoesNotMatchException e) {
+            logPrint(e);
+
+            DelRecipeResDto responseBody = new DelRecipeResDto(ResponseCode.DOES_NOT_MATCH, ResponseMessage.DOES_NOT_MATCH);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseBody);
         } catch (Exception e) {
-            log.error("Exception [Err_Msg]: {}", e.getMessage());
-            log.error("Exception [Err_Where]: {}", e.getStackTrace()[0]);
+            logPrint(e);
 
             DelRecipeResDto responseBody = new DelRecipeResDto(ResponseCode.INTERNAL_SERVER_ERROR, ResponseMessage.INTERNAL_SERVER_ERROR);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseBody);
@@ -145,7 +187,7 @@ public class RecipeServiceImpl implements RecipeService {
         try {
             List<Recipe> recipes = recipeRepository.findAll();
 
-            List<GetAllRecipesDto> posts = recipes.stream().map((recipe -> {
+            List<GetAllRecipesDto> posts = ListUtils.emptyIfNull(recipes).stream().map((recipe -> {
                 Long recipeNo = recipe.getRecipeNo();
 
                 List<RecipeLike> recipeLikes = recipeLikeRepository.findAllByRecipe_RecipeNo(recipeNo);
@@ -166,8 +208,7 @@ public class RecipeServiceImpl implements RecipeService {
             GetAllRecipesSuResDto responseBody = new GetAllRecipesSuResDto(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, posts);
             return ResponseEntity.status(HttpStatus.OK).body(responseBody);
         } catch (Exception e) {
-            log.error("Exception [Err_Msg]: {}", e.getMessage());
-            log.error("Exception [Err_Where]: {}", e.getStackTrace()[0]);
+            logPrint(e);
 
             GetAllRecipesFaResDto responseBody = new GetAllRecipesFaResDto(ResponseCode.INTERNAL_SERVER_ERROR, ResponseMessage.INTERNAL_SERVER_ERROR);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseBody);
@@ -177,11 +218,15 @@ public class RecipeServiceImpl implements RecipeService {
     @Override
     public ResponseEntity<? extends RecipeResponseDto> getAllRecipes(String userId) throws Exception {
         try {
-            Long userNo = userRepository.findByUserId(userId).getUserNo();
+            User user = userRepository.findByUserId(userId);
+            if (user == null) {
+                throw new UserNotFoundException();
+            }
+            Long userNo = user.getUserNo();
 
             List<Recipe> recipes = recipeRepository.findAll();
 
-            List<GetAllRecipesDto> posts = recipes.stream().map((recipe -> {
+            List<GetAllRecipesDto> posts = ListUtils.emptyIfNull(recipes).stream().map((recipe -> {
                 Long recipeNo = recipe.getRecipeNo();
 
                 List<RecipeLike> recipeLikes = recipeLikeRepository.findAllByRecipe_RecipeNo(recipeNo);
@@ -208,9 +253,13 @@ public class RecipeServiceImpl implements RecipeService {
 
             GetAllRecipesSuResDto responseBody = new GetAllRecipesSuResDto(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, posts);
             return ResponseEntity.status(HttpStatus.OK).body(responseBody);
+        } catch (UserNotFoundException e) {
+            logPrint(e);
+
+            GetAllRecipesFaResDto responseBody = new GetAllRecipesFaResDto(ResponseCode.NOT_EXIST_USER, ResponseMessage.NOT_EXIST_USER);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(responseBody);
         } catch (Exception e) {
-            log.error("Exception [Err_Msg]: {}", e.getMessage());
-            log.error("Exception [Err_Where]: {}", e.getStackTrace()[0]);
+            logPrint(e);
 
             GetAllRecipesFaResDto responseBody = new GetAllRecipesFaResDto(ResponseCode.INTERNAL_SERVER_ERROR, ResponseMessage.INTERNAL_SERVER_ERROR);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseBody);
@@ -253,9 +302,13 @@ public class RecipeServiceImpl implements RecipeService {
 
             GetRecipeSuResDto responseBody = new GetRecipeSuResDto(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, newDto);
             return ResponseEntity.status(HttpStatus.OK).body(responseBody);
+        } catch (RecipeNotFoundException e) {
+            logPrint(e);
+
+            GetRecipeFaResDto responseBody = new GetRecipeFaResDto(ResponseCode.NOT_EXIST_RECIPE, ResponseMessage.NOT_EXIST_RECIPE);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(responseBody);
         } catch (Exception e) {
-            log.error("Exception [Err_Msg]: {}", e.getMessage());
-            log.error("Exception [Err_Where]: {}", e.getStackTrace()[0]);
+            logPrint(e);
 
             GetRecipeFaResDto responseBody = new GetRecipeFaResDto(ResponseCode.INTERNAL_SERVER_ERROR, ResponseMessage.INTERNAL_SERVER_ERROR);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseBody);
@@ -266,7 +319,11 @@ public class RecipeServiceImpl implements RecipeService {
     @Transactional
     public ResponseEntity<? extends RecipeResponseDto> getRecipe(Long recipe_no, String userId) throws Exception {
         try {
-            Long userNo = userRepository.findByUserId(userId).getUserNo();
+            User user = userRepository.findByUserId(userId);
+            if (user == null) {
+                throw new UserNotFoundException();
+            }
+            Long userNo = user.getUserNo();
 
             Recipe recipe = recipeRepository.findByRecipeNo(recipe_no).orElseThrow(RecipeNotFoundException::new);
             RecipeFile recipeFile = recipeFileRepository.findByRecipe_RecipeNo(recipe_no);
@@ -308,9 +365,18 @@ public class RecipeServiceImpl implements RecipeService {
 
             GetRecipeSuResDto responseBody = new GetRecipeSuResDto(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, newDto);
             return ResponseEntity.status(HttpStatus.OK).body(responseBody);
+        } catch (UserNotFoundException e) {
+            logPrint(e);
+
+            GetRecipeFaResDto responseBody = new GetRecipeFaResDto(ResponseCode.NOT_EXIST_USER, ResponseMessage.NOT_EXIST_USER);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(responseBody);
+        } catch (RecipeNotFoundException e) {
+            logPrint(e);
+
+            GetRecipeFaResDto responseBody = new GetRecipeFaResDto(ResponseCode.NOT_EXIST_RECIPE, ResponseMessage.NOT_EXIST_RECIPE);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(responseBody);
         } catch (Exception e) {
-            log.error("Exception [Err_Msg]: {}", e.getMessage());
-            log.error("Exception [Err_Where]: {}", e.getStackTrace()[0]);
+            logPrint(e);
 
             GetRecipeFaResDto responseBody = new GetRecipeFaResDto(ResponseCode.INTERNAL_SERVER_ERROR, ResponseMessage.INTERNAL_SERVER_ERROR);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseBody);
@@ -320,7 +386,11 @@ public class RecipeServiceImpl implements RecipeService {
     @Override
     public ResponseEntity<? extends RecipeResponseDto> updateRecipeLike(Long recipe_no, String userId) throws Exception {
         try {
-            Long userNo = userRepository.findByUserId(userId).getUserNo();
+            User user = userRepository.findByUserId(userId);
+            if (user == null) {
+                throw new UserNotFoundException();
+            }
+            Long userNo = user.getUserNo();
 
             Specification<RecipeLike> spec = (root, query, criteriaBuilder) -> null;
             if (Objects.nonNull(recipe_no) && Objects.nonNull(userNo)) {
@@ -338,7 +408,6 @@ public class RecipeServiceImpl implements RecipeService {
                 return ResponseEntity.status(HttpStatus.OK).body(responseBody);
             }
             // 즐겨찾기가 되어있지 않으므로 즐겨찾기 등록(생성)
-            User user = userRepository.findByUserNo(userNo).orElseThrow(UserNotFoundException::new);
             Recipe recipe = recipeRepository.findByRecipeNo(recipe_no).orElseThrow(RecipeNotFoundException::new);
 
             CreateRecipeLikeDto createRecipeLikeDto = new CreateRecipeLikeDto(recipe, user);
@@ -347,13 +416,27 @@ public class RecipeServiceImpl implements RecipeService {
 
             UpRecipeLikeSuResDto responseBody = new UpRecipeLikeSuResDto(ResponseCode.CREATED, ResponseMessage.CREATED, savedRecipeLike.getRecipeLikeNo());
             return ResponseEntity.status(HttpStatus.CREATED).body(responseBody);
+        } catch (UserNotFoundException e) {
+            logPrint(e);
+
+            UpRecipeLikeFaResDto responseBody = new UpRecipeLikeFaResDto(ResponseCode.NOT_EXIST_USER, ResponseMessage.NOT_EXIST_USER);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(responseBody);
+        } catch (RecipeNotFoundException e) {
+            logPrint(e);
+
+            UpRecipeLikeFaResDto responseBody = new UpRecipeLikeFaResDto(ResponseCode.NOT_EXIST_RECIPE, ResponseMessage.NOT_EXIST_RECIPE);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(responseBody);
         } catch (Exception e) {
-            log.error("Exception [Err_Msg]: {}", e.getMessage());
-            log.error("Exception [Err_Where]: {}", e.getStackTrace()[0]);
+            logPrint(e);
 
             UpRecipeLikeFaResDto responseBody = new UpRecipeLikeFaResDto(ResponseCode.INTERNAL_SERVER_ERROR, ResponseMessage.INTERNAL_SERVER_ERROR);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseBody);
         }
+    }
+
+    private void logPrint(Exception e) {
+        log.error("Exception [Err_Msg]: {}", e.getMessage());
+        log.error("Exception [Err_Where]: {}", e.getStackTrace()[0]);
     }
 
 }

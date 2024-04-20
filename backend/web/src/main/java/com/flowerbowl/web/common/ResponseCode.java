@@ -24,6 +24,6 @@ public interface ResponseCode {
 
     String MAIL_FAIL = "MF"; // 메일 발송 실패
     String INTERNAL_SERVER_ERROR = "ISE"; // 500 에러
-
+    String DOES_NOT_MATCH = "DM"; // 두 비교군이 일치하지 않는 경우
 
 }
