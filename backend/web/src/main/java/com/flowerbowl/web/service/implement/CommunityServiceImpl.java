@@ -48,8 +48,8 @@ public class CommunityServiceImpl implements CommunityService {
 
             // request의 값으로 Community Dto 생성
             CreateCommunityDto createCommunityDto = new CreateCommunityDto(
-                    request.getCommunityTitle(),
-                    request.getCommunityContent(),
+                    request.getCommunity_title(),
+                    request.getCommunity_content(),
                     LocalDate.now(ZoneId.of("Asia/Seoul")),
                     "라이언",
                     0L,
@@ -60,7 +60,7 @@ public class CommunityServiceImpl implements CommunityService {
             Community community = communityRepository.save(createCommunityDto.toEntity());
 
             // request이 값으로 community file 생성 후 db에 저장
-            CreateCommunityFileDto createCommunityFileDto = new CreateCommunityFileDto(request.getCommunityFileOname(), request.getCommunityFileSname(), community);
+            CreateCommunityFileDto createCommunityFileDto = new CreateCommunityFileDto(request.getCommunity_file_oname(), request.getCommunity_file_sname(), community);
             communityFileRepository.save(createCommunityFileDto.toEntity());
 
             CrCommunitySuResDto responseBody = new CrCommunitySuResDto(ResponseCode.CREATED, ResponseMessage.CREATED, community.getCommunityNo());
@@ -84,12 +84,12 @@ public class CommunityServiceImpl implements CommunityService {
             CommunityFile communityFile = communityFileRepository.findByCommunity_CommunityNo(community_no);
 
             // 찾은 커뮤니티 게시글의 데이터를 수정
-            community.updateTitle(request.getCommunityTitle());
-            community.updateContent(request.getCommunityContent());
+            community.updateTitle(request.getCommunity_title());
+            community.updateContent(request.getCommunity_content());
 
             // 찾은 커뮤니티 파일의 데이터를 수정
-            communityFile.updateFileOname(request.getCommunityFileOname());
-            communityFile.updateFileSname(request.getCommunityFileSname());
+            communityFile.updateFileOname(request.getCommunity_file_oname());
+            communityFile.updateFileSname(request.getCommunity_file_sname());
 
             // 수정된 커뮤니티 데이터 DB에 저장
             Community result = communityRepository.save(community);
@@ -142,11 +142,11 @@ public class CommunityServiceImpl implements CommunityService {
             // 조회한 커뮤니티 게시글 목록을 순회하며 각각의 게시글의 정보로 posts를 빌드
             List<GetAllCommunitiesDto> posts = communities.stream().map((community -> {
                 return GetAllCommunitiesDto.builder()
-                        .communityNo(community.getCommunityNo())
-                        .communityTitle(community.getCommunityTitle())
-                        .communityWriter(community.getCommunityWriter())
-                        .communityDate(community.getCommunityDate())
-                        .communityViews(community.getCommunityViews())
+                        .community_no(community.getCommunityNo())
+                        .community_title(community.getCommunityTitle())
+                        .community_writer(community.getCommunityWriter())
+                        .community_date(community.getCommunityDate())
+                        .community_views(community.getCommunityViews())
                         .build();
             })).toList();
 
@@ -187,13 +187,13 @@ public class CommunityServiceImpl implements CommunityService {
             communityRepository.save(community);
 
             GetCommunityDto newDto = GetCommunityDto.builder()
-                    .communityNo(community.getCommunityNo())
-                    .communityTitle(community.getCommunityTitle())
-                    .communityWriter(community.getCommunityWriter())
-                    .communityDate(community.getCommunityDate())
-                    .communityContent(community.getCommunityContent())
-                    .communityFileOname(communityFile.getCommunityFileOname())
-                    .communityFileSname(communityFile.getCommunityFileSname())
+                    .community_no(community.getCommunityNo())
+                    .community_title(community.getCommunityTitle())
+                    .community_writer(community.getCommunityWriter())
+                    .community_date(community.getCommunityDate())
+                    .community_content(community.getCommunityContent())
+                    .community_file_oname(communityFile.getCommunityFileOname())
+                    .community_file_sname(communityFile.getCommunityFileSname())
                     .build();
 
             GetCommunitySuResDto responseBody = new GetCommunitySuResDto(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, newDto);

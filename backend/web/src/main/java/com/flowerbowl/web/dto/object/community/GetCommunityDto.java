@@ -14,18 +14,18 @@ import java.util.List;
 @AllArgsConstructor
 public class GetCommunityDto {
 
-    private Long communityNo;
+    private Long community_no;
 
-    private String communityTitle;
+    private String community_title;
 
-    private String communityWriter;
+    private String community_writer;
 
-    private LocalDate communityDate;
+    private LocalDate community_date;
 
-    private String communityContent;
+    private String community_content;
 
-    private List<String> communityFileOname;
+    private List<String> community_file_oname;
 
-    private List<String> communityFileSname;
+    private List<String> community_file_sname;
 
 }
