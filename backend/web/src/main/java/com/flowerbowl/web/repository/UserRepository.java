@@ -36,7 +36,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
             "   l.lesson_no, " +
             "   l.lesson_title " +
             "FROM " +
-            "   USER u" +
+            "   user u" +
             "INNER JOIN " +
             "   review_enable r ON u.user_no = r.user_no " +
             "INNER JOIN " +
@@ -54,7 +54,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
             "FROM " +
             "    lesson_rv lr " +
             "INNER JOIN " +
-            "    USER u ON lr.user_no = u.user_no " +
+            "    user u ON lr.user_no = u.user_no " +
             "INNER JOIN  " +
             "    lesson l ON lr.lesson_no = l.lesson_no " +
             "WHERE  " +
@@ -77,14 +77,14 @@ public interface UserRepository extends JpaRepository<User, Long> {
             "    l.lesson_title " +
             "FROM " +
             "    pay p " +
-            "    INNER JOIN USER u ON p.user_no = u.user_no " +
+            "    INNER JOIN user u ON p.user_no = u.user_no " +
             "    INNER JOIN lesson l ON p.lesson_no = l.lesson_no " +
             "WHERE " +
             "    p.lesson_no IN ( " +
             "        SELECT " +
             "            l.lesson_no " +
             "        FROM " +
-            "            USER u " +
+            "            user u " +
             "            INNER JOIN lesson l ON u.user_no = l.user_no " +
             "        WHERE " +
             "            u.user_id = :userId " +
@@ -107,7 +107,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
             "            p2.lesson_no " +
             "        FROM " +
             "            pay p2 " +
-            "            INNER JOIN USER u ON p2.user_no = u.user_no " +
+            "            INNER JOIN user u ON p2.user_no = u.user_no " +
             "        WHERE " +
             "            u.user_id = :userId)" +
             "ORDER BY " +
@@ -132,13 +132,13 @@ public interface UserRepository extends JpaRepository<User, Long> {
             "    DATE_FORMAT(r.recipe_date, '%Y-%m-%d') AS recipe_date, " +
             "    r.recipe_title, " +
             "    COUNT(l.user_no) AS bookmark_cnt, " +
-            "    (SELECT COUNT(*) FROM COMMENT c WHERE c.recipe_no = r.recipe_no) AS comment_cnt " +
+            "    (SELECT COUNT(*) FROM comment c WHERE c.recipe_no = r.recipe_no) AS comment_cnt " +
             "FROM " +
             "    recipe r " +
             "LEFT JOIN " +
             "    recipe_like l ON r.recipe_no = l.recipe_no " +
             "INNER JOIN " +
-            "    USER u ON r.user_no = u.user_no " +
+            "    user u ON r.user_no = u.user_no " +
             "WHERE " +
             "    u.user_id = :userId " +
             "GROUP BY " +
@@ -153,7 +153,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
             "    DATE_FORMAT(l.lesson_date, '%Y-%m-%d') AS lesson_date, " +
             "    l.lesson_title, " +
             "    COUNT(ll.user_no) AS bookmark_cnt, " +
-            "    (SELECT COUNT(*) FROM LESSON_RV lr WHERE lr.lesson_no = l.lesson_no) AS review_cnt " +
+            "    (SELECT COUNT(*) FROM lesson_rv lr WHERE lr.lesson_no = l.lesson_no) AS review_cnt " +
             "FROM  " +
             "    lesson l " +
             "LEFT JOIN  " +
@@ -178,7 +178,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
             "    pay p " +
             "    INNER JOIN lesson l ON p.lesson_no = l.lesson_no " +
             "    LEFT JOIN lesson_rv lr ON l.lesson_no = lr.lesson_no " +
-            "    INNER JOIN USER u ON p.user_no = u.user_no " +
+            "    INNER JOIN user u ON p.user_no = u.user_no " +
             "WHERE " +
             "    u.user_id = :userId " +
             "GROUP BY " +
@@ -192,7 +192,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query(value = "SELECT " +
             "   * " +
             "FROM " +
-            "   USER u " +
+            "   user u " +
             "WHERE " +
             "   user_id = :userId AND user_email = :userEmail ", nativeQuery = true)
     User findPwByIdAndEmail(@Param("userId") String userId, @Param("userEmail") String userEmail);
@@ -215,7 +215,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
             "   SELECT l.lesson_no  " +
             "   FROM  " +
             "       lesson l " +
-            "       INNER JOIN USER u ON u.user_no = l.user_no  " +
+            "       INNER JOIN user u ON u.user_no = l.user_no  " +
             "   WHERE  " +
             "       user_id = :userId) AND p.pay_no = :payNo ", nativeQuery = true)
     int deletePayByChef(@Param("userId") String userId, @Param("payNo") Long payNo);
@@ -250,7 +250,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
             "   r.recipe_oname, " +
             "   DATE_FORMAT(r.recipe_date, '%Y-%m-%d') as recipe_date, " +
             "   (SELECT COUNT(*) FROM recipe_like rl WHERE r.recipe_no = rl.recipe_no) AS recipe_like_cnt, " +
-            "   (SELECT COUNT(*) FROM COMMENT c WHERE c.recipe_no = r.recipe_no) AS comment_cnt " +
+            "   (SELECT COUNT(*) FROM comment c WHERE c.recipe_no = r.recipe_no) AS comment_cnt " +
             "FROM " +
             "   recipe r " +
             "WHERE  " +
