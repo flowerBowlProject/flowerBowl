@@ -97,7 +97,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
             "    DATE_FORMAT(p.pay_date, '%Y-%m-%d') AS pay_date, " +
             "    p.pay_price, " +
             "    l.lesson_title, " +
-            "    l.lesson_writer " +
+            "    l.lesson_writer, " +
+            "    l.lesson_no " +
             "FROM " +
             "    pay p " +
             "    INNER JOIN lesson l ON p.lesson_no = l.lesson_no " +
@@ -132,7 +133,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
             "    DATE_FORMAT(r.recipe_date, '%Y-%m-%d') AS recipe_date, " +
             "    r.recipe_title, " +
             "    COUNT(l.user_no) AS bookmark_cnt, " +
-            "    (SELECT COUNT(*) FROM comment c WHERE c.recipe_no = r.recipe_no) AS comment_cnt " +
+            "    (SELECT COUNT(*) FROM comment c WHERE c.recipe_no = r.recipe_no) AS comment_cnt," +
+            "    r.recipe_no " +
             "FROM " +
             "    recipe r " +
             "LEFT JOIN " +
@@ -154,7 +156,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
             "    DATE_FORMAT(l.lesson_date, '%Y-%m-%d') AS lesson_date, " +
             "    l.lesson_title, " +
             "    COUNT(ll.user_no) AS bookmark_cnt, " +
-            "    (SELECT COUNT(*) FROM lesson_rv lr WHERE lr.lesson_no = l.lesson_no) AS review_cnt " +
+            "    (SELECT COUNT(*) FROM lesson_rv lr WHERE lr.lesson_no = l.lesson_no) AS review_cnt, " +
+            "    l.lesson_no  " +
             "FROM  " +
             "    lesson l " +
             "LEFT JOIN  " +
@@ -165,7 +168,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
             "    u.user_id = :userId " +
             "GROUP BY  " +
             "    l.lesson_date, " +
-            "    l.lesson_title " +
+            "    l.lesson_title, " +
+            "    l.lesson_no " +
             "ORDER BY  " +
             "    l.lesson_date DESC ", nativeQuery = true)
     List<Object[]> findAllLessonByUser(@Param("userId") String userId);
@@ -174,7 +178,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
             "    DATE_FORMAT(p.pay_date, '%Y-%m-%d') AS pay_date, " +
             "    l.lesson_title, " +
             "    l.lesson_writer, " +
-            "    COALESCE(MAX(lr.lesson_rv_score), 0) AS lesson_rv_score " +
+            "    COALESCE(MAX(lr.lesson_rv_score), 0) AS lesson_rv_score, " +
+            "    l.lesson_no " +
             "FROM " +
             "    pay p " +
             "    INNER JOIN lesson l ON p.lesson_no = l.lesson_no " +
@@ -183,7 +188,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
             "WHERE " +
             "    u.user_id = :userId " +
             "GROUP BY " +
-            "    p.pay_date, l.lesson_title, l.lesson_writer " +
+            "    p.pay_date, l.lesson_title, l.lesson_writer, l.lesson_no " +
             "ORDER BY " +
             "    p.pay_date DESC", nativeQuery = true)
     List<Object[]> findAllPayLesson(@Param("userId") String userId);
