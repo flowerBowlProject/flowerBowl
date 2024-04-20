@@ -36,10 +36,10 @@ public class GetUserInfoResponseDto extends ResponseDto {
         return ResponseEntity.status(HttpStatus.OK).body(body);
     }
 
-    public static ResponseEntity<ResponseDto> notExistUser(){
-        ResponseDto body = new ResponseDto(ResponseCode.NOT_EXIST_USER, ResponseMessage.NOT_EXIST_USER);
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(body);
-    }
+//    public static ResponseEntity<ResponseDto> notExistUser(){
+//        ResponseDto body = new ResponseDto(ResponseCode.NOT_EXIST_USER, ResponseMessage.NOT_EXIST_USER);
+//        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(body);
+//    }
 
 
 }

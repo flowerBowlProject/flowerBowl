@@ -5,6 +5,7 @@ import com.flowerbowl.web.common.JwtError;
 import com.flowerbowl.web.filter.JwtAuthenticationFilter;
 import com.flowerbowl.web.handler.CustomAccessDeniedHandler;
 import com.flowerbowl.web.handler.OAuth2SuccessHandler;
+import com.flowerbowl.web.util.JwtUtil;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -124,13 +125,13 @@ class FailedAuthenticationEntryPoint implements AuthenticationEntryPoint {
         log.info("exception Values={}", exception);
 
         if (exception != null && exception.equals("IT")) {
-            setResponse(response, JwtError.INVALID_TOKEN);
+            JwtUtil.setResponse(response, JwtError.INVALID_TOKEN);
         } else if (exception != null && exception.equals("NS")) {
-            setResponse(response, JwtError.NOT_SUPPORT_TOKEN);
+            JwtUtil.setResponse(response, JwtError.NOT_SUPPORT_TOKEN);
         } else if (exception != null && exception.equals("ET")) {
-            setResponse(response, JwtError.EXPIRED_TOKEN);
-        } else {
-            setResponse(response, JwtError.NOT_EXIST_TOKEN);
+            JwtUtil.setResponse(response, JwtError.EXPIRED_TOKEN);
+        } else if (exception != null && exception.equals("NT")) {
+            JwtUtil.setResponse(response, JwtError.NOT_EXIST_TOKEN);
         }
 
 //        response.setContentType("application/json; charset=UTF-8");
@@ -141,15 +142,4 @@ class FailedAuthenticationEntryPoint implements AuthenticationEntryPoint {
     }
 
 
-    private void setResponse(HttpServletResponse response, JwtError jwtError) throws IOException {
-
-        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-        response.setContentType("application/json; charset=UTF-8");
-
-        JSONObject responseJson = new JSONObject();
-        responseJson.put("code", jwtError.getCode());
-        responseJson.put("message", jwtError.getMessage());
-
-        response.getWriter().print(responseJson);
-    }
 }
