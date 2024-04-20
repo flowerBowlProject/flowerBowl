@@ -3,7 +3,7 @@ import '../Recipe/ViewListStyle.css';
 import Button from '@mui/material/Button';
 import RecipeReviewCard from "../Component/CardComp";
 import Bookmark from "../Component/Bookmark";
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import axios from "axios";
 import { useSelector } from "react-redux";
 import { url } from "../url";
@@ -11,9 +11,22 @@ import { url } from "../url";
 const ViewList = () => {
     const [listData, setListData] = useState([]);
     const navigator = useNavigate();
-    const accessToken = useSelector(state => state.persistedReducer.accessToken);
+    const accessToken = useSelector(state => state.accessToken);
+    const location = useLocation();
+    const keyword = (location.state && location.state.keyword) || '';
 
     useEffect(()=>{
+        if(keyword !== ''){
+            axios.get(`${url}api/search/lessons?keyword=${keyword}&page=1&size=10`)
+            .then(res => {
+                setListData(res.data.lesson);
+                //setPageInfo(res.data.pageInfo);
+                console.log(res);
+            })
+            .catch(err => {
+                console.log(err);
+            })
+        }else{
             {/* 로그인에 따른 조회 */}
             if(accessToken == ''){
                  axios.get(`${url}/api/guest/lessons?page=1&size=10`)
@@ -38,15 +51,15 @@ const ViewList = () => {
                     console.log(err);
                 })
             }
-           
-    },[])
+        } 
+    },[keyword, accessToken])
 
     const clickBookmark = (e, lesson_no) =>{
         console.log("북마크 클릭");
     }
 
     const clickDetail = (e, lesson_no) =>{
-            navigator(`/classDetail/${lesson_no}`);
+        navigator(`/classDetail/${lesson_no}`);
     }
 
     return(
