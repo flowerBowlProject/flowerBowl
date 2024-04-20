@@ -10,23 +10,23 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class GetAllRecipesDto {
 
-    private Long recipeNo;
+    private Long recipe_no;
 
-    private String recipeSname;
+    private String recipe_sname;
 
-    private String recipeTitle;
+    private String recipe_title;
 
-    private String recipeWriter;
+    private String recipe_writer;
 
-    private LocalDate recipeDate;
+    private LocalDate recipe_date;
 
     // 게시글 즐겨찾기 수
-    private Long recipeLikeCount;
+    private Long recipe_like_count;
 
     // 게시글 댓글 수
-    private Long recipeCommentCount;
+    private Long recipe_comment_count;
 
     // 사용자 즐겨찾기 여부
-    private Boolean recipeLikeStatus;
+    private Boolean recipe_like_status;
 
 }

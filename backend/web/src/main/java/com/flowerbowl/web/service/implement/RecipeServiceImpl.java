@@ -48,13 +48,13 @@ public class RecipeServiceImpl implements RecipeService {
 
             // request의 값으로 recipe 생성
             CreateRecipeDto createRecipeDto = new CreateRecipeDto(
-                    request.getRecipeTitle(),
+                    request.getRecipe_title(),
                     LocalDate.now(ZoneId.of("Asia/Seoul")),
-                    request.getRecipeStuff(),
-                    request.getRecipeOname(),
-                    request.getRecipeSname(),
-                    request.getRecipeContent(),
-                    request.getRecipeCategory(),
+                    request.getRecipe_stuff(),
+                    request.getRecipe_oname(),
+                    request.getRecipe_sname(),
+                    request.getRecipe_content(),
+                    request.getRecipe_category(),
                     user.getUserNickname(),
                     0L,
                     user
@@ -64,7 +64,7 @@ public class RecipeServiceImpl implements RecipeService {
             Recipe recipe = recipeRepository.save(createRecipeDto.toEntity());
 
             // request의 값으로 recipe file 생성 후 db에 저장
-            CreateRecipeFileDto createRecipeFileDto = new CreateRecipeFileDto(request.getRecipeFileOname(), request.getRecipeFileSname(), recipe);
+            CreateRecipeFileDto createRecipeFileDto = new CreateRecipeFileDto(request.getRecipe_file_oname(), request.getRecipe_file_sname(), recipe);
             recipeFileRepository.save(createRecipeFileDto.toEntity());
 
             CrRecipeSuResDto responseBody = new CrRecipeSuResDto(ResponseCode.CREATED, ResponseMessage.CREATED, recipe.getRecipeNo());
@@ -100,16 +100,16 @@ public class RecipeServiceImpl implements RecipeService {
 
             // request의 값이 비어있는지 체크가 필요할까...?고민 중
             // 찾은 레시피의 데이터을 수정
-            recipe.updateTitle(request.getRecipeTitle());
-            recipe.updateCategory(request.getRecipeCategory());
-            recipe.updateStuff(request.getRecipeStuff());
-            recipe.updateContent(request.getRecipeContent());
-            recipe.updateOname(request.getRecipeOname());
-            recipe.updateSname(request.getRecipeSname());
+            recipe.updateTitle(request.getRecipe_title());
+            recipe.updateCategory(request.getRecipe_category());
+            recipe.updateStuff(request.getRecipe_stuff());
+            recipe.updateContent(request.getRecipe_content());
+            recipe.updateOname(request.getRecipe_oname());
+            recipe.updateSname(request.getRecipe_sname());
 
             // 찾은 레시피 파일의 데이터를 수정
-            recipeFile.updateFileOname(request.getRecipeFileOname());
-            recipeFile.updateFileSname(request.getRecipeFileSname());
+            recipeFile.updateFileOname(request.getRecipe_file_oname());
+            recipeFile.updateFileSname(request.getRecipe_file_sname());
 
             // 수정된 레시피 데이터 저장
             Recipe result = recipeRepository.save(recipe);
@@ -194,14 +194,14 @@ public class RecipeServiceImpl implements RecipeService {
                 List<Comment> comments = commentRepository.findAllByRecipe_RecipeNo(recipeNo);
 
                 return GetAllRecipesDto.builder()
-                        .recipeNo(recipe.getRecipeNo())
-                        .recipeSname(recipe.getRecipeSname())
-                        .recipeTitle(recipe.getRecipeTitle())
-                        .recipeWriter(recipe.getRecipeWriter())
-                        .recipeDate(recipe.getRecipeDate())
-                        .recipeLikeCount(Long.valueOf(recipeLikes.size()))
-                        .recipeCommentCount(Long.valueOf(comments.size()))
-                        .recipeLikeStatus(false)
+                        .recipe_no(recipe.getRecipeNo())
+                        .recipe_sname(recipe.getRecipeSname())
+                        .recipe_title(recipe.getRecipeTitle())
+                        .recipe_writer(recipe.getRecipeWriter())
+                        .recipe_date(recipe.getRecipeDate())
+                        .recipe_like_count(Long.valueOf(recipeLikes.size()))
+                        .recipe_comment_count(Long.valueOf(comments.size()))
+                        .recipe_like_status(false)
                         .build();
             })).toList();
 
@@ -239,15 +239,15 @@ public class RecipeServiceImpl implements RecipeService {
                 }
 
                 return GetAllRecipesDto.builder()
-                        .recipeNo(recipe.getRecipeNo())
-                        .recipeSname(recipe.getRecipeSname())
-                        .recipeTitle(recipe.getRecipeTitle())
-                        .recipeWriter(recipe.getRecipeWriter())
-                        .recipeDate(recipe.getRecipeDate())
-                        .recipeLikeCount(Long.valueOf(recipeLikes.size()))
-                        .recipeCommentCount(Long.valueOf(comments.size()))
+                        .recipe_no(recipe.getRecipeNo())
+                        .recipe_sname(recipe.getRecipeSname())
+                        .recipe_title(recipe.getRecipeTitle())
+                        .recipe_writer(recipe.getRecipeWriter())
+                        .recipe_date(recipe.getRecipeDate())
+                        .recipe_like_count(Long.valueOf(recipeLikes.size()))
+                        .recipe_comment_count(Long.valueOf(comments.size()))
                         // 다중 조건 검색에 따라 즐겨찾기 여부를 지정
-                        .recipeLikeStatus(recipeLikeRepository.findOne(spec).isPresent())
+                        .recipe_like_status(recipeLikeRepository.findOne(spec).isPresent())
                         .build();
             })).toList();
 
@@ -286,18 +286,18 @@ public class RecipeServiceImpl implements RecipeService {
             recipeRepository.save(recipe);
 
             GetRecipeDto newDto = GetRecipeDto.builder()
-                    .recipeNo(recipe.getRecipeNo())
-                    .recipeOname(recipe.getRecipeOname())
-                    .recipeSname(recipe.getRecipeSname())
-                    .recipeFileOname(recipeFileOname)
-                    .recipeFileSname(recipeFileSname)
-                    .recipeTitle(recipe.getRecipeTitle())
-                    .recipeWriter(recipe.getRecipeWriter())
-                    .recipeDate(recipe.getRecipeDate())
-                    .recipeStuff(recipe.getRecipeStuff())
-                    .recipeCategory(recipe.getRecipeCategory())
-                    .recipeContent(recipe.getRecipeContent())
-                    .recipeLikeStatus(false)
+                    .recipe_no(recipe.getRecipeNo())
+                    .recipe_oname(recipe.getRecipeOname())
+                    .recipe_sname(recipe.getRecipeSname())
+                    .recipe_file_oname(recipeFileOname)
+                    .recipe_file_sname(recipeFileSname)
+                    .recipe_title(recipe.getRecipeTitle())
+                    .recipe_writer(recipe.getRecipeWriter())
+                    .recipe_date(recipe.getRecipeDate())
+                    .recipe_stuff(recipe.getRecipeStuff())
+                    .recipe_category(recipe.getRecipeCategory())
+                    .recipe_content(recipe.getRecipeContent())
+                    .recipe_like_status(false)
                     .build();
 
             GetRecipeSuResDto responseBody = new GetRecipeSuResDto(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, newDto);
@@ -348,19 +348,19 @@ public class RecipeServiceImpl implements RecipeService {
             }
 
             GetRecipeDto newDto = GetRecipeDto.builder()
-                    .recipeNo(recipeNo)
-                    .recipeOname(recipe.getRecipeOname())
-                    .recipeSname(recipe.getRecipeSname())
-                    .recipeFileOname(recipeFileOname)
-                    .recipeFileSname(recipeFileSname)
-                    .recipeTitle(recipe.getRecipeTitle())
-                    .recipeWriter(recipe.getRecipeWriter())
-                    .recipeDate(recipe.getRecipeDate())
-                    .recipeStuff(recipe.getRecipeStuff())
-                    .recipeCategory(recipe.getRecipeCategory())
-                    .recipeContent(recipe.getRecipeContent())
+                    .recipe_no(recipeNo)
+                    .recipe_oname(recipe.getRecipeOname())
+                    .recipe_sname(recipe.getRecipeSname())
+                    .recipe_file_oname(recipeFileOname)
+                    .recipe_file_sname(recipeFileSname)
+                    .recipe_title(recipe.getRecipeTitle())
+                    .recipe_writer(recipe.getRecipeWriter())
+                    .recipe_date(recipe.getRecipeDate())
+                    .recipe_stuff(recipe.getRecipeStuff())
+                    .recipe_category(recipe.getRecipeCategory())
+                    .recipe_content(recipe.getRecipeContent())
                     // 다중 조건 검색에 따라 즐겨찾기 여부를 지정
-                    .recipeLikeStatus(recipeLikeRepository.findOne(spec).isPresent())
+                    .recipe_like_status(recipeLikeRepository.findOne(spec).isPresent())
                     .build();
 
             GetRecipeSuResDto responseBody = new GetRecipeSuResDto(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, newDto);
