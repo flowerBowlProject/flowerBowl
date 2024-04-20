@@ -19,10 +19,10 @@ public class PatchProfileResponseDto extends ResponseDto {
         return ResponseEntity.status(HttpStatus.OK).body(body);
     }
 
-    public static ResponseEntity<ResponseDto> noExistUser() {
-        ResponseDto body = new ResponseDto(ResponseCode.NOT_EXIST_USER, ResponseMessage.NOT_EXIST_USER);
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
-    }
+//    public static ResponseEntity<ResponseDto> noExistUser() {
+//        ResponseDto body = new ResponseDto(ResponseCode.NOT_EXIST_USER, ResponseMessage.NOT_EXIST_USER);
+//        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
+//    }
 
     public static ResponseEntity<ResponseDto> invalidPw() {
         ResponseDto body = new ResponseDto(ResponseCode.INVALID_PASSWORD, ResponseMessage.INVALID_PASSWORD);
