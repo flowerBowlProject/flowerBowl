@@ -143,7 +143,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
             "    u.user_id = :userId " +
             "GROUP BY " +
             "    r.recipe_date, " +
-            "    r.recipe_title " +
+            "    r.recipe_title, " +
+            "    r.recipe_no " +
             "ORDER BY " +
             "    r.recipe_date DESC", nativeQuery = true)
     List<Object[]> findAllRecipeByUser(@Param("userId") String userId);
