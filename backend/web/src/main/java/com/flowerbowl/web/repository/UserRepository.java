@@ -239,7 +239,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
             "       user_no IN (SELECT  " +
             "           user_no  " +
             "       FROM  " +
-            "           USER " +
+            "           user " +
             "       WHERE  " +
             "           user_id = :userId))", nativeQuery = true)
     List<Object[]> findAllLikeLesson(@Param("userId") String userId);
@@ -264,7 +264,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
             "           user_no IN (SELECT " +
             "               user_no " +
             "           FROM " +
-            "               USER " +
+            "               user " +
             "           WHERE  " +
             "               user_id = :userId))", nativeQuery = true)
     List<Object[]> findAllLikeRecipe(@Param("userId") String userId);
