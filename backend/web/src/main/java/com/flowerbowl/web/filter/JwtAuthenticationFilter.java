@@ -1,21 +1,18 @@
 package com.flowerbowl.web.filter;
 
-import com.flowerbowl.web.common.JwtError;
+import com.flowerbowl.web.common.ResponseCode;
+import com.flowerbowl.web.common.ResponseMessage;
 import com.flowerbowl.web.domain.Role;
 import com.flowerbowl.web.domain.User;
 import com.flowerbowl.web.provider.JwtProvider;
 import com.flowerbowl.web.repository.UserRepository;
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.MalformedJwtException;
-import io.jsonwebtoken.SignatureException;
-import io.jsonwebtoken.UnsupportedJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.access.AccessDeniedException;
+import net.minidev.json.JSONObject;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
@@ -63,6 +60,18 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             }
 
             User user = userRepository.findByUserId(userId);
+            if (user == null) {
+                filterChain.doFilter(request, response);
+                response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                response.setContentType("application/json; charset=UTF-8");
+
+                JSONObject responseJson = new JSONObject();
+                responseJson.put("code", ResponseCode.NOT_EXIST_USER);
+                responseJson.put("message", ResponseMessage.NOT_EXIST_USER);
+
+                response.getWriter().print(responseJson);
+                return;
+            }
             Role role = user.getUserRole(); // role: ROLE_ADMIN, ROLE_USER, ROLE_CHEF
 
             List<GrantedAuthority> authorities = new ArrayList<>();
