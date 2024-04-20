@@ -3,7 +3,7 @@ import "./ViewListStyle.css";
 import Button from "@mui/material/Button";
 import RecipeReviewCard from "../Component/CardComp";
 import Bookmark from "../Component/Bookmark";
-import { Link, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { url } from "../url";
 import ButtonOutlinedStyle from "../Component/ButtonOutlinedStyle";
@@ -13,40 +13,50 @@ import ButtonContainStyle from "../Component/ButtonContainStyle";
 const ViewList = () => {
   const [listData, setListData] = useState([]);
   const navigator = useNavigate();
-  const accessToken = useSelector(
-    (state) => state.persistedReducer.accessToken
-  );
+  const accessToken = useSelector((state) => state.accessToken);
+  const location = useLocation();
+  const keyword = (location.state && location.state.keyword) || '';
 
   useEffect(() => {
-    {
-      /* 로그인 여부에 따른 정보 호출 */
-    }
-    if (accessToken === "") {
-      axios
-        .get(`${url}/api/recipes/guest`)
-        .then((res) => {
+    if (keyword !== '') {
+      axios.get(`${url}/api/search/recipes?keyword=${keyword}&page=1&size=10`)
+      .then(res => {
+          setListData(res.data.recipes);
+          //setPageInfo(res.data.pageInfo);
           console.log(res);
-          setListData(res.data.posts);
-        })
-        .catch((err) => {
+      })
+      .catch(err => {
           console.log(err);
-        });
+      })
     } else {
-      axios
-        .get(`${url}/api/recipes`, {
-          headers: {
-            Authorization: accessToken,
-          },
-        })
-        .then((res) => {
-          console.log(res);
-          setListData(res.data.posts);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+      { /* 로그인 여부에 따른 정보 호출 */ }
+      if (accessToken === "") {
+        axios
+          .get(`${url}/api/recipes/guest`)
+          .then((res) => {
+            console.log(res);
+            setListData(res.data.posts);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      } else {
+        axios
+          .get(`${url}/api/recipes`, {
+            headers: {
+              Authorization: accessToken,
+            },
+          })
+          .then((res) => {
+            console.log(res);
+            setListData(res.data.posts);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      }
     }
-  }, []);
+  }, [keyword, accessToken]);
 
   {
     /* 북마크 동작 */
@@ -118,18 +128,19 @@ const ViewList = () => {
           listData.map((data, index) => (
             <div style={{ position: "relative" }}>
               <Bookmark
-                check={data.recipeLikeStatus}
+                check={data.recipe_like_status}
                 sx={{ cursor: "point" }}
-                onClick={(e) => clickBookmark(e, data.recipeNo)}
+                onClick={(e) => clickBookmark(e, data.recipe_no)}
               />
               <RecipeReviewCard
                 key={index}
-                onClick={(e) => clickDetail(e, data.recipeNo)}
-                title={data.recipeTitle}
-                like_count={data.recipeLikeCount}
-                comment_count={data.recipeCommentCount}
-                sname={data.recipeSname}
-                date={data.recipeDate}
+                onClick={(e) => clickDetail(e, data.recipe_no)}
+                title={data.recipe_title}
+                like_count={data.recipe_like_count}
+                comment_count={data.recipe_comment_count}
+                sname={data.recipe_sname}
+                date={data.recipe_date}
+                type={true}
               />
             </div>
           ))}
