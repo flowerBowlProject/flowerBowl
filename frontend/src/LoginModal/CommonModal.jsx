@@ -26,7 +26,20 @@ const handleLogin= async(e,user,dispatch=()=>{})=>{
         user_id:user.id,
         user_password:user.pw
     });
+
     dispatch({type:"accessToken",payload:response.data.access_token})
+
+    try{
+        const nickname = await axios.get(`${url}/api/users/info`,{
+            headers:{
+                Authorization : `Bearer ${response.data.access_token}`
+            }
+        });
+        dispatch({type:"nickname",payload:nickname.data.user_nickname});
+    }catch(error){
+        console.log(error);
+    }
+    
     }catch(error){
         console.error(error);
     }
