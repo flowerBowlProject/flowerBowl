@@ -8,20 +8,22 @@ import { useSelector } from "react-redux";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { url } from "../url";
+import ButtonOutlined from "../Component/ButtonOutlined";
 
 const RecipeDetail = () => {
     const [recipeData, setRecipeData] = useState({ });
     const navigator = useNavigate();
     const accessToken = useSelector((state) => state.accessToken);
+    const writer = useSelector((state)=>state.nickname);
+    console.log(writer)
     const { recipe_no } = useParams();
-
-    console.log(accessToken);
 
     useEffect(()=>{
         if(accessToken === ''){
             axios.get(`${url}/api/recipes/guest/${recipe_no}`)
             .then(res=>{
-                console.log(res);
+                console.log(res.data.data);
+                setRecipeData(res.data.data);
             })
             .catch(err=>{
                 console.log(err);
@@ -34,12 +36,35 @@ const RecipeDetail = () => {
             })
             .then(res=>{
                 console.log(res);
+                setRecipeData(res.data.data)
             })
             .catch(err=>{
                 console.log(err);
             })
         }
-    },[])
+    },[recipe_no])
+
+    {/* 수정 페이지로 이동 */}
+    const clickModify = () =>{
+        navigator(`/modifyRecipe/${recipe_no}`)
+    }
+
+    {/* 게시글 삭제 */}
+    const clickDelete = () =>{
+        axios.delete(`${url}/api/recipes/${recipe_no}`,{
+            headers:{
+                Authorization: `Bearer ${accessToken}`
+            }
+        })
+        .then(res=>{
+            console.log(res);
+            // alert 창 띄우로 리스트 페이지로 이동 navigator('/recipeList');
+        })
+        .catch(err=>{
+            console.log(err);
+        })
+    }
+
     return (
         <>
             <div className="recipeDetail-Box">
@@ -69,8 +94,8 @@ const RecipeDetail = () => {
                     <TurnedInIcon sx={{ fontSize: '60px', color: 'main.or' }} />} 스크랩 </div>
                 {/* 수정/삭제 버튼 - 작성자인 경우에만 true로 버튼 표시 */}
                 <div className="recipe-change">
-                    {true && <ButtonContain size='large' text='로그인'/>} &nbsp;
-                    {true && <ButtonContain size='large' text='로그인'/>}
+                    {writer === recipeData.recipe_writer && <ButtonOutlined size='large' text='수정' handleClick={clickModify}/>} &nbsp;
+                    {writer === recipeData.recipe_writer && <ButtonContain size='large' text='삭제' handleClick={clickDelete}/>}
                 </div>
             </div>
             <div>
