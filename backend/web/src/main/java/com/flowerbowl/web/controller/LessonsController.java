@@ -84,6 +84,6 @@ public class LessonsController {
     // 클래스 즐겨찾기 해제 // DELETE
     @DeleteMapping(value = "/user/lessons/like/{lesson_no}")
     public ResponseEntity<ResponseDto> lessonUnlike(@AuthenticationPrincipal String userId, @PathVariable(value = "lesson_no") Long lesson_no){
-        return lessonService.LessonUnlike(lesson_no, "test");
+        return lessonService.LessonUnlike(lesson_no, userId);
     }
 }
