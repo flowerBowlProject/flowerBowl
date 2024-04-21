@@ -1,14 +1,45 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import './RecipeDetailStyle.css';
 import TurnedInNotIcon from '@mui/icons-material/TurnedInNot';
 import TurnedInIcon from '@mui/icons-material/TurnedIn';
 import Comment from "../Component/Comment/Comment";
 import ButtonContain from "../Component/ButtonContain";
+import { useSelector } from "react-redux";
+import { useParams, useNavigate } from "react-router-dom";
+import axios from "axios";
+import { url } from "../url";
+
 const RecipeDetail = () => {
-    const [recipeData, setRecipeData] = useState({
-        recipe_title: '레시피 제목', recipe_sname: '', recipe_writer: '작성자1',
-        recipe_date: '2024-04-03', recipe_stuff: '', recipe_category: '밥', recipe_content: '레시피 내용', recipe_like_status: false
-    });
+    const [recipeData, setRecipeData] = useState({ });
+    const navigator = useNavigate();
+    const accessToken = useSelector((state) => state.accessToken);
+    const { recipe_no } = useParams();
+
+    console.log(accessToken);
+
+    useEffect(()=>{
+        if(accessToken === ''){
+            axios.get(`${url}/api/recipes/guest/${recipe_no}`)
+            .then(res=>{
+                console.log(res);
+            })
+            .catch(err=>{
+                console.log(err);
+            })
+        }else{
+            axios.get(`${url}/api/recipes/${recipe_no}`,{
+                headers:{
+                    Authorization : `Bearer ${accessToken}`
+                }
+            })
+            .then(res=>{
+                console.log(res);
+            })
+            .catch(err=>{
+                console.log(err);
+            })
+        }
+    },[])
     return (
         <>
             <div className="recipeDetail-Box">
