@@ -12,9 +12,10 @@ import { useSelector } from "react-redux";
 const BookmarkRecipe = () => {
   const navigator = useNavigate();
   const [listData, setListData] = useState([]);
-  const accessToken = useSelector(
-    (state) => state.persistedReducer.accessToken
-  );
+  const accessToken = useSelector((state) => state.accessToken);
+
+  //액세스토큰 확인
+  // console.log("Access Token:", accessToken);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -35,8 +36,8 @@ const BookmarkRecipe = () => {
     fetchData();
   }, [accessToken]);
 
-  //북마크 해제 하는 걸로 다시 짜자!!!
-  const clickBookmark = async (e, recipeNo) => {
+  //북마크 해제
+  const byeBookmark = async (recipeNo) => {
     try {
       const response = await axios.post(
         `${url}/api/recipes/like/${recipeNo}`,
@@ -47,8 +48,16 @@ const BookmarkRecipe = () => {
           },
         }
       );
-      const bookmark = response.data.recipeLikeNo === undefined ? true : false;
-      console.log("Bookmark state:", bookmark);
+      if (response.status === 200) {
+        // 성공적으로 처리되면 상태에서 해당 레시피의 'recipeLikeStatus'를 변경
+        const updatedList = listData.map((item) => {
+          if (item.recipeNo === recipeNo) {
+            return { ...item, recipeLikeStatus: false }; // 'recipeLikeStatus'를 false로 설정
+          }
+          return item;
+        });
+        setListData(updatedList);
+      }
     } catch (error) {
       console.error("Error in bookmark toggle:", error);
     }
@@ -85,7 +94,7 @@ const BookmarkRecipe = () => {
               <Bookmark
                 check={data.recipeLikeStatus}
                 sx={{ cursor: "pointer" }}
-                onClick={(e) => clickBookmark(e, data.recipeNo)}
+                onClick={() => byeBookmark(data.recipeNo)}
               />
               <RecipeReviewCard
                 onClick={(e) => clickDetail(e, data.recipeNo)}
@@ -98,7 +107,7 @@ const BookmarkRecipe = () => {
             </div>
           ))
         ) : (
-          <p>No recipes liked yet.</p>
+          <p>아직 북마크한 레시피가 없습니다.</p>
         )}
       </div>
 
