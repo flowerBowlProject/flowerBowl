@@ -44,6 +44,7 @@ public class AdminServiceImpl implements AdminService {
                 chefCandidiateDto.setLicense_oname(tmp.getLicenseFileOname());
                 chefCandidiateDto.setLicense_status(false);
                 chefCandidiateDto.setUser_no(tmp.getUser().getUserNo());
+                chefCandidiateDto.setUser_name(tmp.getUser().getUserNickname());
 
                 chefResponseDto.getCandidiate().add(chefCandidiateDto);
             }
