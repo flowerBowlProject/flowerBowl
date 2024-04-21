@@ -128,6 +128,9 @@ public class LessonServiceImpl implements LessonService {
             if(!lesson.getUser().getUserId().equals(userId)){
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseDto("FA", "해당하는 user가 작성한 lesson이 아닙니다."));
             }
+            if(lesson.getLessonDeleteStatus()){
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseDto("FA", "이미 삭제된 클래스입니다."));
+            }
             lesson.setLessonDeleteStatus(true);
             return ResponseEntity.status(HttpStatus.OK).body(new ResponseDto());
         }catch (Exception e){
