@@ -124,7 +124,7 @@ public class LessonServiceImpl implements LessonService {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseDto("FA", "userId에 대응되는 user가 없습니다."));
             }
             Lesson lesson = lessonJpaDataRepository.findLessonByLessonNo(lesson_no);
-            if(lesson.getUser().getUserId() != userId){
+            if(!lesson.getUser().getUserId().equals(userId)){
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseDto("FA", "해당하는 user가 작성한 lesson이 아닙니다."));
             }
             lesson.setLessonDeleteStatus(true);
