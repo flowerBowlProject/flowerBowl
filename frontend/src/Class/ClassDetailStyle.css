@@ -4,7 +4,6 @@
     border-top: 2px solid #B9835C;
     border-bottom: 2px solid #B9835C;
     min-height: 50vw;
-    
 }
 
 /* 클래스 썸네일 */
@@ -12,7 +11,8 @@
     border-radius: 30px;
     border: 2px solid #F6C47B;
     width: 70%;
-    height: 350px;
+    min-height: 25vw;
+    max-height: 40vw;
     margin: 2% auto;
 }
 
@@ -74,7 +74,7 @@ a{
     margin: 40px auto;
     font-size: 1.2rem;
     padding: 0 5%;
-    min-height: 30vw;
+    min-height: 20vw;
     width: 70%;
 }
 
