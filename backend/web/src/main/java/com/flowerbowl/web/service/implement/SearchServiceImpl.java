@@ -57,8 +57,10 @@ public class SearchServiceImpl implements SearchService {
                     iter.setRecipe_likes_status(false);
                 }
             }
-            List<LessonShortDto> lessonList = jpaDataLessonRepository.findAllByLessonTitleContainingOrLessonContentContainingOrderByLessonNo(keyword, keyword, pageable)
+            List<LessonShortDto> lessonList = jpaDataLessonRepository.findLessonByLessonDeleteStatusAndLessonTitleContainingOrLessonContentContainingOrderByLessonNoDesc(false, keyword, keyword, pageable)
                     .map(LessonShortDto::from).getContent();
+//            List<LessonShortDto> lessonList = jpaDataLessonRepository.findAllByLessonTitleContainingOrLessonContentContainingOrderByLessonNo(keyword, keyword, pageable)
+//                    .map(LessonShortDto::from).getContent();
             for(LessonShortDto iter : lessonList){
                 Long lessonNo = iter.getLesson_no();
                 iter.setLesson_likes_num(lessonLikeRepository.countLessonLikeByLesson_LessonNo(lessonNo));
@@ -108,7 +110,9 @@ public class SearchServiceImpl implements SearchService {
     @Override
     public ResponseEntity<? super SearchLessonResponseDto> searchLesson(Pageable pageable, String keyword, Boolean loginStatus, String userId){
         try{
-            Page<Lesson> page = jpaDataLessonRepository.findAllByLessonTitleContainingOrLessonContentContainingOrderByLessonNo(keyword, keyword, pageable);
+//            Page<Lesson> page = jpaDataLessonRepository.findAllByLessonTitleContainingOrLessonContentContainingOrderByLessonNo(keyword, keyword, pageable);
+//            Page<Lesson> page = jpaDataLessonRepository.findAllByLessonTitleContainingOrLessonContentContainingAndLessonDeleteStatusOrderByLessonNo(keyword, keyword, false, pageable);
+            Page<Lesson> page = jpaDataLessonRepository.findLessonByLessonDeleteStatusAndLessonTitleContainingOrLessonContentContainingOrderByLessonNoDesc(false, keyword, keyword, pageable);
             PageInfo pageInfo = new PageInfo(page.getTotalPages(), page.getTotalElements());
             List<LessonShortDto> lessonList = page.map(LessonShortDto::from).getContent();
             // 즐겨찾기 수

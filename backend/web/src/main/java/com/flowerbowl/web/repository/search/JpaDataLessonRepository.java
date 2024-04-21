@@ -14,4 +14,6 @@ public interface JpaDataLessonRepository extends JpaRepository<Lesson, Long> {
     Page<Lesson> findAllByOrderByLessonNoDesc(Pageable pageable);
     Page<Lesson> findAllByLessonTitleContainingOrLessonContentContainingOrderByLessonNo(String keyword1, String keyword2, Pageable pageable);
     Page<Lesson> findAllByLessonTitleContaining(String query2, Pageable pageable);
+    Page<Lesson> findAllByLessonTitleContainingOrLessonContentContainingAndLessonDeleteStatusOrderByLessonNo(String keyword1, String keyword2, Boolean deleteStatus, Pageable pageable);
+    Page<Lesson> findLessonByLessonDeleteStatusAndLessonTitleContainingOrLessonContentContainingOrderByLessonNoDesc(Boolean deleteStatue, String keyword1, String keyword2, Pageable pageable);
 }
