@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import './CommunityDetailStyle.css';
 import { useLocation } from "react-router";
 import { useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useParams,useNavigate } from 'react-router-dom';
 import  axios  from "axios";
 import { url } from "../url";
 import Comment from "../Component/Comment/Comment";
@@ -10,18 +10,19 @@ import ButtonContain from "../Component/ButtonContain";
 import ButtonOutlined from "../Component/ButtonOutlined";
 
 const CommunityDetail = () => {
-    const [communityData, setCommunityData] = useState({ communityTitle: '커뮤니티 제목', communityContent: '커뮤니티 내용' });
+    const [communityData, setCommunityData] = useState({});
 
     const location = useLocation();
     const navigate = useNavigate();
-    const communityNo = location.state?.community_no;
-    const accessToken = useSelector(state => state.persistedReducer.accessToken);
+    const accessToken = useSelector(state => state.accessToken);
+    const { community_no } = useParams();
 
     {/* 데이터 불러오기 */}
     useEffect(()=>{
-        axios.get(`${url}/api/communities/${communityNo}`)
+        axios.get(`${url}/api/communities/detail/${community_no}`)
         .then(res=>{
             console.log(res);
+            setCommunityData()
         })
         .catch(err=>{
             console.log(err);
@@ -31,13 +32,13 @@ const CommunityDetail = () => {
     {/* 커뮤니티 수정 */}
     const handleModify = (e) =>{
         e.preventDefault();
-        navigate('/modifyCommunity/' + communityNo);
+        navigate('/modifyCommunity/' + community_no);
     }
 
     {/* 커뮤니티 삭제 */}
     const handleDelete = () =>{
         {/* alert 창 띄우기 */}
-        axios.delete(`${url}/api/communities/${communityNo}`,
+        axios.delete(`${url}/api/communities/${community_no}`,
         {
             headers:{
                 Authorization: accessToken
