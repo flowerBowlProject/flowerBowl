@@ -17,8 +17,6 @@ const ViewList = () => {
   const location = useLocation();
   const keyword = (location.state && location.state.keyword) || '';
 
-  console.log(accessToken)
-
   useEffect(() => {
     if (keyword !== '') {
       axios.get(`${url}/api/search/recipes?keyword=${keyword}&page=1&size=10`)
@@ -64,8 +62,6 @@ const ViewList = () => {
     /* 북마크 동작 */
   }
   const clickBookmark = (e, index, recipeNo) => {
-    console.log(recipeNo);
-    console.log(accessToken);
     if (accessToken === "") {
       {
         /* 로그인이 되어있지 않은 경우 - 로그인 후 이용 가능 alrt - 변수명 수정 후 확인 필요*/
@@ -79,8 +75,6 @@ const ViewList = () => {
           },
         })
         .then((res) => {
-          console.log(res);
-          console.log(recipeNo);
           const bookmark = res.data.recipeLikeNo == undefined ? false : true;
           console.log(bookmark);
           setListData((listData) => {
@@ -144,7 +138,7 @@ const ViewList = () => {
               />
               <RecipeReviewCard
                 onClick={(e) => clickDetail(e, data.recipe_no)}
-                title={data.recipeTitle}
+                title={data.recipe_title}
                 like_count={data.recipe_like_count}
                 comment_count={data.recipe_comment_count}
                 sname={data.recipe_sname}
