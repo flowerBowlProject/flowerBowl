@@ -8,6 +8,7 @@ import storage from "redux-persist/lib/storage";
 export const initialState = {
   member: { memberNo: "" },
   accessToken: "",
+  nickname:""
 };
 
 
@@ -24,6 +25,8 @@ const reducer = (currentState, action) => {
     case "accessToken":
       newState.accessToken = action.payload;
       break;
+    case "nickname":
+      newState.nickname = action.payload;
     default:
   }
   return newState;
