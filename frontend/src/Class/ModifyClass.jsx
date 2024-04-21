@@ -28,7 +28,7 @@ const RegisterClass = () => {
 
     useEffect(() => {
         {/* 수정할 정보 가져와 세팅 */ }
-        axios.get(`${url}/api/user/lessons/${lesson_no}`)
+                axios.get(`${url}/api/user/lessons/${lesson_no}`)
             .then(res => {
                 console.log(res);
                 setRegisterData(res.data.lesson);

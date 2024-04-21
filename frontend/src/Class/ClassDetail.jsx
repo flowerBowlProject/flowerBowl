@@ -8,6 +8,7 @@ import ButtonContain from "../Component/ButtonContain";
 import { useSelector } from "react-redux";
 import { useNavigate, useParams } from 'react-router-dom';
 import ButtonOutlined from "../Component/ButtonOutlined";
+import { Viewer } from "@toast-ui/react-editor";
 
 
 const { kakao } = window;
@@ -88,7 +89,7 @@ const ClassDetail = () => {
         })
         .then(res=>{
             console.log(res);
-            navigator('/classList');
+            //navigator('/classList');
         })
         .catch(err=>{
             console.log(err);
@@ -122,7 +123,7 @@ const ClassDetail = () => {
                 <div className="class-addr">
                     장소 : {classData.lesson_addr}
                 </div>
-                <div className='class-body'>{classData.lesson_contents}</div>
+                <div className='class-body'><Viewer initialValue={classData.lesson_contents || ''} /></div>
 
                 {/* 즐겨찾기 버튼 - 즐겨찾기 여부에 따른 true / false로 아이콘 표시 */}
                 <div className="class-bookmark">{classData.lesson_likes_status === true ? <TurnedInIcon sx={{ fontSize: '60px', color: 'main.or' }} /> :
