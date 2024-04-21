@@ -9,4 +9,5 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
 
     List<Comment> findAllByRecipe_RecipeNo(Long recipeNo);
 
+    Long countAllByRecipe_RecipeNo(Long recipeNo);
 }

@@ -13,4 +13,7 @@ public interface RecipeLikeRepository extends JpaRepository<RecipeLike, Long>, J
 
     List<RecipeLike> findAllByUser_UserNo(Long userNo);
 
+    Long countAllByRecipe_RecipeNo(Long recipeNo);
+
+    Boolean existsRecipeLikeByRecipe_RecipeNoAndUser_UserId(Long recipeNo, String userId);
 }
