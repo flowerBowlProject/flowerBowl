@@ -12,29 +12,29 @@ import java.util.List;
 @AllArgsConstructor
 public class GetRecipeDto {
 
-    private Long recipeNo;
+    private Long recipe_no;
 
-    private String recipeOname;
+    private String recipe_oname;
 
-    private String recipeSname;
+    private String recipe_sname;
 
-    private List<String> recipeFileOname;
+    private List<String> recipe_file_oname;
 
-    private List<String> recipeFileSname;
+    private List<String> recipe_file_sname;
 
-    private String recipeTitle;
+    private String recipe_title;
 
-    private String recipeWriter;
+    private String recipe_writer;
 
-    private LocalDate recipeDate;
+    private LocalDate recipe_date;
 
-    private List<String> recipeStuff;
+    private List<String> recipe_stuff;
 
-    private Category recipeCategory;
+    private Category recipe_category;
 
-    private String recipeContent;
+    private String recipe_content;
 
     // 사용자 즐겨찾기 여부
-    private Boolean recipeLikeStatus;
+    private Boolean recipe_like_status;
 
 }
