@@ -17,17 +17,19 @@ const ViewList = () => {
   const location = useLocation();
   const keyword = (location.state && location.state.keyword) || '';
 
+  console.log(accessToken)
+
   useEffect(() => {
     if (keyword !== '') {
       axios.get(`${url}/api/search/recipes?keyword=${keyword}&page=1&size=10`)
-      .then(res => {
+        .then(res => {
           setListData(res.data.recipes);
           //setPageInfo(res.data.pageInfo);
           console.log(res);
-      })
-      .catch(err => {
+        })
+        .catch(err => {
           console.log(err);
-      })
+        })
     } else {
       { /* 로그인 여부에 따른 정보 호출 */ }
       if (accessToken === "") {
@@ -44,7 +46,7 @@ const ViewList = () => {
         axios
           .get(`${url}/api/recipes`, {
             headers: {
-              Authorization: accessToken,
+              Authorization: `Bearer ${accessToken}`,
             },
           })
           .then((res) => {
@@ -61,26 +63,33 @@ const ViewList = () => {
   {
     /* 북마크 동작 */
   }
-  const clickBookmark = (e, recipeNo) => {
+  const clickBookmark = (e, index, recipeNo) => {
+    console.log(recipeNo);
+    console.log(accessToken);
     if (accessToken === "") {
       {
-        /* 로그인이 되어있지 않은 경우 - 로그인 후 이용 가능 alrt */
+        /* 로그인이 되어있지 않은 경우 - 로그인 후 이용 가능 alrt - 변수명 수정 후 확인 필요*/
       }
       console.log("로그인 후 이용 가능");
     } else {
       axios
         .post(`${url}/api/recipes/like/${recipeNo}`, {
           headers: {
-            Authorization: accessToken,
+            Authorization: `Bearer ${accessToken}`,
           },
         })
         .then((res) => {
-          const bookmark = res.data.recipeLikeNo == undefined ? true : false;
+          console.log(res);
+          console.log(recipeNo);
+          const bookmark = res.data.recipeLikeNo == undefined ? false : true;
           console.log(bookmark);
-          {
-            /* recipe_like_no 여부에 따른 t/f 관리 진행 */
-          }
-        })
+          setListData((listData) => {
+            const updatedList = { ...listData[index], recipeLikeStatus: bookmark };
+            const newListData = [...listData.slice(0, index), updatedList, ...listData.slice(index + 1)];
+            return newListData;
+          })
+          console.log(listData)
+    })
         .catch((err) => {
           {
             /* 토큰 만료에 대한 처리 진행 */
@@ -128,14 +137,14 @@ const ViewList = () => {
           listData.map((data, index) => (
             <div style={{ position: "relative" }}>
               <Bookmark
-                check={data.recipe_like_status}
+                key={index}
+                check={data.recipeLikeStatus}
                 sx={{ cursor: "point" }}
-                onClick={(e) => clickBookmark(e, data.recipe_no)}
+                onClick={(e) => clickBookmark(e, index, data.recipe_no)}
               />
               <RecipeReviewCard
-                key={index}
                 onClick={(e) => clickDetail(e, data.recipe_no)}
-                title={data.recipe_title}
+                title={data.recipeTitle}
                 like_count={data.recipe_like_count}
                 comment_count={data.recipe_comment_count}
                 sname={data.recipe_sname}
