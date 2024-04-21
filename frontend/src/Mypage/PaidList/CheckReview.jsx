@@ -3,36 +3,44 @@ import "./CheckReview.css";
 import ButtonContain from "../../Component/ButtonContain";
 import ButtonOutlined from "../../Component/ButtonOutlined";
 import { Link } from "react-router-dom";
+import axios from "axios";
+import { url } from "../../url";
+import { useSelector } from "react-redux";
 
 const CheckReview = () => {
   // 정렬기능
   const [sortDirection, setSortDirection] = useState("asc");
   const [sortDirectionRating, setSortDirectionRating] = useState("asc");
+  const [listData, setListData] = useState([]);
+  const accessToken = useSelector((state) => state.accessToken);
 
-  // 받아올 테이블 데이터
-  const [tableData, setTableData] = useState([
-    {
-      date: "2024/02/20",
-      description: "화이트데이 초콜릿 만들기 클래스",
-      chef: "@내꿈은너야",
-      rating: 3,
-    },
-    {
-      date: "2023/12/25",
-      description: "크리스마스 스페셜 만들기",
-      chef: "@메리크리스마스",
-      rating: 5,
-    },
-  ]);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(`${url}/api/reviews`, {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
+        setListData(response.data.writtenReviews);
+        //코드 확인
+        // console.log(response.data.likeRecipes);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        setListData([]);
+      }
+    };
+    fetchData();
+  }, [accessToken]);
 
   //   날짜정렬
   const sortTableDataByDate = (direction = "asc") => {
-    const sortedData = [...tableData].sort((a, b) => {
-      const dateA = new Date(a.date);
-      const dateB = new Date(b.date);
+    const sortedData = [...listData].sort((a, b) => {
+      const dateA = new Date(a.review_date);
+      const dateB = new Date(b.review_date);
       return direction === "asc" ? dateB - dateA : dateA - dateB;
     });
-    setTableData(sortedData);
+    setListData(sortedData);
   };
 
   const toggleSortDirection = () => {
@@ -51,12 +59,12 @@ const CheckReview = () => {
   const toggleSortDirectionRating = () => {
     setSortDirectionRating((prevDirection) => {
       const newDirection = prevDirection === "asc" ? "desc" : "asc";
-      sortDataByAttribute("rating", newDirection); // Sort data after updating the direction
+      sortDataByAttribute("review_score", newDirection); // Sort data after updating the direction
       return newDirection;
     });
   };
   const sortDataByAttribute = (attribute, direction) => {
-    const sortedData = [...tableData].sort((a, b) => {
+    const sortedData = [...listData].sort((a, b) => {
       const valueA = a[attribute];
       const valueB = b[attribute];
 
@@ -67,7 +75,7 @@ const CheckReview = () => {
       }
     });
 
-    setTableData(sortedData);
+    setListData(sortedData);
   };
 
   return (
@@ -131,40 +139,34 @@ const CheckReview = () => {
             </tr>
           </thead>
           <tbody>
-            {[...tableData, ...Array(8 - tableData.length)].map(
-              (item, index) => (
-                <tr key={index}>
-                  <td>{item ? index + 1 : ""}</td>
-                  <td>{item ? item.date : ""}</td>
-                  <td>{item ? item.description : ""}</td>
-                  <td>{item ? item.chef : ""}</td>
-                  <td>
-                    {item ? (
-                      <>
-                        <span className="star-filled">
-                          {"★".repeat(item.rating)}
-                        </span>
-                        <span className="star-empty">
-                          {"☆".repeat(5 - item.rating)}
-                        </span>
-                      </>
-                    ) : (
-                      ""
-                    )}
-                  </td>
-                  <td>
-                    {item ? (
-                      <ButtonOutlined size="verySmall" text="삭제" />
-                    ) : (
-                      ""
-                    )}
-                  </td>
-                  <td>
-                    {item ? <ButtonContain size="verySmall" text="수정" /> : ""}
-                  </td>
-                </tr>
-              )
-            )}
+            {[...listData, ...Array(8 - listData.length)].map((data, index) => (
+              <tr key={index}>
+                <td>{data ? index + 1 : ""}</td>
+                <td>{data ? data.review_date : ""}</td>
+                <td>{data ? data.lesson_title : ""}</td>
+                <td>{data ? data.lesson_writer : ""}</td>
+                <td>
+                  {data ? (
+                    <>
+                      <span className="star-filled">
+                        {"★".repeat(data.review_score)}
+                      </span>
+                      <span className="star-empty">
+                        {"☆".repeat(5 - data.review_score)}
+                      </span>
+                    </>
+                  ) : (
+                    ""
+                  )}
+                </td>
+                <td>
+                  {data ? <ButtonOutlined size="verySmall" text="삭제" /> : ""}
+                </td>
+                <td>
+                  {data ? <ButtonContain size="verySmall" text="수정" /> : ""}
+                </td>
+              </tr>
+            ))}
           </tbody>
         </table>
       </section>
