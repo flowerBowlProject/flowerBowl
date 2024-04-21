@@ -7,11 +7,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class UpRecipeLikeSuResDto extends RecipeResponseDto {
 
-    private Long recipeLikeNo;
+    private Long recipe_like_no;
 
     public UpRecipeLikeSuResDto(String code, String message, Long recipeLikeNo) {
         super(code, message);
-        this.recipeLikeNo = recipeLikeNo;
+        this.recipe_like_no = recipeLikeNo;
     }
 
 }
