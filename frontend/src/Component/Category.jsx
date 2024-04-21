@@ -60,7 +60,7 @@ const Category = (props) => {
           <MenuItem value={"김치/젓갈"}>김치/젓갈</MenuItem>
           <MenuItem value={"퓨전"}>퓨전</MenuItem>
           <MenuItem value={"튀김류"}>튀김류</MenuItem>
-          <MenuItem value={"음료/술"}>음료/술</MenuItem>
+          <MenuItem value={"음료/술"}>음료/주류</MenuItem>
 
         </Select>
       </FormControl>
