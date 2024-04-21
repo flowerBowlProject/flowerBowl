@@ -13,12 +13,14 @@ import  axios  from "axios";
 import { url } from "../url";
 import { useSelector } from 'react-redux';
 import ButtonContain from "../Component/ButtonContain";
+import dayjs from "dayjs";
+import ButtonOutlined from "../Component/ButtonOutlined";
 
 const RegisterClass = () => {
-    const accessToken = useSelector(state => state.persistedReducer.accessToken);
+    const accessToken = useSelector(state => state.accessToken);
     {/* 등록 클래스 데이터 + 썸네일 + 썸네일 선택 여부 */ }
     const [registerData, setRegisterData] = useState({
-        lesson_title: '', lesson_category: '', lesson_price: 0, lesson_sname:'', lesson_oname:'',
+        lesson_title: '', lesson_category: '', lesson_price: 0, lesson_sname:'짜장면', lesson_oname:'짜장면',
         lesson_address: '', lesson_content: '', lesson_longitude: 0.0, lesson_latitude: 0.0, lesson_start: '', lesson_end: '', lesson_URL: ''
     });
     const [thumbnail, setThumbnail] = useState(null);
@@ -65,9 +67,10 @@ const RegisterClass = () => {
     {/* 클래스 등록 */}
     const handleRegister = () =>{
         console.log(registerData);
-        axios.post(`${url}/api/lesson`, registerData, {
+        
+        axios.post(`${url}/api/lessons`, registerData, {
             headers: {
-                Authorization: accessToken
+                Authorization: `Bearer ${accessToken}`
             }
         })
         .then(res=>{
@@ -109,20 +112,25 @@ const RegisterClass = () => {
             <div className="classElement1-Box">
                 {/* 가격 */}
                 <div className="classPrice">
-                    <TextField id="outlined-basic" label="가격" variant="outlined" type="number" 
-                        sx={{ width: '12vw', }} name="lesson_price" onChange={(e)=> setValue(e)} />
+                    <TextField id="outlined-basic" label="가격" variant="outlined" type="number" color="secondary"
+                        sx={{ width: '12vw' }} name="lesson_price" onChange={(e)=> setValue(e)} />
                 </div>
                 {/* 날짜 */}
                 <div className="calendar-Box">
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
                         <DemoContainer components={['DatePicker', 'DatePicker']}>
                             <DatePicker label="시작일"
-                                onChange={(newValue) => setRegisterData((registerData) => ({ ...registerData, lesson_start: newValue }))}
+                                onChange={(newValue) => {
+                                    const formatDate = dayjs(newValue).format('YYYY-MM-DD');
+                                    setRegisterData((registerData) => ({ ...registerData, lesson_start: formatDate }))}
+                                }
                             />
                             <DatePicker
                                 label="마감일"
-                                onChange={(newValue) => setRegisterData((registerData) => ({ ...registerData, lesson_end: newValue }))}
-                            />
+                                onChange={(newValue) => {
+                                    const formatDate = dayjs(newValue).format('YYYY-MM-DD');
+                                    setRegisterData((registerData) => ({ ...registerData, lesson_end: formatDate }))}
+                                }                            />
                         </DemoContainer>
                     </LocalizationProvider>
                 </div>
@@ -132,7 +140,7 @@ const RegisterClass = () => {
             <div className="classElement2-Box">
                 <AddressSearch getAddress={getAddress} />
                 <TextField id="outlined-basic" type="text" label="오픈 채팅" variant="outlined" readOnly sx={{ marginLeft: '1vw', width: '40vw' }} placeholder='오픈채팅 링크를 입력해 주세요.'
-                    name="lesson_URL" onChange={(e)=> setValue(e)} />
+                    name="lesson_URL" onChange={(e)=> setValue(e)} color="secondary"/>
             </div>
 
             {/* 레시피 || 클래스 상세 내용 작성란 */}
@@ -140,8 +148,8 @@ const RegisterClass = () => {
 
             <div style={{ border: "1px solid #CBA285", marginBottom: "2%" }} />
             <div className="register_button">
-            <ButtonContain size='large' text='로그인'/> &nbsp;
-            <ButtonContain size='large' text='로그인'/>
+            <ButtonOutlined size='large' text='등록' handleClick={handleRegister}/> &nbsp;
+            <ButtonContain size='large' text='취소'/>
             </div>
         </div>
     );
