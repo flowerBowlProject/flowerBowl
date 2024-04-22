@@ -10,6 +10,7 @@ import com.flowerbowl.web.dto.request.community.CrCommunityReqDto;
 import com.flowerbowl.web.dto.request.community.UpCommunityReqDto;
 import com.flowerbowl.web.dto.response.community.*;
 import com.flowerbowl.web.handler.CommunityNotFoundException;
+import com.flowerbowl.web.handler.DoesNotMatchException;
 import com.flowerbowl.web.handler.PageNotFoundException;
 import com.flowerbowl.web.handler.UserNotFoundException;
 import com.flowerbowl.web.repository.CommunityFileRepository;
@@ -40,7 +41,6 @@ public class CommunityServiceImpl implements CommunityService {
 
     @Override
     public ResponseEntity<? extends CommunityResponseDto> createCommunity(CrCommunityReqDto request, String userId) throws Exception {
-        // 아직 token으로부터 사용자 정보를 얻어오는 부분이 없음
         try {
             User user = userRepository.findByUserId(userId);
             if (user == null) {
@@ -76,13 +76,21 @@ public class CommunityServiceImpl implements CommunityService {
     }
 
     @Override
-    public ResponseEntity<? extends CommunityResponseDto> updateCommunity(UpCommunityReqDto request, Long community_no) throws Exception {
-        // 해당 커뮤니티 게시글의 작성자가 token으로부터 얻은 사용자와 일치하는지 검증하는 코드 필요
+    public ResponseEntity<? extends CommunityResponseDto> updateCommunity(UpCommunityReqDto request, Long community_no, String userId) throws Exception {
         try {
+            User user = userRepository.findByUserId(userId);
+            if (user == null) {
+                throw new UserNotFoundException();
+            }
+
             // 커뮤니티 번호로 커뮤니티 찾기
             Community community = communityRepository.findByCommunityNo(community_no).orElseThrow(CommunityNotFoundException::new);
             // 커뮤니티 번호로 커뮤니티 파일 찾기
             CommunityFile communityFile = communityFileRepository.findByCommunity_CommunityNo(community_no);
+
+            if (!user.getUserNo().equals(community.getUser().getUserNo())) {
+                throw new DoesNotMatchException();
+            }
 
             // 찾은 커뮤니티 게시글의 데이터를 수정
             community.updateTitle(request.getCommunity_title());
@@ -109,10 +117,19 @@ public class CommunityServiceImpl implements CommunityService {
     }
 
     @Override
-    public ResponseEntity<? extends CommunityResponseDto> deleteCommunity(Long community_no) throws Exception {
-        // 해당 커뮤니티 게시글의 작성자가 token으로부터 얻은 사용자와 일치하는지 검증하는 코드 필요
+    @Transactional
+    public ResponseEntity<? extends CommunityResponseDto> deleteCommunity(Long community_no, String userId) throws Exception {
         try {
+            User user = userRepository.findByUserId(userId);
+            if (user == null) {
+                throw new UserNotFoundException();
+            }
             Community community = communityRepository.findByCommunityNo(community_no).orElseThrow(CommunityNotFoundException::new);
+
+            if (!user.getUserNo().equals(community.getUser().getUserNo())) {
+                throw new DoesNotMatchException();
+            }
+
             communityRepository.delete(community);
 
             DelCommunityResDto responseBody = new DelCommunityResDto(ResponseCode.SUCCESS, ResponseMessage.SUCCESS);
