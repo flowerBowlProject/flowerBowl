@@ -39,19 +39,20 @@ public class CommunityServiceImpl implements CommunityService {
     private final UserRepository userRepository;
 
     @Override
-    public ResponseEntity<? extends CommunityResponseDto> createCommunity(CrCommunityReqDto request) throws Exception {
+    public ResponseEntity<? extends CommunityResponseDto> createCommunity(CrCommunityReqDto request, String userId) throws Exception {
         // 아직 token으로부터 사용자 정보를 얻어오는 부분이 없음
         try {
-            Long userNo = 2L;
-
-            User user = userRepository.findByUserNo(userNo).orElseThrow(UserNotFoundException::new);
+            User user = userRepository.findByUserId(userId);
+            if (user == null) {
+                throw new UserNotFoundException();
+            }
 
             // request의 값으로 Community Dto 생성
             CreateCommunityDto createCommunityDto = new CreateCommunityDto(
                     request.getCommunity_title(),
                     request.getCommunity_content(),
                     LocalDate.now(ZoneId.of("Asia/Seoul")),
-                    "라이언",
+                    user.getUserNickname(),
                     0L,
                     user
             );
