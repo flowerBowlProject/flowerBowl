@@ -22,13 +22,13 @@ public class CommunityController {
     }
 
     @PutMapping("{community_no}")
-    private ResponseEntity<? extends CommunityResponseDto> updateCommunity(@RequestBody UpCommunityReqDto request, @PathVariable Long community_no) throws Exception {
-        return communityService.updateCommunity(request, community_no);
+    private ResponseEntity<? extends CommunityResponseDto> updateCommunity(@RequestBody UpCommunityReqDto request, @PathVariable Long community_no, @AuthenticationPrincipal String userId) throws Exception {
+        return communityService.updateCommunity(request, community_no, userId);
     }
 
     @DeleteMapping("{community_no}")
-    private ResponseEntity<? extends CommunityResponseDto> deleteCommunity(@PathVariable Long community_no) throws Exception {
-        return communityService.deleteCommunity(community_no);
+    private ResponseEntity<? extends CommunityResponseDto> deleteCommunity(@PathVariable Long community_no, @AuthenticationPrincipal String userId) throws Exception {
+        return communityService.deleteCommunity(community_no, userId);
     }
 
     @GetMapping("/list")
