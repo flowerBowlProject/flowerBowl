@@ -12,7 +12,6 @@ const ToastEditor = (props) => {
             editorRef.current?.getInstance().setHTML(htmlString);
         }
     }, [props.setContent])
-    console.log(content);
 
     const changeContent = () =>{
         const data = editorRef.current.getInstance().getHTML();

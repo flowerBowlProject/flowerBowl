@@ -55,36 +55,51 @@ const ViewList = () => {
         } 
     },[keyword, accessToken])
 
-    const clickBookmark = (e, lesson_no, lesson_likes_status) =>{
+    const clickBookmark = (e, lesson_no, lesson_likes_status, index) =>{
         console.log("북마크 클릭");
+        console.log(accessToken)
         if(accessToken === ''){
             console.log('로그인 후 이용해 주세요.');
         }else{
             if(lesson_likes_status){
+                console.log('북마크 해제')
                 axios.delete(`${url}/api/user/lessons/like/${lesson_no}`,{
                     headers:{
                         Authorization : `Bearer ${accessToken}`
                     }
                 })
                 .then(res=>{
-                    console.log(res);
+                    console.log('북마크 해제 성공')
+                    setListData((listData) => {
+                        const updatedList = { ...listData[index], lesson_likes_status: false };
+                        const newListData = [...listData.slice(0, index), updatedList, ...listData.slice(index + 1)];
+                        return newListData;
+                      })
                 })
                 .catch(err=>{
                     console.log(err);
+                    console.log('북마크 해제 실패')
                 })
             }else{
+                console.log('북마크 등록')
                 axios.post(`${url}/api/user/lessons/like`,{
+                    "lesson_no" : lesson_no
+                },{
                     headers:{
                         Authorization : `Bearer ${accessToken}`
                     }
-                },{
-                    "lesson_no" : lesson_no
                 })
                 .then(res=>{
-                    console.log(res);
+                    console.log('북마크 등록 성공');
+                    setListData((listData) => {
+                        const updatedList = { ...listData[index], lesson_likes_status: true };
+                        const newListData = [...listData.slice(0, index), updatedList, ...listData.slice(index + 1)];
+                        return newListData;
+                      })
                 })
                 .catch(err=>{
                     console.log(err);
+                    console.log('북마크 등록 실패');
                 })
             }
         }
@@ -114,7 +129,7 @@ const ViewList = () => {
                 {/* 리스트 출력*/}
                 {listData.length !== 0 && listData.map((data, index) =>
                     <div style={{position:'relative'}} key={index} >
-                        <Bookmark sx={{cursor:'point'}} onClick={(e)=>clickBookmark(e, data.lesson_no, data.lesson_likes_status)} check={data.lesson_likes_status}/>
+                        <Bookmark sx={{cursor:'point'}} onClick={(e)=>clickBookmark(e, data.lesson_no, data.lesson_likes_status, index)} check={data.lesson_likes_status}/>
                         <RecipeReviewCard  onClick={(e)=> clickDetail(e, data.lesson_no)}
                             title={data.lesson_title} like_count={data.lesson_likes_num} comment_count={0} sname={data.lesson_sname} date={data.lesson_date} type={false}/>
                     </div>)}
