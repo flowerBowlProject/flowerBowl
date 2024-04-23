@@ -71,7 +71,7 @@ public class LessonsController {
 
     // 클래스 구매 // review_enable에도 넣어줘야함
     // POST
-    @PostMapping(value = "/lessons/buy")
+    @PostMapping(value = "/user/lessons/payments")
     public ResponseEntity<? super PaymentInfoResponseDto> lessonsBuy(@AuthenticationPrincipal String userId, @RequestBody PaymentInfoRequestDto paymentInfoRequestDto){
         return lessonService.buyLesson(paymentInfoRequestDto.getLesson_no(), userId);
     }
