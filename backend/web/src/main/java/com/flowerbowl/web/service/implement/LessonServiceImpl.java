@@ -139,26 +139,27 @@ public class LessonServiceImpl implements LessonService {
         }
     }
 
-    // 모든 클래스 조회(로그인) // 즐겨찾기 여부도 포함해서
+    // 클래스 조회(로그인 + 비로그인) // 즐겨찾기 여부도 포함해서
     @Override
-    public ResponseEntity<? super FindAllResponseDto> findAll(Pageable pageable, String userId){
+    public ResponseEntity<? super FindAllResponseDto> findAll(Pageable pageable, Boolean loginStatus, String userId){
         try{
-            User user = userRepository.findByUserId(userId);
-            if(user == null){
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseDto("FA", "해당하는 userId를 가진 user가 없습니다."));
-            }
-//            Long user_no = user.getUserNo(); // 이거 바꿔줘야 함
-//            List<LessonShortDto> list = lessonJpaDataRepository.findAllByOrderByLessonNoDesc(pageable)
-//                    .map(LessonShortDto::from).getContent();
-            Page<Lesson> page = lessonJpaDataRepository.findAllByOrderByLessonNoDesc(pageable);
+            Page<Lesson> page = lessonJpaDataRepository.findLessonByLessonDeleteStatusOrderByLessonNoDesc(false, pageable);
             PageInfo pageInfo = new PageInfo(page.getTotalPages(), page.getTotalElements());
             List<LessonShortDto> list = page.map(LessonShortDto::from).getContent();
             for(LessonShortDto tmp : list){
                 Long lesson_no = tmp.getLesson_no();
                 Long likes_no = muziLessonLikeRepository.countLessonLikeByLesson_LessonNo(lesson_no);
                 tmp.setLesson_likes_num(likes_no);
-                boolean like_status = muziLessonLikeRepository.existsByUser_UserNoAndLesson_LessonNo(user.getUserNo(), lesson_no);
-                tmp.setLesson_likes_status(like_status);
+                if(loginStatus){
+                    User user = userRepository.findByUserId(userId);
+                    if(user == null){
+                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseDto("FA", "해당하는 userId를 가진 user가 없습니다."));
+                    }
+                    boolean like_status = muziLessonLikeRepository.existsByUser_UserNoAndLesson_LessonNo(user.getUserNo(), lesson_no);
+                    tmp.setLesson_likes_status(like_status);
+                }else{
+                    tmp.setLesson_likes_status(false);
+                }
             }
             return ResponseEntity.status(HttpStatus.OK).body(new FindAllResponseDto("SU", "success",pageInfo, list));
         }catch (Exception e){
@@ -168,25 +169,25 @@ public class LessonServiceImpl implements LessonService {
     }
 
     // 모든 클래스 조회(비로그인) // 이거 위랑 합칠 수 있는지 고민
-    @Override
-    public ResponseEntity<? super FindAllResponseDto> findAllGuest(Pageable pageable){
-        try{
-//            List<LessonShortDto> list = lessonJpaDataRepository.findAllByOrderByLessonNoDesc(pageable)
-//                    .map(LessonShortDto::from).getContent();
-            Page<Lesson> page = lessonJpaDataRepository.findAllByOrderByLessonNoDesc(pageable);
-            PageInfo pageInfo = new PageInfo(page.getTotalPages(), page.getTotalElements());
-            List<LessonShortDto> list = page.map(LessonShortDto::from).getContent();
-            for(LessonShortDto tmp : list){
-                Long likes_num = muziLessonLikeRepository.countLessonLikeByLesson_LessonNo(tmp.getLesson_no());
-                tmp.setLesson_likes_num(likes_num);
-            }
-
-            return ResponseEntity.status(HttpStatus.OK).body(new FindAllResponseDto("SU", "success", pageInfo, list));
-        }catch (Exception e){
-            log.info("LessonService findAllGuest exception : {}",e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseDto("ISE", "Internal Server Error"));
-        }
-    }
+//    @Override
+//    public ResponseEntity<? super FindAllResponseDto> findAllGuest(Pageable pageable){
+//        try{
+////            List<LessonShortDto> list = lessonJpaDataRepository.findAllByOrderByLessonNoDesc(pageable)
+////                    .map(LessonShortDto::from).getContent();
+//            Page<Lesson> page = lessonJpaDataRepository.findAllByOrderByLessonNoDesc(pageable);
+//            PageInfo pageInfo = new PageInfo(page.getTotalPages(), page.getTotalElements());
+//            List<LessonShortDto> list = page.map(LessonShortDto::from).getContent();
+//            for(LessonShortDto tmp : list){
+//                Long likes_num = muziLessonLikeRepository.countLessonLikeByLesson_LessonNo(tmp.getLesson_no());
+//                tmp.setLesson_likes_num(likes_num);
+//            }
+//
+//            return ResponseEntity.status(HttpStatus.OK).body(new FindAllResponseDto("SU", "success", pageInfo, list));
+//        }catch (Exception e){
+//            log.info("LessonService findAllGuest exception : {}",e.getMessage());
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseDto("ISE", "Internal Server Error"));
+//        }
+//    }
 
     // 특정 클래스 조회(로그인) // 즐겨찾기 목록
     @Override
