@@ -20,6 +20,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -63,9 +64,11 @@ public class RecipeServiceImpl implements RecipeService {
             // 생성된 recipe를 db에 저장후 객체 반환
             Recipe recipe = recipeRepository.save(createRecipeDto.toEntity());
 
-            // request의 값으로 recipe file 생성 후 db에 저장
-            CreateRecipeFileDto createRecipeFileDto = new CreateRecipeFileDto(request.getRecipe_file_oname(), request.getRecipe_file_sname(), recipe);
-            recipeFileRepository.save(createRecipeFileDto.toEntity());
+            // request의 recipe_file_oname과 recipe_file_sname이 null이 아닐 때 해당 값으로 recipe file 생성 후 DB에 저장
+            if (!CollectionUtils.isEmpty(request.getRecipe_file_oname()) && !CollectionUtils.isEmpty(request.getRecipe_file_sname())) {
+                CreateRecipeFileDto createRecipeFileDto = new CreateRecipeFileDto(request.getRecipe_file_oname(), request.getRecipe_file_sname(), recipe);
+                recipeFileRepository.save(createRecipeFileDto.toEntity());
+            }
 
             CrRecipeSuResDto responseBody = new CrRecipeSuResDto(ResponseCode.CREATED, ResponseMessage.CREATED, recipe.getRecipeNo());
             return ResponseEntity.status(HttpStatus.CREATED).body(responseBody);
@@ -83,6 +86,7 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
+    @Transactional
     public ResponseEntity<? extends RecipeResponseDto> updateRecipe(UpRecipeReqDto request, Long recipe_no, String userId) throws Exception {
         try {
             User user = userRepository.findByUserId(userId);
@@ -99,7 +103,7 @@ public class RecipeServiceImpl implements RecipeService {
             }
 
             // request의 값이 비어있는지 체크가 필요할까...?고민 중
-            // 찾은 레시피의 데이터을 수정
+            // 찾은 레시피의 데이터를 수정
             recipe.updateTitle(request.getRecipe_title());
             recipe.updateCategory(request.getRecipe_category());
             recipe.updateStuff(request.getRecipe_stuff());
@@ -107,14 +111,26 @@ public class RecipeServiceImpl implements RecipeService {
             recipe.updateOname(request.getRecipe_oname());
             recipe.updateSname(request.getRecipe_sname());
 
-            // 찾은 레시피 파일의 데이터를 수정
-            recipeFile.updateFileOname(request.getRecipe_file_oname());
-            recipeFile.updateFileSname(request.getRecipe_file_sname());
-
-            // 수정된 레시피 데이터 저장
+            // 수정된 레시피 데이터 DB에 저장
             Recipe result = recipeRepository.save(recipe);
-            // 수정된 레시피 파일 데이터 저장
-            recipeFileRepository.save(recipeFile);
+
+            if (recipeFile != null) {
+                // 기존 recipe_file data가 있고 request의 recipe_file_oname과 recipe_file_sname이 null이 아니라면 해당 값으로 recipe file 수정 후 DB에 저장
+                if (!CollectionUtils.isEmpty(request.getRecipe_file_oname()) && !CollectionUtils.isEmpty(request.getRecipe_file_sname())) {
+                    recipeFile.updateFileOname(request.getRecipe_file_oname());
+                    recipeFile.updateFileSname(request.getRecipe_file_sname());
+
+                    recipeFileRepository.save(recipeFile);
+                } else { // 기존 recipe_file data가 있지만 request의 recipe_file_oname 또는 recipe_file_sname이 null이라면 기존 file data 삭제
+                    recipeFileRepository.delete(recipeFile);
+                }
+            } else {
+                // 기존 recipe_file data가 없고 request의 recipe_file_oname과 recipe_file_sname이 null이 아니라면 해당 값으로 새로운 recipe_file data 생성
+                if (!CollectionUtils.isEmpty(request.getRecipe_file_oname()) && !CollectionUtils.isEmpty(request.getRecipe_file_sname())) {
+                    CreateRecipeFileDto createRecipeFileDto = new CreateRecipeFileDto(request.getRecipe_file_oname(), request.getRecipe_file_sname(), recipe);
+                    recipeFileRepository.save(createRecipeFileDto.toEntity());
+                }
+            }
 
             UpRecipeSuResDto responseBody = new UpRecipeSuResDto(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, result.getRecipeNo());
             return ResponseEntity.status(HttpStatus.OK).body(responseBody);
