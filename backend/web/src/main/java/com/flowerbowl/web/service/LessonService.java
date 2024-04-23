@@ -13,8 +13,8 @@ public interface LessonService {
     ResponseEntity<ResponseDto> LessonCreate(CreateRequestDto createRequestDto, String userId);
     ResponseEntity<ResponseDto> LessonModify(LessonRequestDto lessonRequestDto, Long lesson_no, String userId);
     ResponseEntity<ResponseDto> lessonDelete(Long lesson_no, String userId);
-    ResponseEntity<? super FindAllResponseDto> findAll(Pageable pageable, String userId);
-    ResponseEntity<? super FindAllResponseDto> findAllGuest(Pageable pageable);
+    ResponseEntity<? super FindAllResponseDto> findAll(Pageable pageable, Boolean loginStatus, String userId);
+//    ResponseEntity<? super FindAllResponseDto> findAllGuest(Pageable pageable);
     ResponseEntity<? super FindOneResponseDto> findOneResponseDto(Long lesson_no, String userId);
     ResponseEntity<? super FindOneResponseDto> findOneGuestResponseDto(Long lesson_no);
     ResponseEntity<? super PaymentInfoResponseDto> buyLesson(Long lesson_no, String userId);
