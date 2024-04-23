@@ -281,9 +281,13 @@ public class CommunityServiceImpl implements CommunityService {
 
             GetCommunitySuResDto responseBody = new GetCommunitySuResDto(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, newDto);
             return ResponseEntity.status(HttpStatus.OK).body(responseBody);
+        } catch (CommunityNotFoundException e) {
+            logPrint(e);
+
+            GetCommunityFaResDto responseBody = new GetCommunityFaResDto(ResponseCode.NOT_EXIST_COMMUNITY, ResponseMessage.NOT_EXIST_COMMUNITY);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(responseBody);
         } catch (Exception e) {
-            log.error("Exception [Err_Msg]: {}", e.getMessage());
-            log.error("Exception [Err_Where]: {}", e.getStackTrace()[0]);
+            logPrint(e);
 
             GetCommunityFaResDto responseBody = new GetCommunityFaResDto(ResponseCode.INTERNAL_SERVER_ERROR, ResponseMessage.INTERNAL_SERVER_ERROR);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseBody);
