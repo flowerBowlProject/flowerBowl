@@ -20,6 +20,7 @@ import dayjs from 'dayjs';
 const RegisterClass = () => {
     const accessToken = useSelector(state => state.accessToken);
     const { lesson_no } = useParams();
+    const navigator = useNavigate();
 
     {/* 등록 클래스 데이터 + 썸네일 + 썸네일 선택 여부 */ }
     const [registerData, setRegisterData] = useState([]);
@@ -28,7 +29,11 @@ const RegisterClass = () => {
 
     useEffect(() => {
         {/* 수정할 정보 가져와 세팅 */ }
-                axios.get(`${url}/api/user/lessons/${lesson_no}`)
+            axios.get(`${url}/api/user/lessons/${lesson_no}`,{
+                headers:{
+                    Authorization : `Bearer ${accessToken}`
+                }
+            })
             .then(res => {
                 console.log(res);
                 setRegisterData(res.data.lesson);
@@ -79,6 +84,7 @@ const RegisterClass = () => {
 
     {/* 클래스 수정 */ }
     const handleRegister = () => {
+        console.log('수정');
         axios.post(`${url}/api/lessons/${lesson_no}`, registerData, {
             headers: {
                 Authorization: `Bearer ${accessToken}`
@@ -95,6 +101,7 @@ const RegisterClass = () => {
     {/* 취소 버튼 클릭 */ }
     const handleCancel = () => {
         // 뒤로가기 - 리스트 페이지로 이동
+        navigator(`/classDetail/${lesson_no}`)
     }
 
     return (
@@ -154,8 +161,8 @@ const RegisterClass = () => {
 
             <div style={{ border: "1px solid #CBA285", marginBottom: "2%" }} />
             <div className="register_button">
-                <ButtonOutlined size='large' text='수정' /> &nbsp;
-                <ButtonContain size='large' text='취소' />
+                <ButtonOutlined size='large' text='수정' handleClick={handleRegister}/> &nbsp;
+                <ButtonContain size='large' text='취소' handleClick={handleCancel}/>
             </div>
         </div>
     );

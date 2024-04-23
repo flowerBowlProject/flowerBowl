@@ -8,7 +8,7 @@ import ButtonContain from "../Component/ButtonContain";
 import { useSelector } from "react-redux";
 import { useNavigate, useParams } from 'react-router-dom';
 import ButtonOutlined from "../Component/ButtonOutlined";
-import { Viewer } from "@toast-ui/react-editor";
+import { Editor, Viewer } from "@toast-ui/react-editor";
 
 
 const { kakao } = window;
@@ -16,7 +16,7 @@ const { kakao } = window;
 const ClassDetail = () => {
     const [classData, setClassData] = useState({});
     const { lesson_no } = useParams();
-    const [writer, setWriter] = useState(false);
+    const writer= useSelector((state)=>state.nickname);
     const accessToken = useSelector(state => state.accessToken);
 
     const navigator = useNavigate();
@@ -45,7 +45,7 @@ const ClassDetail = () => {
                     console.log(err);
                 })
         }
-    }, [])
+    }, [lesson_no])
 
     useEffect(() => {
         var mapContainer = document.getElementById('staticMap'), // 지도를 표시할 div 
@@ -69,13 +69,64 @@ const ClassDetail = () => {
 
     }, [classData])
 
+    {/* 즐겨찾기 등록 / 해제 */}
+    const clickBookmark = () =>{
+        if(classData.lesson_likes_status){
+            console.log('북마크 해제')
+            axios.delete(`${url}/api/user/lessons/like/${lesson_no}`,{
+                headers:{
+                    Authorization : `Bearer ${accessToken}`
+                }
+            })
+            .then(res=>{
+                console.log('북마크 해제 성공')
+                setClassData((classData) => ({...classData, lesson_likes_status : false}))
+            })
+            .catch(err=>{
+                console.log(err);
+                console.log('북마크 해제 실패')
+            })
+        }else{
+            console.log('북마크 등록')
+            axios.post(`${url}/api/user/lessons/like`,{
+                "lesson_no" : lesson_no
+            },{
+                headers:{
+                    Authorization : `Bearer ${accessToken}`
+                }
+            })
+            .then(res=>{
+                console.log('북마크 등록 성공');
+                setClassData((classData) => ({...classData, lesson_likes_status : true}))
+
+            })
+            .catch(err=>{
+                console.log(err);
+                console.log('북마크 등록 실패');
+            })
+        }
+    }
+
     {/* 클래스 구매 */ }
     const buyClass = () => {
-
+        console.log(accessToken)
+        axios.post(`${url}/lessons/payments`,{
+            "lesson_no":lesson_no
+        },{
+            header:{
+                Authorization : `Bearer ${accessToken}`
+            }
+        })
+        .then(res=>{
+            console.log(res);
+        })
+        .catch(err=>{
+            console.log(err);
+        })
     }
 
     {/* 클래스 수정 */ }
-    const handleModify = (e) => {
+    const handleModify = () => {
         console.log('수정');
         navigator(`/modifyClass/${lesson_no}`);
     }
@@ -83,13 +134,16 @@ const ClassDetail = () => {
     {/* 클래스 삭제 */ }
     const handleDelete = () => {
         {/* alert로 삭제 여부 재확인 */ }
-        console.log('삭제');
-        axios.put(`${url}/api/user/lessons`,{
+        axios.put(`${url}/api/lessons`,{
             "lesson_no" : lesson_no
+        },{
+            headers:{
+                Authorization : `Bearer ${accessToken}`
+            }
         })
         .then(res=>{
             console.log(res);
-            //navigator('/classList');
+            navigator('/classList');
         })
         .catch(err=>{
             console.log(err);
@@ -123,18 +177,19 @@ const ClassDetail = () => {
                 <div className="class-addr">
                     장소 : {classData.lesson_addr}
                 </div>
-                <div className='class-body'><Viewer initialValue={classData.lesson_contents || ''} /></div>
+                <div className='class-body'>{classData.lesson_contents && <Viewer initialValue={classData.lesson_contents} />}</div>
 
                 {/* 즐겨찾기 버튼 - 즐겨찾기 여부에 따른 true / false로 아이콘 표시 */}
-                <div className="class-bookmark">{classData.lesson_likes_status === true ? <TurnedInIcon sx={{ fontSize: '60px', color: 'main.or' }} /> :
-                    <TurnedInNotIcon sx={{ fontSize: '60px', color: 'main.or' }} />} 스크랩 </div>
+                <div className="class-bookmark" style={{cursor:'pointer'}} onClick={clickBookmark}>
+                    {classData.lesson_likes_status === true ? <TurnedInIcon sx={{ fontSize: '60px', color: 'main.or' }} /> :
+                        <TurnedInNotIcon sx={{ fontSize: '60px', color: 'main.or' }} />} 스크랩 </div>
 
                 {/* 수정/삭제 버튼 - 작성자인 경우에만 true로 버튼 표시 + 구매하기 버튼 - 작성자가 아닌 경우 노출 */}
                 <div className="class-change">
                     가격 : {classData.lesson_price} &nbsp;&nbsp;&nbsp;
-                    {false && <ButtonContain size='large' text='구매' handleClick={buyClass} />}
-                    {true && <ButtonOutlined size='large' text='수정' handleClick={handleModify} />} &nbsp;&nbsp;
-                    {true && <ButtonContain size='large' text='삭제' handleClick={handleDelete} />}
+                    {writer !== classData.lesson_writer && <ButtonContain size='large' text='구매' handleClick={buyClass} />}
+                    {writer === classData.lesson_writer && <ButtonOutlined size='large' text='수정' handleClick={(e)=>handleModify(e)} />} &nbsp;&nbsp;
+                    {writer === classData.lesson_writer && <ButtonContain size='large' text='삭제' handleClick={handleDelete} />}
                 </div>
             </div>
         </>
