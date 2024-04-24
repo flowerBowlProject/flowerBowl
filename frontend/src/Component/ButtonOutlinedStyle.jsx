@@ -6,6 +6,7 @@ const ButtonOutlinedStyle = styled(Button)(({ theme, width }) => ({
   borderColor: theme.palette.main.or,
   color: theme.palette.main.or,
   whiteSpace: "nowrap",
+  backgroundColor:theme.palette.main.yl,
   "&:hover": {
     color: theme.palette.main.br,
     borderColor: theme.palette.main.br,

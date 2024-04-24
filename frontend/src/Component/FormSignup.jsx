@@ -3,6 +3,8 @@ import { Grid, Typography } from "@mui/material";
 import ButtonContainStyle from "./ButtonContainStyle.jsx";
 import Input_search_style from "../MainPage/InputSearchStyle.jsx";
 import { validation,validationPassConfirm } from "../Hook/Validation.jsx";
+import { useSelector,useDispatch } from "react-redux";
+import { HideDuplication, SETMEMBEREMAIL, setMemberPw, setMemberTel, setMermberEmail } from "../persistStore.jsx";
 const FormSignup = ({
   title,
   but_text,
@@ -14,8 +16,12 @@ const FormSignup = ({
   vaild,
   setPass,
   pass_confirm,
-  handleBut=()=>{}
+  handleBut=()=>{},
+  handleCheck=()=>{}
 }) => {
+  const dispatch=useDispatch();
+  const duplicationBoolean=useSelector(state=>state.duplicationBoolean[vaild])
+  const duplicationText=useSelector(state=>state.duplicationText[vaild])
   const [validTest,setValidTest]= useState(false);
   const [text,setText]= useState('');
   const handleChange=(e)=>{
@@ -24,7 +30,19 @@ const FormSignup = ({
     if(setPass!=null)
     setPass(value);
     handleBut(vaild,pass_confirm?validationPassConfirm(value,vaild):validation(value,vaild))
+    if(duplicationBoolean){dispatch(HideDuplication(vaild))}
   }
+  const handleBlur=(e)=>{
+    const value=e.target.value;
+    setValidTest(true);
+    if(vaild==='pw'){
+      dispatch(setMemberPw(value))
+    }else if(vaild==='tel'){
+      dispatch(setMemberTel(value))
+    }
+    
+  }
+ 
   const handleSize=()=>{
     if(size==='joy'){
         return{
@@ -60,6 +78,8 @@ const FormSignup = ({
                 width="5vw"
                 size="small"
                 sx={{ height: "1vw", ml: "3.2vw" }}
+                onClick={()=>handleCheck(text)}
+                disabled={validation(text,vaild)}
               >
                 {but_text}
               </ButtonContainStyle>
@@ -68,14 +88,15 @@ const FormSignup = ({
         </Grid>
         <Grid xs item mt="0.2vw" height={form_size.height} >
           <Input_search_style
+            value={text}
             type={pass_exis ? "password" : "text"}
             sx={{ width: "20vw",height:form_size.height_2 }}
             variant="outlined"
             size="small"
-            onBlur={()=>setValidTest(true)}
+            onBlur={(e)=>handleBlur(e)}
             onChange={handleChange}
             placeholder={place_text}
-            helperText={validTest?pass_confirm?validationPassConfirm(text,vaild)?helper_text:'':validation(text,vaild)?helper_text:'':''}
+            helperText={duplicationBoolean?duplicationText:validTest?pass_confirm?validationPassConfirm(text,vaild)?helper_text:'':validation(text,vaild)?helper_text:'':''}
           />
         </Grid>
       </Grid>
