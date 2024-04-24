@@ -13,12 +13,14 @@ import  axios  from "axios";
 import { url } from "../url";
 import { useSelector } from 'react-redux';
 import ButtonContain from "../Component/ButtonContain";
+import dayjs from "dayjs";
+import ButtonOutlined from "../Component/ButtonOutlined";
 
 const RegisterClass = () => {
-    const accessToken = useSelector(state => state.persistedReducer.accessToken);
+    const accessToken = useSelector(state => state.accessToken);
     {/* 등록 클래스 데이터 + 썸네일 + 썸네일 선택 여부 */ }
     const [registerData, setRegisterData] = useState({
-        lesson_title: '', lesson_category: '', lesson_price: 0, lesson_sname:'', lesson_oname:'',
+        lesson_title: '', lesson_category: '', lesson_price: 0, lesson_sname:'짜장면', lesson_oname:'짜장면',
         lesson_address: '', lesson_content: '', lesson_longitude: 0.0, lesson_latitude: 0.0, lesson_start: '', lesson_end: '', lesson_URL: ''
     });
     const [thumbnail, setThumbnail] = useState(null);
@@ -63,19 +65,62 @@ const RegisterClass = () => {
     }
 
     {/* 클래스 등록 */}
-    const handleRegister = () =>{
-        console.log(registerData);
-        axios.post(`${url}/api/lesson`, registerData, {
-            headers: {
-                Authorization: accessToken
+    const handleRegister = (e) =>{
+        e.preventDefault();
+
+        const isFormDataChanged = () => {
+            // 모든 필드가 변경되었는지 여부를 저장할 변수
+            let isChanged = false;
+          
+            // 모든 필드를 순회하면서 변경 여부 확인
+            Object.values(registerData).forEach((value) => {
+              // 빈 값이거나 초기값이 아닌 경우 변경된 것으로 간주
+              if (value !== '' && value !== 0 && value !== '짜장면' && value !== 0.0) {
+                isChanged = true;
+              }
+            });
+          
+            return isChanged;
+        };
+
+        if(!isFormDataChanged()){
+            console.log("등록 가능");
+            axios.post(`${url}/api/lessons`, registerData, {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`
+                }
+            })
+            .then(res=>{
+                console.log(res);
+                navigator('/classList');
+            })
+            .catch(err=>{
+                console.log(err);
+            })
+        }else{
+            console.log('등록 불가');
+
+            {/* 등록 내용 작성 여부 확인 후 alert */}
+            if(registerData.lesson_title.trim() === ''){
+                console.log('제목을 작성해 주세요.')
+            }else if(registerData.lesson_category.trim() === ''){
+                console.log('카테고리를 선택해 주세요')
+            }else if(registerData.lesson_sname.trim() === '' || registerData.lesson_oname.trim() === ''){
+                console.log('사진을 첨부해 주세요')
+            }else if(registerData.lesson_address.trim() === '' || registerData.lesson_latitude === 0.0 || registerData.lesson_longitude ===0.0){
+                console.log('주소를 입력 후 주소 등록 버튼을 눌러주세요')
+            }else if(registerData.lesson_content.trim() === ''){
+                console.log('내용을 작성해 주세요')
+            }else if(registerData.lesson_start === ''){
+                console.log('시작일을 선택해 주세요')
+            }else if(registerData.lesson_end === ''){
+                console.log('종료일을 선택해 주세요')
+            }else if(registerData.lesson_URL.trim() === ''){
+                console.log('문의 채팅 링크를 입력해 주세요')
+            }else{
+                console.log('현재 글작성이 불가합니다. 관리자에게 문의해 주세요')
             }
-        })
-        .then(res=>{
-            console.log(res);    
-        })
-        .catch(err=>{
-            console.log(err);
-        })
+        }
     }
 
     {/* 취소 버튼 클릭 */}
@@ -109,20 +154,25 @@ const RegisterClass = () => {
             <div className="classElement1-Box">
                 {/* 가격 */}
                 <div className="classPrice">
-                    <TextField id="outlined-basic" label="가격" variant="outlined" type="number" 
-                        sx={{ width: '12vw', }} name="lesson_price" onChange={(e)=> setValue(e)} />
+                    <TextField id="outlined-basic" label="가격" variant="outlined" type="number" color="secondary"
+                        sx={{ width: '12vw' }} name="lesson_price" onChange={(e)=> setValue(e)} />
                 </div>
                 {/* 날짜 */}
                 <div className="calendar-Box">
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
                         <DemoContainer components={['DatePicker', 'DatePicker']}>
                             <DatePicker label="시작일"
-                                onChange={(newValue) => setRegisterData((registerData) => ({ ...registerData, lesson_start: newValue }))}
+                                onChange={(newValue) => {
+                                    const formatDate = dayjs(newValue).format('YYYY-MM-DD');
+                                    setRegisterData((registerData) => ({ ...registerData, lesson_start: formatDate }))}
+                                }
                             />
                             <DatePicker
                                 label="마감일"
-                                onChange={(newValue) => setRegisterData((registerData) => ({ ...registerData, lesson_end: newValue }))}
-                            />
+                                onChange={(newValue) => {
+                                    const formatDate = dayjs(newValue).format('YYYY-MM-DD');
+                                    setRegisterData((registerData) => ({ ...registerData, lesson_end: formatDate }))}
+                                }                            />
                         </DemoContainer>
                     </LocalizationProvider>
                 </div>
@@ -132,7 +182,7 @@ const RegisterClass = () => {
             <div className="classElement2-Box">
                 <AddressSearch getAddress={getAddress} />
                 <TextField id="outlined-basic" type="text" label="오픈 채팅" variant="outlined" readOnly sx={{ marginLeft: '1vw', width: '40vw' }} placeholder='오픈채팅 링크를 입력해 주세요.'
-                    name="lesson_URL" onChange={(e)=> setValue(e)} />
+                    name="lesson_URL" onChange={(e)=> setValue(e)} color="secondary"/>
             </div>
 
             {/* 레시피 || 클래스 상세 내용 작성란 */}
@@ -140,8 +190,8 @@ const RegisterClass = () => {
 
             <div style={{ border: "1px solid #CBA285", marginBottom: "2%" }} />
             <div className="register_button">
-            <ButtonContain size='large' text='로그인'/> &nbsp;
-            <ButtonContain size='large' text='로그인'/>
+            <ButtonOutlined size='large' text='등록' handleClick={(e)=>handleRegister(e)}/> &nbsp;
+            <ButtonContain size='large' text='취소'/>
             </div>
         </div>
     );

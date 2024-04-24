@@ -13,7 +13,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import axios from "axios";
 import { url } from "../url";
 import ButtonOutlined from "../Component/ButtonOutlined";
-
+import { useSelector } from "react-redux";
 
 const CommunityList = () => {
     const [listData, setListData] = useState([]);
@@ -22,11 +22,13 @@ const CommunityList = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const keyword = (location.state && location.state.keyword) || '';
+    const accessToken = useSelector(state => state.accessToken);
+
 
     useEffect(() => {
         console.log(keyword);
         if(keyword !== '') {
-            axios.get(`${url}/api/search/communities?keyword=${keyword}&size=8`)
+            axios.get(`${url}/api/search/communities?keyword=${keyword}&page=1&size=10`)
             .then(res => {
                 setListData(res.data.communities);
                 //setPageInfo(res.data.pageInfo);
@@ -47,7 +49,7 @@ const CommunityList = () => {
             })
         }
         
-    },[])
+    },[keyword, accessToken])
 
     const StyledTableCell = styled(TableCell)(() => ({
         [`&.${tableCellClasses.head}`]: {

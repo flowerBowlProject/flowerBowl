@@ -1,18 +1,25 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import '@toast-ui/editor/dist/toastui-editor.css';
 import { Editor } from '@toast-ui/react-editor';
 
 const ToastEditor = (props) => {
     const editorRef = useRef();
-    const [content, setContent] = useState(props.content);
-    console.log(content)
+    const [content, setContent] = useState('');
+
+    useEffect(()=>{
+        if(props.setContent !== ''){
+            const htmlString = decodeURIComponent(props.setContent);
+            editorRef.current?.getInstance().setHTML(htmlString);
+        }
+    }, [props.setContent])
+    console.log(content);
 
     const changeContent = () =>{
         const data = editorRef.current.getInstance().getHTML();
         setContent(data);
         props.getToastEditor(data);
     }
-
+ 
     return (
         <div className='editor' style={{margin: "2% auto", height:'500px'}}>
             <Editor
@@ -27,6 +34,6 @@ const ToastEditor = (props) => {
             />
         </div>
     );
-
 }
+
 export default ToastEditor;
