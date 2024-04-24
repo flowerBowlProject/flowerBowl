@@ -21,6 +21,10 @@ public interface RecipeService {
 
     public ResponseEntity<? extends RecipeResponseDto> getRecipe(Long recipe_no, String userId) throws Exception;
 
+    public ResponseEntity<? extends RecipeResponseDto> getRecipesCategoryGuest(String koreanName) throws Exception;
+
+    public ResponseEntity<? extends RecipeResponseDto> getRecipesCategory(String koreanName, String userId) throws Exception;
+
     public ResponseEntity<? extends RecipeResponseDto> updateRecipeLike(Long recipe_no, String userId) throws Exception;
 
 }
