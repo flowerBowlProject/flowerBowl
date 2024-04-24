@@ -125,7 +125,8 @@ const RegisterClass = () => {
 
     {/* 취소 버튼 클릭 */}
     const handleCancel = () =>{
-        // 뒤로가기 - 리스트 페이지로 이동
+        // 뒤로가기 - 리스트 페이지로 이동 - 현재는 리스트로 이동하도록 구현
+        navigator('/classList');
     }
 
     return (
@@ -186,7 +187,7 @@ const RegisterClass = () => {
             </div>
 
             {/* 레시피 || 클래스 상세 내용 작성란 */}
-            <ToastEditor getToastEditor={getToastEditor}/>
+            <ToastEditor getToastEditor={getToastEditor} setContent={registerData.lesson_content}/>
 
             <div style={{ border: "1px solid #CBA285", marginBottom: "2%" }} />
             <div className="register_button">
