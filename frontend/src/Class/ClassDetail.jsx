@@ -71,7 +71,10 @@ const ClassDetail = () => {
 
     {/* 즐겨찾기 등록 / 해제 */}
     const clickBookmark = () =>{
-        if(classData.lesson_likes_status){
+        if(accessToken === '') {
+            console.log('로그인 후 이용')
+        }else{
+            if(classData.lesson_likes_status){
             console.log('북마크 해제')
             axios.delete(`${url}/api/user/lessons/like/${lesson_no}`,{
                 headers:{
@@ -105,6 +108,8 @@ const ClassDetail = () => {
                 console.log('북마크 등록 실패');
             })
         }
+        }
+        
     }
 
     {/* 클래스 구매 */ }

@@ -21,13 +21,13 @@ const CommunityList = () => {
     const [curPage, setCurPage] = useState(1);
     const navigate = useNavigate();
     const location = useLocation();
-    const keyword = (location.state && location.state.keyword) || '';
+    const params = new URLSearchParams(location.search);
+    const keyword = params.get('keyword');
     const accessToken = useSelector(state => state.accessToken);
-
 
     useEffect(() => {
         console.log(keyword);
-        if(keyword !== '') {
+        if(keyword !== null) {
             axios.get(`${url}/api/search/communities?keyword=${keyword}&page=1&size=10`)
             .then(res => {
                 setListData(res.data.communities);
