@@ -1,6 +1,6 @@
 import ButtonOutLinedStyle from "./ButtonOutlinedStyle";
 import { useState } from "react";
-const ButtonOutlined = ({ text, size, handleClick, data }) => {
+const ButtonOutlined = ({ text, size, handleClick=()=>{}, data }) => {
   const handleSize = (size) => {
     if (size === "verySmall") {
       return {

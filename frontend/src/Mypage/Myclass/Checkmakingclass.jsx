@@ -128,19 +128,7 @@ const Checkmakingclass = () => {
 
   return (
     <>
-      {/* 버튼들 */}
-      <section className="buttons">
-        <span className="checktclass">
-          <Link to="/mypage/checkteachingclass">
-            <ButtonOutlined size="doubleLarge" text="수강클래스 조회" />
-          </Link>
-        </span>
-        <span className="checkmclass">
-          <Link to="/mypage/checkmakingclass">
-            <ButtonContain size="doubleLarge" text="창작클래스 조회" />
-          </Link>
-        </span>
-      </section>
+      
 
       {/* 내용 */}
       <section className="table-content">

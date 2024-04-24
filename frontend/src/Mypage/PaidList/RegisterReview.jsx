@@ -29,25 +29,7 @@ const RegisterReview = () => {
 
   return (
     <div className="all">
-      {/* 버튼들 */}
-      <section className="buttons">
-        <span className="rgPaidlist">
-          <Link to="/mypage/checkPaidList">
-            <ButtonOutlined size="medium" text="결제 내역" />
-          </Link>
-        </span>
-        <span className="rgReview">
-          <Link to="/mypage/checkReview">
-            <ButtonOutlined size="medium" text="리뷰 조회" />
-          </Link>
-        </span>
-        <span className="rgRegister">
-          <Link to="/mypage/registerReview">
-            <ButtonContain size="medium" text="리뷰 작성" />
-          </Link>
-        </span>
-      </section>
-
+  
       {/* 클래스 목록 */}
       <section className="teachingclass">
         <div className="division-line-or"></div>
