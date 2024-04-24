@@ -51,6 +51,16 @@ public class RecipeController {
         return recipeService.getRecipe(recipe_no, userId);
     }
 
+    @GetMapping("/guest/list")
+    private ResponseEntity<? extends RecipeResponseDto> getRecipesCategoryGuest(@RequestParam("category") String koreanName) throws Exception {
+        return recipeService.getRecipesCategoryGuest(koreanName);
+    }
+
+    @GetMapping("/list")
+    private ResponseEntity<? extends RecipeResponseDto> getRecipesCategory(@RequestParam("category") String koreanName, @AuthenticationPrincipal String userId) throws Exception {
+        return recipeService.getRecipesCategory(koreanName, userId);
+    }
+
     @PostMapping("/like/{recipe_no}")
     private ResponseEntity<? extends RecipeResponseDto> likeRecipe(@PathVariable Long recipe_no, @AuthenticationPrincipal String userId) throws Exception {
         return recipeService.updateRecipeLike(recipe_no, userId);
