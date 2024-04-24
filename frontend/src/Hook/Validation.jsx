@@ -5,9 +5,9 @@ export const validation=(value,type)=>{
             case 'id':{ return value.length<8 || value.length>15;    }
             case 'pw': return !/^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@$!%*?&])[a-zA-Z\d@$!%*?&]{8,15}$/.test(value);
             case 'email': return !/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(value);
-            case 'tel': return !/^\d{3}-\d{3,4}-\d{4}$/.test(value);
+            case 'tel': return !/^[0-9]{11}$/.test(value);
             
-            default: return true;
+            default: return false;
         }
 
     }
