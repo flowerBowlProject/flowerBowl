@@ -7,6 +7,7 @@ import com.flowerbowl.web.dto.object.recipe.*;
 import com.flowerbowl.web.dto.request.recipe.CrRecipeReqDto;
 import com.flowerbowl.web.dto.request.recipe.UpRecipeReqDto;
 import com.flowerbowl.web.dto.response.recipe.*;
+import com.flowerbowl.web.handler.CategoryNotFoundException;
 import com.flowerbowl.web.handler.DoesNotMatchException;
 import com.flowerbowl.web.handler.RecipeNotFoundException;
 import com.flowerbowl.web.handler.UserNotFoundException;
@@ -210,7 +211,7 @@ public class RecipeServiceImpl implements RecipeService {
                 List<Comment> comments = commentRepository.findAllByRecipe_RecipeNo(recipeNo);
 
                 return GetAllRecipesDto.builder()
-                        .recipe_no(recipe.getRecipeNo())
+                        .recipe_no(recipeNo)
                         .recipe_sname(recipe.getRecipeSname())
                         .recipe_title(recipe.getRecipeTitle())
                         .recipe_writer(recipe.getRecipeWriter())
@@ -248,14 +249,14 @@ public class RecipeServiceImpl implements RecipeService {
                 List<RecipeLike> recipeLikes = recipeLikeRepository.findAllByRecipe_RecipeNo(recipeNo);
                 List<Comment> comments = commentRepository.findAllByRecipe_RecipeNo(recipeNo);
 
-                // recipeNo과 userNo으로 RecipeLike 테이블 조회
+                // recipeNo과 userNo으로 recipe_like 테이블 조회
                 Specification<RecipeLike> spec = (root, query, criteriaBuilder) -> null;
                 if (Objects.nonNull(recipeNo) && Objects.nonNull(userNo)) {
                     spec = RecipeLikeSpecification.equalRecipeNo(recipeNo).and(RecipeLikeSpecification.equalUserNo(userNo));
                 }
 
                 return GetAllRecipesDto.builder()
-                        .recipe_no(recipe.getRecipeNo())
+                        .recipe_no(recipeNo)
                         .recipe_sname(recipe.getRecipeSname())
                         .recipe_title(recipe.getRecipeTitle())
                         .recipe_writer(recipe.getRecipeWriter())
@@ -395,6 +396,110 @@ public class RecipeServiceImpl implements RecipeService {
             logPrint(e);
 
             GetRecipeFaResDto responseBody = new GetRecipeFaResDto(ResponseCode.INTERNAL_SERVER_ERROR, ResponseMessage.INTERNAL_SERVER_ERROR);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseBody);
+        }
+    }
+
+    @Override
+    public ResponseEntity<? extends RecipeResponseDto> getRecipesCategoryGuest(String koreanName) throws Exception {
+        try {
+            Category category = Category.parsing(koreanName);
+            if (category == null) {
+                throw new CategoryNotFoundException();
+            }
+
+            List<Recipe> recipes = recipeRepository.findAllByRecipeCategory(category);
+
+            List<GetRecipesCategoryDto> posts = ListUtils.emptyIfNull(recipes).stream().map((recipe -> {
+                Long recipeNo = recipe.getRecipeNo();
+
+                List<RecipeLike> recipeLikes = recipeLikeRepository.findAllByRecipe_RecipeNo(recipeNo);
+                List<Comment> comments = commentRepository.findAllByRecipe_RecipeNo(recipeNo);
+
+                return GetRecipesCategoryDto.builder()
+                        .recipe_no(recipeNo)
+                        .recipe_sname(recipe.getRecipeSname())
+                        .recipe_title(recipe.getRecipeTitle())
+                        .recipe_writer(recipe.getRecipeWriter())
+                        .recipe_date(recipe.getRecipeDate())
+                        .recipe_like_count(Long.valueOf(recipeLikes.size()))
+                        .recipe_comment_count(Long.valueOf(comments.size()))
+                        .recipe_like_status(false)
+                        .build();
+            })).toList();
+
+            GetRecipesCategorySuResDto responseBody = new GetRecipesCategorySuResDto(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, posts);
+            return ResponseEntity.status(HttpStatus.OK).body(responseBody);
+        } catch (CategoryNotFoundException e) {
+            logPrint(e);
+
+            GetRecipesCategoryFaResDto responseBody = new GetRecipesCategoryFaResDto(ResponseCode.NOT_EXIST_CATEGORY, ResponseMessage.NOT_EXIST_CATEGORY);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(responseBody);
+        } catch (Exception e) {
+            logPrint(e);
+
+            GetRecipesCategoryFaResDto responseBody = new GetRecipesCategoryFaResDto(ResponseCode.INTERNAL_SERVER_ERROR, ResponseMessage.INTERNAL_SERVER_ERROR);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseBody);
+        }
+    }
+
+    @Override
+    public ResponseEntity<? extends RecipeResponseDto> getRecipesCategory(String koreanName, String userId) throws Exception {
+        try {
+            User user = userRepository.findByUserId(userId);
+            if (user == null) {
+                throw new UserNotFoundException();
+            }
+            Long userNo = user.getUserNo();
+
+            Category category = Category.parsing(koreanName);
+            if (category == null) {
+                throw new CategoryNotFoundException();
+            }
+
+            List<Recipe> recipes = recipeRepository.findAllByRecipeCategory(category);
+
+            List<GetRecipesCategoryDto> posts = ListUtils.emptyIfNull(recipes).stream().map((recipe -> {
+                Long recipeNo = recipe.getRecipeNo();
+
+                List<RecipeLike> recipeLikes = recipeLikeRepository.findAllByRecipe_RecipeNo(recipeNo);
+                List<Comment> comments = commentRepository.findAllByRecipe_RecipeNo(recipeNo);
+
+                // recipeNo와 userNo로 recipe_like 테이블 조회
+                Specification<RecipeLike> spec = (root, query, criteriaBuilder) -> null;
+                if (Objects.nonNull(recipeNo) && Objects.nonNull(userNo)) {
+                    spec = RecipeLikeSpecification.equalRecipeNo(recipeNo).and(RecipeLikeSpecification.equalUserNo(userNo));
+                }
+
+                return GetRecipesCategoryDto.builder()
+                        .recipe_no(recipeNo)
+                        .recipe_sname(recipe.getRecipeSname())
+                        .recipe_title(recipe.getRecipeTitle())
+                        .recipe_writer(recipe.getRecipeWriter())
+                        .recipe_date(recipe.getRecipeDate())
+                        .recipe_like_count(Long.valueOf(recipeLikes.size()))
+                        .recipe_comment_count(Long.valueOf(comments.size()))
+                        // 다중 조건 검색에 따라 즐겨찾기 여부를 지정
+                        .recipe_like_status(recipeLikeRepository.findOne(spec).isPresent())
+                        .build();
+            })).toList();
+
+            GetRecipesCategorySuResDto responseBody = new GetRecipesCategorySuResDto(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, posts);
+            return ResponseEntity.status(HttpStatus.OK).body(responseBody);
+        } catch (UserNotFoundException e) {
+            logPrint(e);
+
+            GetRecipesCategoryFaResDto responseBody = new GetRecipesCategoryFaResDto(ResponseCode.NOT_EXIST_USER, ResponseMessage.NOT_EXIST_USER);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(responseBody);
+        } catch (CategoryNotFoundException e) {
+            logPrint(e);
+
+            GetRecipesCategoryFaResDto responseBody = new GetRecipesCategoryFaResDto(ResponseCode.NOT_EXIST_CATEGORY, ResponseMessage.NOT_EXIST_CATEGORY);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(responseBody);
+        } catch (Exception e) {
+            logPrint(e);
+
+            GetRecipesCategoryFaResDto responseBody = new GetRecipesCategoryFaResDto(ResponseCode.INTERNAL_SERVER_ERROR, ResponseMessage.INTERNAL_SERVER_ERROR);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseBody);
         }
     }
