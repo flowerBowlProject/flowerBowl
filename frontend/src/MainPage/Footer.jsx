@@ -7,6 +7,8 @@ import { useState } from 'react';
 import {Link} from 'react-router-dom';
 import Signup from '../LoginModal/Signup';
 import CommonModal from '../LoginModal/CommonModal';
+import { useDispatch } from 'react-redux';
+import { closeError } from '../persistStore';
 const Text=({mainTitle,content_1,content_2,Link_1,Link_2})=>{
     return(
         <Grid sm={1} container direction='column' >
@@ -33,6 +35,7 @@ const Text=({mainTitle,content_1,content_2,Link_1,Link_2})=>{
 
 
 const Footer =()=>{
+    const dispatch=useDispatch();
     const [open, setOpen] = useState([false, false, false, false]);
   const handleOpen = (event) => {
     const innerText = event.target.innerText;
@@ -43,6 +46,10 @@ const Footer =()=>{
       setOpen([false, false, false, true]);
     console.log(innerText);
   };
+  const handleClose = ()=>{
+    dispatch(closeError());
+    setOpen([false,false,false,false]);
+  }
     return(
         <Grid container direction='column'  sx={{backgroundColor:'main.gr'}}>
             <Grid container direction='row' justifyContent="space-evenly" pt='3vw' mb='1vw'  >
@@ -81,10 +88,11 @@ const Footer =()=>{
                         <Typography ml='1vw' color='#ffffff'>BackEnd<Box component="span"  mr='3.3vw'/>Lion<Box component="span" mr='0.98vw'/>|<Box component="span" mr='0.5vw'/>Neo<Box component="span" mr='0.2vw'/>|<Box component="span" mr='0.5vw'/>Muji</Typography>
                     </Grid>
                 </Grid>
-                <Signup open={open[0]} handleOpen={handleOpen} />
+                <Signup open={open[0]} handleOpen={handleOpen}  handleClose={handleClose}/>
                 <CommonModal
                   open={open[1]}
                   handleOpen={handleOpen}
+                  handleClose={handleClose}
                   name_1="아이디"
                   name_2="비밀번호"
                   helpertext_1="8~15자로 작성해 주세요."
@@ -95,23 +103,29 @@ const Footer =()=>{
                   text_3="비밀번호 찾기"
                   api_login={true}
                   type_pass={true}
+                  vaildTest_1='id'
+                  vaildTest_2='pw'
+                  tag='login'
                 />
                 <CommonModal
                   open={open[2]}
                   handleOpen={handleOpen}
-                  name_1="이름"
+                  handleClose={handleClose}
                   name_2="이메일"
                   helpertext_2="이메일 형식에 맞춰 작성해 주세요."
                   but_name="아이디 찾기"
                   text_1="회원가입"
                   text_2="로그인"
                   text_3="비밀번호 찾기"
+                  vaildTest_2='email'
                   api_login={false}
                   type_pass={false}
+                  tag='searchId'
                 />
                 <CommonModal
                   open={open[3]}
                   handleOpen={handleOpen}
+                  handleClose={handleClose}
                   name_1="아이디"
                   name_2="이메일"
                   helpertext_1="8~15자로 작성해 주세요."
@@ -120,8 +134,11 @@ const Footer =()=>{
                   text_1="회원가입"
                   text_2="아이디 찾기"
                   text_3="로그인"
+                  vaildTest_1='id'
+                  vaildTest_2='email'
                   api_login={false}
                   type_pass={false}
+                  tag='searchPw'
                 />
         </Grid>
     );

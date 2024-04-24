@@ -17,6 +17,8 @@ import CommonModal from "../LoginModal/CommonModal";
 import Signup from "../LoginModal/Signup";
 import ButtonGroupText from "../Component/ButtonGroupText";
 import {useNavigate,Link,NavLink} from 'react-router-dom';
+import { useDispatch ,useSelector} from "react-redux";
+import { closeError } from "../persistStore";
 const TextTitle = styled(Typography)(({ theme }) => ({
   color: theme.palette.main.br,
   fontWeight: "Bold",
@@ -25,6 +27,9 @@ const TextTitle = styled(Typography)(({ theme }) => ({
   marginTop: "0.2vw",
 }));
 const Header = () => {
+  
+  const dispatch=useDispatch();
+  const navigate=useNavigate();
   const [open, setOpen] = useState([false, false, false, false]);
   const handleOpen = (event) => {
     const innerText = event.target.innerText;
@@ -35,6 +40,16 @@ const Header = () => {
       setOpen([false, false, false, true]);
     console.log(innerText);
   };
+  const handleClose = ()=>{
+    dispatch(closeError());
+    setOpen([false,false,false,false]);
+  }
+  const handleLogout=()=>{
+    dispatch({type:'accessToken',payload:""})
+  }
+  const handleMove=()=>{
+    navigate('/Mypage/profile')
+  }
   return (
     <AppBar sx={{ backgroundColor: "main.yl" }}>
       <Toolbar>
@@ -74,20 +89,21 @@ const Header = () => {
               <Grid item ml="5vw">
                 <ButtonOutlined
                   size="large"
-                  text="회원가입"
-                  handleClick={handleOpen}
+                  text={useSelector(state=>state.accessToken)?'마이페이지':"회원가입"}
+                  handleClick={useSelector(state=>state.accessToken)?handleMove:handleOpen}
                 />
-                <Signup open={open[0]} handleOpen={handleOpen} />
+                <Signup open={open[0]} handleOpen={handleOpen} handleClose={handleClose}/>
               </Grid>
               <Grid item ml="1vw">
                 <ButtonContain
                   size="large"
-                  text="로그인"
-                  handleClick={handleOpen}
+                  text={useSelector(state=>state.accessToken)?'로그아웃':"로그인"}
+                  handleClick={useSelector(state=>state.accessToken)?handleLogout:handleOpen}
                 />
                 <CommonModal
                   open={open[1]}
                   handleOpen={handleOpen}
+                  handleClose={handleClose}
                   name_1="아이디"
                   name_2="비밀번호"
                   helpertext_1="8~15자로 작성해 주세요."
@@ -100,10 +116,12 @@ const Header = () => {
                   type_pass={true}
                   vaildTest_1='id'
                   vaildTest_2='pw'
+                  tag='login'
                 />
                 <CommonModal
                   open={open[2]}
                   handleOpen={handleOpen}
+                  handleClose={handleClose}
                   name_2="이메일"
                   helpertext_2="이메일 형식에 맞춰 작성해 주세요."
                   but_name="아이디 찾기"
@@ -113,10 +131,12 @@ const Header = () => {
                   vaildTest_2='email'
                   api_login={false}
                   type_pass={false}
+                  tag='searchId'
                 />
                 <CommonModal
                   open={open[3]}
                   handleOpen={handleOpen}
+                  handleClose={handleClose}
                   name_1="아이디"
                   name_2="이메일"
                   helpertext_1="8~15자로 작성해 주세요."
@@ -129,6 +149,7 @@ const Header = () => {
                   vaildTest_2='email'
                   api_login={false}
                   type_pass={false}
+                  tag='searchPw'
                 />
               </Grid>
             </Grid>
