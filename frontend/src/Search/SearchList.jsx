@@ -14,10 +14,12 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import axios from "axios";
 import { url } from "../url";
 
+
 const SearchList = () => {
-    const navigate = useNavigate();
+    const navigator = useNavigate();
     const location = useLocation();
-    const keyword = '제목';//location.state.keyword;
+    const params = new URLSearchParams(location.search);
+    const keyword = params.get('keyword');
 
     const [searchRecipeList, setSearchRecipeList] = useState([]);
     const [searchClassList, setSearchClassList] = useState([]);
@@ -29,7 +31,6 @@ const SearchList = () => {
         },
     }));
 
-    {/* 호버 css 적용 필요 - 미해결 */ }
     const StyledTableRow = styled(TableRow)(() => ({
         '&:css-1pvw05l-MuiTableRow-root': {
             backgroundColor: '#B9835C',
@@ -38,61 +39,61 @@ const SearchList = () => {
     }));
 
     useEffect(()=>{
-        axios.get(`${url}/api/search?keyword=제목&size=4`)
+        axios.get(`${url}/api/search?keyword=${keyword}&size=4`)
         .then(res=>{
-            console.log(res.data);
-            setCommunityList(res.data.community); // 매치 완료
-            setSearchRecipeList(res.data.recipes); // 매치 필요
-            setSearchClassList(res.data.lessons); // 매치 필요
+            setCommunityList(res.data.community);
+            setSearchRecipeList(res.data.recipes);
+            setSearchClassList(res.data.lessons);
         })
         .catch(err=>{
             console.log(err);
         })
-    },[])
+    },[keyword])
 
     {/* 레시피 디테일 페이지 조회 */ }
     const handleRecipeDetail = (recipe_no, e) => {
         e.preventDefault();
-        navigate('/recipeDetail/' + recipe_no);
+        navigator(`/recipeDetail/${recipe_no}`);
     }
 
     {/* 클래스 디테일 페이지 조회 */ }
     const handleClassDetail = (lesson_no, e) => {
         e.preventDefault();
-        navigate('/classDetail/' + lesson_no);
+        navigator(`/classDetail/${lesson_no}`);
     }
 
     {/* 커뮤니티 디테일 페이지 조회 */ }
     const handleCommunityDetail = (community_no, e) => {
         e.preventDefault();
-        navigate('/communityDetail/' + community_no);
+        navigator(`/communityDetail/${community_no}`);
     }
 
     {/* 더보기 버튼 클릭 */}
     const handleMoreRecipe = () =>{
-        
+        navigator('/recipeList', {state:{keyword:keyword}});
     }
 
     const handleMoreClass = () =>{
-
+        navigator('/classList', {state:{keyword:keyword}});
     }
 
     const handleMoreCommunity = () =>{
-        navigate('/communityList', {state:{keyword:keyword}});
+        navigator('/communityList', {state:{keyword:keyword}});
     }
 
     return (
         <div className="searchList-Box">
             <div className="searchRecipe">
                 <div className="searchList-title">
-                    레시피 <a className="title-right" style={{ cursor: 'pointer' }}> 더보기 &gt; </a>
+                    레시피 <a className="title-right" style={{ cursor: 'pointer' }} onClick={handleMoreRecipe}> 더보기 &gt; </a>
                 </div>
                 <div className="searchList-body">
                     {searchRecipeList.length !== 0 ? searchRecipeList.map((data) =>
                     <div style={{ position: 'relative', cursor: 'pointer' }}>
                         <Bookmark />
                         <div onClick={(e)=> handleRecipeDetail(data.recipe_no, e)}>
-                             <RecipeReviewCard key={data.content_no} list={data}  />
+                            <RecipeReviewCard key={data.recipe_no} 
+                                title={data.recipe_title} like_count={data.recipe_like_count} comment_count={0} sname={data.recipe_sname} date={data.recipe_date} type={true} />
                         </div>
                     </div>
                     ) : <div style={{margin: "5% auto"}}> "조회된 게시글이 없습니다"</div>}
@@ -100,14 +101,15 @@ const SearchList = () => {
             </div>
             <div className="searchClass">
                 <div className="searchList-title">
-                    클래스 <a className="title-right" style={{ cursor: 'pointer' }}> 더보기 &gt; </a>
+                    클래스 <a className="title-right" style={{ cursor: 'pointer' }} onClick={handleMoreClass}> 더보기 &gt; </a>
                 </div>
                 <div className="searchList-body">
                     {searchClassList.length !== 0 ? searchClassList.map((data) =>
                         <div style={{ position: 'relative', cursor: 'pointer' }} >
                             <Bookmark />
                             <div onClick={(e)=> handleClassDetail(data.lesson_no, e)}>
-                                <RecipeReviewCard key={data.content_no} list={data}/>
+                                <RecipeReviewCard key={data.lesson_no}
+                                    title={data.lesson_title} like_count={data.lesson_like_count} sname={data.lesson_sname} date={data.lesson_date} type={false} />
                             </div>
                         </div>
                     ) : <div style={{margin: "5% auto"}}> "조회된 게시글이 없습니다"</div>}

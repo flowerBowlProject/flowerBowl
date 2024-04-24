@@ -29,6 +29,7 @@ export const setMemberPw=(pw)=>({type:SETMEMBERPW,payload:pw});
 export const SETMEMBERNAME='SET/MEMBERNAME'
 export const setMemberName=(name)=>({type:SETMEMBERNAME,payload:name});
 
+
 export const initialState = {
   member: { memberId:"",memberEmail:"",memberTel:'',memberPw:'',memberName:''},
   accessToken: "",
@@ -37,6 +38,7 @@ export const initialState = {
   duplicationText:{id:'중복된 아이디입니다.',name:'중복된 닉네임입니다.' },
   duplicationBoolean:{id:false,name:false},
   emailCheck:false
+  nickname:""
 };
 
 const reducer = (currentState, action) => {
@@ -104,6 +106,8 @@ const reducer = (currentState, action) => {
         memberName:action.payload
       }
       break;
+    case "nickname":
+      newState.nickname = action.payload;
     default:
   }
   return newState;
@@ -115,7 +119,7 @@ const persistConfig = {
 };
 const persistedReducer = persistReducer(persistConfig, reducer);
 const store = configureStore({
-  reducer:  persistedReducer ,
+  reducer: persistedReducer,
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: false,
