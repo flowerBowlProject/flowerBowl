@@ -111,7 +111,7 @@ public class UserServiceImpl implements UserService {
 
         try {
             String userEmail = dto.getUser_email();
-            String userNickname = dto.getUser_nickname();
+//            String userNickname = dto.getUser_nickname();
 
             User byUserEmail = userRepository.findByUserEmail(userEmail);
             if (byUserEmail == null) return FindUserIdResponseDto.findIdFail();
