@@ -15,7 +15,6 @@ const RecipeDetail = () => {
     const navigator = useNavigate();
     const accessToken = useSelector((state) => state.accessToken);
     const writer = useSelector((state)=>state.nickname);
-    console.log(writer)
     const { recipe_no } = useParams();
 
     useEffect(()=>{
@@ -65,6 +64,28 @@ const RecipeDetail = () => {
         })
     }
 
+    {/* 즐겨찾기 생성 / 삭제 */}
+    const clickBookmark = () =>{
+        if(accessToken === ''){
+            console.log('로그인 후 사용해 주세요')
+        }else{
+            axios.post(`${url}/api/recipes/like/${recipe_no}`, null, {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`,
+                }
+            })
+            .then((res) => {
+                console.log('북마크 성공');
+                const check = res.data.code == 'SU' ? false : true;
+                setRecipeData((recipeData) => ({...recipeData, recipe_like_status : check}))
+            })
+            .catch((err) => {
+                /* 토큰 만료에 대한 처리 진행 */
+                console.log(err);     
+            });
+        }
+    }
+
     return (
         <>
             <div className="recipeDetail-Box">
@@ -90,8 +111,8 @@ const RecipeDetail = () => {
 
                 <div className='recipe-body'>{recipeData.recipe_content}</div>
                 {/* 즐겨찾기 버튼 - 즐겨찾기 여부에 따른 true / false로 아이콘 표시 */}
-                <div className="recipe-bookmark">{recipeData.recipe_like_status ? <TurnedInNotIcon sx={{ fontSize: '60px', color: 'main.or' }} /> :
-                    <TurnedInIcon sx={{ fontSize: '60px', color: 'main.or' }} />} 스크랩 </div>
+                <div className="recipe-bookmark" onClick={clickBookmark} style={{cursor :'pointer'}}>{recipeData.recipe_like_status ? <TurnedInIcon sx={{ fontSize: '60px', color: 'main.or' }} /> :
+                    <TurnedInNotIcon sx={{ fontSize: '60px', color: 'main.or' }} />} 스크랩 </div>
                 {/* 수정/삭제 버튼 - 작성자인 경우에만 true로 버튼 표시 */}
                 <div className="recipe-change">
                     {writer === recipeData.recipe_writer && <ButtonOutlined size='large' text='수정' handleClick={clickModify}/>} &nbsp;

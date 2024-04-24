@@ -26,6 +26,16 @@ const BookmarkRecipe = () => {
           },
         });
         setListData(response.data.likeRecipes);
+        setListData(oldListData=>{
+          return oldListData.map(item =>{
+            return{
+              ...item,
+              recipeLikeStatus:true
+            };
+          });
+        });
+            
+        
       } catch (error) {
         console.error("Error fetching data:", error);
         setListData([]);
@@ -47,12 +57,11 @@ const BookmarkRecipe = () => {
           },
         }
       );
-      if (response.status === 200) {
-        console.log(response.status)
+      if (response.status === 200||201) {
         // 성공적으로 처리되면 상태에서 해당 레시피의 'recipeLikeStatus'를 변경
         const updatedList = listData.map((item) => {
-          if (item.recipeNo === recipeNo) {
-            return { ...item, recipeLikeStatus: false }; // 'recipeLikeStatus'를 false로 설정
+          if (item.recipe_no === recipeNo) {
+            return { ...item, recipeLikeStatus: !item.recipeLikeStatus }; // 'recipeLikeStatus'를 false로 설정
           }
           return item;
         });

@@ -15,11 +15,13 @@ const ViewList = () => {
   const navigator = useNavigate();
   const accessToken = useSelector((state) => state.accessToken);
   const location = useLocation();
-  const keyword = (location.state && location.state.keyword) || '';
+  const params = new URLSearchParams(location.search);
+  const keyword = params.get('keyword');
 
   useEffect(() => {
-    if (keyword !== '') {
-      axios.get(`${url}/api/search/recipes?keyword=${keyword}&page=1&size=10`)
+    if (keyword !== null) {
+      if(accessToken === ''){
+        axios.get(`${url}/api/search/recipes?keyword=${keyword}&page=1&size=10`)
         .then(res => {
           setListData(res.data.recipes);
           //setPageInfo(res.data.pageInfo);
@@ -28,6 +30,21 @@ const ViewList = () => {
         .catch(err => {
           console.log(err);
         })
+      }else{
+        axios.get(`${url}/api/user/search/recipes?keyword=${keyword}&page=1&size=10`,{
+          headers:{
+            Authorization : `Bearer ${accessToken}`
+          }
+        })
+        .then(res => {
+          setListData(res.data.recipes);
+          //setPageInfo(res.data.pageInfo);
+          console.log(res);
+        })
+        .catch(err => {
+          console.log(err);
+        })
+      } 
     } else {
       { /* 로그인 여부에 따른 정보 호출 */ }
       if (accessToken === "") {
@@ -61,7 +78,8 @@ const ViewList = () => {
   {
     /* 북마크 동작 */
   }
-  const clickBookmark = (e, index, recipeNo) => {
+  const clickBookmark = (e, index, recipe_no) => {
+    console.log(recipe_no);
     if (accessToken === "") {
       {
         /* 로그인이 되어있지 않은 경우 - 로그인 후 이용 가능 alrt - 변수명 수정 후 확인 필요*/
@@ -69,20 +87,19 @@ const ViewList = () => {
       console.log("로그인 후 이용 가능");
     } else {
       axios
-        .post(`${url}/api/recipes/like/${recipeNo}`, {
+        .post(`${url}/api/recipes/like/${recipe_no}`, null, {
           headers: {
             Authorization: `Bearer ${accessToken}`,
-          },
+          }
         })
         .then((res) => {
-          const bookmark = res.data.recipeLikeNo == undefined ? false : true;
-          console.log(bookmark);
+          const check = res.data.code=='SU' ? false : true;
+          console.log(res);
           setListData((listData) => {
-            const updatedList = { ...listData[index], recipeLikeStatus: bookmark };
+            const updatedList = { ...listData[index], recipe_like_status: check };
             const newListData = [...listData.slice(0, index), updatedList, ...listData.slice(index + 1)];
             return newListData;
           })
-          console.log(listData)
     })
         .catch((err) => {
           {
@@ -132,7 +149,7 @@ const ViewList = () => {
             <div style={{ position: "relative" }}>
               <Bookmark
                 key={index}
-                check={data.recipeLikeStatus}
+                check={data.recipe_like_status}
                 sx={{ cursor: "point" }}
                 onClick={(e) => clickBookmark(e, index, data.recipe_no)}
               />
