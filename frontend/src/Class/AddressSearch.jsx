@@ -6,10 +6,15 @@ import { address_key } from "../config";
 
 const AddressSearch = (props) => {
   const [address, setAddress] = useState({
-    lesson_address: props.address,
+    lesson_address: '',
     lesson_longitude: 0.0,
     lesson_latitude: 0.0,
   });
+
+  useEffect(()=>{
+    if(props.setAddress !== '') setAddress((address) => ({ ...address, lesson_address: props.setAddress }));
+    console.log(props.setAddress);
+  },[props.setAddress])
 
   const searchAddress = () => {
     axios
@@ -64,7 +69,7 @@ const AddressSearch = (props) => {
 
   return (
     <div style={{ display: "flex", justifyContent: "center" }}>
-      <TextField
+      <TextField color="secondary"
         className="main_address"
         id="main_address"
         type="text"

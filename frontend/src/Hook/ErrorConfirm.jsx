@@ -30,7 +30,7 @@ const ErrorConfirm = ({error})=>{
                 severity='success';
                 content='아이디 찾기에 성공 하였습니다.';
                 break;
-            case 'FindPW':
+            case 'FindPw':
                 severity='success';
                 content='이메일에 새로운 비밀번호를 보냈습니다.';
                 break;
@@ -41,6 +41,10 @@ const ErrorConfirm = ({error})=>{
             case 'SUCertification':
                 severity='success';
                 content='인증에 성공 하였습니다.';
+                break;
+            case 'SF':
+                severity='error';
+                content='아이디 혹은 비밀번호가 틀렸습니다.';
                 break;
             case 'CF':
                 severity='error';

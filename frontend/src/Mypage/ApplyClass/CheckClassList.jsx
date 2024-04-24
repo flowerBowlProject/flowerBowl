@@ -1,35 +1,43 @@
 import { React, useState, useEffect } from "react";
 import "./CheckClassList.css";
 import ButtonContain from "../../Component/ButtonContain";
+import axios from "axios";
+import { url } from "../../url";
+import { useSelector } from "react-redux";
 
 const CheckClassList = () => {
   // 정렬기능k
   const [sortDirection, setSortDirection] = useState("asc");
+  const [listData, setListData] = useState([]);
+  const accessToken = useSelector((state) => state.accessToken);
 
-  // 받아올 테이블 데이터
-  const [tableData, setTableData] = useState([
-    {
-      date: "2024/02/20",
-      description: "화이트데이 초콜릿 만들기 클래스",
-      user: "@내꿈은너야",
-      phone: `010-8459-8114`,
-    },
-    {
-      date: "2023/12/25",
-      description: "크리스마스 스페셜 만들기",
-      user: "@메리크리스마스",
-      phone: `010-5995-7519`,
-    },
-  ]);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(`${url}/api/chef/purchasers`, {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
+        setListData(response.data.purchasers);
+        //코드 확인
+        // console.log(response.data.likeRecipes);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        setListData([]);
+      }
+    };
+    fetchData();
+  }, [accessToken]);
 
   //   날짜정렬
   const sortTableDataByDate = (direction = "asc") => {
-    const sortedData = [...tableData].sort((a, b) => {
-      const dateA = new Date(a.date);
-      const dateB = new Date(b.date);
+    const sortedData = [...listData].sort((a, b) => {
+      const dateA = new Date(a.pay_date);
+      const dateB = new Date(b.pay_date);
       return direction === "asc" ? dateB - dateA : dateA - dateB;
     });
-    setTableData(sortedData);
+    setListData(sortedData);
   };
 
   useEffect(() => {
@@ -72,24 +80,18 @@ const CheckClassList = () => {
           </thead>
 
           <tbody>
-            {[...tableData, ...Array(8 - tableData.length)].map(
-              (item, index) => (
-                <tr key={index}>
-                  <td>{item ? index + 1 : ""}</td>
-                  <td>{item ? item.date : ""}</td>
-                  <td>{item ? item.description : ""}</td>
-                  <td>{item ? item.user : ""}</td>
-                  <td>{item ? item.phone : ""}</td>
-                  <td>
-                    {item ? (
-                      <ButtonContain size="small" text="취소/환불" />
-                    ) : (
-                      ""
-                    )}
-                  </td>
-                </tr>
-              )
-            )}
+            {[...listData, ...Array(8 - listData.length)].map((data, index) => (
+              <tr key={index}>
+                <td>{data ? index + 1 : ""}</td>
+                <td>{data ? data.pay_date : ""}</td>
+                <td>{data ? data.lesson_title : ""}</td>
+                <td>{data ? data.user_nickname : ""}</td>
+                <td>{data ? data.user_phone : ""}</td>
+                <td>
+                  {data ? <ButtonContain size="small" text="취소/환불" /> : ""}
+                </td>
+              </tr>
+            ))}
           </tbody>
         </table>
       </section>

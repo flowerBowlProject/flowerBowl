@@ -3,27 +3,37 @@ import "./CheckPaidList.css";
 import ButtonContain from "../../Component/ButtonContain";
 import ButtonOutlined from "../../Component/ButtonOutlined";
 import { Link } from "react-router-dom";
+import axios from "axios";
+import { url } from "../../url";
+import { useSelector } from "react-redux";
 
 const CheckPaidList = () => {
+  const accessToken = useSelector((state) => state?.accessToken);
+
   // 정렬기능
   const [sortDirection, setSortDirection] = useState("asc");
   const [sortReceipt, setSortReceipt] = useState("asc");
+  const [listData, setListData] = useState([]);
+  const [refreshData, setRefreshData] = useState(false);
 
-  // 받아올 테이블 데이터
-  const [tableData, setTableData] = useState([
-    {
-      date: "2024/02/20",
-      description: "화이트데이 초콜릿 만들기 클래스",
-      chef: "@내꿈은너야",
-      receipt: `￦35000`,
-    },
-    {
-      date: "2023/12/25",
-      description: "크리스마스 스페셜 만들기",
-      chef: "@메리크리스마스",
-      receipt: `￦50000`,
-    },
-  ]);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(`${url}/api/mypage/pays`, {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
+        setListData(response.data.pays);
+        //코드 확인
+        // console.log(response.data.payLessons);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        setListData([]);
+      }
+    };
+    fetchData();
+  }, [accessToken, refreshData]);
 
   //결제금액 천단위 붙이기
   const formatCurrency = (value) => {
@@ -35,22 +45,22 @@ const CheckPaidList = () => {
   const toggleSortReceipt = () => {
     setSortReceipt((prevSortReceipt) => {
       const newSortReceipt = prevSortReceipt === "asc" ? "desc" : "asc";
-      sortDataByAttribute("receipt", newSortReceipt); // 새로운 정렬 방향으로 데이터 정렬
+      sortDataByAttribute("pay_price", newSortReceipt); // 새로운 정렬 방향으로 데이터 정렬
       return newSortReceipt;
     });
   };
 
   // 속성(이 경우에는 결제 금액)에 따라 데이터를 정렬하는 함수
   const sortDataByAttribute = (attribute, direction) => {
-    const sortedData = [...tableData].sort((a, b) => {
-      const valueA = parseInt(a[attribute].replace(/[^0-9]/g, ""), 10);
-      const valueB = parseInt(b[attribute].replace(/[^0-9]/g, ""), 10);
+    const sortedData = [...listData].sort((a, b) => {
+      const valueA = parseInt(a[attribute]?.replace(/[^0-9]/g, "") || "0", 10);
+      const valueB = parseInt(b[attribute]?.replace(/[^0-9]/g, "") || "0", 10);
 
       // 정렬 방향에 따라 숫자를 비교하여 정렬
       return direction === "asc" ? valueB - valueA : valueA - valueB;
     });
 
-    setTableData(sortedData); // 정렬된 데이터로 상태 업데이트
+    setListData(sortedData); // 정렬된 데이터로 상태 업데이트
   };
 
   useEffect(() => {
@@ -59,12 +69,12 @@ const CheckPaidList = () => {
 
   //   날짜정렬
   const sortTableDataByDate = (direction = "asc") => {
-    const sortedData = [...tableData].sort((a, b) => {
-      const dateA = new Date(a.date);
-      const dateB = new Date(b.date);
+    const sortedData = [...listData].sort((a, b) => {
+      const dateA = new Date(a.pay_date);
+      const dateB = new Date(b.pay_date);
       return direction === "asc" ? dateB - dateA : dateA - dateB;
     });
-    setTableData(sortedData);
+    setListData(sortedData);
   };
 
   useEffect(() => {
@@ -77,6 +87,24 @@ const CheckPaidList = () => {
       sortTableDataByDate(newDirection); // sort the data after setting direction
       return newDirection;
     });
+  };
+
+  // 취소/환불 api연결
+  const handleDelete = async (payNo) => {
+    try {
+      const response = await axios.delete(`${url}/api/mypage/pays/${payNo}`, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+
+      if (response.status === 200) {
+        console.log("Success:", response.data.message);
+        setRefreshData(!refreshData); // toggle to trigger a re-fetch
+      }
+    } catch (error) {
+      console.error("Failed to delete lesson:", error);
+    }
   };
 
   return (
@@ -121,7 +149,7 @@ const CheckPaidList = () => {
               <th>클래스명</th>
               <th>쉐프</th>
               <th>
-                결재금액
+                결제금액
                 <button className="sort-button" onClick={toggleSortReceipt}>
                   <span
                     className={
@@ -137,24 +165,26 @@ const CheckPaidList = () => {
           </thead>
 
           <tbody>
-            {[...tableData, ...Array(8 - tableData.length)].map(
-              (item, index) => (
-                <tr key={index}>
-                  <td>{item ? index + 1 : ""}</td>
-                  <td>{item ? item.date : ""}</td>
-                  <td>{item ? item.description : ""}</td>
-                  <td>{item ? item.chef : ""}</td>
-                  <td>{item ? formatCurrency(item.receipt) : ""}</td>
-                  <td>
-                    {item ? (
-                      <ButtonContain size="small" text="취소/환불" />
-                    ) : (
-                      ""
-                    )}
-                  </td>
-                </tr>
-              )
-            )}
+            {[...listData, ...Array(8 - listData.length)].map((data, index) => (
+              <tr key={index}>
+                <td>{data ? index + 1 : ""}</td>
+                <td>{data ? data.pay_date : ""}</td>
+                <td>{data ? data.lesson_title : ""}</td>
+                <td>{data ? data.lesson_writer : ""}</td>
+                <td>{data ? formatCurrency(data.pay_price) : ""}</td>
+                <td>
+                  {data ? (
+                    <ButtonContain
+                      handleClick={handleDelete}
+                      size="small"
+                      text="취소/환불"
+                    />
+                  ) : (
+                    ""
+                  )}
+                </td>
+              </tr>
+            ))}
           </tbody>
         </table>
       </section>
