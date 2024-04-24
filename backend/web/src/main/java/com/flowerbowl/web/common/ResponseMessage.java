@@ -21,10 +21,12 @@ public interface ResponseMessage {
     String NOT_EXIST_REVIEW = "This review does not exist"; // 조회한 리뷰가 갯수가 0개인 경우
     String NOT_EXIST_NUM = "This num does not exist"; // @pathvariable 잘못 입력한 경우
     String NOT_EXIST_PAGE = "This page does not exist"; // 존재하지 않는 페이지인 경우
+    String NOT_EXIST_COMMUNITY = "This community does not exist"; // 존재하지 않는 커뮤니티 게시글인 경우
     String FIND_ID_FAIL = "Email incorrect"; // 아이디 찾기 실패
     String FIND_PW_FAIL = "Information mismatch"; // 비번 찾기 실패
 
 
     String MAIL_FAIL = "Mail Send Fail"; // 메일 발송 실패
     String INTERNAL_SERVER_ERROR = "Internal Server Error"; // 500 에러
+    String DOES_NOT_MATCH = "Does Not Match"; // 두 비교군이 일치하지 않는 경우
 }

@@ -45,7 +45,7 @@ public class LessonsController {
     // GET
     @GetMapping("/user/lessons")
     public ResponseEntity<? super FindAllResponseDto> lessonsFindAll(@AuthenticationPrincipal String userId, @PageableDefault(page = 0, size = 8) Pageable pageable){
-        return lessonService.findAll(pageable, userId);
+        return lessonService.findAll(pageable, true, userId);
     }
 
     // 전체 클래스 조회 (비로그인)
@@ -53,7 +53,7 @@ public class LessonsController {
     @GetMapping("/guest/lessons") // guest
     public ResponseEntity<? super FindAllResponseDto> lessonsFindAllGuest(@PageableDefault(page = 0, size = 8) Pageable pageable){
 //   public FindAllResponseDto lessonsFindAllGuest(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "8") int size){
-        return lessonService.findAllGuest(pageable);
+        return lessonService.findAll(pageable, false, "guest");
     }
 
     // 특정 클래스 조회 (로그인)
@@ -71,7 +71,7 @@ public class LessonsController {
 
     // 클래스 구매 // review_enable에도 넣어줘야함
     // POST
-    @PostMapping(value = "/lessons/buy")
+    @PostMapping(value = "/user/lessons/payments")
     public ResponseEntity<? super PaymentInfoResponseDto> lessonsBuy(@AuthenticationPrincipal String userId, @RequestBody PaymentInfoRequestDto paymentInfoRequestDto){
         return lessonService.buyLesson(paymentInfoRequestDto.getLesson_no(), userId);
     }
@@ -84,6 +84,6 @@ public class LessonsController {
     // 클래스 즐겨찾기 해제 // DELETE
     @DeleteMapping(value = "/user/lessons/like/{lesson_no}")
     public ResponseEntity<ResponseDto> lessonUnlike(@AuthenticationPrincipal String userId, @PathVariable(value = "lesson_no") Long lesson_no){
-        return lessonService.LessonUnlike(lesson_no, "test");
+        return lessonService.LessonUnlike(lesson_no, userId);
     }
 }

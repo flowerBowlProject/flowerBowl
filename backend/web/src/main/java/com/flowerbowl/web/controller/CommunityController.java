@@ -6,6 +6,7 @@ import com.flowerbowl.web.dto.response.community.CommunityResponseDto;
 import com.flowerbowl.web.service.CommunityService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -16,18 +17,18 @@ public class CommunityController {
     private final CommunityService communityService;
 
     @PostMapping("")
-    private ResponseEntity<? extends CommunityResponseDto> createCommunity(@RequestBody CrCommunityReqDto request) throws Exception {
-        return communityService.createCommunity(request);
+    private ResponseEntity<? extends CommunityResponseDto> createCommunity(@RequestBody CrCommunityReqDto request, @AuthenticationPrincipal String userId) throws Exception {
+        return communityService.createCommunity(request, userId);
     }
 
     @PutMapping("{community_no}")
-    private ResponseEntity<? extends CommunityResponseDto> updateCommunity(@RequestBody UpCommunityReqDto request, @PathVariable Long community_no) throws Exception {
-        return communityService.updateCommunity(request, community_no);
+    private ResponseEntity<? extends CommunityResponseDto> updateCommunity(@RequestBody UpCommunityReqDto request, @PathVariable Long community_no, @AuthenticationPrincipal String userId) throws Exception {
+        return communityService.updateCommunity(request, community_no, userId);
     }
 
     @DeleteMapping("{community_no}")
-    private ResponseEntity<? extends CommunityResponseDto> deleteCommunity(@PathVariable Long community_no) throws Exception {
-        return communityService.deleteCommunity(community_no);
+    private ResponseEntity<? extends CommunityResponseDto> deleteCommunity(@PathVariable Long community_no, @AuthenticationPrincipal String userId) throws Exception {
+        return communityService.deleteCommunity(community_no, userId);
     }
 
     @GetMapping("/list")
