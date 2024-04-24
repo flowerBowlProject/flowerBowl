@@ -109,25 +109,7 @@ const CheckPaidList = () => {
 
   return (
     <>
-      {/* 버튼들 */}
-      <section className="buttons">
-        <span className="paidlist">
-          <Link to="/mypage/checkPaidList">
-            <ButtonContain size="medium" text="결제 내역" />
-          </Link>
-        </span>
-        <span className="review">
-          <Link to="/mypage/checkReview">
-            <ButtonOutlined size="medium" text="리뷰 조회" />
-          </Link>
-        </span>
-        <span className="register">
-          <Link to="/mypage/registerReview">
-            <ButtonOutlined size="medium" text="리뷰 작성" />
-          </Link>
-        </span>
-      </section>
-
+  
       {/* 내용 */}
       <section className="table-content">
         <table className="custom-table">

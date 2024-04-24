@@ -41,18 +41,18 @@ const Row = ({ icon, name, isHovered, isFixed, link }) => {
 const Sidebar = ({ fixedItem = "" }) => {
   const items = [
     { name: "프로필", icon: <AccountCircleIcon />, link: "/Mypage/profile" },
-    { name: "북마크", icon: <BookmarkIcon />, link: "/Mypage/bookmarkRecipe" },
+    { name: "북마크", icon: <BookmarkIcon />, link: "/Mypage/bookmark" },
     {
       name: "마이 클래스",
       icon: <ImportContactsIcon />,
-      link: "/Mypage/checkteachingclass",
+      link: "/Mypage/checkClass",
     },
     {
       name: "마이 레시피",
       icon: <BlenderIcon />,
       link: "/Mypage/checkmakingrecipe",
     },
-    { name: "결제 내역", icon: <PaymentIcon />, link: "/Mypage/checkPaidList" },
+    { name: "결제 내역", icon: <PaymentIcon />, link: "/Mypage/paymentDetail" },
     {
       name: "클래스 신청 내역",
       icon: <ListIcon />,
@@ -95,6 +95,7 @@ const Sidebar = ({ fixedItem = "" }) => {
                   isFixed={i === initialHoverIndex}
                   isHovered={hoverIndex === i}
                   link={item.link}
+                  link2={item.link2?item.link2:null}
                 />
               </Grid>
             );

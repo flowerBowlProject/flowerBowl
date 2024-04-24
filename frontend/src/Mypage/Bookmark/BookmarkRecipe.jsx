@@ -26,8 +26,6 @@ const BookmarkRecipe = () => {
           },
         });
         setListData(response.data.likeRecipes);
-        //코드 확인
-        // console.log(response.data.likeRecipes);
       } catch (error) {
         console.error("Error fetching data:", error);
         setListData([]);
@@ -38,6 +36,7 @@ const BookmarkRecipe = () => {
 
   //북마크 해제
   const byeBookmark = async (recipeNo) => {
+    console.log(listData)
     try {
       const response = await axios.post(
         `${url}/api/recipes/like/${recipeNo}`,
@@ -49,6 +48,7 @@ const BookmarkRecipe = () => {
         }
       );
       if (response.status === 200) {
+        console.log(response.status)
         // 성공적으로 처리되면 상태에서 해당 레시피의 'recipeLikeStatus'를 변경
         const updatedList = listData.map((item) => {
           if (item.recipeNo === recipeNo) {
@@ -70,21 +70,7 @@ const BookmarkRecipe = () => {
 
   return (
     <>
-      <div className="bookmark-button">
-        <Link to="/mypage/bookmarkRecipe">
-          <ButtonContain size="medium" text="레시피" />
-        </Link>
-        <span className="classbutton">
-          <Link to="/mypage/bookmarkClass">
-            <ButtonOutlined
-              size="medium"
-              text="클래스"
-              className="classbutton"
-            />
-          </Link>
-        </span>
-      </div>
-
+  
       <div className="division-line"></div>
 
       <div className="bookmark-content">
@@ -92,12 +78,13 @@ const BookmarkRecipe = () => {
           listData.map((data, index) => (
             <div key={index} style={{ position: "relative" }}>
               <Bookmark
+
                 check={data.recipeLikeStatus}
                 sx={{ cursor: "pointer" }}
-                onClick={() => byeBookmark(data.recipeNo)}
+                onClick={() => byeBookmark(data.recipe_no)}
               />
               <RecipeReviewCard
-                onClick={(e) => clickDetail(e, data.recipeNo)}
+                onClick={(e) => clickDetail(e, data.recipe_no)}
                 title={data.recipe_title}
                 like_count={data.recipe_like_cnt}
                 comment_count={data.comment_cnt}

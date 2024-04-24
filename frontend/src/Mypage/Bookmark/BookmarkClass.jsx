@@ -67,21 +67,6 @@ const BookmarkClass = () => {
 
   return (
     <>
-      <div className="bookmark-button">
-        <Link to="/mypage/bookmarkRecipe">
-          <ButtonOutlined size="medium" text="레시피" />
-        </Link>
-        <span className="classbutton">
-          <Link to="/mypage/bookmarkClass">
-            <ButtonContain
-              size="medium"
-              text="클래스"
-              className="classbutton"
-            />
-          </Link>
-        </span>
-      </div>
-
       <div className="division-line"></div>
 
       <div className="bookmark-content">

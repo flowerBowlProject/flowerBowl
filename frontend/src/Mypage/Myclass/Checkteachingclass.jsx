@@ -91,20 +91,7 @@ const Checkteachingclass = () => {
 
   return (
     <>
-      {/* 버튼들 */}
-      <section className="buttons">
-        <span className="checktclass">
-          <Link to="/mypage/checkteachingclass">
-            <ButtonContain size="doubleLarge" text="수강클래스 조회" />
-          </Link>
-        </span>
-        <span className="checkmclass">
-          <Link to="/mypage/checkmakingclass">
-            <ButtonOutlined size="doubleLarge" text="창작클래스 조회" />
-          </Link>
-        </span>
-      </section>
-
+      
       {/* 내용 */}
       <section className="table-content">
         <table className="custom-table">
