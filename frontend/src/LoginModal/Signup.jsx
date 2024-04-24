@@ -1,8 +1,16 @@
 import React,{useState} from "react";
-import { Grid, Button, Modal, Box, ButtonGroup} from "@mui/material";
+import { Grid, Button, Modal, Box, ButtonGroup,Typography,TextField} from "@mui/material";
 import ButtonContainStyle from "../Component/ButtonContainStyle";
 import FormSignup from "../Component/FormSignup";
 import styled from "@emotion/styled";
+import axios from "axios";
+import { url } from "../url";
+import ErrorConfirm from "../Hook/ErrorConfirm";
+import { useSelector ,useDispatch} from "react-redux";
+import { ShowDuplication, closeEmailCheck, editErrorType ,openEmailCheck,openError, setMemberName, setMemberid,setMermberEmail} from "../persistStore";
+import { useTheme } from "@emotion/react";
+import InputMember from "./InputMember";
+import ButtonOutlined from "../Component/ButtonOutlined";
 const ButtonLoginStyle =styled(Button)(({theme})=>({
   color: theme.palette.main.br,
   border: 'inherit',
@@ -12,12 +20,110 @@ const ButtonLoginStyle =styled(Button)(({theme})=>({
     backgroundColor: 'transparent'
   }
 }));
-const Signup = ({ open,handleOpen }) => {
+const Signup = ({ open,handleOpen,handleClose }) => {
+  const dispatch=useDispatch();
+  const handleCloseEmailCheck=()=>{
+    dispatch(closeEmailCheck())
+  }
+  const handleCheckId=async(id)=>{
+    try{
+    const response=await axios.post(`${url}/api/auth/checkId`,{
+      user_id:id
+    });
+      dispatch(setMemberid(id));
+      dispatch(editErrorType(response.data.code));
+      dispatch(openError());
+    }catch(error){
+      
+      dispatch(editErrorType(error.response.data.code));
+      dispatch(openError());
+      dispatch(ShowDuplication('id'));
+    }
+  }
+  const handleCheckName=async(name)=>{
+    try{
+      const response=await axios.post(`${url}/api/auth/checkNickname`,
+      {
+        user_nickname:name
+      });
+      dispatch(setMemberName(name))
+      dispatch(editErrorType("SUNAME"));
+      dispatch(openError());
+    }catch(error){
+      console.log(error)
+      dispatch(editErrorType(error.response.data.code));
+      dispatch(openError());
+      dispatch(ShowDuplication('name'));
+    }
+  }
+  const hanldeSendEmail=async(mail)=>{
+    if(userid===''){
+      dispatch(editErrorType("idError"));
+      dispatch(openError());
+    }else{
+    try{
+      const response=await axios.post(`${url}/api/auth/sendEmail`,{
+        user_email: mail,
+        user_id: userid
+      })
+      dispatch(editErrorType("SUEMAIL"));
+      dispatch(openError());
+      dispatch(openEmailCheck())
+      dispatch(setMermberEmail(mail))
+    }
+    catch(error){
+        dispatch(editErrorType(error.response.data.code));
+        dispatch(openError());
+
+    }
+    }
+  }
+  const handleCertifiedEmail=async()=>{
+    try{
+      const response=await axios.post(`${url}/api/auth/checkEmail`,
+      {user_email:userMail,
+      certification_num:emailCode})
+      dispatch(editErrorType("SUCertification"));
+      dispatch(openError());
+      dispatch(closeEmailCheck())
+    }catch(error){
+      dispatch(editErrorType(error.response.data.code));
+      dispatch(openError());
+
+    }
+  }
+  const handleSignup=async()=>{
+    console.log(user)
+    try{
+      const response=await axios.post(`${url}/api/auth/signUp`,
+      { user_id:user.memberId,
+        user_password:user.memberPw,
+        user_nickname:user.memberName,
+        user_phone:user.memberTel,
+        user_email:user.memberEmail}
+      ) 
+      handleClose();
+      dispatch(editErrorType("SUSignUp"));
+      dispatch(openError());
+    }catch(error){
+      dispatch(editErrorType(error.response.data.code));
+      dispatch(openError());
+    }
+
+  }
   const [passConfirm,setPassConfirm]=useState('');
   const [butDisable,setButDisable]=useState([true,true,true,true,true]);
-  const handleConsole=()=>{
-    console.log(butDisable)
+  const userid=useSelector(state=>state.member.memberId)
+  const userMail=useSelector(state=>state.member.memberEmail)
+  const user=useSelector(state=>state.member)
+  const CheckEmailOpen=useSelector(state=>state.emailCheck)
+  const [emailCode,setEmailCode]=useState('');
+  const handleChangeEmailCode=(e)=>{
+    const value=e.target.value
+    setEmailCode(value);
   }
+
+  const theme=useTheme();
   const handleBut= (type,bool)=>{
     switch(type){
       case 'id':
@@ -54,7 +160,7 @@ const Signup = ({ open,handleOpen }) => {
     }
   }
   return (
-    <Modal open={open}>
+    <Modal open={open} onClose={handleClose}> 
       <Box
         mt="7vw"
         mx="25vw"
@@ -74,6 +180,7 @@ const Signup = ({ open,handleOpen }) => {
             size='towel'
             vaild='id'
             handleBut={handleBut}
+            handleCheck={handleCheckId}
           />
           <FormSignup
             title="닉네임"
@@ -82,6 +189,8 @@ const Signup = ({ open,handleOpen }) => {
             but_exis={true}
             size='towel'
             handleBut={handleBut}
+            handleCheck={handleCheckName}
+            vaild='name'
           />
           <FormSignup
             title="비밀번호"
@@ -102,6 +211,7 @@ const Signup = ({ open,handleOpen }) => {
             size='towel'
             vaild='email'  
             handleBut={handleBut}
+            handleCheck={hanldeSendEmail}
           />
           <FormSignup
             title="비밀번호 확인"
@@ -123,7 +233,7 @@ const Signup = ({ open,handleOpen }) => {
           />
 
           <Grid item xs={12} mt="3vw" mb="0.5vw"  textAlign='center'>
-            <ButtonContainStyle  width="15vw"  disabled={butDisable[0]||butDisable[1]||butDisable[2]||butDisable[3]||butDisable[4]}>
+            <ButtonContainStyle  onClick={handleSignup} width="15vw"  disabled={butDisable[0]||butDisable[1]||butDisable[2]||butDisable[3]||butDisable[4]}>
               회원가입
             </ButtonContainStyle>
           </Grid>
@@ -139,6 +249,24 @@ const Signup = ({ open,handleOpen }) => {
             </ButtonGroup>
           </Grid>
         </Grid>
+        <Modal open={CheckEmailOpen} onClose={handleCloseEmailCheck} >
+          <Box mt='15vw' mx='37.5vw' width='25vw' height='15vw' backgroundColor='main.or' borderRadius={1} border={`3px solid ${theme.palette.main.br}`} >
+              <Grid container  mt='3.5vw'>
+                <Grid item xs={6} textAlign='center' pt='0.7vw' >
+                  <Typography>인증코드</Typography> 
+                </Grid>
+                <Grid item xs={6} textAlign='left'>
+                  <TextField onChange={handleChangeEmailCode} variant='filled' size='small' sx={{width:'10vw'}}/> 
+                </Grid>
+                <Grid item xs textAlign='center' mt='4vw'>
+                  <ButtonOutlined text='전송' size='verySmall' handleClick={handleCertifiedEmail}/>
+            
+                </Grid>
+              </Grid>
+              
+          </Box>
+        </Modal>
+        <ErrorConfirm error={useSelector(state=>state.errorType)}/>
       </Box>
     </Modal>
   );
