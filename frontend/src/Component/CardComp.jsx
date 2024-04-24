@@ -38,7 +38,7 @@ const CardComp = ({title, like_count, date, comment_count, sname, onClick, type}
           </div>
             }
           </div>
-          <div className="views-title"> {title} </div>
+          <div className="views-title"> {title.length >=10 ? title.substr(0, 9)+'...' : title } </div>
         </CardContent>
       </Card>
     </div>

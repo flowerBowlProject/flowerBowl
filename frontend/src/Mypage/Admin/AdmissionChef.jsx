@@ -2,33 +2,54 @@ import { React, useState, useEffect } from "react";
 import ButtonContain from "../../Component/ButtonContain";
 import ButtonOutlined from "../../Component/ButtonOutlined";
 import "./AdmissionChef.css";
+import axios from "axios";
+import { url } from "../../url";
+import { useSelector } from "react-redux";
 
 const AdmissionChef = () => {
   // 정렬기능
   const [sortDirection, setSortDirection] = useState("asc");
+  const [listData, setListData] = useState([]);
+  const accessToken = useSelector((state) => state.accessToken);
 
-  // 받아올 테이블 데이터
-  const [tableData, setTableData] = useState([
-    {
-      date: "2024/02/20",
-      user: "@내꿈은너야",
-      file: "https://unsplash.com/ko/%EC%82%AC%EC%A7%84/%EC%A0%91%EC%8B%9C%EC%97%90-%EC%9D%8C%EC%8B%9D%EC%9D%84-%EB%8B%B4%EB%8A%94-%EC%82%AC%EB%9E%8C-cQbOSRpElxw",
-    },
-    {
-      date: "2023/12/25",
-      user: "@메리크리스마스",
-      file: "https://unsplash.com/ko/%EC%82%AC%EC%A7%84/%EC%A0%91%EC%8B%9C%EC%97%90-%EC%9D%8C%EC%8B%9D%EC%9D%84-%EC%A4%80%EB%B9%84%ED%95%98%EB%8A%94-%EB%B6%80%EC%97%8C%EC%97%90%EC%84%9C-%EB%82%A8%EC%9E%90-J1RKeY6Kv8c",
-    },
-  ]);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(`${url}/api/admin/chefs`, {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
+        setListData(response.data.candidiate);
+        // // console.log(typeof response.data.candidiate);
+
+        // const candidateData = Array.isArray(response.data?.candidiate)
+        //   ? response.data.candidiate
+        //   : [];
+        // setListData(candidateData);
+
+        //코드 확인
+        // console.log(response.data.likeRecipes);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        setListData([]);
+      }
+    };
+    fetchData();
+  }, [accessToken]);
 
   //   날짜정렬
+  const extractDate = (datetime) => {
+    return datetime.split("T")[0];
+  };
+
   const sortTableDataByDate = (direction = "asc") => {
-    const sortedData = [...tableData].sort((a, b) => {
-      const dateA = new Date(a.date);
-      const dateB = new Date(b.date);
+    const sortedData = [...listData].sort((a, b) => {
+      const dateA = new Date(a.license_date);
+      const dateB = new Date(b.license_date);
       return direction === "asc" ? dateB - dateA : dateA - dateB;
     });
-    setTableData(sortedData);
+    setListData(sortedData);
   };
 
   useEffect(() => {
@@ -71,16 +92,16 @@ const AdmissionChef = () => {
             </thead>
 
             <tbody>
-              {[...tableData, ...Array(8 - tableData.length)].map(
-                (item, index) => (
+              {[...listData, ...Array(8 - listData.length)].map(
+                (data, index) => (
                   <tr key={index}>
-                    <td>{item ? index + 1 : ""}</td>
-                    <td>{item ? item.date : ""}</td>
-                    <td className="applyer">{item ? item.user : ""}</td>
+                    <td>{data ? index + 1 : ""}</td>
+                    <td>{data ? extractDate(data.license_date) : ""}</td>
+                    <td className="applyer">{data ? data.user_name : ""}</td>
                     <td>
-                      {item && item.file ? (
+                      {data && data.license_sname ? (
                         <img
-                          src={item.file}
+                          src={data.license_sname}
                           alt="첨부파일"
                           className="attachment-image"
                         />
@@ -89,7 +110,7 @@ const AdmissionChef = () => {
                       )}
                     </td>
                     <td className="button-group">
-                      {item ? (
+                      {data ? (
                         <>
                           <span className="adok">
                             <ButtonContain size="medium" text="신청 허가" />

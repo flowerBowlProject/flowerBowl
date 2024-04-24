@@ -10,50 +10,54 @@ import ButtonContainStyle from "../../Component/ButtonContainStyle";
 
 const Profile = () => {
   const [imageFile, setImageFile] = useState(null);
-  const [passConfirm,setPassConfirm]=useState('');
-  const [butDisable,setButDisable]=useState([true,true,true,true,true]);
-  const butBoolean=butDisable[0]||butDisable[1]||butDisable[2]||butDisable[3]||butDisable[4]
+  const [passConfirm, setPassConfirm] = useState("");
+  const [butDisable, setButDisable] = useState([true, true, true, true, true]);
+  const butBoolean =
+    butDisable[0] ||
+    butDisable[1] ||
+    butDisable[2] ||
+    butDisable[3] ||
+    butDisable[4];
   const handleChangeImage = (event) => {
     setImageFile(event.target.files[0]);
   };
-  const handleConsole=()=>{
-    console.log(butDisable)
-  }
-  const handleBut= (type,bool)=>{
-    switch(type){
-      case 'id':
-        setButDisable(prevState =>{
-            prevState[0]=bool;
-            return [...prevState];
-        })
+  const handleConsole = () => {
+    console.log(butDisable);
+  };
+  const handleBut = (type, bool) => {
+    switch (type) {
+      case "id":
+        setButDisable((prevState) => {
+          prevState[0] = bool;
+          return [...prevState];
+        });
         break;
-      case 'pw':
-        setButDisable(prevState =>{
-          prevState[1]=bool;
+      case "pw":
+        setButDisable((prevState) => {
+          prevState[1] = bool;
           return [...prevState];
-      })
-      break;
-      case 'email':
-        setButDisable(prevState =>{
-          prevState[2]=bool;
+        });
+        break;
+      case "email":
+        setButDisable((prevState) => {
+          prevState[2] = bool;
           return [...prevState];
-      })
-      break;
-      case 'tel':
-        setButDisable(prevState =>{
-          prevState[4]=bool;
+        });
+        break;
+      case "tel":
+        setButDisable((prevState) => {
+          prevState[4] = bool;
           return [...prevState];
-      })
-      break;
+        });
+        break;
       default:
-        setButDisable(prevState =>{
-          prevState[3]=bool;
+        setButDisable((prevState) => {
+          prevState[3] = bool;
           return [...prevState];
-      })
-      break;
-
+        });
+        break;
     }
-  }
+  };
   return (
     <>
       <Grid container direction="row">
@@ -113,14 +117,14 @@ const Profile = () => {
         <Grid item xs={4.5}>
           <Grid container direction="column">
             <Grid item>
-              <Grid container direction="column" ml="-10em" rowGap={2}>
+              <Grid container direction="column" ml="-10em" rowGap={4}>
                 <Grid item>
                   <FormSignup
                     size="joy"
                     title="아이디"
                     place_text="jean1030"
                     helper_text="8~15자로 작성해 주세요."
-                    vaild='id'
+                    vaild="id"
                     handleBut={handleBut}
                   />
                 </Grid>
@@ -131,7 +135,6 @@ const Profile = () => {
                     but_text="중복확인"
                     place_text="치킨나라피자공주"
                     but_exis={true}
-                    
                   />
                 </Grid>
                 <Grid item>
@@ -141,7 +144,7 @@ const Profile = () => {
                     place_text="010-8495-9515"
                     helper_text="올바른 휴대폰 번호를 입력해 주세요."
                     but_exis={false}
-                    vaild='tel'
+                    vaild="tel"
                     handleBut={handleBut}
                   />
                 </Grid>
@@ -153,7 +156,7 @@ const Profile = () => {
                     place_text="jean1030@naver.com"
                     but_exis={true}
                     helper_text="올바른 이메일을 입력해 주세요."
-                    vaild='email'
+                    vaild="email"
                     handleBut={handleBut}
                   />
                 </Grid>
@@ -163,14 +166,14 @@ const Profile = () => {
             {/* 모니터일 때 ml=18em */}
             <Grid item ml="15em" mb="2em" mt="2.5em">
               <div className="change">
-                <ButtonContain text="변경" size="medium"  disable={butBoolean} />
+                <ButtonContain text="변경" size="medium" disable={butBoolean} />
               </div>
             </Grid>
           </Grid>
         </Grid>
 
         <Grid item xs={4.5}>
-          <Grid container direction="column" ml="-10em" rowGap={2}>
+          <Grid container direction="column" ml="-10em" rowGap={-5}>
             <Grid item height="7em">
               <FormSignup size="joy" title="비밀번호" place_text="*****" />
             </Grid>
@@ -181,7 +184,7 @@ const Profile = () => {
                 place_text="******"
                 helper_text="영문, 숫자, 특수문자 포함 8~15자로 작성해주세요."
                 pass_exis={true}
-                vaild='pw'
+                vaild="pw"
                 setPass={setPassConfirm}
                 handleBut={handleBut}
               />
