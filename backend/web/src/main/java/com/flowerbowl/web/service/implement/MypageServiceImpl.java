@@ -104,6 +104,7 @@ public class MypageServiceImpl implements MypageService {
                 lessons.setLesson_title((String) posts[1]);
                 lessons.setLesson_writer((String) posts[2]);
                 lessons.setReview_score((Long) posts[3]);
+                lessons.setLesson_no((Long) posts[4]);
                 payLessons.add(lessons);
             }
 
@@ -129,6 +130,7 @@ public class MypageServiceImpl implements MypageService {
                 myRecipe.setRecipe_title((String) posts[1]);
                 myRecipe.setBookmark_cnt((Long) posts[2]);
                 myRecipe.setComment_cnt((Long) posts[3]);
+                myRecipe.setRecipe_no((Long) posts[4]);
                 myRecipes.add(myRecipe);
             }
 
@@ -155,6 +157,7 @@ public class MypageServiceImpl implements MypageService {
                 myLesson.setLesson_title((String) posts[1]);
                 myLesson.setBookmark_cnt((Long) posts[2]);
                 myLesson.setReview_cnt((Long) posts[3]);
+                myLesson.setLesson_no((Long) posts[4]);
                 myLessons.add(myLesson);
             }
 
@@ -205,6 +208,7 @@ public class MypageServiceImpl implements MypageService {
                 pay.setPay_price((String) posts[1]);
                 pay.setLesson_title((String) posts[2]);
                 pay.setLesson_writer((String) posts[3]);
+                pay.setLesson_no((Long) posts[4]);
                 pays.add(pay);
             }
 

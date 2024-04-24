@@ -15,5 +15,6 @@ public class MyRecipes {
     private String recipe_title;
     private Long bookmark_cnt;
     private Long comment_cnt;
+    private Long recipe_no;
 
 }
