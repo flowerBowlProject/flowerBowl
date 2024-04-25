@@ -13,7 +13,7 @@ public class MyRecipes {
 
     private String recipe_date;
     private String recipe_title;
-    private Long bookmark_cnt;
+    private Long recipe_like_cnt;
     private Long comment_cnt;
     private Long recipe_no;
 
