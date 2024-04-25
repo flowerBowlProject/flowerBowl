@@ -9,7 +9,8 @@ public enum JwtError {
     INVALID_TOKEN("IT", "Invalid Token"),
     EXPIRED_TOKEN("ET", "Expired Token"),
     NOT_SUPPORT_TOKEN("NS", "JWT format not supported"),
-    NOT_PERMISSION("NP", "No Permission");
+    NOT_PERMISSION("NP", "No Permission"),
+    NOT_FIND_EXCEPTION("NE", "Not find JWt exception");
 
     private String code;
     private String message;
