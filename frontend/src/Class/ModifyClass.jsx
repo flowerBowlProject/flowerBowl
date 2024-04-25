@@ -65,7 +65,8 @@ const RegisterClass = () => {
 
     {/* 주소 및 위도/경도 받아와 저장 */ }
     const getAddress = address => {
-        setRegisterData((registerData) => ({ ...registerData, lesson_address: address.lesson_address }));
+        console.log(address);
+        setRegisterData((registerData) => ({ ...registerData, lesson_addr: address.lesson_address }));
         setRegisterData((registerData) => ({ ...registerData, lesson_longitude: address.lesson_longitude }));
         setRegisterData((registerData) => ({ ...registerData, lesson_latitude: address.lesson_latitude }));
     }
@@ -84,18 +85,60 @@ const RegisterClass = () => {
 
     {/* 클래스 수정 */ }
     const handleRegister = () => {
-        console.log('수정');
-        axios.post(`${url}/api/lessons/${lesson_no}`, registerData, {
-            headers: {
-                Authorization: `Bearer ${accessToken}`
+        const isFormDataChanged = () => {
+            // 모든 필드가 변경되었는지 여부를 저장할 변수
+            let isChanged = false;
+          
+            // 모든 필드를 순회하면서 변경 여부 확인
+            Object.values(registerData).forEach((value) => {
+              // 빈 값이거나 초기값이 아닌 경우 변경된 것으로 간주
+              if (value !== '' && value !== 0 && value !== '짜장면' && value !== 0.0) {
+                isChanged = true;
+              }
+            });
+          
+            return isChanged;
+        };
+
+        if(isFormDataChanged()){
+            console.log("수정 가능");
+            axios.put(`${url}/api/lessons/${lesson_no}`, registerData, {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`
+                }
+            })
+                .then(res => {
+                    console.log('수정완료');
+                    navigator(`/classDetail/${lesson_no}`);
+                })
+                .catch(err => {
+                    console.log(err);
+                })
+        }else{
+            console.log('수정 불가');
+            console.log(registerData);
+
+            {/* 등록 내용 작성 여부 확인 후 alert */}
+            if(registerData.lesson_title.trim() === ''){
+                console.log('제목을 작성해 주세요.')
+            }else if(registerData.lesson_category.trim() === ''){
+                console.log('카테고리를 선택해 주세요')
+            }else if(registerData.lesson_sname.trim() === '' || registerData.lesson_oname.trim() === ''){
+                console.log('사진을 첨부해 주세요')
+            }else if(registerData.lesson_address === null || registerData.lesson_latitude === 0.0 || registerData.lesson_longitude ===0.0){
+                console.log('주소를 입력 후 주소 등록 버튼을 눌러주세요')
+            }else if(registerData.lesson_content && registerData.lesson_content.trim() === ''){
+                console.log('내용을 작성해 주세요')
+            }else if(registerData.lesson_start === ''){
+                console.log('시작일을 선택해 주세요')
+            }else if(registerData.lesson_end === ''){
+                console.log('종료일을 선택해 주세요')
+            }else if(registerData.lesson_URL.trim() === ''){
+                console.log('문의 채팅 링크를 입력해 주세요')
+            }else{
+                console.log('현재 글작성이 불가합니다. 관리자에게 문의해 주세요')
             }
-        })
-            .then(res => {
-                console.log(res);
-            })
-            .catch(err => {
-                console.log(err);
-            })
+        }
     }
 
     {/* 취소 버튼 클릭 */ }
