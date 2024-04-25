@@ -21,7 +21,7 @@ const RegisterClass = () => {
     {/* 등록 클래스 데이터 + 썸네일 + 썸네일 선택 여부 */ }
     const [registerData, setRegisterData] = useState({
         lesson_title: '', lesson_category: '', lesson_price: 0, lesson_sname:'짜장면', lesson_oname:'짜장면',
-        lesson_address: '', lesson_content: '', lesson_longitude: 0.0, lesson_latitude: 0.0, lesson_start: '', lesson_end: '', lesson_URL: ''
+        lesson_addr: '', lesson_content: '', lesson_longitude: 0.0, lesson_latitude: 0.0, lesson_start: '', lesson_end: '', lesson_URL: ''
     });
     const [thumbnail, setThumbnail] = useState(null);
     const [selectedFile, setSelectedFile] = useState(null);
@@ -47,7 +47,7 @@ const RegisterClass = () => {
 
     {/* 주소 및 위도/경도 받아와 저장 */ }
     const getAddress = address => {
-        setRegisterData((registerData) => ({ ...registerData, lesson_address: address.lesson_address }));
+        setRegisterData((registerData) => ({ ...registerData, lesson_address: address.lesson_addr }));
         setRegisterData((registerData) => ({ ...registerData, lesson_longitude: address.lesson_longitude }));
         setRegisterData((registerData) => ({ ...registerData, lesson_latitude: address.lesson_latitude }));
     }
@@ -107,7 +107,7 @@ const RegisterClass = () => {
                 console.log('카테고리를 선택해 주세요')
             }else if(registerData.lesson_sname.trim() === '' || registerData.lesson_oname.trim() === ''){
                 console.log('사진을 첨부해 주세요')
-            }else if(registerData.lesson_address.trim() === '' || registerData.lesson_latitude === 0.0 || registerData.lesson_longitude ===0.0){
+            }else if(registerData.lesson_addr.trim() === '' || registerData.lesson_latitude === 0.0 || registerData.lesson_longitude ===0.0){
                 console.log('주소를 입력 후 주소 등록 버튼을 눌러주세요')
             }else if(registerData.lesson_content.trim() === ''){
                 console.log('내용을 작성해 주세요')
