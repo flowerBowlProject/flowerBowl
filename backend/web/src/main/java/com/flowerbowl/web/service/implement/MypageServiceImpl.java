@@ -128,7 +128,7 @@ public class MypageServiceImpl implements MypageService {
                 MyRecipes myRecipe = new MyRecipes();
                 myRecipe.setRecipe_date((String) posts[0]);
                 myRecipe.setRecipe_title((String) posts[1]);
-                myRecipe.setBookmark_cnt((Long) posts[2]);
+                myRecipe.setRecipe_like_cnt((Long) posts[2]);
                 myRecipe.setComment_cnt((Long) posts[3]);
                 myRecipe.setRecipe_no((Long) posts[4]);
                 myRecipes.add(myRecipe);
@@ -155,7 +155,7 @@ public class MypageServiceImpl implements MypageService {
                 MyLessons myLesson = new MyLessons();
                 myLesson.setLesson_date((String) posts[0]);
                 myLesson.setLesson_title((String) posts[1]);
-                myLesson.setBookmark_cnt((Long) posts[2]);
+                myLesson.setLesson_like_cnt((Long) posts[2]);
                 myLesson.setReview_cnt((Long) posts[3]);
                 myLesson.setLesson_no((Long) posts[4]);
                 myLessons.add(myLesson);
