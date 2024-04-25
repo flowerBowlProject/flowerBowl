@@ -27,7 +27,7 @@ public class GetRecipesCategoryDto {
     private Long recipe_like_cnt;
 
     // 레시피 댓글 수
-    private Long recipe_comment_cnt;
+    private Long comment_cnt;
 
     // 사용자 즐겨찾기 여부
     private Boolean recipe_like_status;
