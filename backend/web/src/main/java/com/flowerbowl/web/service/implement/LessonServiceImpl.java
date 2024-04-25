@@ -149,16 +149,16 @@ public class LessonServiceImpl implements LessonService {
             for(LessonShortDto tmp : list){
                 Long lesson_no = tmp.getLesson_no();
                 Long likes_no = muziLessonLikeRepository.countLessonLikeByLesson_LessonNo(lesson_no);
-                tmp.setLesson_likes_num(likes_no);
+                tmp.setLesson_like_cnt(likes_no);
                 if(loginStatus){
                     User user = userRepository.findByUserId(userId);
                     if(user == null){
                         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseDto("FA", "해당하는 userId를 가진 user가 없습니다."));
                     }
                     boolean like_status = muziLessonLikeRepository.existsByUser_UserNoAndLesson_LessonNo(user.getUserNo(), lesson_no);
-                    tmp.setLesson_likes_status(like_status);
+                    tmp.setLesson_like_status(like_status);
                 }else{
-                    tmp.setLesson_likes_status(false);
+                    tmp.setLesson_like_status(false);
                 }
             }
             return ResponseEntity.status(HttpStatus.OK).body(new FindAllResponseDto("SU", "success",pageInfo, list));
@@ -202,9 +202,9 @@ public class LessonServiceImpl implements LessonService {
             Lesson lesson = lessonJpaDataRepository.findLessonByLessonNo(lesson_no);
             Boolean like_status = muziLessonLikeRepository.existsByUser_UserNoAndLesson_LessonNo(user.getUserNo(), lesson_no);
             LessonResponseDto lessonResponseDto = new LessonResponseDto(lesson);
-            lessonResponseDto.setLesson_likes_status(like_status);
+            lessonResponseDto.setLesson_like_status(like_status);
             Long likes_no = muziLessonLikeRepository.countLessonLikeByLesson_LessonNo(lesson_no);
-            lessonResponseDto.setLesson_likes_num(likes_no);
+            lessonResponseDto.setLesson_like_cnt(likes_no);
             return ResponseEntity.status(HttpStatus.OK).body(new FindOneResponseDto(lessonResponseDto));
         }catch (Exception e){
             log.info("LessonService findOneResponseDto Exception : {}", e.getMessage());
@@ -222,9 +222,9 @@ public class LessonServiceImpl implements LessonService {
             }
             Lesson lesson = lessonJpaDataRepository.findLessonByLessonNo(lesson_no);
             LessonResponseDto lessonResponseDto = new LessonResponseDto(lesson);
-            lessonResponseDto.setLesson_likes_status(false);
+            lessonResponseDto.setLesson_like_status(false);
             Long likes_no = muziLessonLikeRepository.countLessonLikeByLesson_LessonNo(lesson_no);
-            lessonResponseDto.setLesson_likes_num(likes_no);
+            lessonResponseDto.setLesson_like_cnt(likes_no);
             return ResponseEntity.status(HttpStatus.OK).body(new FindOneResponseDto(lessonResponseDto));
         }catch (Exception e){
             log.info("LessonService findOneGuestResponseDto Exception : {}", e.getMessage());

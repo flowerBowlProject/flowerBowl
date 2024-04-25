@@ -18,14 +18,14 @@ public class LessonResponseDto {
     private LocalDate lesson_end;
     private String lesson_sname;
     private String lesson_oname;
-    private Long lesson_likes_num; // 이건 query로 넣어줘야 함
+    private Long lesson_like_cnt; // 이건 query로 넣어줘야 함
     private String lesson_writer;
     private String lesson_URL;
     private String lesson_addr;
     private Double lesson_longitude; // 경도
     private Double lesson_latitude; // 위도
     private Category lesson_category;
-    private Boolean lesson_likes_status; // 이것도 query로 해결
+    private Boolean lesson_like_status; // 이것도 query로 해결
     private String lesson_contents;
 
     public LessonResponseDto(){}
