@@ -216,8 +216,8 @@ public class RecipeServiceImpl implements RecipeService {
                         .recipe_title(recipe.getRecipeTitle())
                         .recipe_writer(recipe.getRecipeWriter())
                         .recipe_date(recipe.getRecipeDate())
-                        .recipe_like_count(Long.valueOf(recipeLikes.size()))
-                        .recipe_comment_count(Long.valueOf(comments.size()))
+                        .recipe_like_cnt(Long.valueOf(recipeLikes.size()))
+                        .comment_cnt(Long.valueOf(comments.size()))
                         .recipe_like_status(false)
                         .build();
             })).toList();
@@ -261,8 +261,8 @@ public class RecipeServiceImpl implements RecipeService {
                         .recipe_title(recipe.getRecipeTitle())
                         .recipe_writer(recipe.getRecipeWriter())
                         .recipe_date(recipe.getRecipeDate())
-                        .recipe_like_count(Long.valueOf(recipeLikes.size()))
-                        .recipe_comment_count(Long.valueOf(comments.size()))
+                        .recipe_like_cnt(Long.valueOf(recipeLikes.size()))
+                        .comment_cnt(Long.valueOf(comments.size()))
                         // 다중 조건 검색에 따라 즐겨찾기 여부를 지정
                         .recipe_like_status(recipeLikeRepository.findOne(spec).isPresent())
                         .build();
@@ -422,8 +422,8 @@ public class RecipeServiceImpl implements RecipeService {
                         .recipe_title(recipe.getRecipeTitle())
                         .recipe_writer(recipe.getRecipeWriter())
                         .recipe_date(recipe.getRecipeDate())
-                        .recipe_like_count(Long.valueOf(recipeLikes.size()))
-                        .recipe_comment_count(Long.valueOf(comments.size()))
+                        .recipe_like_cnt(Long.valueOf(recipeLikes.size()))
+                        .comment_cnt(Long.valueOf(comments.size()))
                         .recipe_like_status(false)
                         .build();
             })).toList();
@@ -477,8 +477,8 @@ public class RecipeServiceImpl implements RecipeService {
                         .recipe_title(recipe.getRecipeTitle())
                         .recipe_writer(recipe.getRecipeWriter())
                         .recipe_date(recipe.getRecipeDate())
-                        .recipe_like_count(Long.valueOf(recipeLikes.size()))
-                        .recipe_comment_count(Long.valueOf(comments.size()))
+                        .recipe_like_cnt(Long.valueOf(recipeLikes.size()))
+                        .comment_cnt(Long.valueOf(comments.size()))
                         // 다중 조건 검색에 따라 즐겨찾기 여부를 지정
                         .recipe_like_status(recipeLikeRepository.findOne(spec).isPresent())
                         .build();
