@@ -5,9 +5,12 @@ import { url } from "../url";
 import { useSelector } from 'react-redux';
 import axios from "axios";
 import ButtonContain from "../Component/ButtonContain";
+import ButtonOutlined from "../Component/ButtonOutlined";
+import { useNavigate } from "react-router-dom";
 
 const RegisterCommunity = () => {
-    const accessToken = useSelector(state => state.persistedReducer.accessToken);
+    const accessToken = useSelector(state => state.accessToken);
+    const navigator = useNavigate();
 
     const [registerData, setRegisterData] = useState({ community_title: '', community_content: '' });
 
@@ -26,22 +29,52 @@ const RegisterCommunity = () => {
     {/* 커뮤니티 등록 */ }
     const handleRegister = () => {
         console.log(registerData);
-        axios.post(`${url}/api/communities`, registerData, {
+
+        const isFormDataChanged = () => {
+            // 모든 필드가 변경되었는지 여부를 저장할 변수
+            let isChanged = false;
+          
+            // 모든 필드를 순회하면서 변경 여부 확인
+            Object.values(registerData).forEach((value) => {
+              // 빈 값이거나 초기값이 아닌 경우 변경된 것으로 간주
+              if (value !== '' && value !== 0  ) {
+                isChanged = true;
+              }
+            });
+          
+            return isChanged;
+        };
+
+        if(isFormDataChanged()){
+            axios.post(`${url}/api/communities`, registerData, {
             headers: {
-                Authorization: accessToken
+                Authorization: `Bearer ${accessToken}`
             }
         })
             .then(res => {
                 console.log(res);
+                navigator('/communityList');
             })
             .catch(err => {
                 console.log(err);
             })
+        }else{
+            {/* 등록 내용 작성 여부 확인 후 alert */}
+            if(registerData.community_title.trim() === ''){
+                console.log('제목을 작성해 주세요.')
+            }else if(registerData.community_content === ''){
+                console.log('내용을 작성해 주세요')
+            }else{
+                console.log('관리자에게 문의해 주세요')
+            }
+        }
+        
     }
 
     {/* 취소 버튼 클릭 */ }
     const handleCancel = () => {
         // 뒤로가기 - 리스트 페이지로 이동
+        navigator('/classList');
     }
 
     return (
@@ -49,13 +82,13 @@ const RegisterCommunity = () => {
             <input className="communityregister-title" type='text' placeholder="제목을 작성해 주세요." name="community_title" onChange={(e)=>setValue(e)}/>
 
             <div className="communityText-Box">
-                <ToastEditor getToastEditor={getToastEditor} />
+                <ToastEditor getToastEditor={getToastEditor} setContent={registerData.community_content}/>
             </div>
 
             {/* 등록 + 취소 버튼 컴포넌트 위치 */}
             <div className="register_button" style={{ marginTop: "2%" }}>
-            <ButtonContain size='large' text='로그인'/> &nbsp;
-            <ButtonContain size='large' text='로그인'/>
+            <ButtonOutlined size='large' text='등록' handleClick={handleRegister}/> &nbsp;
+            <ButtonContain size='large' text='취소' handleClick={handleCancel}/>
             </div>
         </div>
     );
