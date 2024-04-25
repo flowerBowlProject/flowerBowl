@@ -9,6 +9,7 @@ import { useSelector } from "react-redux";
 import { useNavigate, useParams } from 'react-router-dom';
 import ButtonOutlined from "../Component/ButtonOutlined";
 import { Editor, Viewer } from "@toast-ui/react-editor";
+import ClassPayment from "./ClassPayment";
 
 
 const { kakao } = window;
@@ -114,20 +115,30 @@ const ClassDetail = () => {
 
     {/* 클래스 구매 */ }
     const buyClass = () => {
-        console.log(accessToken)
-        axios.post(`${url}/lessons/payments`,{
-            "lesson_no":lesson_no
+        /*axios.post(`${url}/api/user/lessons/payments`,{
+            "lesson_no": lesson_no
         },{
-            header:{
+            headers:{
                 Authorization : `Bearer ${accessToken}`
             }
         })
         .then(res=>{
             console.log(res);
+            const payData = res.data.payinfo;
+            console.log(payData);
+            console.log(payData.order_no);
+            axios.post(`https://api.iamport.kr/verify/${payData.order_no}`,null)
+            .then(res=>{
+                console.log(res);
+            })
+            .catch(err=>{
+                console.log(err);
+            })
         })
         .catch(err=>{
             console.log(err);
-        })
+        })*/
+
     }
 
     {/* 클래스 수정 */ }
@@ -192,7 +203,7 @@ const ClassDetail = () => {
                 {/* 수정/삭제 버튼 - 작성자인 경우에만 true로 버튼 표시 + 구매하기 버튼 - 작성자가 아닌 경우 노출 */}
                 <div className="class-change">
                     가격 : {classData.lesson_price} &nbsp;&nbsp;&nbsp;
-                    {writer !== classData.lesson_writer && <ButtonContain size='large' text='구매' handleClick={buyClass} />}
+                    {writer !== classData.lesson_writer && <ClassPayment lesson_no={lesson_no}/> }
                     {writer === classData.lesson_writer && <ButtonOutlined size='large' text='수정' handleClick={(e)=>handleModify(e)} />} &nbsp;&nbsp;
                     {writer === classData.lesson_writer && <ButtonContain size='large' text='삭제' handleClick={handleDelete} />}
                 </div>
