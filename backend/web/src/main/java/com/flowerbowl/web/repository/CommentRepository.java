@@ -12,6 +12,8 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
 
     Optional<Comment> findByCommentNo(Long commentNo);
 
+    List<Comment> findAllByParentNo(Long parentNo);
+
     List<Comment> findAllByRecipe_RecipeNo(Long recipeNo);
 
     Long countAllByRecipe_RecipeNo(Long recipeNo);
