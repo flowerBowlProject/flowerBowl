@@ -13,7 +13,7 @@ public class ReviewsShortDto {
     private Long review_no;
     private String review_content;
     private LocalDate review_date;
-    private int review_score;
+    private Integer review_score;
     private Long user_no;
 
     public static ReviewsShortDto from(LessonRv lessonRv){
