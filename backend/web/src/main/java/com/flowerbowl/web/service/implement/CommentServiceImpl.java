@@ -18,6 +18,7 @@ import com.flowerbowl.web.repository.UserRepository;
 import com.flowerbowl.web.service.CommentService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.ListUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -25,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.List;
 import java.util.Objects;
 
 @Service
@@ -177,6 +179,56 @@ public class CommentServiceImpl implements CommentService {
             logPrint(e);
 
             UpCommentFaResDto responseBody = new UpCommentFaResDto(ResponseCode.INTERNAL_SERVER_ERROR, ResponseMessage.INTERNAL_SERVER_ERROR);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseBody);
+        }
+    }
+
+    @Override
+    @Transactional
+    public ResponseEntity<? extends CommentResponseDto> deleteComment(Long comment_no, String userId) throws Exception {
+        try {
+            User user = userRepository.findByUserId(userId);
+            if (user == null) {
+                throw new UserNotFoundException();
+            }
+
+            Comment comment = commentRepository.findByCommentNo(comment_no).orElseThrow(CommentNotFoundException::new);
+
+            // 삭제하려는 User와 comment의 작성자가 일치하는지 검증
+            if (!user.getUserNo().equals(comment.getUser().getUserNo())) {
+                throw new DoesNotMatchException();
+            }
+
+            // 삭제하려는 댓글을 부모 댓글로 가지는 자식 댓글들을 모두 삭제
+            List<Comment> childComments = commentRepository.findAllByParentNo(comment_no);
+            if (!childComments.isEmpty()) {
+                commentRepository.deleteAll(childComments);
+            }
+
+            // 삭제하려는 댓글 삭제
+            commentRepository.delete(comment);
+
+            DelCommentResDto responseBody = new DelCommentResDto(ResponseCode.SUCCESS, ResponseMessage.SUCCESS);
+            return ResponseEntity.status(HttpStatus.OK).body(responseBody);
+        } catch (UserNotFoundException e) {
+            logPrint(e);
+
+            DelCommentResDto responseBody = new DelCommentResDto(ResponseCode.NOT_EXIST_USER, ResponseMessage.NOT_EXIST_USER);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(responseBody);
+        } catch (CommentNotFoundException e) {
+            logPrint(e);
+
+            DelCommentResDto responseBody = new DelCommentResDto(ResponseCode.NOT_EXIST_COMMENT, ResponseMessage.NOT_EXIST_COMMENT);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(responseBody);
+        } catch (DoesNotMatchException e) {
+            logPrint(e);
+
+            DelCommentResDto responseBody = new DelCommentResDto(ResponseCode.DOES_NOT_MATCH, ResponseMessage.DOES_NOT_MATCH);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseBody);
+        } catch (Exception e) {
+            logPrint(e);
+
+            DelCommentResDto responseBody = new DelCommentResDto(ResponseCode.INTERNAL_SERVER_ERROR, ResponseMessage.INTERNAL_SERVER_ERROR);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseBody);
         }
     }
