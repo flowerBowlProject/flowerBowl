@@ -8,9 +8,8 @@ import com.flowerbowl.web.domain.Recipe;
 import com.flowerbowl.web.domain.User;
 import com.flowerbowl.web.dto.object.comment.CreateCommentDto;
 import com.flowerbowl.web.dto.request.comment.CrCommentReqDto;
-import com.flowerbowl.web.dto.response.comment.CommentResponseDto;
-import com.flowerbowl.web.dto.response.comment.CrCommentFaResDto;
-import com.flowerbowl.web.dto.response.comment.CrCommentSuResDto;
+import com.flowerbowl.web.dto.request.comment.UpCommentReqDto;
+import com.flowerbowl.web.dto.response.comment.*;
 import com.flowerbowl.web.handler.*;
 import com.flowerbowl.web.repository.CommentRepository;
 import com.flowerbowl.web.repository.CommunityRepository;
@@ -22,6 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -132,6 +132,51 @@ public class CommentServiceImpl implements CommentService {
             logPrint(e);
 
             CrCommentFaResDto responseBody = new CrCommentFaResDto(ResponseCode.INTERNAL_SERVER_ERROR, ResponseMessage.INTERNAL_SERVER_ERROR);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseBody);
+        }
+    }
+
+    @Override
+    @Transactional
+    public ResponseEntity<? extends CommentResponseDto> updateComment(UpCommentReqDto request, Long comment_no, String userId) throws Exception {
+        try {
+            User user = userRepository.findByUserId(userId);
+            if (user == null) {
+                throw new UserNotFoundException();
+            }
+
+            Comment comment = commentRepository.findByCommentNo(comment_no).orElseThrow(CommentNotFoundException::new);
+
+            // 수정하려는 User와 comment의 작성자가 일치하는지 검증
+            if (!user.getUserNo().equals(comment.getUser().getUserNo())) {
+                throw new DoesNotMatchException();
+            }
+
+            comment.updateContent(request.getComment_content());
+
+            Comment result = commentRepository.save(comment);
+
+            UpCommentSuResDto responseBody = new UpCommentSuResDto(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, result.getCommentNo());
+            return ResponseEntity.status(HttpStatus.OK).body(responseBody);
+        } catch (UserNotFoundException e) {
+            logPrint(e);
+
+            UpCommentFaResDto responseBody = new UpCommentFaResDto(ResponseCode.NOT_EXIST_USER, ResponseMessage.NOT_EXIST_USER);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(responseBody);
+        } catch (CommentNotFoundException e) {
+            logPrint(e);
+
+            UpCommentFaResDto responseBody = new UpCommentFaResDto(ResponseCode.NOT_EXIST_COMMENT, ResponseMessage.NOT_EXIST_COMMENT);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(responseBody);
+        } catch (DoesNotMatchException e) {
+            logPrint(e);
+
+            UpCommentFaResDto responseBody = new UpCommentFaResDto(ResponseCode.DOES_NOT_MATCH, ResponseMessage.DOES_NOT_MATCH);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseBody);
+        } catch (Exception e) {
+            logPrint(e);
+
+            UpCommentFaResDto responseBody = new UpCommentFaResDto(ResponseCode.INTERNAL_SERVER_ERROR, ResponseMessage.INTERNAL_SERVER_ERROR);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseBody);
         }
     }

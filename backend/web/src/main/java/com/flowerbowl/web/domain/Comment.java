@@ -41,4 +41,8 @@ public class Comment {
     @JoinColumn(name = "community_no")
     private Community community;
 
+    public void updateContent(String commentContent) {
+        this.commentContent = commentContent;
+    }
+
 }
