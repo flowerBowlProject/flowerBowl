@@ -26,4 +26,9 @@ public class CommentController {
         return commentService.updateComment(request, comment_no, userId);
     }
 
+    @DeleteMapping("/{comment_no}")
+    private ResponseEntity<? extends CommentResponseDto> deleteComment(@PathVariable Long comment_no,@AuthenticationPrincipal String userId) throws Exception {
+        return commentService.deleteComment(comment_no, userId);
+    }
+
 }
