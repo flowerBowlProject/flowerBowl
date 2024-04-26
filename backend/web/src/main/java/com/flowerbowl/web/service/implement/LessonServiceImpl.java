@@ -1,16 +1,12 @@
 package com.flowerbowl.web.service.implement;
 
 import com.flowerbowl.web.domain.*;
-import com.flowerbowl.web.dto.object.lesson.LessonShortDto;
-import com.flowerbowl.web.dto.object.lesson.PageInfo;
-import com.flowerbowl.web.dto.response.lesson.ResponseDto;
-import com.flowerbowl.web.dto.object.lesson.LessonResponseDto;
-import com.flowerbowl.web.dto.object.lesson.PayInfo;
+import com.flowerbowl.web.dto.object.lesson.*;
+import com.flowerbowl.web.dto.response.lesson.*;
 import com.flowerbowl.web.dto.request.lesson.CreateRequestDto;
 import com.flowerbowl.web.dto.request.lesson.LessonRequestDto;
-import com.flowerbowl.web.dto.response.lesson.FindAllResponseDto;
-import com.flowerbowl.web.dto.response.lesson.FindOneResponseDto;
-import com.flowerbowl.web.dto.response.lesson.PaymentInfoResponseDto;
+import com.flowerbowl.web.repository.LessonRepository;
+import com.flowerbowl.web.repository.ReviewRepository;
 import com.flowerbowl.web.repository.UserRepository;
 import com.flowerbowl.web.repository.lesson.*;
 import com.flowerbowl.web.service.LessonService;
@@ -32,12 +28,14 @@ import java.util.List;
 @RequiredArgsConstructor
 public class LessonServiceImpl implements LessonService {
     private final LessonsRepository lessonsRepository;
+    private final LessonRepository lessonRepository;
     private final MuziLessonLikeRepository muziLessonLikeRepository;
     private final PayRepository payRepository;
     private final PayJpaRepository payJpaRepository;
     private final LessonJpaDataRepository lessonJpaDataRepository;
     private final JpaReviewEnableRepository jpaReviewEnableRepository;
     private final UserRepository userRepository;
+    private final ReviewRepository reviewRepository;
 
     // 클래스 등록
     @Transactional
@@ -231,6 +229,22 @@ public class LessonServiceImpl implements LessonService {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseDto("ISE", "Internal Server Error"));
         }
     }
+    // 특정 클래스 리뷰 조회 (비로그인 + 로그인)
+    public ResponseEntity<? super ReviewsResponseDto> findReviews(Long lesson_no, Pageable pageable){
+        try {
+            if(!lessonRepository.existsLessonByLessonNo(lesson_no)){
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseDto("FA", "해당 lesson_no을 가진 class가 존재하지 않습니다,"));
+            }
+            Page<LessonRv> lessonRvs = reviewRepository.findLessonRvByLesson_LessonNo(lesson_no, pageable);
+            List<ReviewsShortDto> reviewsResponseDtoList = lessonRvs.map(ReviewsShortDto::from).getContent();
+            return ResponseEntity.status(HttpStatus.OK).body(new ReviewsResponseDto("SU", "success", reviewsResponseDtoList));
+
+        }catch (Exception e){
+            log.info("LessonService findReviews Exception : {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseDto("ISE", "Internal Server Error"));
+        }
+    }
+
 
     // 클래스 구매
     // 구매 정보 저장 + 구매 정보를 넘격줘야함
