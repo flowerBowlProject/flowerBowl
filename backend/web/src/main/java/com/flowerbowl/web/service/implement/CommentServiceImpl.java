@@ -58,10 +58,11 @@ public class CommentServiceImpl implements CommentService {
                 // 부모 댓글이 있는 경우
                 if (request.getParent_no() != null) {
                     // 부모 댓글 조회
-                    Comment comment = commentRepository.findByCommentNo(request.getParent_no()).orElseThrow(CommentNotFoundException::new);
+                    Comment parentComment = commentRepository.findByCommentNo(request.getParent_no()).orElseThrow(CommentNotFoundException::new);
 
                     // 부모 댓글 또한 게시판 종류가 레시피여야 한다. 즉 부모 댓글의 community column은 null이어야 한다. null이 아닐 경우 Exception throw
-                    if (comment.getCommunity() != null) {
+                    // 또한 작성하려는 대댓글과 부모 댓글의 게시글 번호가 같아야 한다. 같지 않은 경우 Exception throw
+                    if (parentComment.getCommunity() != null || !postNo.equals(parentComment.getRecipe().getRecipeNo())) {
                         throw new WrongBoardTypeException();
                     }
                 }
@@ -81,10 +82,11 @@ public class CommentServiceImpl implements CommentService {
                 // 부모 댓글이 있는 경우
                 if (request.getParent_no() != null) {
                     // 부모 댓글 조회
-                    Comment comment = commentRepository.findByCommentNo(request.getParent_no()).orElseThrow(CommentNotFoundException::new);
+                    Comment parentComment = commentRepository.findByCommentNo(request.getParent_no()).orElseThrow(CommentNotFoundException::new);
 
                     // 부모 댓글 또한 게시판 종류가 커뮤니티여야 한다. 즉 부모 댓글의 recipe column은 null이어야 한다. null이 아닐 경우 Exception throw
-                    if (comment.getRecipe() != null) {
+                    // 또한 작성하려는 대댓글과 부모 댓글의 게시글 번호가 같아야 한다. 같지 않은 경우 Exception throw
+                    if (parentComment.getRecipe() != null || !postNo.equals(parentComment.getCommunity().getCommunityNo())) {
                         throw new WrongBoardTypeException();
                     }
                 }
