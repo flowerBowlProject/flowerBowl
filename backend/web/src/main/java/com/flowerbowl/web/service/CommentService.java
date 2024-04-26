@@ -11,4 +11,6 @@ public interface CommentService {
 
     public ResponseEntity<? extends CommentResponseDto> updateComment(UpCommentReqDto request, Long comment_no, String userId) throws Exception;
 
+    public ResponseEntity<? extends CommentResponseDto> deleteComment(Long comment_no, String userId) throws Exception;
+
 }
