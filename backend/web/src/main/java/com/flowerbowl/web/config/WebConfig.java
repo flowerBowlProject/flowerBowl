@@ -132,6 +132,8 @@ class FailedAuthenticationEntryPoint implements AuthenticationEntryPoint {
             JwtUtil.setResponse(response, JwtError.EXPIRED_TOKEN);
         } else if (exception != null && exception.equals("NT")) {
             JwtUtil.setResponse(response, JwtError.NOT_EXIST_TOKEN);
+        } else {
+            JwtUtil.setResponse(response, JwtError.NOT_FIND_EXCEPTION);
         }
 
 //        response.setContentType("application/json; charset=UTF-8");

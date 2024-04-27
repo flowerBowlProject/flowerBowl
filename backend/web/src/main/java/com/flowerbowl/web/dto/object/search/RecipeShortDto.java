@@ -18,9 +18,9 @@ public class RecipeShortDto {
     private String recipe_writer;
     private LocalDate recipe_date;
     // 따로 추가해줘야 하는 부분
-    private Long recipe_likes_num;
-    private Long recipe_comments_num;
-    private Boolean recipe_likes_status;
+    private Long recipe_like_cnt; // 좋아요 수
+    private Long comment_cnt; // 댓글 수
+    private Boolean recipe_like_status; // s 뺌
 
     public static RecipeShortDto from(Recipe recipe){
         return RecipeShortDto.builder()

@@ -9,4 +9,5 @@ public interface LessonsRepository {
     void LessonCreate(Lesson lesson);
     public Lesson findByLesson_no(Long lesson_no);
     public List<Lesson> findAllUser(Long user_no);
+
 }
