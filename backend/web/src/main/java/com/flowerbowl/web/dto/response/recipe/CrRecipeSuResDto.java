@@ -6,11 +6,11 @@ import lombok.*;
 @NoArgsConstructor
 public class CrRecipeSuResDto extends RecipeResponseDto {
 
-    private Long recipeNo;
+    private Long recipe_no;
 
     public CrRecipeSuResDto(String code, String message, Long recipeNo) {
         super(code, message);
-        this.recipeNo = recipeNo;
+        this.recipe_no = recipeNo;
     }
 
 }

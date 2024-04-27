@@ -13,14 +13,14 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class GetAllCommunitiesDto {
 
-    private Long communityNo;
+    private Long community_no;
 
-    private String communityTitle;
+    private String community_title;
 
-    private String communityWriter;
+    private String community_writer;
 
-    private LocalDate communityDate;
+    private LocalDate community_date;
 
-    private Long communityViews;
+    private Long community_views;
 
 }

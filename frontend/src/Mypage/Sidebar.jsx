@@ -12,9 +12,14 @@ import PaymentIcon from "@mui/icons-material/Payment";
 import ListIcon from "@mui/icons-material/List";
 import "./Sidebar.css";
 import { Link, Outlet,NavLink } from "react-router-dom";
+import axios from "axios";
+import { url } from "../url";
+import { useSelector ,useDispatch} from "react-redux";
+import { editErrorType,openError } from "../persistStore";
 
 const Row = ({ icon, name, isHovered, isFixed, link }) => {
   const color = isFixed || isHovered ? "main.wh" : "main.or";
+  
   return (
     <NavLink to={link} style={{textDecoration:'none'}} className={({isActive})=>isActive? 'selected':'unselected'} >
       <ListItem
@@ -39,38 +44,63 @@ const Row = ({ icon, name, isHovered, isFixed, link }) => {
 };
 
 const Sidebar = ({ fixedItem = "" }) => {
-  const items = [
+  const accessToken=useSelector((state)=>state.accessToken)
+  const dispatch=useDispatch();
+  const [items,setItems]=useState([
     { name: "프로필", icon: <AccountCircleIcon />, link: "/Mypage/profile" },
-    { name: "북마크", icon: <BookmarkIcon />, link: "/Mypage/bookmarkRecipe" },
+    { name: "북마크", icon: <BookmarkIcon />, link: "/Mypage/bookmark" },
     {
       name: "마이 클래스",
       icon: <ImportContactsIcon />,
-      link: "/Mypage/checkteachingclass",
+      link: "/Mypage/checkClass",
     },
     {
       name: "마이 레시피",
       icon: <BlenderIcon />,
       link: "/Mypage/checkmakingrecipe",
     },
-    { name: "결제 내역", icon: <PaymentIcon />, link: "/Mypage/checkPaidList" },
+    { name: "결제 내역", icon: <PaymentIcon />, link: "/Mypage/paymentDetail" },
     {
       name: "클래스 신청 내역",
       icon: <ListIcon />,
       link: "/Mypage/checkClassList",
-    },
-  ];
+    }
+  ])
+  
+    
+  
+  const handleCheckRole=async()=>{
+    try{
+      const response=await axios.get(`${url}/api/users/info`,{
+        headers:{
+          Authorization: `Bearer ${accessToken}`
+        }
+      })
+      const updatedItems = [...items]; // 복사본 생성
+      updatedItems[5].role = response.data.user_role;
+      setItems(updatedItems); // 상태 업데이트
+    }catch(error){
+      dispatch(editErrorType(error.response.data.code))
+      dispatch(openError())
+    }
 
+  }
   const initialHoverIndex = items.findIndex((item) => item.name === fixedItem);
   const [hoverIndex, setHoverIndex] = useState(initialHoverIndex);
   useEffect(() => {
     setHoverIndex(initialHoverIndex);
   }, [initialHoverIndex]);
-
+  useEffect(()=>{
+    handleCheckRole();
+  },[])
   return (
     <Grid container direction="row">
       <Grid item xs={2.5}>
         <Grid container direction="column" mt="5vw">
           {items.map((item, i) => {
+            console.log(item.role)
+            if(item.role==='ROLE_CHEF'||i!==5){
+              
             return (
               <Grid
                 item
@@ -95,9 +125,10 @@ const Sidebar = ({ fixedItem = "" }) => {
                   isFixed={i === initialHoverIndex}
                   isHovered={hoverIndex === i}
                   link={item.link}
+                  link2={item.link2?item.link2:null}
                 />
               </Grid>
-            );
+            );}
           })}
         </Grid>
       </Grid>

@@ -13,7 +13,11 @@ const CheckReview = () => {
   const [sortDirectionRating, setSortDirectionRating] = useState("asc");
   const [listData, setListData] = useState([]);
   const accessToken = useSelector((state) => state.accessToken);
-
+  const [slice,setSlice]= useState(8);
+  const handleClickMoreDetail=()=>{
+    if(listData.length>slice)
+    setSlice(slice+8)
+  }
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -80,24 +84,7 @@ const CheckReview = () => {
 
   return (
     <>
-      {/* 버튼들 */}
-      <section className="buttons">
-        <span className="paidlist">
-          <Link to="/mypage/checkPaidList">
-            <ButtonOutlined size="medium" text="결제 내역" />
-          </Link>
-        </span>
-        <span className="review">
-          <Link to="/mypage/checkReview">
-            <ButtonContain size="medium" text="리뷰 조회" />
-          </Link>
-        </span>
-        <span className="register">
-          <Link to="/mypage/registerReview">
-            <ButtonOutlined size="medium" text="리뷰 작성" />
-          </Link>
-        </span>
-      </section>
+      
 
       {/* 내용 */}
       <section className="table-content">
@@ -139,7 +126,7 @@ const CheckReview = () => {
             </tr>
           </thead>
           <tbody>
-            {[...listData, ...Array(8 - listData.length)].map((data, index) => (
+          {[...listData.slice(0,slice), ...Array(8-listData.slice(slice-8,slice).length)].map((data, index) => (
               <tr key={index}>
                 <td>{data ? index + 1 : ""}</td>
                 <td>{data ? data.review_date : ""}</td>
@@ -173,7 +160,7 @@ const CheckReview = () => {
 
       {/* 더보기 버튼    */}
       <section className="bottom-add">
-        <ButtonContain size="medium" text="더보기" />
+        <ButtonContain size="medium" text="더보기" handleClick={handleClickMoreDetail} />
       </section>
     </>
   );

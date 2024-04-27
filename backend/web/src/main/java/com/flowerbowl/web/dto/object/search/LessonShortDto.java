@@ -13,10 +13,10 @@ import java.time.LocalDate;
 public class LessonShortDto {
     private Long lesson_no;
     private String lesson_title;
-    private LocalDate lesson_date;
+    private LocalDate lesson_date; // 게시글 작성 날짜
     private String lesson_oname;
     private String lesson_sname;
-//    private Long lesson_likes_num; // ??
+    private Long lesson_likes_num; // 즐겨찾기 수
     private String lesson_writer;
     private Boolean lesson_likes_status;
 

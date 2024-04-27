@@ -25,7 +25,9 @@ import Checkmakingrecipe from "./Mypage/Myrecipe/Checkmakingrecipe";
 import { CheckPaidList, CheckReview, RegisterReview } from "./Mypage/PaidList/";
 import Sidebar from "./Mypage/Sidebar";
 import AdminSidebar from "./Mypage/AdminSidebar";
-
+import BookmarkPage from "./Mypage/Bookmark/BookmarkPage";
+import CheckClass from "./Mypage/Myclass/CheckClass";
+import PaymentDetail from "./Mypage/PaidList/PaymentDetail";
 const App = () => {
   return (
     <>
@@ -55,14 +57,21 @@ const App = () => {
         <Route path="/Mypage" element={<Sidebar />}>
           <Route path="profile" element={<Profilepage />} />
           <Route path="checkClassList" element={<CheckClassList />} />
-          <Route path="bookmarkClass" element={<BookmarkClass />} />
-          <Route path="bookmarkRecipe" element={<BookmarkRecipe />} />
-          <Route path="checkmakingclass" element={<Checkmakingclass />} />
-          <Route path="checkteachingclass" element={<Checkteachingclass />} />
+          <Route path="bookmark" element={<BookmarkPage/>} >
+            <Route path="class" element={<BookmarkClass />} />
+            <Route path="recipe" element={<BookmarkRecipe />} />  
+          </Route>
+          <Route path="checkClass" element={<CheckClass/>}>
+            <Route path="making" element={<Checkmakingclass />} />
+            <Route path="teaching" element={<Checkteachingclass />} />
+          </Route>
+          
           <Route path="checkmakingrecipe" element={<Checkmakingrecipe />} />
-          <Route path="checkPaidList" element={<CheckPaidList />} />
-          <Route path="checkReview" element={<CheckReview />} />
-          <Route path="registerReview" element={<RegisterReview />} />
+          <Route path="paymentDetail" element={<PaymentDetail/>} >
+            <Route path="checkPaidList" element={<CheckPaidList />} />
+            <Route path="checkReview" element={<CheckReview />} />
+            <Route path="registerReview" element={<RegisterReview />} />
+          </Route>
         </Route>
 
         <Route path="/Admin" element={<AdminSidebar />}>

@@ -16,7 +16,11 @@ const Checkmakingrecipe = () => {
   const [sortBookmark, setSortBookmark] = useState("asc");
   const [sortComment, setSortComment] = useState("asc");
   const [listData, setListData] = useState([]);
-
+  const [slice,setSlice]= useState(8);
+  const handleClickMoreDetail=()=>{
+    if(listData.length>slice)
+    setSlice(slice+8)
+  }
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -27,7 +31,7 @@ const Checkmakingrecipe = () => {
         });
         setListData(response.data.myRecipes);
         //코드 확인
-        // console.log(response.data.payLessons);
+         console.log(response.data.myRecipes);
       } catch (error) {
         console.error("Error fetching data:", error);
         setListData([]);
@@ -142,12 +146,12 @@ const Checkmakingrecipe = () => {
             </tr>
           </thead>
           <tbody>
-            {[...listData, ...Array(8 - listData.length)].map((data, index) => (
+          {[...listData.slice(0,slice), ...Array(8-listData.slice(slice-8,slice).length)].map((data, index) => (
               <tr key={index}>
                 <td>{data ? index + 1 : ""}</td>
                 <td>{data ? data.recipe_date : ""}</td>
                 <td>{data ? data.recipe_title : ""}</td>
-                <td>{data ? data.bookmark_cnt.toLocaleString() : ""}</td>
+                <td>{data ? data.recipe_like_cnt.toLocaleString() : ""}</td>
                 <td>{data ? data.comment_cnt.toLocaleString() : ""}</td>
                 <td>
                   {data ? <ButtonOutlined size="verySmall" text="삭제" /> : ""}
@@ -163,7 +167,7 @@ const Checkmakingrecipe = () => {
 
       {/* 더보기 버튼    */}
       <section className="bottom-add">
-        <ButtonContain size="medium" text="더보기" />
+        <ButtonContain size="medium" text="더보기" handleClick={handleClickMoreDetail} />
       </section>
     </>
   );
