@@ -8,21 +8,21 @@ import { url } from "../url";
 import Comment from "../Component/Comment/Comment";
 import ButtonContain from "../Component/ButtonContain";
 import ButtonOutlined from "../Component/ButtonOutlined";
+import { Viewer } from "@toast-ui/react-editor";
 
 const CommunityDetail = () => {
     const [communityData, setCommunityData] = useState({});
-
-    const location = useLocation();
-    const navigate = useNavigate();
-    const accessToken = useSelector(state => state.accessToken);
     const { community_no } = useParams();
+    const writer= useSelector((state)=>state.nickname);
+    const location = useLocation();
+    const navigator = useNavigate();
+    const accessToken = useSelector(state => state.accessToken);
 
     {/* 데이터 불러오기 */}
     useEffect(()=>{
         axios.get(`${url}/api/communities/detail/${community_no}`)
         .then(res=>{
-            console.log(res);
-            setCommunityData()
+            setCommunityData(res.data.data);
         })
         .catch(err=>{
             console.log(err);
@@ -30,37 +30,39 @@ const CommunityDetail = () => {
     },[])
 
     {/* 커뮤니티 수정 */}
-    const handleModify = (e) =>{
-        e.preventDefault();
-        navigate('/modifyCommunity/' + community_no);
+    const handleModify = () =>{
+        navigator('/modifyCommunity/' + community_no);
     }
 
     {/* 커뮤니티 삭제 */}
     const handleDelete = () =>{
+        console.log(accessToken)
         {/* alert 창 띄우기 */}
         axios.delete(`${url}/api/communities/${community_no}`,
         {
             headers:{
-                Authorization: accessToken
+                Authorization: `Bearer ${accessToken}`
             }
         })
         .then(res=>{
-
+            console.log(res);
+            {/* 삭제 alert 창 띄우기 */}
+            navigator('/communityList');
         })
         .catch(err=>{
-
+            console.log(err);
         })
     }
 
     return (
         <>
             <div className="communityDetail-Box">
-                <div className="community-title"> {communityData.communityTitle} </div>
-                <div className='community-body'>{communityData.communityContent}</div>
+                <div className="community-title"> {communityData.community_title} </div>
+                <div className='community-body'>{communityData.community_content && <Viewer initialValue={communityData.community_content} />}</div>
                 {/* 수정/삭제 버튼 - 작성자인 경우에만 true로 버튼 표시 */}
                 <div className="community-change">
-                    {true &&  <ButtonOutlined size='large' text='수정' handleClick={handleModify}/>} &nbsp;
-                    {true && <ButtonContain size='large' text='삭제'handleClick={handleDelete}/>}
+                    {writer === communityData.community_writer &&  <ButtonOutlined size='large' text='수정' handleClick={handleModify}/>} &nbsp;
+                    {writer === communityData.community_writer && <ButtonContain size='large' text='삭제'handleClick={handleDelete}/>}
                 </div>
             </div>
             <div>
