@@ -16,9 +16,9 @@ public class LessonShortDto {
     private LocalDate lesson_date;
     private String lesson_oname;
     private String lesson_sname;
-    private Long lesson_likes_num;
+    private Long lesson_like_cnt;
     private String lesson_writer;
-    private Boolean lesson_likes_status;
+    private Boolean lesson_like_status;
 
     public static LessonShortDto from(Lesson lesson){
         return LessonShortDto.builder()
@@ -28,7 +28,7 @@ public class LessonShortDto {
                 .lesson_oname(lesson.getLessonOname())
                 .lesson_sname(lesson.getLessonSname())
                 .lesson_writer(lesson.getLessonWriter())
-                .lesson_likes_status(false) // 이거 수정해야함 // 서비스에서
+                .lesson_like_status(false) // 이거 수정해야함 // 서비스에서
                 .build();
     }
 //    public static LessonShortDto guestFrom(Lesson lesson){

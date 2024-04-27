@@ -21,10 +21,10 @@ public class GetAllRecipesDto {
     private LocalDate recipe_date;
 
     // 게시글 즐겨찾기 수
-    private Long recipe_like_count;
+    private Long recipe_like_cnt;
 
     // 게시글 댓글 수
-    private Long recipe_comment_count;
+    private Long comment_cnt;
 
     // 사용자 즐겨찾기 여부
     private Boolean recipe_like_status;
