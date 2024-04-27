@@ -38,7 +38,7 @@ const ButtonOutlined = ({ text, size, handleClick=()=>{}, data }) => {
   const sizeStyle = handleSize(size);
   return (
     <ButtonOutLinedStyle
-      onClick={() => (data ? handleClick(data) : handleClick())}
+      onClick={(e) => (data ? handleClick(data) : handleClick(e))}
       width={sizeStyle.width}
       variant="outlined"
       size={sizeStyle.size}

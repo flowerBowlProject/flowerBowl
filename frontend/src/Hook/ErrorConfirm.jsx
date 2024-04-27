@@ -18,6 +18,9 @@ const ErrorConfirm = ({error})=>{
         let content = '';
 
         switch (error) {
+            case 'NU':
+                severity='error';
+                content="아이디가 존재하지 않습니다!";
             case 'EP':
                 severity='error';
                 content='가입하지 않은 이메일이나 아이디입니다.';

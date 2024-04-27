@@ -13,7 +13,11 @@ const BookmarkRecipe = () => {
   const navigator = useNavigate();
   const [listData, setListData] = useState([]);
   const accessToken = useSelector((state) => state.accessToken);
-
+  const [slice,setSlice]= useState(8);
+  const handleClickMoreDetail=()=>{
+    if(listData.length>slice)
+    setSlice(slice+8)
+  }
   //액세스토큰 확인
   // console.log("Access Token:", accessToken);
 
@@ -25,17 +29,11 @@ const BookmarkRecipe = () => {
             Authorization: `Bearer ${accessToken}`,
           },
         });
-        setListData(response.data.likeRecipes);
-        setListData(oldListData=>{
-          return oldListData.map(item =>{
-            return{
-              ...item,
-              recipeLikeStatus:true
-            };
-          });
-        });
-            
-        
+        const updatedData = response.data.likeRecipes.map(recipe => ({
+          ...recipe,
+          recipeLikeStatus:true
+        }));
+        setListData(updatedData)
       } catch (error) {
         console.error("Error fetching data:", error);
         setListData([]);
@@ -59,13 +57,13 @@ const BookmarkRecipe = () => {
       );
       if (response.status === 200||201) {
         // 성공적으로 처리되면 상태에서 해당 레시피의 'recipeLikeStatus'를 변경
-        const updatedList = listData.map((item) => {
-          if (item.recipe_no === recipeNo) {
-            return { ...item, recipeLikeStatus: !item.recipeLikeStatus }; // 'recipeLikeStatus'를 false로 설정
+        const updatedData = listData.map(recipe => {
+          if(recipe.recipe_no ==recipeNo){
+          return {...recipe, recipeLikeStatus:!recipe.recipeLikeStatus};
           }
-          return item;
+          return recipe;
         });
-        setListData(updatedList);
+        setListData(updatedData)
       }
     } catch (error) {
       console.error("Error in bookmark toggle:", error);
@@ -76,7 +74,7 @@ const BookmarkRecipe = () => {
   const clickDetail = (e, recipeNo) => {
     navigator(`/recipeDetail/${recipeNo}`);
   };
-
+  
   return (
     <>
   
@@ -84,10 +82,10 @@ const BookmarkRecipe = () => {
 
       <div className="bookmark-content">
         {listData.length > 0 ? (
-          listData.map((data, index) => (
+      
+          [...listData.slice(0,slice)].map((data, index) => (    
             <div key={index} style={{ position: "relative" }}>
-              <Bookmark
-
+               <Bookmark
                 check={data.recipeLikeStatus}
                 sx={{ cursor: "pointer" }}
                 onClick={() => byeBookmark(data.recipe_no)}
@@ -99,7 +97,8 @@ const BookmarkRecipe = () => {
                 comment_count={data.comment_cnt}
                 sname={data.recipe_sname}
                 date={data.recipe_date}
-              />
+              /> 
+          
             </div>
           ))
         ) : (
@@ -110,7 +109,7 @@ const BookmarkRecipe = () => {
       <div className="division-line"></div>
 
       <div className="add">
-        <ButtonContain size="large" text="더보기" />
+        <ButtonContain size="large" text="더보기" handleClick={handleClickMoreDetail}/>
       </div>
     </>
   );

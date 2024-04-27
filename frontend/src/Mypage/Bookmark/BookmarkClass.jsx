@@ -13,7 +13,11 @@ const BookmarkClass = () => {
   const navigator = useNavigate();
   const [listData, setListData] = useState([]);
   const accessToken = useSelector((state) => state.accessToken);
-
+  const [slice,setSlice]= useState(8);
+  const handleClickMoreDetail=()=>{
+    if(listData.length>slice)
+    setSlice(slice+8)
+  }
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -31,14 +35,15 @@ const BookmarkClass = () => {
             }
           });
         })
+        
         //코드 확인
-
       } catch (error) {
         console.error("Error fetching data:", error);
         setListData([]);
       }
     };
     fetchData();
+    
   }, [accessToken]);
 
   //북마크 해제
@@ -49,7 +54,6 @@ const BookmarkClass = () => {
       if(classLikeStatus){
       response = await axios.delete(
         `${url}/api/user/lessons/like/${lessonNo}`,
-        {},
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -57,7 +61,6 @@ const BookmarkClass = () => {
         }
       );
     }else{
-      console.log(lessonNo)
       response=await axios.post(
         `${url}/api/user/lessons/like`,
         {lesson_no:lessonNo},
@@ -94,11 +97,11 @@ const BookmarkClass = () => {
 
       <div className="bookmark-content">
         {listData.length > 0 ? (
-          listData.map((data, index) => (
+          [...listData.slice(0,slice)].map((data, index) => (
             <div key={index} style={{ position: "relative" }}>
               <Bookmark
                 check={data.classLikeStatus}
-                sx={{ cursor: "pointer" }}
+              sx={{ cursor: "pointer" }}
                  onClick={() => byeBookmark(data.lesson_no,data.classLikeStatus)}
               />
               <ClassReviewCard
@@ -118,7 +121,7 @@ const BookmarkClass = () => {
       <div className="division-line"></div>
 
       <div className="add">
-        <ButtonContain size="large" text="더보기" />
+        <ButtonContain size="large" text="더보기" handleClick={handleClickMoreDetail}/> 
       </div>
     </>
   );

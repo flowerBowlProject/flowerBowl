@@ -21,9 +21,6 @@ const ButtonLoginStyle =styled(Button)(({theme})=>({
       backgroundColor: 'transparent'
     }
   }));
-
-
-
 const CommonModal=({open,name_1,name_2,helpertext_1,helpertext_2,but_name,text_1,text_2,text_3,api_login,type_pass,handleOpen,vaildTest_1,vaildTest_2,handleClose,tag})=>{
     const theme= useTheme();
     const dispatch = useDispatch();

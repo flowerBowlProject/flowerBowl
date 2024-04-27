@@ -12,13 +12,15 @@ import ButtonContain from "../Component/ButtonContain";
 import ButtonOutlined from "../Component/ButtonOutlined";
 import InputSearch from "./InputSearch";
 import { styled } from "@mui/material/styles";
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import CommonModal from "../LoginModal/CommonModal";
 import Signup from "../LoginModal/Signup";
 import ButtonGroupText from "../Component/ButtonGroupText";
 import {useNavigate,Link,NavLink} from 'react-router-dom';
 import { useDispatch ,useSelector} from "react-redux";
-import { closeError } from "../persistStore";
+import { closeError, editErrorType ,openError} from "../persistStore";
+import axios from "axios";
+import { url } from "../url";
 const TextTitle = styled(Typography)(({ theme }) => ({
   color: theme.palette.main.br,
   fontWeight: "Bold",
@@ -27,12 +29,15 @@ const TextTitle = styled(Typography)(({ theme }) => ({
   marginTop: "0.2vw",
 }));
 const Header = () => {
-  
+
   const dispatch=useDispatch();
   const navigate=useNavigate();
+  const accessToken=useSelector(state=>state.accessToken)
+  const [role,setRole]=useState('')
   const [open, setOpen] = useState([false, false, false, false]);
   const handleOpen = (event) => {
     const innerText = event.target.innerText;
+    console.log(innerText)
     if (innerText === "회원가입") setOpen([true, false, false, false]);
     else if (innerText === "로그인") setOpen([false, true, false, false]);
     else if (innerText === "아이디 찾기") setOpen([false, false, true, false]);
@@ -40,15 +45,58 @@ const Header = () => {
       setOpen([false, false, false, true]);
     console.log(innerText);
   };
+  const handleText = () => {
+    if (role === 'ROLE_ADMIN') {
+      return '관리자페이지';
+    } else if (accessToken) {
+      return '마이페이지';
+    } else {
+      return '회원가입';
+    }
+  };
+  const text=handleText();
   const handleClose = ()=>{
     dispatch(closeError());
     setOpen([false,false,false,false]);
   }
   const handleLogout=()=>{
+    navigate('/')
     dispatch({type:'accessToken',payload:""})
+    setRole('')
   }
   const handleMove=()=>{
-    navigate('/Mypage/profile')
+    dispatch(closeError())
+    if (role === 'ROLE_ADMIN')
+    navigate('/Admin/admissionChef')
+    else
+    navigate('/Mypage/profile') 
+  }
+  
+  useEffect(()=>{
+    const roleCheck=async()=>{
+      try{
+      const response=await axios.get(`${url}/api/users/info`,{
+        headers:{
+        Authorization: `Bearer ${accessToken}`}
+      })
+      setRole(response.data.user_role)
+    }catch(error){
+      dispatch(editErrorType(error.response.data.code))
+      dispatch(openError())
+    }
+    }
+    if(accessToken!=='')
+    roleCheck();
+
+  },[accessToken])
+  const handleClick=(e)=>{
+    if (role === 'ROLE_ADMIN') {
+      handleMove();
+    } else if (accessToken) {
+      handleMove();
+    } else {
+      handleOpen(e);
+    }
   }
   return (
     <AppBar sx={{ backgroundColor: "main.yl" }}>
@@ -76,9 +124,9 @@ const Header = () => {
           </Grid>
           <Grid item xs={3}>
             <ButtonGroupText >
-            <NavLink to='/recipeList' style={{textDecoration:'none'}} className={({isActive})=>isActive?"focused":"unFocused"}><ButtonLogoStyle>레시피</ButtonLogoStyle></NavLink>
-            <NavLink to='/classList' style={{textDecoration:'none'}} className={({isActive})=>isActive?"focused":"unFocused"}><ButtonLogoStyle>클래스</ButtonLogoStyle></NavLink>
-            <NavLink to='/communityList' style={{textDecoration:'none'}} className={({isActive})=>isActive?"focused":"unFocused"}><ButtonLogoStyle>커뮤니티</ButtonLogoStyle></NavLink>
+            <NavLink to='/recipeList' style={{textDecoration:'none'}} className={({isActive})=>isActive?"focused":"unFocused"}><ButtonLogoStyle onClick={handleClose}>레시피</ButtonLogoStyle></NavLink>
+            <NavLink to='/classList' style={{textDecoration:'none'}} className={({isActive})=>isActive?"focused":"unFocused"}><ButtonLogoStyle  onClick={handleClose}>클래스</ButtonLogoStyle></NavLink>
+            <NavLink to='/communityList' style={{textDecoration:'none'}} className={({isActive})=>isActive?"focused":"unFocused"}><ButtonLogoStyle onClick={handleClose}>커뮤니티</ButtonLogoStyle></NavLink>
             </ButtonGroupText>
           </Grid>
           <Grid item xs={4}>
@@ -89,8 +137,8 @@ const Header = () => {
               <Grid item ml="5vw">
                 <ButtonOutlined
                   size="large"
-                  text={useSelector(state=>state.accessToken)?'마이페이지':"회원가입"}
-                  handleClick={useSelector(state=>state.accessToken)?handleMove:handleOpen}
+                  text={text}
+                  handleClick={handleClick}
                 />
                 <Signup open={open[0]} handleOpen={handleOpen} handleClose={handleClose}/>
               </Grid>
