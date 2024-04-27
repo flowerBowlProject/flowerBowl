@@ -17,6 +17,7 @@ const AddressSearch = (props) => {
   },[props.setAddress])
 
   const searchAddress = () => {
+    console.log('버튼 클릭')
     axios
       .get("https://dapi.kakao.com/v2/local/search/address.json", {
         params: {
@@ -86,8 +87,7 @@ const AddressSearch = (props) => {
         variant="outlined"
         onClick={searchAddress}
       >
-        {" "}
-        주소 등록{" "}
+        주소 등록
       </Button>
     </div>
   );

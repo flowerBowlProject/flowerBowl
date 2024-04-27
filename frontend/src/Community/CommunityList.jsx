@@ -23,6 +23,7 @@ const CommunityList = () => {
     const location = useLocation();
     const params = new URLSearchParams(location.search);
     const keyword = params.get('keyword');
+    
     const accessToken = useSelector(state => state.accessToken);
 
     useEffect(() => {
@@ -66,8 +67,7 @@ const CommunityList = () => {
     }));
 
     {/* 커뮤니티 글쓰기로 이동 */ }
-    const handleRegister = (e) => {
-        e.preventDefault();
+    const handleRegister = () => {
         navigate('/registerCommunity');
     }
 
@@ -95,8 +95,8 @@ const CommunityList = () => {
     return (
         <>
             <div className="communityList-Box">
-                <div style={{float:'right'}} onClick={handleRegister}>
-                    <ButtonOutlined size='large' text='글쓰기'/>
+                <div style={{float:'right'}}>
+                    <ButtonOutlined size='large' text='글쓰기' handleClick={handleRegister}/>
                 </div>
 
                 <TableContainer component={Paper} sx={{ boxShadow: 'none' }}>
