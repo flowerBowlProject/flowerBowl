@@ -15,7 +15,11 @@ const CheckPaidList = () => {
   const [sortReceipt, setSortReceipt] = useState("asc");
   const [listData, setListData] = useState([]);
   const [refreshData, setRefreshData] = useState(false);
-
+  const [slice,setSlice]= useState(8);
+  const handleClickMoreDetail=()=>{
+    if(listData.length>slice)
+    setSlice(slice+8)
+  }
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -147,7 +151,7 @@ const CheckPaidList = () => {
           </thead>
 
           <tbody>
-            {[...listData, ...Array(8 - listData.length)].map((data, index) => (
+          {[...listData.slice(0,slice), ...Array(8-listData.slice(slice-8,slice).length)].map((data, index) => (
               <tr key={index}>
                 <td>{data ? index + 1 : ""}</td>
                 <td>{data ? data.pay_date : ""}</td>
@@ -173,7 +177,7 @@ const CheckPaidList = () => {
 
       {/* 더보기 버튼    */}
       <section className="bottom-add">
-        <ButtonContain size="medium" text="더보기" />
+        <ButtonContain size="medium" text="더보기" handleClick={handleClickMoreDetail}/>
       </section>
     </>
   );
