@@ -11,7 +11,11 @@ const AdmissionChef = () => {
   const [sortDirection, setSortDirection] = useState("asc");
   const [listData, setListData] = useState([]);
   const accessToken = useSelector((state) => state.accessToken);
-
+  const [slice,setSlice]= useState(8);
+  const handleClickMoreDetail=()=>{
+    if(listData.length>slice)
+    setSlice(slice+8)
+  }
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -20,7 +24,7 @@ const AdmissionChef = () => {
             Authorization: `Bearer ${accessToken}`,
           },
         });
-        setListData(response.data.candidiate);
+        setListData(response.data.candidiate.reverse());
         // // console.log(typeof response.data.candidiate);
 
         // const candidateData = Array.isArray(response.data?.candidiate)
@@ -36,6 +40,7 @@ const AdmissionChef = () => {
       }
     };
     fetchData();
+  
   }, [accessToken]);
 
   //   날짜정렬
@@ -44,17 +49,17 @@ const AdmissionChef = () => {
   };
 
   const sortTableDataByDate = (direction = "asc") => {
+    
     const sortedData = [...listData].sort((a, b) => {
       const dateA = new Date(a.license_date);
       const dateB = new Date(b.license_date);
       return direction === "asc" ? dateB - dateA : dateA - dateB;
     });
+    
     setListData(sortedData);
   };
 
-  useEffect(() => {
-    sortTableDataByDate(sortDirection);
-  }, []);
+  
 
   const toggleSortDirection = () => {
     setSortDirection((prevDirection) => {
@@ -92,8 +97,8 @@ const AdmissionChef = () => {
             </thead>
 
             <tbody>
-              {[...listData, ...Array(8 - listData.length)].map(
-                (data, index) => (
+            {[...listData.slice(0,slice), ...Array(8-listData.slice(slice-8,slice).length)].map((data, index) => (
+                
                   <tr key={index}>
                     <td>{data ? index + 1 : ""}</td>
                     <td>{data ? extractDate(data.license_date) : ""}</td>
@@ -132,7 +137,7 @@ const AdmissionChef = () => {
 
         {/* 더보기 버튼    */}
         <section className="bottom-add">
-          <ButtonContain size="medium" text="더보기" />
+          <ButtonContain size="medium" text="더보기" handleClick={handleClickMoreDetail}/>
         </section>
       </div>
     </>

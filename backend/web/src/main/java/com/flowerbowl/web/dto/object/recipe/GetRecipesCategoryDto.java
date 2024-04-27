@@ -1,6 +1,9 @@
 package com.flowerbowl.web.dto.object.recipe;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
@@ -8,7 +11,7 @@ import java.time.LocalDate;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class GetAllRecipesDto {
+public class GetRecipesCategoryDto {
 
     private Long recipe_no;
 
@@ -20,10 +23,10 @@ public class GetAllRecipesDto {
 
     private LocalDate recipe_date;
 
-    // 게시글 즐겨찾기 수
+    // 레시피 즐겨찾기 수
     private Long recipe_like_count;
 
-    // 게시글 댓글 수
+    // 레시피 댓글 수
     private Long recipe_comment_count;
 
     // 사용자 즐겨찾기 여부

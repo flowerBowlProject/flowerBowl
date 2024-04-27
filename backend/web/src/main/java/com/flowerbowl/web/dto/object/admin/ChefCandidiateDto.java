@@ -14,4 +14,5 @@ public class ChefCandidiateDto{
     private String license_sname;
     private String license_oname;
     private Long user_no;
+    private String user_name;
 }

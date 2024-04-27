@@ -15,7 +15,7 @@ const Checkteachingclass = () => {
   const [sortDirectionRating, setSortDirectionRating] = useState("asc");
   const [listData, setListData] = useState([]);
   const accessToken = useSelector((state) => state.accessToken);
-
+  const [slice,setSlice]= useState(8);
   //액세스토큰 확인
   // console.log("Access Token:", accessToken);
 
@@ -88,23 +88,13 @@ const Checkteachingclass = () => {
       return newDirection;
     });
   };
-
+  const handleClickMoreDetail=()=>{
+    if(listData.length>slice)
+    setSlice(slice+8)
+  }
   return (
     <>
-      {/* 버튼들 */}
-      <section className="buttons">
-        <span className="checktclass">
-          <Link to="/mypage/checkteachingclass">
-            <ButtonContain size="doubleLarge" text="수강클래스 조회" />
-          </Link>
-        </span>
-        <span className="checkmclass">
-          <Link to="/mypage/checkmakingclass">
-            <ButtonOutlined size="doubleLarge" text="창작클래스 조회" />
-          </Link>
-        </span>
-      </section>
-
+      
       {/* 내용 */}
       <section className="table-content">
         <table className="custom-table">
@@ -143,7 +133,7 @@ const Checkteachingclass = () => {
             </tr>
           </thead>
           <tbody>
-            {[...listData, ...Array(8 - listData.length)].map((data, index) => (
+            {[...listData.slice(0,slice), ...Array(8-listData.slice(slice-8,slice).length)].map((data, index) => (
               <tr key={index}>
                 <td>{data ? index + 1 : ""}</td>
                 <td>{data ? data.pay_date : ""}</td>
@@ -173,7 +163,7 @@ const Checkteachingclass = () => {
 
       {/* 더보기 버튼    */}
       <section className="bottom-add">
-        <ButtonContain size="medium" text="더보기" />
+        <ButtonContain size="medium" text="더보기" handleClick={handleClickMoreDetail} />
       </section>
     </>
   );

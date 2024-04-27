@@ -39,7 +39,7 @@ public class UserServiceImpl implements UserService {
         try {
 
             user = userRepository.findByUserId(userId);
-            if (user == null) return GetUserInfoResponseDto.notExistUser();
+//            if (user == null) return GetUserInfoResponseDto.notExistUser();
 
 
         } catch (Exception exception) {
@@ -57,7 +57,7 @@ public class UserServiceImpl implements UserService {
         try {
 
             User user = userRepository.findByUserId(userId);
-            if (user == null) PatchProfileResponseDto.noExistUser();
+//            if (user == null) PatchProfileResponseDto.noExistUser();
 
 
             String userPw = dto.getUser_password();

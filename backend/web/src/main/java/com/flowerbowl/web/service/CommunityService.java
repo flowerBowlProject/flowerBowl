@@ -7,11 +7,11 @@ import org.springframework.http.ResponseEntity;
 
 public interface CommunityService {
 
-    public ResponseEntity<? extends CommunityResponseDto> createCommunity(CrCommunityReqDto request) throws Exception;
+    public ResponseEntity<? extends CommunityResponseDto> createCommunity(CrCommunityReqDto request, String userId) throws Exception;
 
-    public ResponseEntity<? extends CommunityResponseDto> updateCommunity(UpCommunityReqDto request, Long community_no) throws Exception;
+    public ResponseEntity<? extends CommunityResponseDto> updateCommunity(UpCommunityReqDto request, Long community_no, String userId) throws Exception;
 
-    public ResponseEntity<? extends CommunityResponseDto> deleteCommunity(Long community_no) throws Exception;
+    public ResponseEntity<? extends CommunityResponseDto> deleteCommunity(Long community_no, String userId) throws Exception;
 
     public ResponseEntity<? extends CommunityResponseDto> getAllCommunities(int page, int size) throws Exception;
 

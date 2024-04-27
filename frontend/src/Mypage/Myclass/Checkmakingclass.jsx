@@ -17,13 +17,17 @@ const Checkmakingclass = () => {
   const [sortComment, setSortComment] = useState("asc");
   const [listData, setListData] = useState([]);
   const [refreshData, setRefreshData] = useState(false);
+  const [slice,setSlice]= useState(8);
+  const handleClickMoreDetail=()=>{
+    if(listData.length>slice)
+    setSlice(slice+8)
+  }
   //액세스토큰 확인
   // console.log("Access Token:", accessToken);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        console.log("데이터 리로드");
         const response = await axios.get(`${url}/api/chef/lessons`, {
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -31,7 +35,6 @@ const Checkmakingclass = () => {
         });
         setListData(response.data.myLessons);
         //코드 확인
-        // console.log(response.data.payLessons);
       } catch (error) {
         console.error("Error fetching data:", error);
         setListData([]);
@@ -125,22 +128,10 @@ const Checkmakingclass = () => {
   if (!accessToken) {
     return <div>로딩중입니다..</div>;
   }
-
+  
   return (
     <>
-      {/* 버튼들 */}
-      <section className="buttons">
-        <span className="checktclass">
-          <Link to="/mypage/checkteachingclass">
-            <ButtonOutlined size="doubleLarge" text="수강클래스 조회" />
-          </Link>
-        </span>
-        <span className="checkmclass">
-          <Link to="/mypage/checkmakingclass">
-            <ButtonContain size="doubleLarge" text="창작클래스 조회" />
-          </Link>
-        </span>
-      </section>
+      
 
       {/* 내용 */}
       <section className="table-content">
@@ -190,14 +181,15 @@ const Checkmakingclass = () => {
             </tr>
           </thead>
           <tbody>
-            {[...listData, ...Array(8 - listData.length)].map((data, index) => (
+            {[...listData.slice(0,slice), ...Array(8-listData.slice(slice-8,slice).length)].map((data, index) => (
+              
               <tr key={index}>
                 <td>{data ? index + 1 : ""}</td>
                 <td>{data ? data.lesson_date : ""}</td>
                 <td onClick={(e) => clickDetail(e, data.lesson_no)}>
                   {data ? data.lesson_title : ""}
                 </td>
-                <td>{data ? data.bookmark_cnt.toLocaleString() : ""}</td>
+                <td>{data ? data.lesson_like_cnt.toLocaleString(): ""}</td>
                 <td>{data ? data.review_cnt.toLocaleString() : ""}</td>
                 <td>
                   {data ? (
@@ -212,7 +204,7 @@ const Checkmakingclass = () => {
                   )}
                 </td>
                 <td>
-                  {data ? <ButtonContain size="verySmall" text="수정" /> : ""}
+                  {data ? <ButtonContain size="verySmall" text="수정" handleClick={handleClickMoreDetail}/> : ""}
                 </td>
               </tr>
             ))}

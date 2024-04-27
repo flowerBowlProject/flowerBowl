@@ -8,8 +8,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 
 public interface SearchService {
-    ResponseEntity<? super SearchAllResponseDto> searchAll(Pageable pageable, String keyword);
-    ResponseEntity<? super SearchRecipeResponseDto> searchRecipe(Pageable pageable, String keyword);
-    ResponseEntity<? super SearchLessonResponseDto> searchLesson(Pageable pageable, String keyword);
+    ResponseEntity<? super SearchAllResponseDto> searchAll(Pageable pageable, String keyword, Boolean loginStatus, String userId);
+    ResponseEntity<? super SearchRecipeResponseDto> searchRecipe(Pageable pageable, String keyword, Boolean loginStatus, String userId);
+    ResponseEntity<? super SearchLessonResponseDto> searchLesson(Pageable pageable, String keyword, Boolean loginStatus, String userId);
     ResponseEntity<? super SearchCommunityResponseDto> searchCommunity(Pageable pageable, String keyword);
 }

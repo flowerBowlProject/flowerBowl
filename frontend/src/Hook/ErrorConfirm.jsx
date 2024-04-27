@@ -18,6 +18,9 @@ const ErrorConfirm = ({error})=>{
         let content = '';
 
         switch (error) {
+            case 'NU':
+                severity='error';
+                content="아이디가 존재하지 않습니다!";
             case 'EP':
                 severity='error';
                 content='가입하지 않은 이메일이나 아이디입니다.';
@@ -30,7 +33,7 @@ const ErrorConfirm = ({error})=>{
                 severity='success';
                 content='아이디 찾기에 성공 하였습니다.';
                 break;
-            case 'FindPW':
+            case 'FindPw':
                 severity='success';
                 content='이메일에 새로운 비밀번호를 보냈습니다.';
                 break;
@@ -41,6 +44,10 @@ const ErrorConfirm = ({error})=>{
             case 'SUCertification':
                 severity='success';
                 content='인증에 성공 하였습니다.';
+                break;
+            case 'SF':
+                severity='error';
+                content='아이디 혹은 비밀번호가 틀렸습니다.';
                 break;
             case 'CF':
                 severity='error';
