@@ -116,7 +116,7 @@ const SearchList = () => {
             .then((res) => {
               const check = res.data.code=='SU' ? false : true;
               setSearchRecipeList((searchRecipeList) => {
-                const updatedList = { ...searchRecipeList[index], recipe_likes_status: check };
+                const updatedList = { ...searchRecipeList[index], recipe_like_status: check };
                 const newListData = [...searchRecipeList.slice(0, index), updatedList, ...searchRecipeList.slice(index + 1)];
                 return newListData;
               })
@@ -124,11 +124,11 @@ const SearchList = () => {
         }
     }
 
-    const clickClassBookmark = (e, index, lesson_no, lesson_likes_status) =>{
+    const clickClassBookmark = (e, index, lesson_no, lesson_like_status) =>{
         if (accessToken === '') {
             console.log('로그인 후 이용해 주세요.');
         } else {
-            if (lesson_likes_status) {
+            if (lesson_like_status) {
                 console.log('북마크 해제')
                 axios.delete(`${url}/api/user/lessons/like/${lesson_no}`, {
                     headers: {
@@ -138,7 +138,7 @@ const SearchList = () => {
                     .then(res => {
                         console.log('북마크 해제 성공')
                         setSearchClassList((searchClassList) => {
-                            const updatedList = { ...searchClassList[index], lesson_likes_status: false };
+                            const updatedList = { ...searchClassList[index], lesson_like_status: false };
                             const newListData = [...searchClassList.slice(0, index), updatedList, ...searchClassList.slice(index + 1)];
                             return newListData;
                         })
@@ -159,7 +159,7 @@ const SearchList = () => {
                     .then(res => {
                         console.log('북마크 등록 성공');
                         setSearchClassList((searchClassList) => {
-                            const updatedList = { ...searchClassList[index], lesson_likes_status: true };
+                            const updatedList = { ...searchClassList[index], lesson_like_status: true };
                             const newListData = [...searchClassList.slice(0, index), updatedList, ...searchClassList.slice(index + 1)];
                             return newListData;
                         })
@@ -182,10 +182,10 @@ const SearchList = () => {
                 <div className="searchList-body">
                     {searchRecipeList.length !== 0 ? searchRecipeList.map((data, index) =>
                         <div style={{ position: 'relative', cursor: 'pointer' }} key={data.recipe_no}>
-                            <Bookmark check={data.recipe_likes_status}  onClick={(e) => clickRecipeBookmark(e, index, data.recipe_no)}/>
+                            <Bookmark check={data.recipe_like_status}  onClick={(e) => clickRecipeBookmark(e, index, data.recipe_no)}/>
                             <div onClick={(e) => handleRecipeDetail(data.recipe_no, e)}>
                                 <RecipeReviewCard
-                                    title={data.recipe_title} like_count={data.recipe_likes_num} comment_count={data.recipe_comments_num} sname={data.recipe_sname} date={data.recipe_date} type={true} />
+                                    title={data.recipe_title} like_count={data.recipe_like_cnt} comment_count={data.comment_cnt} sname={data.recipe_sname} date={data.recipe_date} type={true} />
                             </div>
                         </div>
                     ) : <div style={{ margin: "5% auto" }}> "조회된 게시글이 없습니다"</div>}
@@ -198,10 +198,10 @@ const SearchList = () => {
                 <div className="searchList-body">
                     {searchClassList.length !== 0 ? searchClassList.map((data, index) =>
                         <div style={{ position: 'relative', cursor: 'pointer' }} key={index}>
-                            <Bookmark check={data.lesson_likes_status} onClick={(e)=>clickClassBookmark(e, index, data.lesson_no, data.lesson_likes_status)}/>
+                            <Bookmark check={data.lesson_like_status} onClick={(e)=>clickClassBookmark(e, index, data.lesson_no, data.lesson_like_status)}/>
                             <div onClick={(e) => handleClassDetail(data.lesson_no, e)}>
                                 <RecipeReviewCard key={data.lesson_no}
-                                    title={data.lesson_title} like_count={data.lesson_likes_num} sname={data.lesson_sname} date={data.lesson_date} type={false} />
+                                    title={data.lesson_title} like_count={data.lesson_like_cnt} sname={data.lesson_sname} date={data.lesson_date} type={false} />
                             </div>
                         </div>
                     ) : <div style={{ margin: "5% auto" }}> "조회된 게시글이 없습니다"</div>}

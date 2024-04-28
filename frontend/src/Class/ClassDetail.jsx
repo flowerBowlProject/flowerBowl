@@ -75,7 +75,7 @@ const ClassDetail = () => {
         if(accessToken === '') {
             console.log('로그인 후 이용')
         }else{
-            if(classData.lesson_likes_status){
+            if(classData.lesson_like_status){
             console.log('북마크 해제')
             axios.delete(`${url}/api/user/lessons/like/${lesson_no}`,{
                 headers:{
@@ -84,7 +84,7 @@ const ClassDetail = () => {
             })
             .then(res=>{
                 console.log('북마크 해제 성공')
-                setClassData((classData) => ({...classData, lesson_likes_status : false}))
+                setClassData((classData) => ({...classData, lesson_like_status : false}))
             })
             .catch(err=>{
                 console.log(err);
@@ -101,7 +101,7 @@ const ClassDetail = () => {
             })
             .then(res=>{
                 console.log('북마크 등록 성공');
-                setClassData((classData) => ({...classData, lesson_likes_status : true}))
+                setClassData((classData) => ({...classData, lesson_like_status : true}))
 
             })
             .catch(err=>{
@@ -197,7 +197,7 @@ const ClassDetail = () => {
 
                 {/* 즐겨찾기 버튼 - 즐겨찾기 여부에 따른 true / false로 아이콘 표시 */}
                 <div className="class-bookmark" style={{cursor:'pointer'}} onClick={clickBookmark}>
-                    {classData.lesson_likes_status === true ? <TurnedInIcon sx={{ fontSize: '60px', color: 'main.or' }} /> :
+                    {classData.lesson_like_status === true ? <TurnedInIcon sx={{ fontSize: '60px', color: 'main.or' }} /> :
                         <TurnedInNotIcon sx={{ fontSize: '60px', color: 'main.or' }} />} 스크랩 </div>
 
                 {/* 수정/삭제 버튼 - 작성자인 경우에만 true로 버튼 표시 + 구매하기 버튼 - 작성자가 아닌 경우 노출 */}
