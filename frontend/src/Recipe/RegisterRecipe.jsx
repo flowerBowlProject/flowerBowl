@@ -2,10 +2,19 @@ import React, { useState } from "react";
 import './RegisterRecipeStyle.css';
 import Category from "../Component/Category";
 import ToastEditor from "../Component/ToastEditor";
+import RecipeStuff from "./RecipeStuff";
+import ButtonOutlined from "../Component/ButtonOutlined";
+import ButtonContain from "../Component/ButtonContain";
+import { url } from "../url";
+import axios from "axios";
+import { useSelector } from 'react-redux';
 
 const RegisterRecipe = () => {
+    const accessToken = useSelector(state => state.accessToken);
+
     {/* 등록 레시피 데이터 + 썸네일 + 썸네일 선택 여부 */ }
-    const [registerData, setRegisterData] = useState({ recipe_title: '', recipe_category: '', recipe_stuff: [], recipe_content: '' });
+    const [registerData, setRegisterData] = useState({ recipe_title: '', recipe_category: '', recipe_stuff: [], recipe_content: '', recipe_sname:'짜장면', recipe_oname:'짜장면',
+        recipe_file_oname:[], recipe_file_sname:[] });
     const [thumbnail, setThumbnail] = useState(null);
     const [selectedFile, setSelectedFile] = useState(null);
 
@@ -30,7 +39,42 @@ const RegisterRecipe = () => {
 
     {/* 토스트 에디터 값 받아와 저장 */}
     const getToastEditor = content =>{
-        setRegisterData((registerData) => ({ ...registerData, lesson_content: content}));
+        setRegisterData((registerData) => ({ ...registerData, recipe_content: content}));
+    }
+
+    {/* 재료 입력 값 받아와서 저장 */}
+    const getStuff = stuff =>{
+        console.log(stuff);
+        setRegisterData((registerData) => ({...registerData, recipe_stuff: stuff}));
+    }
+
+    {/* 그 외의 변경사항 적용 */}
+    const setValue = (e) =>{
+        const value = e.target.value;
+        const name = e.target.name;
+        setRegisterData((registerData) => ({ ...registerData, [name]: value }));
+    }
+
+    const handleRegister = () =>{
+        console.log(registerData);
+
+        axios.post(`${url}/api/recipes`, registerData,{
+            headers:{
+                Authorization: `Bearer ${accessToken}`
+            }
+        })
+        .then(res=>{
+            console.log(res);
+            navigator('/recipeList');
+        })
+        .catch(err=>{
+            console.log(err);
+        })
+
+    }
+
+    const handleCancel = () =>{
+        navigator('/recipeList');
     }
 
 
@@ -50,7 +94,7 @@ const RegisterRecipe = () => {
                             <input type='file' name='thumbImg' onChange={chooseThumbnail} />
                         </label>)}
                 </div>
-                <input className="register-title" type='text' placeholder="제목을 작성해 주세요."/>
+                <input className="register-Recipetitle" type='text' placeholder="제목을 작성해 주세요." name="recipe_title" onChange={(e)=> setValue(e)}/>
             
             {/* 카테고리 선택 */}
             <Category getCategory={getCategory} />
@@ -58,14 +102,17 @@ const RegisterRecipe = () => {
 
             <div className="recipeText-Box">
                 {/* 재료 작성란 */}
-                <div className="materialInput-Box" style={{borderBottom: "2px solid #CBA285", height: "2vw", width:"70%", margin : "1vw"}}>
-                재료 태그 작성란 - 컴포넌트 만들어서 넣을 예정
+                <div className="materialInput-Box" style={{display: 'flex'}}>
+                        <RecipeStuff getStuff={getStuff}/>
                 </div>
                 {/* 레시피 || 클래스 상세 내용 작성란 */}
-                <ToastEditor getToastEditor={getToastEditor}/>
+                <ToastEditor getToastEditor={getToastEditor} setContent={registerData.recipe_content}/>
             </div>
             
-            {/* 조이님이 만들어주신 공통 컴포넌트 버튼 추가 필요 -> 등록 / 취소 버튼 */}
+            <div className="register_button" style={{ marginTop: "2%" }}>
+                <ButtonOutlined size='large' text='등록' handleClick={handleRegister}/> &nbsp;
+                <ButtonContain size='large' text='취소' handleClick={handleCancel}/>
+            </div>
         </div>
     );
 }

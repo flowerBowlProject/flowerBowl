@@ -9,6 +9,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { url } from "../url";
 import ButtonOutlined from "../Component/ButtonOutlined";
+import { Viewer } from "@toast-ui/react-editor";
 
 const RecipeDetail = () => {
     const [recipeData, setRecipeData] = useState({ });
@@ -106,10 +107,11 @@ const RecipeDetail = () => {
                 </div>
 
                 <div className="recipe-stuff">
-                    재료 : {recipeData.recipe_stuff}
+                    재료 : {recipeData.recipe_stuff.join(', ')}
                 </div>
 
-                <div className='recipe-body'>{recipeData.recipe_content}</div>
+                <div className='recipe-body'>{recipeData.recipe_content && <Viewer initialValue={recipeData.recipe_content} />}</div>
+
                 {/* 즐겨찾기 버튼 - 즐겨찾기 여부에 따른 true / false로 아이콘 표시 */}
                 <div className="recipe-bookmark" onClick={clickBookmark} style={{cursor :'pointer'}}>{recipeData.recipe_like_status ? <TurnedInIcon sx={{ fontSize: '60px', color: 'main.or' }} /> :
                     <TurnedInNotIcon sx={{ fontSize: '60px', color: 'main.or' }} />} 스크랩 </div>
