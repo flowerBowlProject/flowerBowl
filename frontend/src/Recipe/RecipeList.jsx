@@ -156,8 +156,8 @@ const ViewList = () => {
               <RecipeReviewCard
                 onClick={(e) => clickDetail(e, data.recipe_no)}
                 title={data.recipe_title}
-                like_count={data.recipe_like_count}
-                comment_count={data.recipe_comment_count}
+                like_count={data.recipe_like_cnt}
+                comment_count={data.comment_cnt}
                 sname={data.recipe_sname}
                 date={data.recipe_date}
                 type={true}
