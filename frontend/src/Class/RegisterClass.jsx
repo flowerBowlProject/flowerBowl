@@ -15,9 +15,12 @@ import { useSelector } from 'react-redux';
 import ButtonContain from "../Component/ButtonContain";
 import dayjs from "dayjs";
 import ButtonOutlined from "../Component/ButtonOutlined";
+import { useNavigate } from "react-router-dom";
 
 const RegisterClass = () => {
     const accessToken = useSelector(state => state.accessToken);
+    const navigator = useNavigate();
+
     {/* 등록 클래스 데이터 + 썸네일 + 썸네일 선택 여부 */ }
     const [registerData, setRegisterData] = useState({
         lesson_title: '', lesson_category: '', lesson_price: 0, lesson_sname:'짜장면', lesson_oname:'짜장면',
@@ -47,7 +50,7 @@ const RegisterClass = () => {
 
     {/* 주소 및 위도/경도 받아와 저장 */ }
     const getAddress = address => {
-        setRegisterData((registerData) => ({ ...registerData, lesson_address: address.lesson_addr }));
+        setRegisterData((registerData) => ({ ...registerData, lesson_addr: address.lesson_address }));
         setRegisterData((registerData) => ({ ...registerData, lesson_longitude: address.lesson_longitude }));
         setRegisterData((registerData) => ({ ...registerData, lesson_latitude: address.lesson_latitude }));
     }
@@ -65,25 +68,25 @@ const RegisterClass = () => {
     }
 
     {/* 클래스 등록 */}
-    const handleRegister = (e) =>{
-        e.preventDefault();
-
-        const isFormDataChanged = () => {
-            // 모든 필드가 변경되었는지 여부를 저장할 변수
-            let isChanged = false;
-          
-            // 모든 필드를 순회하면서 변경 여부 확인
-            Object.values(registerData).forEach((value) => {
-              // 빈 값이거나 초기값이 아닌 경우 변경된 것으로 간주
-              if (value !== '' && value !== 0 && value !== '짜장면' && value !== 0.0) {
-                isChanged = true;
-              }
-            });
-          
-            return isChanged;
-        };
-
-        if(!isFormDataChanged()){
+    const handleRegister = () =>{
+       {/* 등록 내용 작성 여부 확인 후 alert */}
+       if(registerData.lesson_title === ''){
+            console.log('제목을 작성해 주세요.')
+        }else if(registerData.lesson_category === ''){
+            console.log('카테고리를 선택해 주세요')
+        }else if(registerData.lesson_sname === '' || registerData.lesson_oname === ''){
+            console.log('사진을 첨부해 주세요')
+        }else if(registerData.lesson_addr === '' || registerData.lesson_latitude === 0.0 || registerData.lesson_longitude ===0.0){
+            console.log('주소를 입력 후 주소 등록 버튼을 눌러주세요')
+        }else if(registerData.lesson_content === ''){
+            console.log('내용을 작성해 주세요')
+        }else if(registerData.lesson_start === ''){
+            console.log('시작일을 선택해 주세요')
+        }else if(registerData.lesson_end === ''){
+            console.log('종료일을 선택해 주세요')
+        }else if(registerData.lesson_URL === ''){
+            console.log('문의 채팅 링크를 입력해 주세요')
+        }else{
             console.log("등록 가능");
             axios.post(`${url}/api/lessons`, registerData, {
                 headers: {
@@ -97,29 +100,6 @@ const RegisterClass = () => {
             .catch(err=>{
                 console.log(err);
             })
-        }else{
-            console.log('등록 불가');
-
-            {/* 등록 내용 작성 여부 확인 후 alert */}
-            if(registerData.lesson_title.trim() === ''){
-                console.log('제목을 작성해 주세요.')
-            }else if(registerData.lesson_category.trim() === ''){
-                console.log('카테고리를 선택해 주세요')
-            }else if(registerData.lesson_sname.trim() === '' || registerData.lesson_oname.trim() === ''){
-                console.log('사진을 첨부해 주세요')
-            }else if(registerData.lesson_addr.trim() === '' || registerData.lesson_latitude === 0.0 || registerData.lesson_longitude ===0.0){
-                console.log('주소를 입력 후 주소 등록 버튼을 눌러주세요')
-            }else if(registerData.lesson_content.trim() === ''){
-                console.log('내용을 작성해 주세요')
-            }else if(registerData.lesson_start === ''){
-                console.log('시작일을 선택해 주세요')
-            }else if(registerData.lesson_end === ''){
-                console.log('종료일을 선택해 주세요')
-            }else if(registerData.lesson_URL.trim() === ''){
-                console.log('문의 채팅 링크를 입력해 주세요')
-            }else{
-                console.log('현재 글작성이 불가합니다. 관리자에게 문의해 주세요')
-            }
         }
     }
 
@@ -192,7 +172,7 @@ const RegisterClass = () => {
             <div style={{ border: "1px solid #CBA285", marginBottom: "2%" }} />
             <div className="register_button">
             <ButtonOutlined size='large' text='등록' handleClick={(e)=>handleRegister(e)}/> &nbsp;
-            <ButtonContain size='large' text='취소'/>
+            <ButtonContain size='large' text='취소' handleClick={handleCancel}/>
             </div>
         </div>
     );
