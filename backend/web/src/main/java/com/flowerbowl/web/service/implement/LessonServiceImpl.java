@@ -11,6 +11,7 @@ import com.flowerbowl.web.repository.UserRepository;
 import com.flowerbowl.web.repository.lesson.*;
 import com.flowerbowl.web.service.LessonService;
 import lombok.RequiredArgsConstructor;
+import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -256,15 +257,15 @@ public class LessonServiceImpl implements LessonService {
             if(!lessonJpaDataRepository.existsLessonByLessonNo(lesson_no)){
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseDto("FA","해당하는 lesson_no을 가진 클래스가 없습니다."));
             }
-            // 구매 정보 저장
-            Pay pay = new Pay();
+            // 클래스를 구매한 유저 정보를 받아옴
             User user = userRepository.findByUserId(userId);
             if(user == null){
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseDto("FA", "해당하는 user_id를 가진 유저가 없습니다."));
             }
-//            User user = userRepository.findUserByUserNo(user_no);
+            // 구매 정보 저장
+            Pay pay = new Pay();
             pay.setUser(user);
-            // lesson
+            // lesson // clinet에게 전송할 때도 사용
             Lesson lesson = lessonsRepository.findByLesson_no(lesson_no);
             pay.setLesson(lesson);
             pay.setPayDate(LocalDateTime.now());
@@ -280,11 +281,15 @@ public class LessonServiceImpl implements LessonService {
 
             // client 에게 전송해줄 결제정보
             PayInfo payInfo = new PayInfo();
-            payInfo.setOrder_no(pay_code); // 구매 날짜 + pk
-            payInfo.setUser_nickname(user.getUserNickname());
-            payInfo.setUser_phone_number(user.getUserPhone());
-            payInfo.setUser_email(user.getUserEmail());
-            payInfo.kakaopay();
+            payInfo.setMerchant_uid(pay_code); // 구매 날짜 + pk
+            // 구매자에 대한 정보
+            payInfo.setBuyer_name(user.getUserNickname());
+            payInfo.setBuyer_name(user.getUserPhone());
+            payInfo.setBuyer_email(user.getUserEmail());
+            // 클래스에 대한 정보
+            payInfo.setName(lesson.getLessonTitle()); // 구매제품 이름
+            payInfo.setAmount(Long.parseLong(lesson.getLessonPrice())); // 가격설정
+            payInfo.kakaopay(); // 카카오페이로 결제
 
             // review_enable table에 넣어줌
 //            jpaDataReviewEnable.save(new ReviewEnable())
