@@ -20,10 +20,10 @@ const ToastEditor = (props) => {
     }
  
     return (
-        <div className='editor' style={{margin: "2% auto", height:'500px'}}>
+        <div style={{margin: "2% auto", height:'500px'}}>
             <Editor
                 onChange={changeContent}
-                placeholder="내용을 입력해주세요."
+                placeholder="내용을 입력해주세요"
                 initialValue={content}
                 ref={editorRef}
                 previewStyle='vertical'
