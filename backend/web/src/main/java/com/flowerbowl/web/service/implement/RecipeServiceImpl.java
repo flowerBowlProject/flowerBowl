@@ -16,6 +16,7 @@ import com.flowerbowl.web.service.RecipeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.ListUtils;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -202,7 +203,7 @@ public class RecipeServiceImpl implements RecipeService {
     @Override
     public ResponseEntity<? extends RecipeResponseDto> getAllRecipesGuest() throws Exception {
         try {
-            List<Recipe> recipes = recipeRepository.findAll();
+            List<Recipe> recipes = recipeRepository.findAll(Sort.by(Sort.Direction.DESC, "recipeNo"));
 
             List<GetAllRecipesDto> posts = ListUtils.emptyIfNull(recipes).stream().map((recipe -> {
                 Long recipeNo = recipe.getRecipeNo();
@@ -241,7 +242,7 @@ public class RecipeServiceImpl implements RecipeService {
             }
             Long userNo = user.getUserNo();
 
-            List<Recipe> recipes = recipeRepository.findAll();
+            List<Recipe> recipes = recipeRepository.findAll(Sort.by(Sort.Direction.DESC, "recipeNo"));
 
             List<GetAllRecipesDto> posts = ListUtils.emptyIfNull(recipes).stream().map((recipe -> {
                 Long recipeNo = recipe.getRecipeNo();
