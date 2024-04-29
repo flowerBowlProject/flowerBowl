@@ -42,12 +42,12 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
             "   SELECT comment_no, comment_content, comment_date, parent_no, community_no, recipe_no, user_no, convert(comment_no, char) as path " +
             "   FROM comment " +
             "   WHERE parent_no IS NULL " +
-            "   AND recipe_no = :communityNo " +
+            "   AND community_no = :communityNo " +
             "   UNION ALL " +
             "   SELECT c.comment_no, c.comment_content, c.comment_date, c.parent_no, c.community_no, c.recipe_no, c.user_no, concat(CTE.comment_no, '-', c.comment_no) AS path " +
             "   FROM comment c " +
             "   INNER JOIN CTE ON c.parent_no = CTE.comment_no " +
-            "   WHERE c.recipe_no = :communityNo" +
+            "   WHERE c.community_no = :communityNo" +
             ")" +
             "SELECT comment_no, comment_content, comment_date, parent_no, community_no, recipe_no, user_no, path " +
             "FROM CTE " +
