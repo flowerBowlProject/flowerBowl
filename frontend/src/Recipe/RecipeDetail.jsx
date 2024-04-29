@@ -42,7 +42,7 @@ const RecipeDetail = () => {
                 console.log(err);
             })
         }
-    },[recipe_no])
+    },[recipe_no, accessToken])
 
     {/* 수정 페이지로 이동 */}
     const clickModify = () =>{
@@ -97,7 +97,7 @@ const RecipeDetail = () => {
                 <div className="recipe-element">
                     <div style={{ float: "left", textAlign: "center" }}>
                         <div className="recipe-title"> {recipeData.recipe_title} </div>
-                        <div className="class-category" style={{ color: "#B9835C" }}> category :  </div>
+                        <div className="class-category" style={{ color: "#B9835C" }}> category :  {recipeData.recipe_category}</div>
                     </div>
 
                     <div className="recipe-writerDate" style={{textAlign:"right"}}>
@@ -107,7 +107,7 @@ const RecipeDetail = () => {
                 </div>
 
                 <div className="recipe-stuff">
-                    재료 : {recipeData.recipe_stuff.join(', ')}
+                    재료 : {recipeData.recipe_stuff && recipeData.recipe_stuff.join(', ')}
                 </div>
 
                 <div className='recipe-body'>{recipeData.recipe_content && <Viewer initialValue={recipeData.recipe_content} />}</div>

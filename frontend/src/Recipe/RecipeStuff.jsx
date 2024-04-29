@@ -2,29 +2,28 @@ import React, { useEffect, useState } from "react";
 import './RecipeStuffStyle.css';
 
 const RecipeStuff = (props) => {
-    const initialTags = [];
+    const [tags, setTags] = useState([]);
 
-    const [tags, setTags] = useState(initialTags);
+    useEffect(() => {
+        setTags(props.setStuff || []);
+    }, [props.setStuff]);
 
     const removeTags = (indexToRemove) => {
       const filter = tags.filter((el,index) => index !== indexToRemove);
       setTags(filter);
-      
+      props.getStuff(filter);
     };
-  
+    
     const addTags = (event) => {
       const inputVal = event.target.value;
 
       if(event.key === "Enter" && inputVal !== '' && !tags.includes(inputVal)){
         setTags([...tags,inputVal]);
-         event.target.value = '';
+        props.getStuff([...tags,inputVal]);
+        event.target.value = '';
       }
+      
     };
-
-    useEffect(() => {
-        props.getStuff(tags);
-    }, [tags]);
-
 
     return (
         <>

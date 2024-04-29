@@ -8,13 +8,15 @@ import ButtonContain from "../Component/ButtonContain";
 import { url } from "../url";
 import axios from "axios";
 import { useSelector } from 'react-redux';
+import { useNavigate } from "react-router-dom";
 
 const RegisterRecipe = () => {
     const accessToken = useSelector(state => state.accessToken);
+    const navigator = useNavigate();
 
     {/* 등록 레시피 데이터 + 썸네일 + 썸네일 선택 여부 */ }
     const [registerData, setRegisterData] = useState({ recipe_title: '', recipe_category: '', recipe_stuff: [], recipe_content: '', recipe_sname:'짜장면', recipe_oname:'짜장면',
-        recipe_file_oname:[], recipe_file_sname:[] });
+        recipe_file_oname:['짜장면'], recipe_file_sname:['짜장면'] });
     const [thumbnail, setThumbnail] = useState(null);
     const [selectedFile, setSelectedFile] = useState(null);
 
@@ -57,21 +59,35 @@ const RegisterRecipe = () => {
 
     const handleRegister = () =>{
         console.log(registerData);
-
-        axios.post(`${url}/api/recipes`, registerData,{
-            headers:{
-                Authorization: `Bearer ${accessToken}`
-            }
-        })
-        .then(res=>{
-            console.log(res);
-            navigator('/recipeList');
-        })
-        .catch(err=>{
-            console.log(err);
-        })
-
+        {/* 등록 내용 작성 여부 확인 후 alert */}
+        if(registerData.recipe_title === ''){
+            console.log('제목을 작성해 주세요.')
+        }else if(registerData.recipe_category === ''){
+            console.log('카테고리를 선택해 주세요')
+        }else if(registerData.recipe_sname === '' || registerData.recipe_oname === ''){
+            console.log('사진을 첨부해 주세요')
+        }else if(registerData.recipe_content && registerData.recipe_content === ''){
+            console.log('내용을 작성해 주세요')
+        }else if(registerData.recipe_stuff.length === 0){
+            console.log('재료를 등록해 주세요')
+        }else{
+            console.log("등록 가능");
+            axios.post(`${url}/api/recipes`, registerData,{
+                headers:{
+                    Authorization: `Bearer ${accessToken}`
+                }
+            })
+            .then(res=>{
+                console.log(res);
+                navigator('/recipeList');
+            })
+            .catch(err=>{
+                console.log(err);
+            })
+        }
+            
     }
+    
 
     const handleCancel = () =>{
         navigator('/recipeList');
