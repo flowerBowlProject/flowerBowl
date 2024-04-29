@@ -1,6 +1,7 @@
 package com.flowerbowl.web.controller;
 
 import com.flowerbowl.web.dto.request.comment.CrCommentReqDto;
+import com.flowerbowl.web.dto.request.comment.GetCommentReqParam;
 import com.flowerbowl.web.dto.request.comment.UpCommentReqDto;
 import com.flowerbowl.web.dto.response.comment.CommentResponseDto;
 import com.flowerbowl.web.service.CommentService;
@@ -29,6 +30,11 @@ public class CommentController {
     @DeleteMapping("/{comment_no}")
     private ResponseEntity<? extends CommentResponseDto> deleteComment(@PathVariable Long comment_no,@AuthenticationPrincipal String userId) throws Exception {
         return commentService.deleteComment(comment_no, userId);
+    }
+
+    @GetMapping("")
+    private ResponseEntity<? extends CommentResponseDto> getComments(GetCommentReqParam request) throws Exception {
+        return commentService.getComments(request);
     }
 
 }
