@@ -284,7 +284,7 @@ public class LessonServiceImpl implements LessonService {
             payInfo.setMerchant_uid(pay_code); // 구매 날짜 + pk
             // 구매자에 대한 정보
             payInfo.setBuyer_name(user.getUserNickname());
-            payInfo.setBuyer_name(user.getUserPhone());
+            payInfo.setBuyer_tel(user.getUserPhone());
             payInfo.setBuyer_email(user.getUserEmail());
             // 클래스에 대한 정보
             payInfo.setName(lesson.getLessonTitle()); // 구매제품 이름
