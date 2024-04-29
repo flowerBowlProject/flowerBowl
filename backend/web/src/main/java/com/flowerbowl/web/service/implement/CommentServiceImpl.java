@@ -6,8 +6,11 @@ import com.flowerbowl.web.domain.Comment;
 import com.flowerbowl.web.domain.Community;
 import com.flowerbowl.web.domain.Recipe;
 import com.flowerbowl.web.domain.User;
+import com.flowerbowl.web.dto.object.comment.CommentPageInfo;
 import com.flowerbowl.web.dto.object.comment.CreateCommentDto;
+import com.flowerbowl.web.dto.object.comment.GetCommentsDto;
 import com.flowerbowl.web.dto.request.comment.CrCommentReqDto;
+import com.flowerbowl.web.dto.request.comment.GetCommentReqParam;
 import com.flowerbowl.web.dto.request.comment.UpCommentReqDto;
 import com.flowerbowl.web.dto.response.comment.*;
 import com.flowerbowl.web.handler.*;
@@ -19,6 +22,9 @@ import com.flowerbowl.web.service.CommentService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.ListUtils;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -26,6 +32,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Objects;
 
@@ -231,6 +238,96 @@ public class CommentServiceImpl implements CommentService {
             logPrint(e);
 
             DelCommentResDto responseBody = new DelCommentResDto(ResponseCode.INTERNAL_SERVER_ERROR, ResponseMessage.INTERNAL_SERVER_ERROR);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseBody);
+        }
+    }
+
+    @Override
+    public ResponseEntity<? extends CommentResponseDto> getComments(GetCommentReqParam request) throws Exception {
+        try {
+            // 날짜 포맷 변환
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
+            int page = request.getPage() - 1;
+            int size = request.getSize();
+
+            // parameter로 받은 page(페이지 번호 - 1), size(페이지 당 데이터 개수)로 PageRequest 생성
+            PageRequest pageRequest = PageRequest.of(page, size);
+
+            Long postType = request.getType();
+            Long postNo = request.getPost_no();
+
+            Page<Comment> commentPage;
+
+            if (Objects.equals(postType, 1L)) { // 게시판 종류가 레시피인 경우
+                List<Comment> commentList = commentRepository.findCommentsByRecipeNo(postNo);
+
+                int start = (int) pageRequest.getOffset();
+                int end = Math.min((start + pageRequest.getPageSize()), commentList.size());
+
+                commentPage = new PageImpl<>(commentList.subList(start, end), pageRequest, commentList.size());
+            } else if (Objects.equals(postType, 2L)) { // 게시판 종류가 커뮤니티인 경우
+                List<Comment> commentList = commentRepository.findCommentsByCommunityNo(postNo);
+
+                int start = (int) pageRequest.getOffset();
+                int end = Math.min((start + pageRequest.getPageSize()), commentList.size());
+
+                commentPage = new PageImpl<>(commentList.subList(start, end), pageRequest, commentList.size());
+            } else {
+                throw new WrongBoardTypeException();
+            }
+
+            // 댓글이 하나도 없을 때 Exception throw
+            if (commentPage.getTotalElements() == 0) {
+                throw new CommentNotFoundException();
+            }
+
+            // 요청한 페이지 번호가 존재하는 페이지 개수를 넘을 때 Exception throw
+            if (page >= commentPage.getTotalPages()) {
+                throw new PageNotFoundException();
+            }
+
+            // 조회한 댓글 목록을 순회하며 각각의 댓글 정보로 comments를 빌드
+            List<GetCommentsDto> comments = commentPage.stream().map((comment -> {
+                return GetCommentsDto.builder()
+                        .comment_no(comment.getCommentNo())
+                        .comment_writer(comment.getUser().getUserNickname())
+                        .comment_date(comment.getCommentDate().format(formatter))
+                        .comment_content(comment.getCommentContent())
+                        .user_file_sname(comment.getUser().getUserFileSname())
+                        .parent_no(comment.getParentNo())
+                        .build();
+            })).toList();
+
+            // 조회한 댓글 목록에 대한 정보로 페이지 정보 빌드
+            CommentPageInfo commentPageInfo = CommentPageInfo.builder()
+                    .page(page + 1)
+                    .size(size)
+                    .totalPage(commentPage.getTotalPages())
+                    .totalElement(commentPage.getTotalElements())
+                    .build();
+
+            GetCommentsSuResDto responseBody = new GetCommentsSuResDto(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, comments, commentPageInfo);
+            return ResponseEntity.status(HttpStatus.OK).body(responseBody);
+        } catch (WrongBoardTypeException e) {
+            logPrint(e);
+
+            GetCommentsFaResDto responseBody = new GetCommentsFaResDto(ResponseCode.WRONG_BOARD_TYPE, ResponseMessage.WRONG_BOARD_TYPE);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseBody);
+        } catch (CommentNotFoundException e) {
+            logPrint(e);
+
+            GetCommentsFaResDto responseBody = new GetCommentsFaResDto(ResponseCode.NOT_EXIST_COMMENT, ResponseMessage.NOT_EXIST_COMMENT);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(responseBody);
+        } catch (PageNotFoundException e) {
+            logPrint(e);
+
+            GetCommentsFaResDto responseBody = new GetCommentsFaResDto(ResponseCode.NOT_EXIST_PAGE, ResponseMessage.NOT_EXIST_PAGE);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(responseBody);
+        } catch (Exception e) {
+            logPrint(e);
+
+            GetCommentsFaResDto responseBody = new GetCommentsFaResDto(ResponseCode.INTERNAL_SERVER_ERROR, ResponseMessage.INTERNAL_SERVER_ERROR);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseBody);
         }
     }
