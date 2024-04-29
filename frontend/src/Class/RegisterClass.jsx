@@ -167,7 +167,7 @@ const RegisterClass = () => {
             </div>
 
             {/* 레시피 || 클래스 상세 내용 작성란 */}
-            <ToastEditor getToastEditor={getToastEditor} setContent={registerData.lesson_content}/>
+            <ToastEditor getToastEditor={getToastEditor} setContent={''}/>
 
             <div style={{ border: "1px solid #CBA285", marginBottom: "2%" }} />
             <div className="register_button">
