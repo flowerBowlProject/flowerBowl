@@ -10,41 +10,65 @@ import ButtonOutlinedStyle from "../Component/ButtonOutlinedStyle";
 import { useSelector } from "react-redux";
 import ButtonContainStyle from "../Component/ButtonContainStyle";
 
-const ViewList = () => {
+const RecipeList = () => {
   const [listData, setListData] = useState([]);
   const navigator = useNavigate();
   const accessToken = useSelector((state) => state.accessToken);
   const location = useLocation();
   const params = new URLSearchParams(location.search);
   const keyword = params.get('keyword');
+  const [pageInfo, setPageInfo] = useState(1);
+
+  {/* 정렬 구현 */ }
+  const [selectButton, setSelectButton] = useState('최신순');
+  const handleClick = (selectButton) => {
+    let sorted;
+    setSelectButton(selectButton);
+
+    switch (selectButton) {
+      case '최신순':
+        sorted = [...listData].sort((a, b) => new Date(b.recipe_date) - new Date(a.recipe_date));
+        setPageInfo(1);
+        break;
+      case "인기순":
+        sorted = [...listData].sort((a, b) => b.recipe_like_cnt - a.recipe_like_cnt);
+        setPageInfo(1);
+        break;
+      case "댓글순":
+        sorted = [...listData].sort((a, b) => b.comment_cnt - a.comment_cnt);
+        setPageInfo(1);
+        break;
+      default:
+        sorted = listData; // 기본값은 변경하지 않음
+    }
+    setListData(sorted);
+  }
 
   useEffect(() => {
     if (keyword !== null) {
-      if(accessToken === ''){
-        axios.get(`${url}/api/search/recipes?keyword=${keyword}&page=1&size=10`)
-        .then(res => {
-          setListData(res.data.recipes);
-          //setPageInfo(res.data.pageInfo);
-          console.log(res);
-        })
-        .catch(err => {
-          console.log(err);
-        })
-      }else{
-        axios.get(`${url}/api/user/search/recipes?keyword=${keyword}&page=1&size=10`,{
-          headers:{
-            Authorization : `Bearer ${accessToken}`
+      if (accessToken === '') {
+        axios.get(`${url}/api/search/recipes?keyword=${keyword}&page=1&size=${pageInfo}*8`)
+          .then(res => {
+            setListData(res.data.recipes);
+            console.log(res);
+          })
+          .catch(err => {
+            console.log(err);
+          })
+      } else {
+        axios.get(`${url}/api/user/search/recipes?keyword=${keyword}&page=1&size=${pageInfo}*8`, {
+          headers: {
+            Authorization: `Bearer ${accessToken}`
           }
         })
-        .then(res => {
-          setListData(res.data.recipes);
-          //setPageInfo(res.data.pageInfo);
-          console.log(res);
-        })
-        .catch(err => {
-          console.log(err);
-        })
-      } 
+          .then(res => {
+            setListData(res.data.recipes);
+            console.log(res);
+          })
+          .catch(err => {
+            console.log(err);
+          })
+      }
     } else {
       { /* 로그인 여부에 따른 정보 호출 */ }
       if (accessToken === "") {
@@ -93,14 +117,14 @@ const ViewList = () => {
           }
         })
         .then((res) => {
-          const check = res.data.code=='SU' ? false : true;
+          const check = res.data.code == 'SU' ? false : true;
           console.log(res);
           setListData((listData) => {
             const updatedList = { ...listData[index], recipe_like_status: check };
             const newListData = [...listData.slice(0, index), updatedList, ...listData.slice(index + 1)];
             return newListData;
           })
-    })
+        })
         .catch((err) => {
           {
             /* 토큰 만료에 대한 처리 진행 */
@@ -123,13 +147,18 @@ const ViewList = () => {
     navigator("/registerRecipe");
   };
 
+  {/* 더보기 클릭 */ }
+  const clickMore = () => {
+    setPageInfo(pageInfo + 1);
+  }
+
   return (
     <div className="viewList-Box">
       <div className="sortList">
         <div className="sortList-left">
-          <Button sx={{ color: "main.or" }}> 최신순 </Button>
-          <Button sx={{ color: "main.or" }}> 인기순 </Button>
-          <Button sx={{ color: "main.or" }}> 댓글순 </Button>
+          <Button sx={{ color: selectButton === '최신순' ? "main.br" : "main.or" }} onClick={() => handleClick('최신순')}> 최신순 </Button>
+          <Button sx={{ color: selectButton === '인기순' ? "main.br" : "main.or" }} onClick={() => handleClick('인기순')}> 인기순 </Button>
+          <Button sx={{ color: selectButton === '댓글순' ? "main.br" : "main.or" }} onClick={() => handleClick('댓글순')}> 댓글순 </Button>
         </div>
         <div className="sortList-right">
           <ButtonOutlinedStyle
@@ -145,7 +174,7 @@ const ViewList = () => {
       <div className="viewList">
         {/* 리스트 출력*/}
         {listData.length !== 0 &&
-          listData.map((data, index) => (
+          listData.slice(0, pageInfo*8).map((data, index) => (
             <div style={{ position: "relative" }}>
               <Bookmark
                 key={index}
@@ -165,9 +194,8 @@ const ViewList = () => {
             </div>
           ))}
       </div>
-      <ButtonContainStyle className="moreButton"> 더보기 </ButtonContainStyle>
+      <ButtonContainStyle className="moreButton" onClick={clickMore}> 더보기 </ButtonContainStyle>
     </div>
   );
 };
-
-export default ViewList;
+export default RecipeList;
