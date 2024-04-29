@@ -123,7 +123,7 @@ const RecipeDetail = () => {
             </div>
             <div>
                 {/* 댓글 */}
-                <Comment />
+                <Comment typeString={1} no={recipe_no}/>
             </div>
         </>
     );
