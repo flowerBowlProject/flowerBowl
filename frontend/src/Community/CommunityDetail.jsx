@@ -66,7 +66,7 @@ const CommunityDetail = () => {
                 </div>
             </div>
             <div>
-                <Comment/>
+                <Comment typeString={2} no={community_no}/>
             </div>
         </>
     );

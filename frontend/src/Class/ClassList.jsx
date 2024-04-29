@@ -16,11 +16,33 @@ const ViewList = () => {
     const location = useLocation();
     const params = new URLSearchParams(location.search);
     const keyword = params.get('keyword');
+    const [pageInfo, setPageInfo] = useState(1);
+
+    {/* 정렬 구현 */ }
+    const [selectButton, setSelectButton] = useState('최신순');
+    const handleClick = (selectButton) => {
+        let sorted;
+        setSelectButton(selectButton);
+
+        switch (selectButton) {
+            case '최신순':
+                sorted = [...listData].sort((a, b) => new Date(b.lesson_date) - new Date(a.lesson_date));
+                setPageInfo(1);
+                break;
+            case "인기순":
+                sorted = [...listData].sort((a, b) => b.lesson_like_cnt - a.lesson_like_cnt);
+                setPageInfo(1);
+                break;
+            default:
+                sorted = listData; // 기본값은 변경하지 않음
+        }
+        setListData(sorted);
+    }
 
     useEffect(() => {
         if (keyword !== null) {
             if (accessToken === '') {
-                axios.get(`${url}/api/search/lessons?keyword=${keyword}&page=1&size=10`)
+                axios.get(`${url}/api/search/lessons?keyword=${keyword}&page=1&size=${pageInfo}*8`)
                     .then(res => {
                         setListData(res.data.lesson);
                         //setPageInfo(res.data.pageInfo);
@@ -31,7 +53,7 @@ const ViewList = () => {
                     })
             } else {
                 console.log(keyword)
-                axios.get(`${url}/api/user/search/lessons?keyword=${keyword}&page=1&size=10`, {
+                axios.get(`${url}/api/user/search/lessons?keyword=${keyword}&page=1&size=${pageInfo}*8`, {
                     headers: {
                         Authorization: `Bearer ${accessToken}`
                     }
@@ -48,7 +70,7 @@ const ViewList = () => {
         } else {
             {/* 로그인에 따른 조회 */ }
             if (accessToken == '') {
-                axios.get(`${url}/api/guest/lessons?page=1&size=10`)
+                axios.get(`${url}/api/guest/lessons?page=1&size=${pageInfo}*8`)
                     .then(res => {
                         console.log(res);
                         setListData(res.data.lessons);
@@ -57,7 +79,7 @@ const ViewList = () => {
                         console.log(err);
                     })
             } else {
-                axios.get(`${url}/api/user/lessons?page=1&size=10`, {
+                axios.get(`${url}/api/user/lessons?page=1&size=${pageInfo}*8`, {
                     headers: {
                         Authorization: `Bearer ${accessToken}`
                     }
@@ -134,9 +156,8 @@ const ViewList = () => {
         <div className="viewList-Box">
             <div className="sortList">
                 <div className="sortList-left">
-                    <Button sx={{ color: 'main.or' }}> 최신순 </Button>
-                    <Button sx={{ color: 'main.or' }}> 인기순 </Button>
-                    <Button sx={{ color: 'main.or' }}> 댓글순 </Button>
+                    <Button sx={{ color: selectButton === '최신순' ? "main.br" : "main.or" }} onClick={() => handleClick('최신순')}> 최신순 </Button>
+                    <Button sx={{ color: selectButton === '인기순' ? "main.br" : "main.or" }} onClick={() => handleClick('인기순')}> 인기순 </Button>
                 </div>
                 <div className="sortList-right">
                     <ButtonOutlinedStyle className="view-register" variant="outlined" onClick={clickRegister}> 클래스 등록 </ButtonOutlinedStyle>
