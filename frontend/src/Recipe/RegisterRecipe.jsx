@@ -122,7 +122,7 @@ const RegisterRecipe = () => {
                         <RecipeStuff getStuff={getStuff}/>
                 </div>
                 {/* 레시피 || 클래스 상세 내용 작성란 */}
-                <ToastEditor getToastEditor={getToastEditor} setContent={registerData.recipe_content}/>
+                <ToastEditor getToastEditor={getToastEditor} setContent={''}/>
             </div>
             
             <div className="register_button" style={{ marginTop: "2%" }}>

@@ -1,23 +1,71 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import './CommentStyle.css';
 import { Pagination } from "@mui/material";
 import CommentParent from "./CommentParent";
 import CommentChild from "./CommentChild";
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 import ButtonContain from "../ButtonContain";
+import ButtonOutlined from "../ButtonOutlined";
+import axios from "axios";
+import { url } from "../../url";
+import { useSelector } from "react-redux";
 
 // props로 게시판 종류와 게시글 번호를 넘겨 받아 조회 요청 진행
-const Comment = ({ props }) => {
+const Comment = ({ typeString, no }) => {
     // 댓글/대댓글의 구분은 parent_no로 판단
-    const [commentList, setCommentList] = useState([{comment_no:1, comment_writer: "작성자1",
-        comment_date: "2024-04-05", comment_content: "댓글 내용1", parent_no: 1, comment_thumbnail:""},
-        {comment_no:1, comment_writer: "작성자2",
-        comment_date: "2024-04-05", comment_content: "댓글 내용2", parent_no: 0, comment_thumbnail:""}]);
+    const [commentList, setCommentList] = useState([]);
+    const [pageInfo, setPageInfo] = useState({page:1, size:10, totalPage:0, totalElement:0});
+    const [registerData, setRegisterData] = useState({type:typeString, post_no:no, parent_no:null, comment_content:''});
+    const accessToken = useSelector(state => state.accessToken);
+    const [curPage, setCurPage] = useState(1);
 
-    const [pageInfo, setPageInfo] = useState({page:0, size:0, totalPage:0, totalElement:10});
+    useEffect(()=>{
+        axios.get(`${url}/api/comments?type=${typeString}&post_no=${no}&page=${pageInfo.page}&size=${pageInfo.size}`)
+        .then(res=>{
+            console.log(res);
+            setCommentList(res.data.comments);
+            setPageInfo(res.data.pageInfo);
+        })
+        .catch(err=>{
+            console.log(err);
+        })
+    },[])
 
+    {/* 댓글 등록 */}
     const handleRegister = () =>{
+        console.log(registerData.comment_content);
+        console.log(registerData)
+        
+        if(registerData.comment_content.trim() === ''){
+            console.log('댓글을 작성해주세요');
+        }else{
+            axios.post(`${url}/api/comments`,registerData,{
+                headers:{
+                    Authorization: `Bearer ${accessToken}`
+                }
+            })
+            .then(res=>{
+                console.log(res);
+            })
+            .catch(err=>{
+                console.log(err);
+            })
+        }
+    }
 
+    {/* 페이지네이션 */}
+    const pageChange = (e) =>{
+        const checkPage = Number(e.target.outerText);
+        console.log(checkPage);
+        setCurPage(checkPage);
+        axios.get(`${url}/api/comments?type=${typeString}&post_no=${no}&page=${curPage}&size=${pageInfo.size}`)
+        .then(res => {
+            setCommentList(res.data.posts);
+            setPageInfo(res.data.pageInfo);
+        })
+        .catch(err => {
+            console.log(err);
+        })
     }
 
     return (
@@ -25,16 +73,17 @@ const Comment = ({ props }) => {
             <div className="comment-Box">
                 {/* 댓글 작성란 */}
                 <div className="comment-register">
-                    <textarea className="comment-write" placeholder="댓글을 작성하세요."/>
-                    <ButtonContain size='large' text='로그인'/>
+                    <textarea className="comment-write" placeholder="댓글을 작성하세요." onChange={(e)=>setRegisterData((registerData)=>({...registerData, comment_content : e.target.value}))}/>
+                    <ButtonOutlined size='heightLarge' text='등록' handleClick={handleRegister}/>
                 </div>
                 
                 <div style={{width:"90%", margin:"2% auto", display:'flex', alignContent:'center'}}>
                     댓글 &nbsp; <ChatBubbleOutlineIcon sx={{ color: 'main.br', marginRight:"0.5vw"}} /> {pageInfo.totalElement}
                 </div>
+                {commentList.length === 0 && <div style={{display:'flex', justifyContent:'center', marginBottom: '2vw'}}>조회된 댓글이 없습니다</div>}
                 {commentList.map((list, index) => (
-                    list.parent_no === 1 ?
-                        <CommentParent data={list} key={index} isLast={index !== commentList.length -1}/>
+                    list.parent_no === null ?
+                        <CommentParent typeString={typeString} no={no} data={list} key={index} isLast={index !== commentList.length -1}/>
                         : <CommentChild data={list} key={index} isLast={index !== commentList.length -1}/>
                 ))}
                 
@@ -42,7 +91,9 @@ const Comment = ({ props }) => {
             {/* 페이지네이션 */}
             <div className="comment-page">
                 {/* 전체 게시물 페이지 수로 count 변경 필요 */}
-                <Pagination count={10} showFirstButton showLastButton sx={{marginBottom:"5%"}}/>
+                <Pagination count={Math.ceil(pageInfo.totalElement/10)}
+                page = {curPage}
+                onChange={pageChange} />
             </div>
         </>
     );
