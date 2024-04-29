@@ -45,6 +45,12 @@ input[type="file"]{
     text-align: center;
 }
 
+
+.register-title:focus{
+    border: none;
+    border-bottom: 2px solid #CBA285;
+}
+
 input{
     outline: none;
 }
