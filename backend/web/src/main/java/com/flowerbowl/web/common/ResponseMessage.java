@@ -21,6 +21,7 @@ public interface ResponseMessage {
     String NOT_EXIST_NUM = "This num does not exist"; // @pathvariable 잘못 입력한 경우
     String FIND_ID_FAIL = "Email incorrect"; // 아이디 찾기 실패
     String FIND_PW_FAIL = "Information mismatch"; // 비번 찾기 실패
+    String NOT_MATCH_USER = "This user does not match"; // 아이디 매칭 실패
 
 
     String MAIL_FAIL = "Mail Send Fail"; // 메일 발송 실패
