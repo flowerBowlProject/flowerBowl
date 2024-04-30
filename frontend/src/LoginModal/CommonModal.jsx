@@ -40,10 +40,21 @@ const CommonModal=({open,name_1,name_2,helpertext_1,helpertext_2,but_name,text_1
             user_id:user.id,
             user_password:user.pw
         });
+        console.log(response);
             dispatch({type:"accessToken",payload:response.data.access_token});
             handleClose();
             dispatch(editErrorType('LOGIN'));
             dispatch(openError());
+            try{
+                const nickname = await axios.get(`${url}/api/users/info`,{
+                    headers:{
+                        Authorization : `Bearer ${response.data.access_token}`
+                    }
+                });
+                dispatch({type:"nickname",payload:nickname.data.user_nickname});
+            }catch(error){
+                console.log(error);
+            }
         }catch(error){
             dispatch(editErrorType(error.response.data.code));
             dispatch(openError());

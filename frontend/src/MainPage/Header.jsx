@@ -63,6 +63,7 @@ const Header = () => {
     navigate('/')
     dispatch({type:'accessToken',payload:""})
     setRole('')
+    dispatch({type:'nickname', payload:''})
   }
   const handleMove=()=>{
     dispatch(closeError())
@@ -132,7 +133,7 @@ const Header = () => {
           <Grid item xs={4}>
             <InputSearch width="25vw" size="small" />
           </Grid>
-          <Grid item xs={2} ml="13vw">
+          <Grid item xs={2.1} ml="13vw">
             <Grid container>
               <Grid item ml="5vw">
                 <ButtonOutlined
