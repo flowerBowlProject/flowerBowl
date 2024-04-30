@@ -5,6 +5,7 @@ import com.flowerbowl.web.domain.LessonRv;
 import com.flowerbowl.web.domain.User;
 import com.flowerbowl.web.dto.object.mypage.AvailableReviews;
 import com.flowerbowl.web.dto.object.mypage.WrittenReviews;
+import com.flowerbowl.web.dto.object.review.GetReviewDto;
 import com.flowerbowl.web.dto.request.review.InsertReviewRequestDto;
 import com.flowerbowl.web.dto.request.review.PatchReviewRequestDto;
 import com.flowerbowl.web.dto.response.ResponseDto;
@@ -67,9 +68,8 @@ public class ReviewServiceImpl implements ReviewService {
         try {
 
             List<Lesson> posts = userRepository.findAvailableReviewListByUserId(userId);
-            if (posts == null) {
-                AvailableReviewsResponseDto.noExistLesson();
-            }
+            if (posts == null) AvailableReviewsResponseDto.noExistLesson();
+
 
             for (Lesson lesson : posts) {
                 AvailableReviews reviewList = new AvailableReviews();
@@ -145,7 +145,8 @@ public class ReviewServiceImpl implements ReviewService {
         try {
 
             Optional<LessonRv> lessonRv = reviewRepository.findById(reviewNo);
-            if (lessonRv.isEmpty()) {return DeleteReviewResponseDto.notExistNum();}
+            if (lessonRv.isEmpty()) return DeleteReviewResponseDto.notExistNum();
+
 
             reviewRepository.deleteById(reviewNo);
 
@@ -155,6 +156,31 @@ public class ReviewServiceImpl implements ReviewService {
         }
 
         return DeleteReviewResponseDto.success();
+    }
+
+    @Override
+    public ResponseEntity<? super GetReviewResponseDto> getReview(Long reviewNo) {
+
+        GetReviewDto getReviewDto = new GetReviewDto();
+
+        try {
+
+            List<Object[]> review = reviewRepository.findReviewByReviewNo(reviewNo);
+            if (review == null) return GetReviewResponseDto.noExistReview();
+
+
+            for (Object[] posts : review) {
+                getReviewDto.setReview_score((Integer) posts[0]);
+                getReviewDto.setReview_content((String) posts[1]);
+                getReviewDto.setLesson_title((String) posts[2]);
+            }
+
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            return ResponseDto.databaseError();
+        }
+
+        return GetReviewResponseDto.success(getReviewDto);
     }
 
 }
