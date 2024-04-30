@@ -31,4 +31,9 @@ public class GetReviewResponseDto extends ResponseDto {
         ResponseDto body = new ResponseDto(ResponseCode.NOT_EXIST_NUM, ResponseMessage.NOT_EXIST_NUM);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
     }
+
+    public static ResponseEntity<? super ResponseDto> noMatchUser() {
+        ResponseDto body = new ResponseDto(ResponseCode.NOT_MATCH_USER, ResponseMessage.NOT_MATCH_USER);
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(body);
+    }
 }
