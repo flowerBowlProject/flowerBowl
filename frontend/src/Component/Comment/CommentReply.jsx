@@ -7,7 +7,7 @@ import ButtonContain from "../ButtonContain";
 import ButtonOutlined from "../ButtonOutlined";
 import { useSelector } from "react-redux";
 
-const CommentReply = ({ registerReply, typeString, no, parent_no }) => {
+const CommentReply = ({ registerReply, typeString, no, parent_no,isLast, setChange, change }) => {
     const writer = useSelector((state) => state.nickname);
     const accessToken = useSelector(state => state.accessToken);
 
@@ -25,7 +25,8 @@ const CommentReply = ({ registerReply, typeString, no, parent_no }) => {
             })
                 .then(res => {
                     console.log(res);
-                    // 데이터 리로드 필요
+                    registerReply();
+                    setChange(!change);
                 })
                 .catch(err => {
                     console.log(err);
@@ -58,7 +59,7 @@ const CommentReply = ({ registerReply, typeString, no, parent_no }) => {
                     <ButtonContain size='large' text='취소' handleClick={handleCancle} />
                 </div>
             </div>
-            {true && <div style={{ border: "0.5px solid #B0A695", width: "90%", margin: "1vw auto 1vw auto" }} />}
+            {isLast && <div style={{ border: "0.5px solid #B0A695", width: "90%", margin: "1vw auto 1vw auto" }} />}
         </>
     );
 }
