@@ -3,7 +3,7 @@ package com.flowerbowl.web.common;
 public interface ResponseMessage {
 
     /**
-     *로그인 응답 코드 및 메시지
+     * 로그인 응답 코드 및 메시지
      */
     String SUCCESS = "success"; // 성공
     String CREATED = "Created"; // 생성 완료
@@ -26,6 +26,7 @@ public interface ResponseMessage {
     String NOT_EXIST_COMMENT = "This comment or Parent comment does not exist"; // 존재하지 않는 댓글인 경우
     String FIND_ID_FAIL = "Email incorrect"; // 아이디 찾기 실패
     String FIND_PW_FAIL = "Information mismatch"; // 비번 찾기 실패
+    String NOT_MATCH_USER = "This user does not match"; // 아이디 매칭 실패
     String WRONG_BOARD_TYPE = "Wrong board type"; // 잘못된 게시판 타입인 경우
 
 
