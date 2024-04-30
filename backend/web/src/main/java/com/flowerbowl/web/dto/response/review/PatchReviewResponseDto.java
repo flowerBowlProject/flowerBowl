@@ -20,7 +20,7 @@ public class PatchReviewResponseDto extends ResponseDto {
     }
 
     public static ResponseEntity<?super ResponseDto> notMatchUser() {
-        ResponseDto body = new ResponseDto(ResponseCode.NOT_MATCH_USER, ResponseMessage.NOT_MATCH_USER);
+        ResponseDto body = new ResponseDto(ResponseCode.DOES_NOT_MATCH, ResponseMessage.DOES_NOT_MATCH);
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(body);
     }
 }
