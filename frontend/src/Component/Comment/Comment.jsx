@@ -10,7 +10,8 @@ import axios from "axios";
 import { url } from "../../url";
 import { useSelector } from "react-redux";
 
-// props로 게시판 종류와 게시글 번호를 넘겨 받아 조회 요청 진행
+
+
 const Comment = ({ typeString, no }) => {
     // 댓글/대댓글의 구분은 parent_no로 판단
     const [commentList, setCommentList] = useState([]);
@@ -18,25 +19,36 @@ const Comment = ({ typeString, no }) => {
     const [registerData, setRegisterData] = useState({type:typeString, post_no:no, parent_no:null, comment_content:''});
     const accessToken = useSelector(state => state.accessToken);
     const [curPage, setCurPage] = useState(1);
+    const [change, setChange] = useState(false);
+
+    const fetchData = (typeString, no, pageInfo, setCommentList, setPageInfo) => {
+        axios.get(`${url}/api/comments?type=${typeString}&post_no=${no}&page=${pageInfo.page}&size=${pageInfo.size}`)
+            .then(res => {
+                console.log(res);
+                setCommentList(res.data.comments);
+                setPageInfo(res.data.pageInfo);
+            })
+            .catch(err => {
+                console.log(err);
+            });
+    };
+
+    const changeList = () =>{
+        setChange(!change);
+    }
 
     useEffect(()=>{
-        axios.get(`${url}/api/comments?type=${typeString}&post_no=${no}&page=${pageInfo.page}&size=${pageInfo.size}`)
-        .then(res=>{
-            console.log(res);
-            setCommentList(res.data.comments);
-            setPageInfo(res.data.pageInfo);
-        })
-        .catch(err=>{
-            console.log(err);
-        })
-    },[])
+        console.log('11111');
+        fetchData(typeString, no, pageInfo, setCommentList, setPageInfo);
+    },[change])
 
     {/* 댓글 등록 */}
     const handleRegister = () =>{
         console.log(registerData.comment_content);
-        console.log(registerData)
         
-        if(registerData.comment_content.trim() === ''){
+        if(accessToken === ''){
+            console.log('로그인 후 사용')
+        }else if(registerData.comment_content.trim() === ''){
             console.log('댓글을 작성해주세요');
         }else{
             axios.post(`${url}/api/comments`,registerData,{
@@ -46,9 +58,15 @@ const Comment = ({ typeString, no }) => {
             })
             .then(res=>{
                 console.log(res);
+                setRegisterData((registerData)=>({...registerData, comment_content : ''}));
+                setChange(!change);
+                //fetchData(typeString, no, pageInfo, setCommentList, setPageInfo);
             })
             .catch(err=>{
                 console.log(err);
+                if(err.response.data.code === 'NE'){
+                    console.log('로그인 후 이용해 주세요')
+                }
             })
         }
     }
@@ -73,7 +91,7 @@ const Comment = ({ typeString, no }) => {
             <div className="comment-Box">
                 {/* 댓글 작성란 */}
                 <div className="comment-register">
-                    <textarea className="comment-write" placeholder="댓글을 작성하세요." onChange={(e)=>setRegisterData((registerData)=>({...registerData, comment_content : e.target.value}))}/>
+                    <textarea className="comment-write" placeholder="댓글을 작성하세요." value={registerData.comment_content} onChange={(e)=>setRegisterData((registerData)=>({...registerData, comment_content : e.target.value}))}/>
                     <ButtonOutlined size='heightLarge' text='등록' handleClick={handleRegister}/>
                 </div>
                 
@@ -83,8 +101,8 @@ const Comment = ({ typeString, no }) => {
                 {commentList.length === 0 && <div style={{display:'flex', justifyContent:'center', marginBottom: '2vw'}}>조회된 댓글이 없습니다</div>}
                 {commentList.map((list, index) => (
                     list.parent_no === null ?
-                        <CommentParent typeString={typeString} no={no} data={list} key={index} isLast={index !== commentList.length -1}/>
-                        : <CommentChild data={list} key={index} isLast={index !== commentList.length -1}/>
+                        <CommentParent typeString={typeString} no={no} data={list} key={list.comment_no} isLast={index !== commentList.length -1} change={change} setChange={setChange} />
+                        : <CommentChild data={list} key={list.comment_no} isLast={index !== commentList.length -1}  change={change} setChange={setChange}/>
                 ))}
                 
             </div>

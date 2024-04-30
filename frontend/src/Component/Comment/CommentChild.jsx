@@ -7,10 +7,11 @@ import { useSelector } from "react-redux";
 import axios from "axios";
 import { url } from "../../url";
 
-const CommentChild = ({ data, isLast }) => {
+const CommentChild = ({ data, isLast, change, setChange }) => {
     const accessToken = useSelector(state => state.accessToken);
     const [commentModify, setCommentModify] = useState(true);
     const [childData, setChildData] = useState(data);
+    const writer = useSelector((state) => state.nickname);
 
     {/* 수정 버튼 클릭 시 */ }
     const changeComment = () => {
@@ -57,6 +58,7 @@ const CommentChild = ({ data, isLast }) => {
         })
         .then(res=>{
             console.log(res);
+            setChange(!change);
         })
         .catch(err=>{
             console.log(err);
@@ -81,7 +83,7 @@ const CommentChild = ({ data, isLast }) => {
                     </textarea>
                 </div>
 
-                {commentModify ?
+                {writer === childData.comment_writer && (commentModify ?
                     <div className="commentButtonChild-Box">
                         <ButtonOutlined size='large' text='수정' handleClick={changeComment} /> &nbsp;
                         <ButtonContain size='large' text='삭제' handleClick={handleDelete} />
@@ -91,7 +93,7 @@ const CommentChild = ({ data, isLast }) => {
                         <ButtonOutlined size='large' text='수정' handleClick={modifyComment} /> &nbsp;
                         <ButtonContain size='large' text='취소' handleClick={changeComment} />
                     </div>
-                }
+                )}
             </div>
             {isLast && <div style={{ border: "0.5px solid #B0A695", width: "90%", margin: "1vw auto 1vw auto" }} />}
         </>

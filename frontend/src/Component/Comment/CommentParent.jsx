@@ -7,15 +7,21 @@ import { useSelector } from "react-redux";
 import axios from "axios";
 import { url } from "../../url";
 
-const CommentParent = ({ data, isLast, typeString, no }) => {
+const CommentParent = ({ data, isLast, typeString, no, change, setChange }) => {
     const [replyModal, setReplyModal] = useState(false);
     const accessToken = useSelector(state => state.accessToken);
     const [parentData, setParentData] = useState(data);
     const [commentModify, setCommentModify] = useState(true);
+    const writer = useSelector((state) => state.nickname);
 
     {/* 대댓글 클릭 시 - 컴포넌트에 부모 댓글 관련 정보 넘겨주기*/}
     const registerReply = () =>{
-       setReplyModal(!replyModal);
+        if(accessToken === ''){
+            console.log('로그인 후 이용 가능')
+        }else{
+            setReplyModal(!replyModal);
+        }
+       
     }
 
     {/* 수정 버튼 클릭 시 */}
@@ -60,7 +66,7 @@ const CommentParent = ({ data, isLast, typeString, no }) => {
         })
         .then(res=>{
             console.log(res);
-            // 리로드 코드 작성 필요
+            setChange(!change);
         })
         .catch(err=>{
             console.log(err);
@@ -85,8 +91,7 @@ const CommentParent = ({ data, isLast, typeString, no }) => {
                 </div>
                 <div className="commentButton-Box">
                     <div className="commentReply-register" onClick={registerReply}> 대댓글 </div>
-                    
-                    {commentModify ? 
+                    {writer === parentData.comment_writer && (commentModify ? 
                         <div className="commentButton">
                             <ButtonOutlined size='large' text='수정' handleClick={changeComment}/> &nbsp;
                             <ButtonContain size='large' text='삭제' handleClick={handleDelete}/>
@@ -96,11 +101,11 @@ const CommentParent = ({ data, isLast, typeString, no }) => {
                             <ButtonOutlined size='large' text='수정' handleClick={modifyComment}/> &nbsp;
                             <ButtonContain size='large' text='취소' handleClick={changeComment}/>
                         </div>
-                    } 
+                   ) } 
                 </div>
             </div>
             {isLast && <div style={{ border: "0.5px solid #B0A695", width: "90%", margin: "1vw auto 1vw auto" }} />}
-            {replyModal && <CommentReply registerReply={registerReply} typeString={typeString} no={no} parent_no={parentData.comment_no}/>}
+            {replyModal && <CommentReply isLast={isLast} registerReply={registerReply} typeString={typeString} no={no} parent_no={parentData.comment_no} change={change} setChange={setChange}/>}
         </>
     );
 }
