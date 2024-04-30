@@ -1,0 +1,130 @@
+.buttons .outputbutton {
+  width: auto;
+  margin-left: 7em;
+  margin-bottom: 3em;
+}
+
+.buttons .inputbutton {
+  width: auto;
+  margin-bottom: 3em;
+  margin-left: 2em;
+}
+/* 더보기버튼 */
+.bottom-add .inputbutton {
+  margin-top: 5em;
+  margin-left: 45em;
+  justify-content: center;
+  align-items: center;
+}
+
+.custom-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.custom-table th,
+.custom-table td {
+  padding: 8px;
+  border: 1px solid var(--brown--color);
+  color: var(--brown--color);
+  border-left: none;
+  border-right: none;
+  border-bottom: none;
+  border-top: none;
+}
+
+.custom-table th,
+.custom-table tr:last-child td {
+  border-bottom: 2px solid var(--brown--color); /* Make the bottom border thicker and brown */
+}
+
+.custom-table th {
+  font-weight: bold;
+}
+
+.custom-table td {
+  border: 1px solid var(--orange--color);
+}
+
+.custom-table tbody td {
+  border-left: none;
+  border-right: none;
+}
+
+.custom-table tbody tr:not(:last-child) td {
+  border-bottom: 1px solid #d3d3d3; /* light gray for rows except the last one */
+}
+
+.custom-table tbody tr:last-child td {
+  border-bottom: 2px solid var(--brown--color); /* thicker brown line for the last row */
+}
+
+/* 회색줄 사이 간격 */
+.custom-table td {
+  padding-top: 1.5em;
+  padding-bottom: 1.5em;
+}
+
+/* 정렬기능버튼 */
+.sort-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: inherit;
+}
+
+.sort-button:focus {
+  outline: none;
+}
+
+/* 아이콘 색상 */
+.star-filled {
+  color: var(--orange--color);
+}
+
+.star-empty {
+  color: var(--orange--color);
+}
+
+.arrow-up {
+  color: var(--brown--color);
+}
+
+.arrow-down {
+  color: var(--brown--color);
+}
+
+/* 클래스이름이랑 간격조정 */
+.custom-table td {
+  padding-top: 1.5em;
+  padding-bottom: 1.5em;
+  padding-left: 0.5em;
+  padding-right: 0.5em;
+}
+
+.custom-table th:nth-child(3),
+.custom-table td:nth-child(3) {
+  width: 30%;
+}
+
+.custom-table th:nth-child(4),
+.custom-table td:nth-child(4) {
+  width: 20%;
+}
+
+/* 메인컨텐트 조정 */
+.table-content {
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.custom-table th:last-child,
+.custom-table td:last-child {
+  border-right: none;
+}
+
+.custom-table {
+  width: 100%;
+}

@@ -18,8 +18,7 @@ public interface ResponseCode {
     String NOT_EXIST_NUM = "NN"; // @pathvariable 잘못 입력한 경우
     String FIND_ID_FAIL = "EI"; // 아이디 찾기 실패
     String FIND_PW_FAIL = "EP"; // 비번 찾기 시 실패
-    String NOT_MATCH_USER = "MU"; // 아이디 매칭 실패
-
+    String WRONG_BOARD_TYPE = "WT"; // 잘못된 게시판 타입인 경우
 
 
     String MAIL_FAIL = "MF"; // 메일 발송 실패

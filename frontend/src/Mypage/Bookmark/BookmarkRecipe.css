@@ -1,0 +1,39 @@
+.division-line {
+  border-top: 2px solid var(--brown--color);
+  margin: 50px auto;
+  width: 80%;
+  position: relative;
+}
+
+.bookmark-content {
+  display: flex;
+  flex-wrap: wrap;
+  text-align: center;
+  justify-content: space-between; /* To evenly distribute items on each row */
+}
+
+.bookmark-content > * {
+  flex-basis: calc(25% - 20px); /* 25% width with some spacing between items */
+  margin-bottom: 20px; /* Adjust spacing between rows */
+  flex-grow: 0; /* Prevent items from growing beyond their specified width */
+}
+
+@media (max-width: 768px) {
+  .bookmark-content > * {
+    flex-basis: calc(25% - 10px); /* Adjust width for smaller screens */
+    margin-bottom: 10px; /* Adjust spacing between rows for smaller screens */
+  }
+}
+
+.add{
+  position: relative; /* Keep the button fixed at the bottom of the viewport */
+  bottom: 10px; /* Distance from the bottom of the viewport */
+  left: 50%; /* Start at 50% from the left of the viewport */
+  transform: translate(-50%, 0); /* Shift it back by 50% of its own width */
+  display: flex; /* Using flexbox for center alignment */
+  align-items: center; /* Center items vertically */
+  justify-content: center; /* Center items horizontally */
+  /* Ensure the button has some dimensions if it's not defined by its content */
+  min-width: 100px; /* Minimum width */ /* Padding for aesthetic spacing */
+  text-align: center; /* Ensure text within the button is centered */
+}

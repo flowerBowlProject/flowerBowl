@@ -1,6 +1,3 @@
-@font-face {
-    font-family: 'GowunBatang-Bold';
-    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2108@1.1/GowunBatang-Bold.woff') format('woff');
-    font-weight: bold;
-    font-style: normal;
+.logoImg {
+        width: 2vw;
 }

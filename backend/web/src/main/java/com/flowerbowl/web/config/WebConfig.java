@@ -13,7 +13,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Configurable;
-import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
@@ -63,16 +62,17 @@ public class WebConfig {
                 .authorizeHttpRequests(request -> request
                                 .requestMatchers("/", "/file/**", "/error", // 스프링이 웰컴 페이지를 찾으려고 하는데 못 찾으니까 error페이지로 이동하려고 하는거 같다
                                         "/api/recipes/guest", "/api/recipes/guest/**",
-                                        "/api/comments", "/api/communities/detail/*",
+                                        "/api/communities/detail/*",
                                         "/api/guest/**", "/api/banners",
                                         "/api/users/findId", "/api/users/findPw",
                                         "/oauth2/**", "/api/auth/**",
-                                        "/api/search", "/api/search/**").permitAll()
+                                        "/api/search", "/api/search/**").permitAll() // 역할을 따른 경로 접근 제한 설정
                                 .requestMatchers(RegexRequestMatcher.regexMatcher("\\/api\\/communities\\/list(?=\\?).*")).permitAll()
+                                .requestMatchers(RegexRequestMatcher.regexMatcher("\\/api\\/comments(?=\\?).*")).permitAll()
 //                                .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll() 정적 자원들은 필요가 없나?
 //                        .requestMatchers("/api/user/**").hasAnyRole("USER", "CHEF") // 나머지 요청은 인증된 사용자만 접근이 가능해서 필요가 없는 거 같음
                                 .requestMatchers("/api/chef/**",
-                                        "/api/lessons/**", "/api/lessons").hasRole("CHEF")
+                                        "/api/lessons/**","/api/lessons").hasRole("CHEF")
                                 .requestMatchers("/api/admin/**").hasRole("ADMIN")
                                 .anyRequest().authenticated() // 나머지 요청은 인증된 사용자만 접근
                 )
