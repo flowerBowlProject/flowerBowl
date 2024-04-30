@@ -57,4 +57,11 @@ public class ReviewController {
 
         return reviewService.reviewDelete(reviewNo);
     }
+
+    @GetMapping("/{review_no}")
+    public ResponseEntity<? super GetReviewResponseDto> review(
+            @PathVariable(name = "review_no") Long reviewNo) {
+        
+        return reviewService.getReview(reviewNo);
+    }
 }

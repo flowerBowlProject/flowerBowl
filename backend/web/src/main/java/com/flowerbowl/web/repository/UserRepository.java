@@ -51,7 +51,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query(value = "SELECT " +
             "    lr.lesson_rv_score," +
             "    DATE_FORMAT(lr.lesson_rv_date, '%Y-%m-%d'), " +
-            "    lr.lesson_no, " +
+            "    lr.lesson_rv_no, " +
             "    l.lesson_title, " +
             "    l.lesson_writer " +
             "FROM " +

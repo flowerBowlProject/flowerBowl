@@ -38,4 +38,10 @@ public interface ReviewService {
      * @return 리뷰 삭제
      */
     ResponseEntity<? super DeleteReviewResponseDto> reviewDelete(Long reviewNo);
+
+    /**
+     * 
+     * @return 리뷰 상세
+     */
+    ResponseEntity<? super GetReviewResponseDto> getReview(Long reviewNo);
 }
