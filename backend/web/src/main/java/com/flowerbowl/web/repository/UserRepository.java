@@ -10,9 +10,12 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
+
+    Optional<User> findByUserNo(Long userNo);
 
     @Modifying
     @Transactional
@@ -274,4 +277,3 @@ public interface UserRepository extends JpaRepository<User, Long> {
             "               user_id = :userId))", nativeQuery = true)
     List<Object[]> findAllLikeRecipe(@Param("userId") String userId);
 }
-

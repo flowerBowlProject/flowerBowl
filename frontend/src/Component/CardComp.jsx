@@ -7,7 +7,7 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import ChatBubbleIcon from '@mui/icons-material/ChatBubble';
 
 // 전체적으로 list의 element의 단어들을 api와 일치시켜야 함
-const RecipeReviewCard = ({list}) => {
+const CardComp = ({list}) => {
   return (
     <div>
       <Card className='card-Box'>
@@ -35,4 +35,4 @@ const RecipeReviewCard = ({list}) => {
   );
 }
 
-export default RecipeReviewCard;
+export default CardComp;

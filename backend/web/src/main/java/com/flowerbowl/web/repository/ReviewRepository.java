@@ -2,6 +2,8 @@ package com.flowerbowl.web.repository;
 
 import com.flowerbowl.web.domain.LessonRv;
 import com.flowerbowl.web.domain.Recipe;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -39,4 +41,7 @@ public interface ReviewRepository extends JpaRepository<LessonRv, Long> {
     LessonRv findByLessonRvNo(Long reviewNo);
 
 //    LessonRv findByLessonRvNo(Long lessonRvNo);
+
+    //
+    Page<LessonRv> findLessonRvByLesson_LessonNo(Long lesson_no, Pageable pageable);
 }

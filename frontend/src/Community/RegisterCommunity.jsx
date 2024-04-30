@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import './RegisterCommunityStyle.css';
 import ToastEditor from "../Component/ToastEditor";
 import { Editor } from "@toast-ui/react-editor";
-
+import Inputbutton from '../Component/Input/Inputbutton';
 const RegisterCommunity = () =>{
     const [registerData, setRegisterData] = useState({community_title: '', community_content:''});
 
@@ -15,7 +15,10 @@ const RegisterCommunity = () =>{
             </div>
 
             {/* 등록 + 취소 버튼 컴포넌트 위치 */}
-            
+            <div className="register_button">
+                <Inputbutton variant="outlined" text="등록" i= {false} w="medium-large"/> &nbsp;
+                <Inputbutton variant="outlined" text="취소" i= {true} w="medium-large"/>
+            </div>
         </div>
     );
 }

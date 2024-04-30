@@ -5,7 +5,7 @@ spring:
     livereload:
       enabled: true
   datasource:
-    url: jdbc:mysql://127.0.0.1:3306/flowerBowl?serverTimezone=UTC&useUnicode=yes&characterEncoding=UTF-8
+    url: jdbc:mysql://127.0.0.1:3306/flowerBowl?serverTimezone=Asia/Seoul&useUnicode=yes&characterEncoding=UTF-8
     username: neo
     password: 1234
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -68,3 +68,6 @@ spring:
       matching-strategy: ant_path_matcher
 
 secret-key: HfdHzFynv0TnzLtkk9xBpCJc2AzwAtW2qhvVgMrA1kk=
+
+payment:
+  store_id: imp75223852
