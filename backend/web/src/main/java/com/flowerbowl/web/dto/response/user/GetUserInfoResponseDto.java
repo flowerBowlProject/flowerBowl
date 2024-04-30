@@ -19,6 +19,7 @@ public class GetUserInfoResponseDto extends ResponseDto {
     private String user_file_sname;
     private String user_file_oname;
     private Boolean user_pw_changed;
+    private String user_id;
 
     private GetUserInfoResponseDto(User user) {
         super();
@@ -29,6 +30,7 @@ public class GetUserInfoResponseDto extends ResponseDto {
         this.user_file_sname = user.getUserFileSname();
         this.user_file_oname = user.getUserFileOname();
         this.user_pw_changed = user.getUserPwChanged();
+        this.user_id = user.getUserId();
     }
 
     public static ResponseEntity<GetUserInfoResponseDto> success(User user){
