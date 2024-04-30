@@ -24,10 +24,12 @@ public interface ResponseCode {
     String FIND_ID_FAIL = "EI"; // 아이디 찾기 실패
     String FIND_PW_FAIL = "EP"; // 비번 찾기 시 실패
     String WRONG_BOARD_TYPE = "WT"; // 잘못된 게시판 타입인 경우
+    String NOT_MATCH_USER = "MU";
 
 
     String MAIL_FAIL = "MF"; // 메일 발송 실패
     String INTERNAL_SERVER_ERROR = "ISE"; // 500 에러
     String DOES_NOT_MATCH = "DM"; // 두 비교군이 일치하지 않는 경우
+
 
 }

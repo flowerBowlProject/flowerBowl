@@ -37,6 +37,9 @@ public interface ReviewRepository extends JpaRepository<LessonRv, Long> {
             "WHERE " +
             "   lesson_rv_no = :reviewNo", nativeQuery = true)
     List<Object[]> findReviewByReviewNo(@Param("reviewNo") Long reviewNo);
+
+    LessonRv findByLessonRvNo(Long reviewNo);
+
 //    LessonRv findByLessonRvNo(Long lessonRvNo);
 
     //

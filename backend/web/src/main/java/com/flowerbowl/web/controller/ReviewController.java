@@ -53,15 +53,17 @@ public class ReviewController {
 
     @DeleteMapping("/{review_no}")
     public ResponseEntity<? super DeleteReviewResponseDto> reviewDelete(
+            @AuthenticationPrincipal String userId,
             @PathVariable(name = "review_no") Long reviewNo) {
 
-        return reviewService.reviewDelete(reviewNo);
+        return reviewService.reviewDelete(userId, reviewNo);
     }
 
     @GetMapping("/{review_no}")
-    public ResponseEntity<? super GetReviewResponseDto> review(
+    public ResponseEntity<? super GetReviewResponseDto> reviewGet(
+            @AuthenticationPrincipal String userId,
             @PathVariable(name = "review_no") Long reviewNo) {
-        
-        return reviewService.getReview(reviewNo);
+
+        return reviewService.getReview(userId, reviewNo);
     }
 }
