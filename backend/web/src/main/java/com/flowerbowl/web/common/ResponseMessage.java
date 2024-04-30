@@ -6,6 +6,7 @@ public interface ResponseMessage {
      * 로그인 응답 코드 및 메시지
      */
     String SUCCESS = "success"; // 성공
+    String CREATED = "Created"; // 생성 완료
 
     String BAD_REQUEST = "Bad Request"; // 400 에러
     String DUPLICATE_ID = "Duplicate Id"; // 회원 가입 시 중복 아이디 에러
