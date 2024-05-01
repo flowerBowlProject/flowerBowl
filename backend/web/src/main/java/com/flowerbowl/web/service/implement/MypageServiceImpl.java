@@ -5,6 +5,7 @@ import com.flowerbowl.web.dto.object.mypage.*;
 import com.flowerbowl.web.dto.response.ResponseDto;
 import com.flowerbowl.web.dto.response.mypage.*;
 import com.flowerbowl.web.repository.*;
+import com.flowerbowl.web.repository.lesson.PayRepository;
 import com.flowerbowl.web.service.MypageService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,6 +22,7 @@ import java.util.List;
 public class MypageServiceImpl implements MypageService {
 
     private final UserRepository userRepository;
+    private final PayRepository payRepository;
     private final LessonLikeRepository lessonLikeRepository;
     private final LessonRepository lessonRepository;
     private final RecipeLikeRepository reviewLikeRepository;
@@ -183,6 +185,7 @@ public class MypageServiceImpl implements MypageService {
                 purchaser.setUser_nickname((String) posts[1]);
                 purchaser.setUser_phone((String) posts[2]);
                 purchaser.setLesson_title((String) posts[3]);
+                purchaser.setPay_no((Long) posts[4]);
                 purchasers.add(purchaser);
             }
 
@@ -209,6 +212,7 @@ public class MypageServiceImpl implements MypageService {
                 pay.setLesson_title((String) posts[2]);
                 pay.setLesson_writer((String) posts[3]);
                 pay.setLesson_no((Long) posts[4]);
+                pay.setPay_no((Long) posts[5]);
                 pays.add(pay);
             }
 
