@@ -7,4 +7,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface PayRepository extends JpaRepository<Pay, Long>{
     Long countAllByPayNoGreaterThan(Long no);
+
+    Pay findByPayNo(Long payNo);
 }

@@ -39,14 +39,14 @@ public interface UserRepository extends JpaRepository<User, Long> {
             "   l.lesson_no, " +
             "   l.lesson_title " +
             "FROM " +
-            "   user u" +
+            "   user u " +
             "INNER JOIN " +
             "   review_enable r ON u.user_no = r.user_no " +
             "INNER JOIN " +
             "   lesson l ON r.lesson_no = l.lesson_no " +
             "WHERE " +
             "   u.user_id = :userId AND r.review_enable = TRUE ", nativeQuery = true)
-    List<Lesson> findAvailableReviewListByUserId(@Param("userId") String userId);
+    List<Object[]> findAvailableReviewListByUserId(@Param("userId") String userId);
 
     @Query(value = "SELECT " +
             "    lr.lesson_rv_score," +
@@ -77,7 +77,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
             "    DATE_FORMAT(p.pay_date, '%Y-%m-%d') AS pay_date, " +
             "    u.user_nickname, " +
             "    u.user_phone, " +
-            "    l.lesson_title " +
+            "    l.lesson_title, " +
+            "    p.pay_no " +
             "FROM " +
             "    pay p " +
             "    INNER JOIN user u ON p.user_no = u.user_no " +
@@ -101,7 +102,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
             "    p.pay_price, " +
             "    l.lesson_title, " +
             "    l.lesson_writer, " +
-            "    l.lesson_no " +
+            "    l.lesson_no, " +
+            "    p.pay_no " +
             "FROM " +
             "    pay p " +
             "    INNER JOIN lesson l ON p.lesson_no = l.lesson_no " +
@@ -125,7 +127,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
             "    SELECT " +
             "       user_no  " +
             "    FROM " +
-            "       USER  " +
+            "       user  " +
             "    WHERE " +
             "       user_id = :userId) " +
             "       AND pay_no = :payNo ", nativeQuery = true)
