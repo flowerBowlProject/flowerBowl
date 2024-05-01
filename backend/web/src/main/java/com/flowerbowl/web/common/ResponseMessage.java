@@ -30,6 +30,9 @@ public interface ResponseMessage {
     String WRONG_BOARD_TYPE = "Wrong board type"; // 잘못된 게시판 타입인 경우
 
 
+    String WRONG_FILE_EXTENSION = "Wrong File Extension"; // 허용되지 않은 파일 확장자인 경우
+    String UPLOAD_FAIL = "File Upload Fail"; // 파일 업로드 실패
+    String CONVERT_FAIL = "File Convert Fail"; // 파일 변환 실패
     String MAIL_FAIL = "Mail Send Fail"; // 메일 발송 실패
     String INTERNAL_SERVER_ERROR = "Internal Server Error"; // 500 에러
     String DOES_NOT_MATCH = "Does Not Match"; // 두 비교군이 일치하지 않는 경우
