@@ -5,6 +5,7 @@ import com.flowerbowl.web.common.JwtError;
 import com.flowerbowl.web.filter.JwtAuthenticationFilter;
 import com.flowerbowl.web.handler.CustomAccessDeniedHandler;
 import com.flowerbowl.web.handler.OAuth2SuccessHandler;
+import com.flowerbowl.web.util.JwtUtil;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -61,12 +62,13 @@ public class WebConfig {
                 .authorizeHttpRequests(request -> request
                                 .requestMatchers("/", "/file/**", "/error", // 스프링이 웰컴 페이지를 찾으려고 하는데 못 찾으니까 error페이지로 이동하려고 하는거 같다
                                         "/api/recipes/guest", "/api/recipes/guest/**",
-                                        "/api/comments", "/api/communities/detail/*",
+                                        "/api/communities/detail/*",
                                         "/api/guest/**", "/api/banners",
                                         "/api/users/findId", "/api/users/findPw",
                                         "/oauth2/**", "/api/auth/**",
                                         "/api/search", "/api/search/**").permitAll() // 역할을 따른 경로 접근 제한 설정
                                 .requestMatchers(RegexRequestMatcher.regexMatcher("\\/api\\/communities\\/list(?=\\?).*")).permitAll()
+                                .requestMatchers(RegexRequestMatcher.regexMatcher("\\/api\\/comments(?=\\?).*")).permitAll()
 //                                .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll() 정적 자원들은 필요가 없나?
 //                        .requestMatchers("/api/user/**").hasAnyRole("USER", "CHEF") // 나머지 요청은 인증된 사용자만 접근이 가능해서 필요가 없는 거 같음
                                 .requestMatchers("/api/chef/**",
@@ -124,13 +126,15 @@ class FailedAuthenticationEntryPoint implements AuthenticationEntryPoint {
         log.info("exception Values={}", exception);
 
         if (exception != null && exception.equals("IT")) {
-            setResponse(response, JwtError.INVALID_TOKEN);
+            JwtUtil.setResponse(response, JwtError.INVALID_TOKEN);
         } else if (exception != null && exception.equals("NS")) {
-            setResponse(response, JwtError.NOT_SUPPORT_TOKEN);
+            JwtUtil.setResponse(response, JwtError.NOT_SUPPORT_TOKEN);
         } else if (exception != null && exception.equals("ET")) {
-            setResponse(response, JwtError.EXPIRED_TOKEN);
+            JwtUtil.setResponse(response, JwtError.EXPIRED_TOKEN);
+        } else if (exception != null && exception.equals("NT")) {
+            JwtUtil.setResponse(response, JwtError.NOT_EXIST_TOKEN);
         } else {
-            setResponse(response, JwtError.NOT_EXIST_TOKEN);
+            JwtUtil.setResponse(response, JwtError.NOT_FIND_EXCEPTION);
         }
 
 //        response.setContentType("application/json; charset=UTF-8");
@@ -141,15 +145,4 @@ class FailedAuthenticationEntryPoint implements AuthenticationEntryPoint {
     }
 
 
-    private void setResponse(HttpServletResponse response, JwtError jwtError) throws IOException {
-
-        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-        response.setContentType("application/json; charset=UTF-8");
-
-        JSONObject responseJson = new JSONObject();
-        responseJson.put("code", jwtError.getCode());
-        responseJson.put("message", jwtError.getMessage());
-
-        response.getWriter().print(responseJson);
-    }
 }

@@ -13,6 +13,7 @@ public class MyLessons {
 
     private String lesson_date;
     private String lesson_title;
-    private Long bookmark_cnt;
+    private Long lesson_like_cnt;
     private Long review_cnt;
+    private Long lesson_no;
 }

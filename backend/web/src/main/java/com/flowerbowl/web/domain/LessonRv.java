@@ -38,6 +38,14 @@ public class LessonRv {
     private Lesson lesson;
 
 
+    public void setLessonRvContent(String lessonRvContent) {
+        this.lessonRvContent = lessonRvContent;
+    }
+
+    public void setLessonRvScore(Integer lessonRvScore) {
+        this.lessonRvScore = lessonRvScore;
+    }
+
     public LessonRv(InsertReviewRequestDto dto, User user, Lesson lesson) {
         this.lessonRvContent = dto.getReview_content();
         this.lessonRvScore = dto.getReview_score();

@@ -28,15 +28,7 @@ public class JwtProvider {
     @Value("${secret-key}")
     private String secretKey;
 
-    /**
-     * 초기에 시크릿 키 만들고 사용은 따로 안함
-     *
-     * @return secretKey
-     */
-    private String jwtSecretKeyMaker() {
-        SecretKey key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
-        return Encoders.BASE64.encode(key.getEncoded());
-    }
+
 
     public String create(String userId) {
 
@@ -74,7 +66,7 @@ public class JwtProvider {
                     .getBody()
                     .getSubject();
 
-        } catch (SecurityException | MalformedJwtException | IllegalArgumentException exception) {
+        } catch (SignatureException | SecurityException | MalformedJwtException | IllegalArgumentException exception) {
             request.setAttribute("exception", JwtError.INVALID_TOKEN.getCode());
             log.error("Jwt Exception [Err_Msg]: {}", exception.getMessage());
             log.error("class={}", exception.getClass());
@@ -90,7 +82,7 @@ public class JwtProvider {
             log.error("class={}", exception.getClass());
             return null;
         } catch (Exception exception) {
-            request.setAttribute("exception", JwtError.NOT_EXIST_TOKEN.getCode());
+            request.setAttribute("exception", JwtError.NOT_FIND_EXCEPTION.getCode());
             log.error("Jwt Exception [Err_Msg]: {}", exception.getMessage());
             log.error("class={}", exception.getClass());
             return null;

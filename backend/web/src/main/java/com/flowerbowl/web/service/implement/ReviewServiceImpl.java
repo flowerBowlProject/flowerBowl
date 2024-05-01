@@ -5,6 +5,7 @@ import com.flowerbowl.web.domain.LessonRv;
 import com.flowerbowl.web.domain.User;
 import com.flowerbowl.web.dto.object.mypage.AvailableReviews;
 import com.flowerbowl.web.dto.object.mypage.WrittenReviews;
+import com.flowerbowl.web.dto.object.review.GetReviewDto;
 import com.flowerbowl.web.dto.request.review.InsertReviewRequestDto;
 import com.flowerbowl.web.dto.request.review.PatchReviewRequestDto;
 import com.flowerbowl.web.dto.response.ResponseDto;
@@ -43,7 +44,6 @@ public class ReviewServiceImpl implements ReviewService {
             Lesson lesson = lessonRepository.findByLessonNo(dto.getLesson_no());
 
             LessonRv lessonRv = new LessonRv(dto, user, lesson);
-            lessonRv.getLesson().getLessonNo();
             reviewRepository.save(lessonRv);
 
             Long userNo = user.getUserNo();
@@ -66,15 +66,14 @@ public class ReviewServiceImpl implements ReviewService {
 
         try {
 
-            List<Lesson> posts = userRepository.findAvailableReviewListByUserId(userId);
-            if (posts == null) {
-                AvailableReviewsResponseDto.noExistLesson();
-            }
+            List<Object[]> dbResult = userRepository.findAvailableReviewListByUserId(userId);
+            if (dbResult == null) AvailableReviewsResponseDto.noExistLesson();
 
-            for (Lesson lesson : posts) {
+
+            for (Object[] posts : dbResult) {
                 AvailableReviews reviewList = new AvailableReviews();
-                reviewList.setLesson_no(lesson.getLessonNo());
-                reviewList.setLesson_title(lesson.getLessonTitle());
+                reviewList.setLesson_no((Long) posts[0]);
+                reviewList.setLesson_title((String) posts[1]);
                 availableReviews.add(reviewList);
             }
 
@@ -125,11 +124,13 @@ public class ReviewServiceImpl implements ReviewService {
             Long reviewNo) {
 
         try {
-            String reviewContent = dto.getReview_content();
-            Integer reviewScore = dto.getReview_score();
 
-            reviewRepository.updateLessonReview(reviewContent, reviewScore, reviewNo);
-//            reviewRepository.save(lessonRv);
+            LessonRv lessonRv = reviewRepository.findByLessonRvNo(reviewNo);
+            if (!userId.equals(lessonRv.getUser().getUserId())) return PatchReviewResponseDto.notMatchUser();
+
+            lessonRv.setLessonRvContent(dto.getReview_content());
+            lessonRv.setLessonRvScore(dto.getReview_score());
+            reviewRepository.save(lessonRv);
 
         } catch (Exception exception) {
             exception.printStackTrace();
@@ -140,12 +141,14 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
-    public ResponseEntity<? super DeleteReviewResponseDto> reviewDelete(Long reviewNo) {
+    public ResponseEntity<? super DeleteReviewResponseDto> reviewDelete(String userId, Long reviewNo) {
 
         try {
 
-            Optional<LessonRv> lessonRv = reviewRepository.findById(reviewNo);
-            if (lessonRv.isEmpty()) {return DeleteReviewResponseDto.notExistNum();}
+            LessonRv lessonRv = reviewRepository.findByLessonRvNo(reviewNo);
+            if (lessonRv == null) return DeleteReviewResponseDto.notExistNum();
+
+            if (!userId.equals(lessonRv.getUser().getUserId())) return DeleteReviewResponseDto.notMatchUser();
 
             reviewRepository.deleteById(reviewNo);
 
@@ -155,6 +158,33 @@ public class ReviewServiceImpl implements ReviewService {
         }
 
         return DeleteReviewResponseDto.success();
+    }
+
+    @Override
+    public ResponseEntity<? super GetReviewResponseDto> getReview(String userId, Long reviewNo) {
+
+        GetReviewDto getReviewDto = new GetReviewDto();
+
+        try {
+
+            List<Object[]> review = reviewRepository.findReviewByReviewNo(reviewNo);
+            if (review == null) return GetReviewResponseDto.noExistReview();
+
+            LessonRv lessonRv = reviewRepository.findByLessonRvNo(reviewNo);
+            if (!userId.equals(lessonRv.getUser().getUserId())) return GetReviewResponseDto.noMatchUser();
+
+            for (Object[] posts : review) {
+                getReviewDto.setReview_score((Integer) posts[0]);
+                getReviewDto.setReview_content((String) posts[1]);
+                getReviewDto.setLesson_title((String) posts[2]);
+            }
+
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            return ResponseDto.databaseError();
+        }
+
+        return GetReviewResponseDto.success(getReviewDto);
     }
 
 }
