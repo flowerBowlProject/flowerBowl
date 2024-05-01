@@ -27,6 +27,9 @@ public interface ResponseCode {
     String NOT_MATCH_USER = "MU";
 
 
+    String WRONG_FILE_EXTENSION = "WF"; // 허용되지 않은 파일 확장자인 경우
+    String UPLOAD_FAIL = "UF"; // 파일 업로드 실패
+    String CONVERT_FAIL = "CF"; // 파일 변환 실패
     String MAIL_FAIL = "MF"; // 메일 발송 실패
     String INTERNAL_SERVER_ERROR = "ISE"; // 500 에러
     String DOES_NOT_MATCH = "DM"; // 두 비교군이 일치하지 않는 경우

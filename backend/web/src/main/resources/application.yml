@@ -67,6 +67,23 @@ spring:
     pathmatch:
       matching-strategy: ant_path_matcher
 
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+
+cloud:
+  aws:
+    region:
+      static: ap-northeast-2
+    s3:
+      bucket: flowerbowl
+    stack:
+      auto: false
+    credentials:
+      access-key: AKIAQCEUCRHPVWHE37OQ
+      secret-key: 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
+
 secret-key: HfdHzFynv0TnzLtkk9xBpCJc2AzwAtW2qhvVgMrA1kk=
 
 payment:
