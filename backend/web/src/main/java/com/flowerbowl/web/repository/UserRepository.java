@@ -125,7 +125,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
             "    SELECT " +
             "       user_no  " +
             "    FROM " +
-            "       USER  " +
+            "       user  " +
             "    WHERE " +
             "       user_id = :userId) " +
             "       AND pay_no = :payNo ", nativeQuery = true)
