@@ -15,5 +15,6 @@ public class PurchaserList {
     private String lesson_title;
     private String user_nickname;
     private String user_phone;
+    private Long pay_no;
 
 }

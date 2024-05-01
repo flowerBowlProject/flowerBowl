@@ -17,4 +17,5 @@ public class Pays {
     private String lesson_title;
     private String lesson_writer;
     private Long lesson_no;
+    private Long pay_no;
 }
