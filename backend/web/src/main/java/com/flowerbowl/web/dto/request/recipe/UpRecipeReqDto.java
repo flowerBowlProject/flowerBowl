@@ -10,20 +10,20 @@ import java.util.List;
 @AllArgsConstructor
 public class UpRecipeReqDto {
 
-    private String recipeTitle;
+    private String recipe_title;
 
-    private Category recipeCategory;
+    private Category recipe_category;
 
-    private List<String> recipeStuff;
+    private List<String> recipe_stuff;
 
-    private String recipeContent;
+    private String recipe_content;
 
-    private String recipeOname;
+    private String recipe_oname;
 
-    private String recipeSname;
+    private String recipe_sname;
 
-    private List<String> recipeFileOname;
+    private List<String> recipe_file_oname;
 
-    private List<String> recipeFileSname;
+    private List<String> recipe_file_sname;
 
 }

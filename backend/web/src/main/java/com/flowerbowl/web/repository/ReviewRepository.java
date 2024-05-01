@@ -27,6 +27,18 @@ public interface ReviewRepository extends JpaRepository<LessonRv, Long> {
                             @Param("score") Integer newLessonRvScore,
                             @Param("no") Long lessonRvNo);
 
+    @Query(value = "SELECT " +
+            "   lv.lesson_rv_score AS review_score, " +
+            "   lv.lesson_rv_content AS review_content, " +
+            "   l.lesson_title " +
+            "FROM " +
+            "   lesson_rv lv " +
+            "   INNER JOIN lesson l ON l.lesson_no = lv.lesson_no " +
+            "WHERE " +
+            "   lesson_rv_no = :reviewNo", nativeQuery = true)
+    List<Object[]> findReviewByReviewNo(@Param("reviewNo") Long reviewNo);
+
+    LessonRv findByLessonRvNo(Long reviewNo);
 
 //    LessonRv findByLessonRvNo(Long lessonRvNo);
 

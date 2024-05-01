@@ -5,6 +5,7 @@ import com.flowerbowl.web.dto.object.mypage.*;
 import com.flowerbowl.web.dto.response.ResponseDto;
 import com.flowerbowl.web.dto.response.mypage.*;
 import com.flowerbowl.web.repository.*;
+import com.flowerbowl.web.repository.lesson.PayRepository;
 import com.flowerbowl.web.service.MypageService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,6 +22,7 @@ import java.util.List;
 public class MypageServiceImpl implements MypageService {
 
     private final UserRepository userRepository;
+    private final PayRepository payRepository;
     private final LessonLikeRepository lessonLikeRepository;
     private final LessonRepository lessonRepository;
     private final RecipeLikeRepository reviewLikeRepository;
@@ -104,6 +106,7 @@ public class MypageServiceImpl implements MypageService {
                 lessons.setLesson_title((String) posts[1]);
                 lessons.setLesson_writer((String) posts[2]);
                 lessons.setReview_score((Long) posts[3]);
+                lessons.setLesson_no((Long) posts[4]);
                 payLessons.add(lessons);
             }
 
@@ -127,8 +130,9 @@ public class MypageServiceImpl implements MypageService {
                 MyRecipes myRecipe = new MyRecipes();
                 myRecipe.setRecipe_date((String) posts[0]);
                 myRecipe.setRecipe_title((String) posts[1]);
-                myRecipe.setBookmark_cnt((Long) posts[2]);
+                myRecipe.setRecipe_like_cnt((Long) posts[2]);
                 myRecipe.setComment_cnt((Long) posts[3]);
+                myRecipe.setRecipe_no((Long) posts[4]);
                 myRecipes.add(myRecipe);
             }
 
@@ -153,8 +157,9 @@ public class MypageServiceImpl implements MypageService {
                 MyLessons myLesson = new MyLessons();
                 myLesson.setLesson_date((String) posts[0]);
                 myLesson.setLesson_title((String) posts[1]);
-                myLesson.setBookmark_cnt((Long) posts[2]);
+                myLesson.setLesson_like_cnt((Long) posts[2]);
                 myLesson.setReview_cnt((Long) posts[3]);
+                myLesson.setLesson_no((Long) posts[4]);
                 myLessons.add(myLesson);
             }
 
@@ -180,6 +185,7 @@ public class MypageServiceImpl implements MypageService {
                 purchaser.setUser_nickname((String) posts[1]);
                 purchaser.setUser_phone((String) posts[2]);
                 purchaser.setLesson_title((String) posts[3]);
+                purchaser.setPay_no((Long) posts[4]);
                 purchasers.add(purchaser);
             }
 
@@ -205,6 +211,8 @@ public class MypageServiceImpl implements MypageService {
                 pay.setPay_price((String) posts[1]);
                 pay.setLesson_title((String) posts[2]);
                 pay.setLesson_writer((String) posts[3]);
+                pay.setLesson_no((Long) posts[4]);
+                pay.setPay_no((Long) posts[5]);
                 pays.add(pay);
             }
 
