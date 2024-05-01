@@ -7,5 +7,4 @@ import org.springframework.web.multipart.MultipartFile;
 public interface ImageService {
 
     public ResponseEntity<? extends ImageResponseDto> uploadImage(MultipartFile multipartFile, String dirName) throws Exception;
-
 }
