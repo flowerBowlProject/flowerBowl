@@ -66,14 +66,14 @@ public class ReviewServiceImpl implements ReviewService {
 
         try {
 
-            List<Lesson> posts = userRepository.findAvailableReviewListByUserId(userId);
-            if (posts == null) AvailableReviewsResponseDto.noExistLesson();
+            List<Object[]> dbResult = userRepository.findAvailableReviewListByUserId(userId);
+            if (dbResult == null) AvailableReviewsResponseDto.noExistLesson();
 
 
-            for (Lesson lesson : posts) {
+            for (Object[] posts : dbResult) {
                 AvailableReviews reviewList = new AvailableReviews();
-                reviewList.setLesson_no(lesson.getLessonNo());
-                reviewList.setLesson_title(lesson.getLessonTitle());
+                reviewList.setLesson_no((Long) posts[0]);
+                reviewList.setLesson_title((String) posts[1]);
                 availableReviews.add(reviewList);
             }
 
