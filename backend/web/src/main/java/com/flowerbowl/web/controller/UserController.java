@@ -49,7 +49,7 @@ public class UserController {
 
     @PostMapping("/findPw")
     public ResponseEntity<? super FindUserPwResponseDto> findPw(
-            @RequestBody @Valid FindUserPwRequestDto dto){
+            @RequestBody @Valid FindUserPwRequestDto dto) {
 
         return userService.findPw(dto);
     }
