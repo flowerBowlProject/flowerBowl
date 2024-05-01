@@ -7,6 +7,7 @@ import com.flowerbowl.web.dto.request.lesson.CreateRequestDto;
 import com.flowerbowl.web.dto.request.lesson.LessonRequestDto;
 import com.flowerbowl.web.repository.*;
 import com.flowerbowl.web.repository.lesson.*;
+import com.flowerbowl.web.repository.lesson.PayRepository;
 import com.flowerbowl.web.service.LessonService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,6 +34,7 @@ public class LessonServiceImpl implements LessonService {
     private final UserRepository userRepository;
     private final ReviewRepository reviewRepository;
     private final PayRepository payRepository;
+
     // 클래스 등록
     @Transactional
     @Override
