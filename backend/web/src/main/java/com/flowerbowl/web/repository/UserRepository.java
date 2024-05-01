@@ -77,7 +77,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
             "    DATE_FORMAT(p.pay_date, '%Y-%m-%d') AS pay_date, " +
             "    u.user_nickname, " +
             "    u.user_phone, " +
-            "    l.lesson_title " +
+            "    l.lesson_title, " +
+            "    p.pay_no " +
             "FROM " +
             "    pay p " +
             "    INNER JOIN user u ON p.user_no = u.user_no " +
@@ -101,7 +102,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
             "    p.pay_price, " +
             "    l.lesson_title, " +
             "    l.lesson_writer, " +
-            "    l.lesson_no " +
+            "    l.lesson_no, " +
+            "    p.pay_no " +
             "FROM " +
             "    pay p " +
             "    INNER JOIN lesson l ON p.lesson_no = l.lesson_no " +
