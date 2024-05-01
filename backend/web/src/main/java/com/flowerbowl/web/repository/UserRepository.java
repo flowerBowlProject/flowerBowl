@@ -39,14 +39,14 @@ public interface UserRepository extends JpaRepository<User, Long> {
             "   l.lesson_no, " +
             "   l.lesson_title " +
             "FROM " +
-            "   user u" +
+            "   user u " +
             "INNER JOIN " +
             "   review_enable r ON u.user_no = r.user_no " +
             "INNER JOIN " +
             "   lesson l ON r.lesson_no = l.lesson_no " +
             "WHERE " +
             "   u.user_id = :userId AND r.review_enable = TRUE ", nativeQuery = true)
-    List<Lesson> findAvailableReviewListByUserId(@Param("userId") String userId);
+    List<Object[]> findAvailableReviewListByUserId(@Param("userId") String userId);
 
     @Query(value = "SELECT " +
             "    lr.lesson_rv_score," +
