@@ -7,4 +7,9 @@ import org.springframework.web.multipart.MultipartFile;
 public interface ImageService {
 
     public ResponseEntity<? extends ImageResponseDto> uploadImage(MultipartFile multipartFile, String dirName) throws Exception;
+
+    public void copyS3(String oldFileName, String newFileName);
+
+    public void deleteS3(String fileName);
+
 }
