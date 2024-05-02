@@ -324,13 +324,8 @@ public class CommunityServiceImpl implements CommunityService {
             // page, size 정보를 가지고 해당하는 커뮤니티 게시글 조회
             Page<Community> communities = communityRepository.findAllByOrderByCommunityNoDesc(pageRequest);
 
-            // 커뮤니티 게시글이 한 개도 없을 때 Exception throw
-            if (communities.getTotalElements() == 0) {
-                throw new CommunityNotFoundException();
-            }
-
             // 요청한 페이지 번호가 존재하는 페이지 개수를 넘을 때 Exception throw
-            if (page >= communities.getTotalPages()) {
+            if (communities.getTotalPages() != 0 && page >= communities.getTotalPages()) {
                 throw new PageNotFoundException();
             }
 
@@ -355,11 +350,6 @@ public class CommunityServiceImpl implements CommunityService {
 
             GetAllCommunitiesSuResDto responseBody = new GetAllCommunitiesSuResDto(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, posts, communityPageInfo);
             return ResponseEntity.status(HttpStatus.OK).body(responseBody);
-        } catch (CommunityNotFoundException e) {
-            logPrint(e);
-
-            GetAllCommunitiesFaResDto responseBody = new GetAllCommunitiesFaResDto(ResponseCode.NOT_EXIST_COMMUNITY, ResponseMessage.NOT_EXIST_COMMUNITY);
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(responseBody);
         } catch (PageNotFoundException e) {
             logPrint(e);
 
