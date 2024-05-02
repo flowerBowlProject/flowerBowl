@@ -229,6 +229,10 @@ public class MypageServiceImpl implements MypageService {
 
         try {
 
+//            Pay pay = payRepository.findByPayNo(payNo);
+//            if (pay == null) return DeletePayByUserResponseDto.notExistPayNo();
+//            if (!userId.equals(pay.getUser().getUserId())) return DeletePayByUserResponseDto.notMatchUser();
+
             int dbResult = userRepository.deletePayByUser(userId, payNo);
             if (dbResult == 0) return DeletePayByUserResponseDto.notExistPayNo();
 
@@ -245,6 +249,9 @@ public class MypageServiceImpl implements MypageService {
 
         try {
 
+//            Pay pay = payRepository.findByPayNo(payNo);
+//            if (pay == null) return DeletePayByChefResponseDto.notExistPayNo();
+//            if (!userId.equals(pay.getUser().getUserId())) return DeletePayByChefResponseDto.notMatchUser();
 
             int dbResult = userRepository.deletePayByChef(userId, payNo);
             if (dbResult == 0) return DeletePayByChefResponseDto.notExistPayNo();
