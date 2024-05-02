@@ -5,13 +5,11 @@ import com.flowerbowl.web.dto.object.lesson.*;
 import com.flowerbowl.web.dto.response.lesson.*;
 import com.flowerbowl.web.dto.request.lesson.CreateRequestDto;
 import com.flowerbowl.web.dto.request.lesson.LessonRequestDto;
-import com.flowerbowl.web.repository.LessonRepository;
-import com.flowerbowl.web.repository.ReviewRepository;
-import com.flowerbowl.web.repository.UserRepository;
+import com.flowerbowl.web.repository.*;
 import com.flowerbowl.web.repository.lesson.*;
+import com.flowerbowl.web.repository.lesson.PayRepository;
 import com.flowerbowl.web.service.LessonService;
 import lombok.RequiredArgsConstructor;
-import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -31,12 +29,11 @@ public class LessonServiceImpl implements LessonService {
     private final LessonsRepository lessonsRepository;
     private final LessonRepository lessonRepository;
     private final MuziLessonLikeRepository muziLessonLikeRepository;
-    private final PayRepository payRepository;
-    private final PayJpaRepository payJpaRepository;
     private final LessonJpaDataRepository lessonJpaDataRepository;
-    private final JpaReviewEnableRepository jpaReviewEnableRepository;
+    private final ReviewEnableRepository reviewEnableRepository;
     private final UserRepository userRepository;
     private final ReviewRepository reviewRepository;
+    private final PayRepository payRepository;
 
     // 클래스 등록
     @Transactional
@@ -167,27 +164,6 @@ public class LessonServiceImpl implements LessonService {
         }
     }
 
-    // 모든 클래스 조회(비로그인) // 이거 위랑 합칠 수 있는지 고민
-//    @Override
-//    public ResponseEntity<? super FindAllResponseDto> findAllGuest(Pageable pageable){
-//        try{
-////            List<LessonShortDto> list = lessonJpaDataRepository.findAllByOrderByLessonNoDesc(pageable)
-////                    .map(LessonShortDto::from).getContent();
-//            Page<Lesson> page = lessonJpaDataRepository.findAllByOrderByLessonNoDesc(pageable);
-//            PageInfo pageInfo = new PageInfo(page.getTotalPages(), page.getTotalElements());
-//            List<LessonShortDto> list = page.map(LessonShortDto::from).getContent();
-//            for(LessonShortDto tmp : list){
-//                Long likes_num = muziLessonLikeRepository.countLessonLikeByLesson_LessonNo(tmp.getLesson_no());
-//                tmp.setLesson_likes_num(likes_num);
-//            }
-//
-//            return ResponseEntity.status(HttpStatus.OK).body(new FindAllResponseDto("SU", "success", pageInfo, list));
-//        }catch (Exception e){
-//            log.info("LessonService findAllGuest exception : {}",e.getMessage());
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseDto("ISE", "Internal Server Error"));
-//        }
-//    }
-
     // 특정 클래스 조회(로그인) // 즐겨찾기 목록
     @Override
     public ResponseEntity<? super FindOneResponseDto> findOneResponseDto(Long lesson_no, String userId){
@@ -262,11 +238,17 @@ public class LessonServiceImpl implements LessonService {
             if(user == null){
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseDto("FA", "해당하는 user_id를 가진 유저가 없습니다."));
             }
-            // 구매 정보 저장
+            // 구매 정보 저장 // 구매 정보가 있는지 여부를 먼저 확인해야함
+            if(payRepository.existsPayByLesson_LessonNoAndUser(lesson_no, user)){
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseDto("FA", "이미 구매한 클래스입니다."));
+            }
             Pay pay = new Pay();
             pay.setUser(user);
             // lesson // clinet에게 전송할 때도 사용
             Lesson lesson = lessonsRepository.findByLesson_no(lesson_no);
+            if(lesson.getLessonDeleteStatus()){
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseDto("FA", "해당 클래스는 삭제된 클래스 입니다."));
+            }
             pay.setLesson(lesson);
             pay.setPayDate(LocalDateTime.now());
             // pay_price
@@ -277,7 +259,8 @@ public class LessonServiceImpl implements LessonService {
             pay.setPayCode(pay_code);
             System.out.println(pay.getLesson().getLessonNo());
 
-            payJpaRepository.PayCreate(pay);
+//            payJpaRepository.PayCreate(pay);
+            payRepository.save(pay);
 
             // client 에게 전송해줄 결제정보
             PayInfo payInfo = new PayInfo();
@@ -297,12 +280,13 @@ public class LessonServiceImpl implements LessonService {
             reviewEnable.setReviewEnable(false);
             reviewEnable.setUser(user);
             reviewEnable.setLesson(lesson);
-            jpaReviewEnableRepository.save(reviewEnable);
+            reviewEnableRepository.save(reviewEnable);
 
             return ResponseEntity.status(HttpStatus.OK).body(new PaymentInfoResponseDto(payInfo));
 
         }catch (Exception e){
-            log.info("LessonService LessonDelete Exception : {}", e.getMessage());
+            log.info("LessonService buyLesson Exception : {}", e.getMessage());
+            log.info("getStackTrace()[0] : {}", e.getStackTrace()[0]);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseDto("ISE", "Internal Server Error"));
         }
     }

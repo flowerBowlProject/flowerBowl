@@ -77,6 +77,8 @@ public class LessonsController {
     // POST
     @PostMapping(value = "/user/lessons/payments")
     public ResponseEntity<? super PaymentInfoResponseDto> lessonsBuy(@AuthenticationPrincipal String userId, @RequestBody PaymentInfoRequestDto paymentInfoRequestDto){
+//    public ResponseEntity<? super PaymentInfoResponseDto> lessonsBuy(@RequestBody PaymentInfoRequestDto paymentInfoRequestDto){
+//        String userId = "test";
         return lessonService.buyLesson(paymentInfoRequestDto.getLesson_no(), userId);
     }
     // 클래스 즐겨찾기 등록 // POST
