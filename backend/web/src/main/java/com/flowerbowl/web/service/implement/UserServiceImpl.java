@@ -67,11 +67,16 @@ public class UserServiceImpl implements UserService {
             boolean isMatch = passwordEncoder.matches(userPw, encodePw);
             if (!isMatch) return PatchProfileResponseDto.invalidPw();
 
-            boolean isExistNickname = userRepository.existsByUserNickname(dto.getNew_nickname());
-            if (isExistNickname) return PatchProfileResponseDto.duplicateNickname();
+            // oauth2.0으로 로그인 시 닉네임, 이메일에 null 값이 들어온다
+            if (StringUtils.hasText(dto.getNew_nickname())) {
+                boolean isExistNickname = userRepository.existsByUserNickname(dto.getNew_nickname());
+                if (isExistNickname) return PatchProfileResponseDto.duplicateNickname();
+            }
 
-            boolean isExistEmail = userRepository.existsByUserEmail(dto.getNew_email());
-            if (isExistEmail) return PatchProfileResponseDto.duplicateEmail();
+            if (StringUtils.hasText(dto.getNew_email())) {
+                boolean isExistEmail = userRepository.existsByUserEmail(dto.getNew_email());
+                if (isExistEmail) return PatchProfileResponseDto.duplicateEmail();
+            }
 
             if (StringUtils.hasText(dto.getNew_pw())) {
                 String newPw = dto.getNew_pw();
