@@ -32,4 +32,9 @@ public class ImageController {
         return imageService.uploadImage(multipartFile, "temp/profile");
     }
 
+    @PostMapping("/banner")
+    public ResponseEntity<? extends ImageResponseDto> uploadBannerImage(@RequestPart("file") MultipartFile multipartFile) throws Exception {
+        return imageService.uploadImage(multipartFile, "temp/banner");
+    }
+
 }
