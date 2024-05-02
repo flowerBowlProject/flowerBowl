@@ -277,13 +277,8 @@ public class CommentServiceImpl implements CommentService {
                 throw new WrongBoardTypeException();
             }
 
-            // 댓글이 하나도 없을 때 Exception throw
-            if (commentPage.getTotalElements() == 0) {
-                throw new CommentNotFoundException();
-            }
-
             // 요청한 페이지 번호가 존재하는 페이지 개수를 넘을 때 Exception throw
-            if (page >= commentPage.getTotalPages()) {
+            if (commentPage.getTotalPages() != 0 && page >= commentPage.getTotalPages()) {
                 throw new PageNotFoundException();
             }
 
@@ -314,11 +309,6 @@ public class CommentServiceImpl implements CommentService {
 
             GetCommentsFaResDto responseBody = new GetCommentsFaResDto(ResponseCode.WRONG_BOARD_TYPE, ResponseMessage.WRONG_BOARD_TYPE);
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseBody);
-        } catch (CommentNotFoundException e) {
-            logPrint(e);
-
-            GetCommentsFaResDto responseBody = new GetCommentsFaResDto(ResponseCode.NOT_EXIST_COMMENT, ResponseMessage.NOT_EXIST_COMMENT);
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(responseBody);
         } catch (PageNotFoundException e) {
             logPrint(e);
 
