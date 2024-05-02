@@ -58,8 +58,11 @@ public class ImageServiceImpl implements ImageService {
             } else if (Objects.equals(dirName, "temp/profile")) {
                 UpProfileImageSuResDto responseBody = new UpProfileImageSuResDto(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, fileName, imageUrl);
                 return ResponseEntity.status(HttpStatus.OK).body(responseBody);
-            } else {
+            } else if (Objects.equals(dirName, "temp/banner")) {
                 UpBannerImageSuResDto responseBody = new UpBannerImageSuResDto(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, fileName, imageUrl);
+                return ResponseEntity.status(HttpStatus.OK).body(responseBody);
+            } else {
+                UpChefImageSuResDto responseBody = new UpChefImageSuResDto(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, fileName, imageUrl);
                 return ResponseEntity.status(HttpStatus.OK).body(responseBody);
             }
 
