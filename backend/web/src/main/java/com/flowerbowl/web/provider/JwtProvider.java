@@ -34,7 +34,6 @@ public class JwtProvider {
 
         Date expiredData = Date.from(Instant.now().plus(1, ChronoUnit.HOURS)); // 만로 시간은 1시간
         Key key = Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
-        System.out.println(secretKey);
 
         /*
          * jwt 토큰에는 유저 아이디만 넣었음

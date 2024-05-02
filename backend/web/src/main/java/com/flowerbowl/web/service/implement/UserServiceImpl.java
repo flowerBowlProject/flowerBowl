@@ -13,10 +13,12 @@ import com.flowerbowl.web.util.EmailUtil;
 import com.flowerbowl.web.util.PwUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 
@@ -68,18 +70,22 @@ public class UserServiceImpl implements UserService {
             boolean isExistNickname = userRepository.existsByUserNickname(dto.getNew_nickname());
             if (isExistNickname) return PatchProfileResponseDto.duplicateNickname();
 
-            boolean isExistEmail = userRepository.existsByUserNickname(dto.getNew_email());
+            boolean isExistEmail = userRepository.existsByUserEmail(dto.getNew_email());
             if (isExistEmail) return PatchProfileResponseDto.duplicateEmail();
 
-            String newPw = dto.getNew_pw();
-            String newEncodePw = passwordEncoder.encode(newPw);
+            if (StringUtils.hasText(dto.getNew_pw())) {
+                String newPw = dto.getNew_pw();
+                String newEncodePw = passwordEncoder.encode(newPw);
+                user.setUserPw(newEncodePw);
+            }
+//            BeanUtils.copyProperties(dto, user); 나중에 사용해보자
 
-            user.setUserEmail(dto.getNew_email());
-            user.setUserNickname(dto.getNew_nickname());
-            user.setUserPw(newEncodePw);
-            user.setUserPhone(dto.getNew_phone());
-            user.setUserFileOname(dto.getUser_file_oanme());
-            user.setUserFileSname(dto.getUser_file_sname());
+            if (StringUtils.hasText(dto.getNew_email())) user.setUserEmail(dto.getNew_email());
+            if (StringUtils.hasText(dto.getNew_nickname())) user.setUserNickname(dto.getNew_nickname());
+            if (StringUtils.hasText(dto.getNew_phone())) user.setUserPhone(dto.getNew_phone());
+            if (StringUtils.hasText(dto.getUser_file_oanme())) user.setUserFileOname(dto.getUser_file_oanme());
+            if (StringUtils.hasText(dto.getUser_file_sname())) user.setUserFileSname(dto.getUser_file_sname());
+            user.setUserPwChanged(false);
             userRepository.save(user);
 
         } catch (Exception exception) {
