@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import './CommunityDetailStyle.css';
 import { useLocation } from "react-router";
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useParams,useNavigate } from 'react-router-dom';
 import  axios  from "axios";
 import { url } from "../url";
@@ -9,6 +9,8 @@ import Comment from "../Component/Comment/Comment";
 import ButtonContain from "../Component/ButtonContain";
 import ButtonOutlined from "../Component/ButtonOutlined";
 import { Viewer } from "@toast-ui/react-editor";
+import { editErrorType, openError } from "../persistStore";
+import ErrorConfirm from "../Hook/ErrorConfirm";
 
 const CommunityDetail = () => {
     const [communityData, setCommunityData] = useState({});
@@ -17,6 +19,7 @@ const CommunityDetail = () => {
     const location = useLocation();
     const navigator = useNavigate();
     const accessToken = useSelector(state => state.accessToken);
+    const dispatch = useDispatch();
 
     {/* 데이터 불러오기 */}
     useEffect(()=>{
@@ -26,6 +29,8 @@ const CommunityDetail = () => {
         })
         .catch(err=>{
             console.log(err);
+            dispatch(editErrorType(err.response.data.code));
+            dispatch(openError());
         })
     },[])
 
@@ -36,7 +41,10 @@ const CommunityDetail = () => {
 
     {/* 커뮤니티 삭제 */}
     const handleDelete = () =>{
-        console.log(accessToken)
+        if(accessToken === ''){
+            dispatch(editErrorType('NT'));
+            dispatch(openError());
+        }
         {/* alert 창 띄우기 */}
         axios.delete(`${url}/api/communities/${community_no}`,
         {
@@ -46,17 +54,22 @@ const CommunityDetail = () => {
         })
         .then(res=>{
             console.log(res);
-            {/* 삭제 alert 창 띄우기 */}
+            dispatch(editErrorType('DELETE'));
+            dispatch(openError());
             navigator('/communityList');
         })
         .catch(err=>{
             console.log(err);
+            dispatch(editErrorType(err.response.data.code));
+            dispatch(openError());
         })
     }
 
     return (
         <>
             <div className="communityDetail-Box">
+            <ErrorConfirm error={useSelector(state => state.errorType)} />
+
                 <div className="community-title"> {communityData.community_title} </div>
                 <div className='community-body'>{communityData.community_content && <Viewer initialValue={communityData.community_content} />}</div>
                 {/* 수정/삭제 버튼 - 작성자인 경우에만 true로 버튼 표시 */}

@@ -13,7 +13,9 @@ import Paper from '@mui/material/Paper';
 import { useLocation, useNavigate } from 'react-router-dom';
 import axios from "axios";
 import { url } from "../url";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { editErrorType, openError } from "../persistStore";
+import ErrorConfirm from "../Hook/ErrorConfirm";
 
 const SearchList = () => {
     const navigator = useNavigate();
@@ -21,6 +23,7 @@ const SearchList = () => {
     const params = new URLSearchParams(location.search);
     const keyword = params.get('keyword');
     const accessToken = useSelector(state => state.accessToken);
+    const dispatch = useDispatch();
 
     const [searchRecipeList, setSearchRecipeList] = useState([]);
     const [searchClassList, setSearchClassList] = useState([]);
@@ -49,6 +52,8 @@ const SearchList = () => {
                 })
                 .catch(err => {
                     console.log(err);
+                    dispatch(editErrorType(err.response.data.code));
+                    dispatch(openError());
                 })
         }else{
             axios.get(`${url}/api/user/search?keyword=${keyword}&size=4`,{
@@ -63,6 +68,8 @@ const SearchList = () => {
                 })
                 .catch(err => {
                     console.log(err);
+                    dispatch(editErrorType(err.response.data.code));
+                    dispatch(openError());
                 })
         }
 
@@ -102,10 +109,9 @@ const SearchList = () => {
     {/* 즐겨찾기 클릭 */}
     const clickRecipeBookmark = (e, index, recipe_no) =>{
         if (accessToken === "") {
-          {
-            /* 로그인이 되어있지 않은 경우 - 로그인 후 이용 가능 alrt - 변수명 수정 후 확인 필요*/
-          }
           console.log("로그인 후 이용 가능");
+          dispatch(editErrorType('NT'));
+                dispatch(openError());
         } else {
           axios
             .post(`${url}/api/recipes/like/${recipe_no}`, null, {
@@ -121,12 +127,17 @@ const SearchList = () => {
                 return newListData;
               })
             })
+            .catch(err=>{
+                dispatch(editErrorType(err.response.data.code));
+                dispatch(openError());
+            })
         }
     }
 
     const clickClassBookmark = (e, index, lesson_no, lesson_like_status) =>{
         if (accessToken === '') {
-            console.log('로그인 후 이용해 주세요.');
+            dispatch(editErrorType('NT'));
+            dispatch(openError());
         } else {
             if (lesson_like_status) {
                 console.log('북마크 해제')
@@ -145,7 +156,9 @@ const SearchList = () => {
                     })
                     .catch(err => {
                         console.log(err);
-                        console.log('북마크 해제 실패')
+                        console.log('북마크 해제 실패');
+                        dispatch(editErrorType(err.response.data.code));
+                        dispatch(openError());
                     })
             } else {
                 console.log('북마크 등록')
@@ -167,6 +180,8 @@ const SearchList = () => {
                     .catch(err => {
                         console.log(err);
                         console.log('북마크 등록 실패');
+                        dispatch(editErrorType(err.response.data.code));
+                        dispatch(openError());
                     })
             }
         }
@@ -175,6 +190,8 @@ const SearchList = () => {
 
     return (
         <div className="searchList-Box">
+            <ErrorConfirm error={useSelector(state=>state.errorType)}/>
+
             <div className="searchRecipe">
                 <div className="searchList-title">
                     레시피 <a className="title-right" style={{ cursor: 'pointer' }} onClick={handleMoreRecipe}> 더보기 &gt; </a>

@@ -3,15 +3,17 @@ import './CommentStyle.css';
 import SubdirectoryArrowRightIcon from '@mui/icons-material/SubdirectoryArrowRight';
 import ButtonContain from "../ButtonContain";
 import ButtonOutlined from "../ButtonOutlined";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { url } from "../../url";
+import { editErrorType, openError } from "../../persistStore";
 
 const CommentChild = ({ data, isLast, change, setChange }) => {
     const accessToken = useSelector(state => state.accessToken);
     const [commentModify, setCommentModify] = useState(true);
     const [childData, setChildData] = useState(data);
     const writer = useSelector((state) => state.nickname);
+    const dispatch = useDispatch();
 
     {/* 수정 버튼 클릭 시 */ }
     const changeComment = () => {
@@ -43,9 +45,18 @@ const CommentChild = ({ data, isLast, change, setChange }) => {
             console.log(res);
             commentContent.disabled = true;
             setCommentModify(true);
+            dispatch(editErrorType('MODIFY'));
+            dispatch(openError());
         })
         .catch(err=>{
             console.log(err);
+            if(err.response.data.code === 'NCM'){
+                dispatch(editErrorType('COMMENT_ERROR'));
+                dispatch(openError());
+            }else{
+                dispatch(editErrorType(err.response.data.code));
+                dispatch(openError());
+            }  
         })
     }
 
@@ -59,9 +70,17 @@ const CommentChild = ({ data, isLast, change, setChange }) => {
         .then(res=>{
             console.log(res);
             setChange(!change);
+            dispatch(editErrorType('DELETE'));
+                dispatch(openError());
         })
         .catch(err=>{
-            console.log(err);
+            if(err.response.data.code === 'NCM'){
+                dispatch(editErrorType('COMMENT_ERROR'));
+                dispatch(openError());
+            }else{
+                dispatch(editErrorType(err.response.data.code));
+                dispatch(openError());
+            }  
         })
     }
 

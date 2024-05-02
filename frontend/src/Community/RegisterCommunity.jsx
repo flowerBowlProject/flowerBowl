@@ -1,18 +1,34 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import './RegisterCommunityStyle.css';
 import ToastEditor from "../Component/ToastEditor";
 import { url } from "../url";
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import axios from "axios";
 import ButtonContain from "../Component/ButtonContain";
 import ButtonOutlined from "../Component/ButtonOutlined";
 import { useNavigate } from "react-router-dom";
+import { editErrorType, openError } from "../persistStore";
+import ErrorConfirm from "../Hook/ErrorConfirm";
 
 const RegisterCommunity = () => {
     const accessToken = useSelector(state => state.accessToken);
     const navigator = useNavigate();
+    const dispatch = useDispatch();
 
     const [registerData, setRegisterData] = useState({ community_title: '', community_content: '' });
+
+    useEffect(()=>{
+        axios.get(`${url}/api/users/info`,{
+            headers:{
+                Authorization : `Bearer ${accessToken}`
+            }
+        })
+        .catch(err=>{
+            dispatch(editErrorType(err.response.data.code));
+            dispatch(openError());
+            navigator('/communityList');
+        })
+    })
 
     {/* 토스트 에디터 값 받아와 저장 */ }
     const getToastEditor = content => {
@@ -28,47 +44,29 @@ const RegisterCommunity = () => {
 
     {/* 커뮤니티 등록 */ }
     const handleRegister = () => {
-        console.log(registerData);
 
-        const isFormDataChanged = () => {
-            // 모든 필드가 변경되었는지 여부를 저장할 변수
-            let isChanged = false;
-          
-            // 모든 필드를 순회하면서 변경 여부 확인
-            Object.values(registerData).forEach((value) => {
-              // 빈 값이거나 초기값이 아닌 경우 변경된 것으로 간주
-              if (value !== '' && value !== 0  ) {
-                isChanged = true;
-              }
-            });
-          
-            return isChanged;
-        };
-
-        if(isFormDataChanged()){
+        if(registerData.community_title.trim() === ''){
+            dispatch(editErrorType('TITLE'));
+            dispatch(openError());
+        }else if(registerData.community_content === ''){
+            dispatch(editErrorType('CONTENT'));
+            dispatch(openError());
+        }else{
             axios.post(`${url}/api/communities`, registerData, {
             headers: {
                 Authorization: `Bearer ${accessToken}`
             }
-        })
+            })
             .then(res => {
                 console.log(res);
                 navigator('/communityList');
             })
             .catch(err => {
                 console.log(err);
+                dispatch(editErrorType(err.response.data.code));
+                dispatch(openError());
             })
-        }else{
-            {/* 등록 내용 작성 여부 확인 후 alert */}
-            if(registerData.community_title.trim() === ''){
-                console.log('제목을 작성해 주세요.')
-            }else if(registerData.community_content === ''){
-                console.log('내용을 작성해 주세요')
-            }else{
-                console.log('관리자에게 문의해 주세요')
-            }
         }
-        
     }
 
     {/* 취소 버튼 클릭 */ }
@@ -79,6 +77,8 @@ const RegisterCommunity = () => {
 
     return (
         <div className="community-Box">
+            <ErrorConfirm error={useSelector(state => state.errorType)} />
+
             <input className="communityregister-title" type='text' placeholder="제목을 작성해 주세요." name="community_title" onChange={(e)=>setValue(e)}/>
 
             <div className="communityText-Box">
