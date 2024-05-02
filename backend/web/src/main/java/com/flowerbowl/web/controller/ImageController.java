@@ -37,4 +37,9 @@ public class ImageController {
         return imageService.uploadImage(multipartFile, "temp/banner");
     }
 
+    @PostMapping("/chef")
+    public ResponseEntity<? extends ImageResponseDto> uploadChefImage(@RequestPart("file") MultipartFile multipartFile) throws Exception {
+        return imageService.uploadImage(multipartFile, "temp/chef");
+    }
+
 }
