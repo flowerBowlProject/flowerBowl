@@ -250,7 +250,7 @@ public class RecipeServiceImpl implements RecipeService {
                         }
                     }
 
-                    if (CollectionUtils.isEmpty(fileOname) && CollectionUtils.isEmpty(fileSname)) { // for문을 돌고도 fileOname과 fileSname이 빈 리스트라면 모두 사용되지 않기 때문에 data를 DB에서 삭제
+                    if (CollectionUtils.isEmpty(fileOname) || CollectionUtils.isEmpty(fileSname)) { // for문을 돌고도 fileOname과 fileSname이 빈 리스트라면 모두 사용되지 않기 때문에 data를 DB에서 삭제
                         recipeFileRepository.delete(recipeFile);
                     }
                 } else { // 기존 recipe_file data가 있지만 request의 recipe_file_oname 또는 recipe_file_sname이 null이라면 잘못된 요청이다.
