@@ -123,7 +123,7 @@ class FailedAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
         String exception = (String) request.getAttribute("exception");
         log.info("requestURL={}", request.getRequestURL());
-        log.info("exception Values={}", exception);
+//        log.info("exception Values={}", exception);
 
         if (exception != null && exception.equals("IT")) {
             JwtUtil.setResponse(response, JwtError.INVALID_TOKEN);
