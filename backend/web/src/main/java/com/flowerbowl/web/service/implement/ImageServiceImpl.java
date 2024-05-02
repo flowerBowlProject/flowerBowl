@@ -3,6 +3,7 @@ package com.flowerbowl.web.service.implement;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.AmazonS3Exception;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
+import com.amazonaws.services.s3.model.CopyObjectRequest;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.flowerbowl.web.common.ResponseCode;
 import com.flowerbowl.web.common.ResponseMessage;
@@ -122,6 +123,18 @@ public class ImageServiceImpl implements ImageService {
             return Optional.of(file);
         }
         return Optional.empty();
+    }
+
+    @Override
+    public void copyS3(String oldFileName, String newFileName) {
+        CopyObjectRequest copyObjectRequest = new CopyObjectRequest(bucket, oldFileName, bucket, newFileName);
+        copyObjectRequest.setCannedAccessControlList(CannedAccessControlList.PublicRead);
+        amazonS3.copyObject(copyObjectRequest);
+    }
+
+    @Override
+    public void deleteS3(String fileName) {
+        amazonS3.deleteObject(bucket, fileName);
     }
 
     private void logPrint(Exception e) {

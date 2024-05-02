@@ -12,6 +12,7 @@ import com.flowerbowl.web.handler.DoesNotMatchException;
 import com.flowerbowl.web.handler.RecipeNotFoundException;
 import com.flowerbowl.web.handler.UserNotFoundException;
 import com.flowerbowl.web.repository.*;
+import com.flowerbowl.web.service.ImageService;
 import com.flowerbowl.web.service.RecipeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,6 +27,7 @@ import org.springframework.util.CollectionUtils;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -40,6 +42,7 @@ public class RecipeServiceImpl implements RecipeService {
     private final RecipeLikeRepository recipeLikeRepository;
     private final CommentRepository commentRepository;
     private final UserRepository userRepository;
+    private final ImageService imageService;
 
     @Override
     public ResponseEntity<? extends RecipeResponseDto> createRecipe(CrRecipeReqDto request, String userId) throws Exception {
@@ -49,14 +52,73 @@ public class RecipeServiceImpl implements RecipeService {
                 throw new UserNotFoundException();
             }
 
+            String requestRecipeOname = request.getRecipe_oname();
+            if (requestRecipeOname.trim().isEmpty()) {
+                requestRecipeOname = null;
+            }
+            String requestRecipeSname = request.getRecipe_sname();
+            if (requestRecipeSname.trim().isEmpty()) {
+                requestRecipeSname = null;
+            }
+
+            if (requestRecipeOname != null && requestRecipeSname != null) {
+                // requestRecipeOname => temp/thumbnail/파일명
+                // newRecipeOname => recipeThumbnail/파일명
+                String newRecipeOname = "recipeThumbnail/" + requestRecipeOname.split("/")[2];
+
+                // temp/thumbnail에 있는 파일을 recipeThumbnail로 복사
+                imageService.copyS3(requestRecipeOname, newRecipeOname);
+
+                // DB에 저장할 requestRecipeOname과 requestRecipeSname을 새로운 이미지에 대한 정보로 변경
+                requestRecipeOname = newRecipeOname;
+                requestRecipeSname = "https://flowerbowl.s3.ap-northeast-2.amazonaws.com/" + newRecipeOname;
+            }
+
+            List<String> fileOname = null;
+            List<String> fileSname = null;
+            String content = request.getRecipe_content();
+
+            // request의 recipe_file_oname과 recipe_file_sname이 null이 아닐 때 해당 값으로 recipe file 생성 후 DB에 저장
+            if (!CollectionUtils.isEmpty(request.getRecipe_file_oname()) && !CollectionUtils.isEmpty(request.getRecipe_file_sname())) {
+                fileOname = new ArrayList<>();
+                fileSname = new ArrayList<>();
+
+                for (String source : request.getRecipe_file_sname()) {
+                    // request의 file_sname 리스트를 순회하며 업로드된 이미지가 실제로 사용됐는지 확인한다.
+                    if (content.contains(source)) {
+                        // file_sname에서 파일명을 가져오기 위해 "/"로 나누고 마지막 인덱스를 가져온다.
+                        int lastIdx = source.split("/").length - 1;
+                        String fileName = source.split("/")[lastIdx];
+
+                        // oldFileOname => temp/content/파일명
+                        // newFileOname => recipe/파일명
+                        String oldFileOname = "temp/content/" + fileName;
+                        String newFileOname = "recipe/" + fileName;
+
+                        // temp/content/에 있는 파일을 recipe/로 복사
+                        imageService.copyS3(oldFileOname, newFileOname);
+
+                        // 복사된 새 파일명을 가지고 새 url을 생성
+                        String newFileSname = "https://flowerbowl.s3.ap-northeast-2.amazonaws.com/" + newFileOname;
+
+                        // content에 포함된 기존 url을 새로운 url로 대체
+                        content = content.replace(source, newFileSname);
+
+                        // DB에 저장할 리스트에 새로운 file_oname, file_sname을 push
+                        fileOname.add(newFileOname);
+                        fileSname.add(newFileSname);
+                    }
+                }
+            }
+
             // request의 값으로 recipe 생성
             CreateRecipeDto createRecipeDto = new CreateRecipeDto(
                     request.getRecipe_title(),
                     LocalDate.now(ZoneId.of("Asia/Seoul")),
                     request.getRecipe_stuff(),
-                    request.getRecipe_oname(),
-                    request.getRecipe_sname(),
-                    request.getRecipe_content(),
+                    requestRecipeOname,
+                    requestRecipeSname,
+                    content,
                     request.getRecipe_category(),
                     user.getUserNickname(),
                     0L,
@@ -64,15 +126,14 @@ public class RecipeServiceImpl implements RecipeService {
             );
 
             // 생성된 recipe를 db에 저장후 객체 반환
-            Recipe recipe = recipeRepository.save(createRecipeDto.toEntity());
+            Recipe result = recipeRepository.save(createRecipeDto.toEntity());
 
-            // request의 recipe_file_oname과 recipe_file_sname이 null이 아닐 때 해당 값으로 recipe file 생성 후 DB에 저장
-            if (!CollectionUtils.isEmpty(request.getRecipe_file_oname()) && !CollectionUtils.isEmpty(request.getRecipe_file_sname())) {
-                CreateRecipeFileDto createRecipeFileDto = new CreateRecipeFileDto(request.getRecipe_file_oname(), request.getRecipe_file_sname(), recipe);
+            if (fileOname != null) {
+                CreateRecipeFileDto createRecipeFileDto = new CreateRecipeFileDto(fileOname, fileSname, result);
                 recipeFileRepository.save(createRecipeFileDto.toEntity());
             }
 
-            CrRecipeSuResDto responseBody = new CrRecipeSuResDto(ResponseCode.CREATED, ResponseMessage.CREATED, recipe.getRecipeNo());
+            CrRecipeSuResDto responseBody = new CrRecipeSuResDto(ResponseCode.CREATED, ResponseMessage.CREATED, result.getRecipeNo());
             return ResponseEntity.status(HttpStatus.CREATED).body(responseBody);
         } catch (UserNotFoundException e) {
             logPrint(e);
@@ -104,32 +165,144 @@ public class RecipeServiceImpl implements RecipeService {
                 throw new DoesNotMatchException();
             }
 
-            // request의 값이 비어있는지 체크가 필요할까...?고민 중
-            // 찾은 레시피의 데이터를 수정
-            recipe.updateTitle(request.getRecipe_title());
-            recipe.updateCategory(request.getRecipe_category());
-            recipe.updateStuff(request.getRecipe_stuff());
-            recipe.updateContent(request.getRecipe_content());
-            recipe.updateOname(request.getRecipe_oname());
-            recipe.updateSname(request.getRecipe_sname());
+            String requestRecipeOname = request.getRecipe_oname();
+            if (requestRecipeOname.trim().isEmpty()) {
+                requestRecipeOname = null;
+            }
+            String requestRecipeSname = request.getRecipe_sname();
+            if (requestRecipeSname.trim().isEmpty()) {
+                requestRecipeSname = null;
+            }
 
-            // 수정된 레시피 데이터 DB에 저장
-            Recipe result = recipeRepository.save(recipe);
+            String recipeOname = recipe.getRecipeOname();
+            String recipeSname = recipe.getRecipeSname();
+
+            if (requestRecipeOname == null || requestRecipeSname == null) { // request의 값이 null인 경우
+                if (recipeOname != null && recipeSname != null) {
+                    // S3에 있는 기존 이미지 삭제
+                    imageService.deleteS3(recipeOname);
+                }
+            } else { // request의 값이 null이 아닌 경우
+                // 새로운 썸네일 이미지인 경우
+                if (!Objects.equals(recipeOname, requestRecipeOname)) {
+                    if (recipeOname != null && recipeSname != null) {
+                        // S3에 있는 기존 이미지 삭제
+                        imageService.deleteS3(recipeOname);
+                    }
+
+                    // requestRecipeOname => temp/thumbnail/파일명
+                    // newRecipeOname => recipeThumbnail/파일명
+                    String newRecipeOname = "recipeThumbnail/" + requestRecipeOname.split("/")[2];
+
+                    // temp/thumbnail에 있는 파일을 recipeThumbnail로 복사
+                    imageService.copyS3(requestRecipeOname, newRecipeOname);
+
+                    // DB에 저장할 requestRecipeOname과 requestRecipeSname을 새로운 이미지에 대한 정보로 변경
+                    requestRecipeOname = newRecipeOname;
+                    requestRecipeSname = "https://flowerbowl.s3.ap-northeast-2.amazonaws.com/" + newRecipeOname;
+                }
+            }
+
+            List<String> fileOname = null;
+            List<String> fileSname = null;
+            String content = request.getRecipe_content();
 
             if (recipeFile != null) {
                 // 기존 recipe_file data가 있고 request의 recipe_file_oname과 recipe_file_sname이 null이 아니라면 해당 값으로 recipe file 수정 후 DB에 저장
                 if (!CollectionUtils.isEmpty(request.getRecipe_file_oname()) && !CollectionUtils.isEmpty(request.getRecipe_file_sname())) {
-                    recipeFile.updateFileOname(request.getRecipe_file_oname());
-                    recipeFile.updateFileSname(request.getRecipe_file_sname());
+                    fileOname = new ArrayList<>();
+                    fileSname = new ArrayList<>();
 
-                    recipeFileRepository.save(recipeFile);
-                } else { // 기존 recipe_file data가 있지만 request의 recipe_file_oname 또는 recipe_file_sname이 null이라면 기존 file data 삭제
-                    recipeFileRepository.delete(recipeFile);
+                    List<String> recipeFileSnameList = recipeFile.getRecipeFileSname();
+
+                    for (String source : request.getRecipe_file_sname()) {
+                        int lastIdx = source.split("/").length - 1;
+                        String fileName = source.split("/")[lastIdx];
+
+                        if (recipeFileSnameList.contains(source)) { // 해당 이미지 정보가 기존 file 리스트에 있는 경우. 즉 기존에 있던 이미지인 경우
+                            String recipeFileOname = "recipe/" + fileName;
+
+                            if (content.contains(source)) { // content에 있는 경우. 즉 여전히 사용하는 이미지인 경우
+                                fileOname.add(recipeFileOname);
+                                fileSname.add(source);
+                            } else { // content에 없는 경우. 즉 내용에서 삭제된 사용하지 않는 이미지인 경우. S3에서 해당 이미지를 삭제한다.
+                                imageService.deleteS3(recipeFileOname);
+                            }
+                        } else { // 해당 이미지 정보가 기존 file 리스트에 없는 경우. 즉 새로 추가된 이미지를 뜻함
+                            if (content.contains(source)) {
+                                // oldFileOname => temp/content/파일명
+                                // newFileOname => recipe/파일명
+                                String oldFileOname = "temp/content/" + fileName;
+                                String newFileOname = "recipe/" + fileName;
+
+                                // temp/content/에 있는 파일을 recipe/로 복사
+                                imageService.copyS3(oldFileOname, newFileOname);
+
+                                // 복사된 새 파일명을 가지고 새 url을 생성
+                                String newFileSname = "https://flowerbowl.s3.ap-northeast-2.amazonaws.com/" + newFileOname;
+
+                                // content에 포함된 기존 url을 새로운 url로 대체
+                                content = content.replace(source, newFileSname);
+
+                                fileOname.add(newFileOname);
+                                fileSname.add(newFileSname);
+                            }
+                        }
+                    }
+
+                    if (CollectionUtils.isEmpty(fileOname) && CollectionUtils.isEmpty(fileSname)) { // for문을 돌고도 fileOname과 fileSname이 빈 리스트라면 모두 사용되지 않기 때문에 data를 DB에서 삭제
+                        recipeFileRepository.delete(recipeFile);
+                    }
+                } else { // 기존 recipe_file data가 있지만 request의 recipe_file_oname 또는 recipe_file_sname이 null이라면 잘못된 요청이다.
+                    throw new IllegalArgumentException();
                 }
             } else {
                 // 기존 recipe_file data가 없고 request의 recipe_file_oname과 recipe_file_sname이 null이 아니라면 해당 값으로 새로운 recipe_file data 생성
+                // 모두 새로운 이미지라는 것을 의미
                 if (!CollectionUtils.isEmpty(request.getRecipe_file_oname()) && !CollectionUtils.isEmpty(request.getRecipe_file_sname())) {
-                    CreateRecipeFileDto createRecipeFileDto = new CreateRecipeFileDto(request.getRecipe_file_oname(), request.getRecipe_file_sname(), recipe);
+                    fileOname = new ArrayList<>();
+                    fileSname = new ArrayList<>();
+
+                    for (String source : request.getRecipe_file_sname()) {
+                        if (content.contains(source)) {
+                            int lastIdx = source.split("/").length - 1;
+                            String fileName = source.split("/")[lastIdx];
+
+                            String oldFileOname = "temp/content/" + fileName;
+                            String newFileOname = "recipe/" + fileName;
+
+                            imageService.copyS3(oldFileOname, newFileOname);
+
+                            String newFileSname = "https://flowerbowl.s3.ap-northeast-2.amazonaws.com/" + newFileOname;
+
+                            content = content.replace(source, newFileSname);
+
+                            fileOname.add(newFileOname);
+                            fileSname.add(newFileSname);
+                        }
+                    }
+                }
+            }
+
+            // 찾은 레시피의 데이터를 수정
+            recipe.updateTitle(request.getRecipe_title());
+            recipe.updateCategory(request.getRecipe_category());
+            recipe.updateStuff(request.getRecipe_stuff());
+            recipe.updateContent(content);
+            recipe.updateOname(requestRecipeOname);
+            recipe.updateSname(requestRecipeSname);
+
+            // 수정된 레시피 데이터 DB에 저장
+            Recipe result = recipeRepository.save(recipe);
+
+            if (fileOname != null) {
+                if (recipeFile != null) {
+                    recipeFile.updateFileOname(fileOname);
+                    recipeFile.updateFileSname(fileSname);
+
+                    recipeFileRepository.save(recipeFile);
+                } else {
+                    CreateRecipeFileDto createRecipeFileDto = new CreateRecipeFileDto(fileOname, fileSname, result);
                     recipeFileRepository.save(createRecipeFileDto.toEntity());
                 }
             }
@@ -168,9 +341,20 @@ public class RecipeServiceImpl implements RecipeService {
                 throw new UserNotFoundException();
             }
             Recipe recipe = recipeRepository.findByRecipeNo(recipe_no).orElseThrow(RecipeNotFoundException::new);
+            RecipeFile recipeFile = recipeFileRepository.findByRecipe_RecipeNo(recipe_no);
 
             if (!user.getUserNo().equals(recipe.getUser().getUserNo())) {
                 throw new DoesNotMatchException();
+            }
+
+            if (recipe.getRecipeOname() != null && recipe.getRecipeSname() != null) {
+                imageService.deleteS3(recipe.getRecipeOname());
+            }
+
+            if (recipeFile != null) {
+                for (String source : recipeFile.getRecipeFileOname()) {
+                    imageService.deleteS3(source);
+                }
             }
 
             recipeRepository.delete(recipe);
