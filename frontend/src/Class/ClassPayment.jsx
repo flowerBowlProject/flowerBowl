@@ -1,16 +1,22 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { url } from "../url";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import ButtonContain from "../Component/ButtonContain";
+import { editErrorType, openError } from "../persistStore";
 
 const { IMP } = window;
 
 const ClassPayment = ({ lesson_no }) => {
     const [paymentData, setPaymentData] = useState({});
     const accessToken = useSelector(state => state.accessToken);
+    const dispatch = useDispatch();
 
     const buyClass = async () => {
+        if(accessToken==''){
+            dispatch(editErrorType('NT'));
+            dispatch(openError());
+        }
         try {
             const response = await axios.post(`${url}/api/user/lessons/payments`, {
                 "lesson_no": lesson_no

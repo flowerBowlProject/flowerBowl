@@ -2,12 +2,14 @@ import React, { useEffect, useState } from "react";
 import './RegisterCommunityStyle.css';
 import ToastEditor from "../Component/ToastEditor";
 import { url } from "../url";
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useLocation } from "react-router";
 import  axios  from "axios";
 import ButtonContain from "../Component/ButtonContain";
 import { useParams,useNavigate } from 'react-router-dom';
 import ButtonOutlined from "../Component/ButtonOutlined";
+import ErrorConfirm from "../Hook/ErrorConfirm";
+import { editErrorType, openError } from "../persistStore";
 
 
 const RegisterCommunity = () =>{
@@ -16,10 +18,28 @@ const RegisterCommunity = () =>{
     const { community_no } = useParams();
     const [registerData, setRegisterData] = useState({});
     const navigator = useNavigate();
+    const dispatch = useDispatch();
 
 
     {/* 초기 커뮤니티 값 가져오기 */}
     useEffect(()=>{
+        if(accessToken == ''){
+            dispatch(editErrorType('NE'));
+            dispatch(openError());
+            navigator(`/communityDetail/${community_no}`);
+        }
+
+        axios.get(`${url}/api/users/info`,{
+            headers:{
+                Authorization : `Bearer ${accessToken}`
+            }
+        })
+        .catch(err=>{
+            dispatch(editErrorType(err.response.data.code));
+            dispatch(openError());
+            navigator(`/communityDetail/${community_no}`)
+        })
+        
         axios.get(`${url}/api/communities/detail/${community_no}`)
         .then(res=>{
             console.log(res);
@@ -27,6 +47,8 @@ const RegisterCommunity = () =>{
         })
         .catch(err=>{
             console.log(err);
+            dispatch(editErrorType(err.response.data.code));
+            dispatch(openError());
         })
     },[])
 
@@ -66,19 +88,26 @@ const RegisterCommunity = () =>{
             }
         })
             .then(res => {
+                dispatch(editErrorType('MODIFY'));
+                dispatch(openError());
                 navigator(`/communityDetail/${community_no}`);
             })
             .catch(err => {
                 console.log(err);
+                dispatch(editErrorType(err.response.data.code));
+                dispatch(openError());
             })
         }else{
-            {/* 등록 내용 작성 여부 확인 후 alert */}
+            {/* 수정 내용 작성 여부 확인 후 alert */}
             if(registerData.community_title.trim() === ''){
-                console.log('제목을 작성해 주세요.');
+                dispatch(editErrorType('TITLE'));
+                dispatch(openError());
             }else if(registerData.community_content === ''){
-                console.log('내용을 작성해 주세요');
+                dispatch(editErrorType('CONTENT'));
+                dispatch(openError());
             }else{
-                console.log('관리자에게 문의해 주세요')
+                dispatch(editErrorType('error'));
+                dispatch(openError());
             }
         }
     }
@@ -91,6 +120,8 @@ const RegisterCommunity = () =>{
 
     return(
         <div className="community-Box">
+            <ErrorConfirm  error={useSelector(state => state.errorType)} />
+
             <input className="communityregister-title" type='text' placeholder="제목을 작성해 주세요." name="community_title" value={registerData.community_title} onChange={(e)=>setValue(e)}/>
             
             <div className="communityText-Box">

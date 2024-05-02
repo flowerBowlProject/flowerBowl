@@ -8,8 +8,9 @@ import ButtonContain from "../ButtonContain";
 import ButtonOutlined from "../ButtonOutlined";
 import axios from "axios";
 import { url } from "../../url";
-import { useSelector } from "react-redux";
-
+import { useSelector, useDispatch } from "react-redux";
+import ErrorConfirm from "../../Hook/ErrorConfirm";
+import { editErrorType, openError } from "../../persistStore";
 
 
 const Comment = ({ typeString, no }) => {
@@ -20,6 +21,7 @@ const Comment = ({ typeString, no }) => {
     const accessToken = useSelector(state => state.accessToken);
     const [curPage, setCurPage] = useState(1);
     const [change, setChange] = useState(false);
+    const dispatch = useDispatch();
 
     const fetchData = (typeString, no, pageInfo, setCommentList, setPageInfo) => {
         axios.get(`${url}/api/comments?type=${typeString}&post_no=${no}&page=${pageInfo.page}&size=${pageInfo.size}`)
@@ -30,12 +32,10 @@ const Comment = ({ typeString, no }) => {
             })
             .catch(err => {
                 console.log(err);
+                dispatch(editErrorType(err.response.data.code));
+                dispatch(openError());
             });
     };
-
-    const changeList = () =>{
-        setChange(!change);
-    }
 
     useEffect(()=>{
         console.log('11111');
@@ -43,13 +43,13 @@ const Comment = ({ typeString, no }) => {
     },[change])
 
     {/* 댓글 등록 */}
-    const handleRegister = () =>{
-        console.log(registerData.comment_content);
-        
+    const handleRegister = () =>{        
         if(accessToken === ''){
-            console.log('로그인 후 사용')
+            dispatch(editErrorType  ('NT'));
+            dispatch(openError());
         }else if(registerData.comment_content.trim() === ''){
-            console.log('댓글을 작성해주세요');
+            dispatch(editErrorType('COMMENT'));
+                dispatch(openError());
         }else{
             axios.post(`${url}/api/comments`,registerData,{
                 headers:{
@@ -60,13 +60,13 @@ const Comment = ({ typeString, no }) => {
                 console.log(res);
                 setRegisterData((registerData)=>({...registerData, comment_content : ''}));
                 setChange(!change);
-                //fetchData(typeString, no, pageInfo, setCommentList, setPageInfo);
+                dispatch(editErrorType('REGISTER'));
+            dispatch(openError());
             })
             .catch(err=>{
                 console.log(err);
-                if(err.response.data.code === 'NE'){
-                    console.log('로그인 후 이용해 주세요')
-                }
+                dispatch(editErrorType(err.response.data.code));
+                dispatch(openError());
             })
         }
     }
@@ -83,12 +83,16 @@ const Comment = ({ typeString, no }) => {
         })
         .catch(err => {
             console.log(err);
+            dispatch(editErrorType(err.response.data.code));
+            dispatch(openError());
         })
     }
 
     return (
         <>
             <div className="comment-Box">
+            <ErrorConfirm error={useSelector(state => state.errorType)} />
+
                 {/* 댓글 작성란 */}
                 <div className="comment-register">
                     <textarea className="comment-write" placeholder="댓글을 작성하세요." value={registerData.comment_content} onChange={(e)=>setRegisterData((registerData)=>({...registerData, comment_content : e.target.value}))}/>

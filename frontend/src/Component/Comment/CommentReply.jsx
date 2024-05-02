@@ -5,12 +5,13 @@ import axios from "axios";
 import { url } from "../../url";
 import ButtonContain from "../ButtonContain";
 import ButtonOutlined from "../ButtonOutlined";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { editErrorType, openError } from "../../persistStore";
 
 const CommentReply = ({ registerReply, typeString, no, parent_no,isLast, setChange, change }) => {
     const writer = useSelector((state) => state.nickname);
     const accessToken = useSelector(state => state.accessToken);
-
+    const dispatch = useDispatch();
     const [registerData, setRegisterData] = useState({ type: typeString, post_no: no, comment_content: "", parent_no: parent_no });
 
     {/* 등록 버튼 클릭 시 */ }
@@ -27,9 +28,17 @@ const CommentReply = ({ registerReply, typeString, no, parent_no,isLast, setChan
                     console.log(res);
                     registerReply();
                     setChange(!change);
+                    dispatch(editErrorType('COMMENT'));
+                    dispatch(openError());
                 })
                 .catch(err => {
-                    console.log(err);
+                    if(err.response.data.code === 'NCM'){
+                        dispatch(editErrorType('COMMENT_ERROR'));
+                        dispatch(openError());
+                    }else{
+                        dispatch(editErrorType(err.response.data.code));
+                        dispatch(openError());
+                    }  
                 })
         }
     }

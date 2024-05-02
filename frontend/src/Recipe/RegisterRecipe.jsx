@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import './RegisterRecipeStyle.css';
 import Category from "../Component/Category";
 import ToastEditor from "../Component/ToastEditor";
@@ -7,18 +7,33 @@ import ButtonOutlined from "../Component/ButtonOutlined";
 import ButtonContain from "../Component/ButtonContain";
 import { url } from "../url";
 import axios from "axios";
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from "react-router-dom";
+import { editErrorType, openError } from "../persistStore";
 
 const RegisterRecipe = () => {
     const accessToken = useSelector(state => state.accessToken);
     const navigator = useNavigate();
+    const dispatch = useDispatch();
 
     {/* 등록 레시피 데이터 + 썸네일 + 썸네일 선택 여부 */ }
     const [registerData, setRegisterData] = useState({ recipe_title: '', recipe_category: '', recipe_stuff: [], recipe_content: '', recipe_sname:'짜장면', recipe_oname:'짜장면',
         recipe_file_oname:['짜장면'], recipe_file_sname:['짜장면'] });
     const [thumbnail, setThumbnail] = useState(null);
     const [selectedFile, setSelectedFile] = useState(null);
+
+    useEffect(()=>{
+        axios.get(`${url}/api/users/info`,{
+            headers:{
+                Authorization : `Bearer ${accessToken}`
+            }
+        })
+        .catch(err=>{
+            dispatch(editErrorType(err.response.data.code));
+            dispatch(openError());
+            navigator('/recipeList')
+        })
+    },[])
 
     const chooseThumbnail = (e) => {
         const file = e.target.files[0];
@@ -60,17 +75,22 @@ const RegisterRecipe = () => {
     const handleRegister = () =>{
         console.log(registerData);
         {/* 등록 내용 작성 여부 확인 후 alert */}
-        if(registerData.recipe_title === ''){
-            console.log('제목을 작성해 주세요.')
-        }else if(registerData.recipe_category === ''){
-            console.log('카테고리를 선택해 주세요')
-        }else if(registerData.recipe_sname === '' || registerData.recipe_oname === ''){
-            console.log('사진을 첨부해 주세요')
-        }else if(registerData.recipe_content && registerData.recipe_content === ''){
-            console.log('내용을 작성해 주세요')
-        }else if(registerData.recipe_stuff.length === 0){
-            console.log('재료를 등록해 주세요')
-        }else{
+        if (registerData.recipe_title === '') {
+            dispatch(editErrorType('TITLE'));
+            dispatch(openError());
+        } else if (registerData.recipe_category === '') {
+            dispatch(editErrorType('CATEGORY'));
+            dispatch(openError());
+        } else if (registerData.recipe_sname === '' || registerData.recipe_oname === '') {
+            dispatch(editErrorType('THUMBNAIL'));
+            dispatch(openError());
+        } else if (registerData.recipe_content && registerData.recipe_content === '') {
+            dispatch(editErrorType('CONTENT'));
+            dispatch(openError());
+        } else if (registerData.recipe_stuff.length === 0) {
+            dispatch(editErrorType('STUFF'));
+            dispatch(openError());
+        } else {
             console.log("등록 가능");
             axios.post(`${url}/api/recipes`, registerData,{
                 headers:{
@@ -79,10 +99,14 @@ const RegisterRecipe = () => {
             })
             .then(res=>{
                 console.log(res);
+                dispatch(editErrorType('REGISTER'));
+                dispatch(openError());
                 navigator('/recipeList');
             })
             .catch(err=>{
                 console.log(err);
+                dispatch(editErrorType(err.response.data.code));
+                dispatch(openError());
             })
         }
             

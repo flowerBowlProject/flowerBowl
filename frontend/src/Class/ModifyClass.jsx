@@ -12,15 +12,18 @@ import AddressSearch from "./AddressSearch";
 import axios from "axios";
 import { url } from "../url";
 import { useNavigate, useParams } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import ButtonContain from "../Component/ButtonContain";
 import ButtonOutlined from "../Component/ButtonOutlined";
 import dayjs from 'dayjs';
+import { editErrorType, openError } from "../persistStore";
+import ErrorConfirm from "../Hook/ErrorConfirm";
 
 const RegisterClass = () => {
     const accessToken = useSelector(state => state.accessToken);
     const { lesson_no } = useParams();
     const navigator = useNavigate();
+    const dispatch = useDispatch();
 
     {/* 등록 클래스 데이터 + 썸네일 + 썸네일 선택 여부 */ }
     const [registerData, setRegisterData] = useState([]);
@@ -29,11 +32,11 @@ const RegisterClass = () => {
 
     useEffect(() => {
         {/* 수정할 정보 가져와 세팅 */ }
-            axios.get(`${url}/api/user/lessons/${lesson_no}`,{
-                headers:{
-                    Authorization : `Bearer ${accessToken}`
-                }
-            })
+        axios.get(`${url}/api/user/lessons/${lesson_no}`, {
+            headers: {
+                Authorization: `Bearer ${accessToken}`
+            }
+        })
             .then(res => {
                 console.log(res);
                 setRegisterData(res.data.lesson);
@@ -41,6 +44,9 @@ const RegisterClass = () => {
             })
             .catch(err => {
                 console.log(err);
+                dispatch(editErrorType(err.response.data.code));
+                dispatch(openError());
+                navigator(`/classDetail/${lesson_no}`)
             })
     }, [lesson_no])
 
@@ -85,24 +91,32 @@ const RegisterClass = () => {
 
     {/* 클래스 수정 */ }
     const handleRegister = () => {
-        {/* 수정 내용 작성 여부 확인 후 alert */}
-        if(registerData.lesson_title === ''){
-            console.log('제목을 작성해 주세요.')
-        }else if(registerData.lesson_category === ''){
-            console.log('카테고리를 선택해 주세요')
-        }else if(registerData.lesson_sname === '' || registerData.lesson_oname === ''){
-            console.log('사진을 첨부해 주세요')
-        }else if(registerData.lesson_address === null || registerData.lesson_latitude === 0.0 || registerData.lesson_longitude ===0.0){
-            console.log('주소를 입력 후 주소 등록 버튼을 눌러주세요')
-        }else if(registerData.lesson_content && registerData.lesson_content === ''){
-            console.log('내용을 작성해 주세요')
-        }else if(registerData.lesson_start === ''){
-            console.log('시작일을 선택해 주세요')
-        }else if(registerData.lesson_end === ''){
-            console.log('종료일을 선택해 주세요')
-        }else if(registerData.lesson_URL.trim() === ''){
-            console.log('문의 채팅 링크를 입력해 주세요')
-        }else{
+        {/* 수정 내용 작성 여부 확인 후 alert */ }
+        if (registerData.lesson_title === '') {
+            dispatch(editErrorType('TITLE'));
+            dispatch(openError());
+        } else if (registerData.lesson_category === '') {
+            dispatch(editErrorType('CATEGORY'));
+            dispatch(openError());
+        } else if (registerData.lesson_sname === '' || registerData.lesson_oname === '') {
+            dispatch(editErrorType('THUMBNAIL'));
+            dispatch(openError());
+        } else if (registerData.lesson_address === null || registerData.lesson_latitude === 0.0 || registerData.lesson_longitude === 0.0) {
+            dispatch(editErrorType('ADDRESS'));
+            dispatch(openError());
+        } else if (registerData.lesson_content && registerData.lesson_content === '') {
+            dispatch(editErrorType('CONTENT'));
+            dispatch(openError());
+        } else if (registerData.lesson_start === '') {
+            dispatch(editErrorType('STARTDATE'));
+            dispatch(openError());
+        } else if (registerData.lesson_end === '') {
+            dispatch(editErrorType('ENDDATE'));
+            dispatch(openError());
+        } else if (registerData.lesson_URL.trim() === '') {
+            dispatch(editErrorType('LINK'));
+            dispatch(openError());
+        } else {
             console.log("수정 가능");
             axios.put(`${url}/api/lessons/${lesson_no}`, registerData, {
                 headers: {
@@ -111,10 +125,14 @@ const RegisterClass = () => {
             })
                 .then(res => {
                     console.log('수정완료');
+                    dispatch(editErrorType('MODIFY'));
+                    dispatch(openError());
                     navigator(`/classDetail/${lesson_no}`);
                 })
                 .catch(err => {
                     console.log(err);
+                    dispatch(editErrorType(err.response.data.code));
+                    dispatch(openError());
                 })
         }
     }
@@ -127,6 +145,7 @@ const RegisterClass = () => {
 
     return (
         <div className="registerClass-Box">
+            <ErrorConfirm error={useSelector(state => state.errorType)} />
 
             {/* 썸네일 선택 - 다시 클릭 시 재선택 */}
             <div style={{ display: 'flex', alignItems: 'flex-end' }}>
@@ -182,8 +201,8 @@ const RegisterClass = () => {
 
             <div style={{ border: "1px solid #CBA285", marginBottom: "2%" }} />
             <div className="register_button">
-                <ButtonOutlined size='large' text='수정' handleClick={handleRegister}/> &nbsp;
-                <ButtonContain size='large' text='취소' handleClick={handleCancel}/>
+                <ButtonOutlined size='large' text='수정' handleClick={handleRegister} /> &nbsp;
+                <ButtonContain size='large' text='취소' handleClick={handleCancel} />
             </div>
         </div>
     );
