@@ -6,11 +6,11 @@ import { useParams, useNavigate } from 'react-router-dom';
 import axios from "axios";
 import { url } from "../url";
 import Comment from "../Component/Comment/Comment";
-import ButtonContain from "../Component/ButtonContain";
 import ButtonOutlined from "../Component/ButtonOutlined";
 import { Viewer } from "@toast-ui/react-editor";
 import { editErrorType, openError } from "../persistStore";
 import ErrorConfirm from "../Hook/ErrorConfirm";
+import DeleteModal from "../Hook/DeleteModal";
 
 const CommunityDetail = () => {
     const [communityData, setCommunityData] = useState({});
@@ -39,47 +39,6 @@ const CommunityDetail = () => {
         navigator('/modifyCommunity/' + community_no);
     }
 
-    const [result, setResult] = useState(false);
-    const [delModal, setDelModal] = useState(false);
-
-    {/* 커뮤니티 삭제 */ }
-    const handleDelete = (e) => {
-        console.log('삭제1')
-        e.preventDefault();
-        console.log('삭제2')
-
-        if (accessToken === '') {
-            dispatch(editErrorType('NT'));
-            dispatch(openError());
-        }else{
-            {/* alert 창 띄우기 */ }
-            
-        }
-    }
-
-    
-    useEffect(()=>{
-        if(result){
-            axios.delete(`${url}/api/communities/${community_no}`,
-            {
-                headers: {
-                    Authorization: `Bearer ${accessToken}`
-                }
-            })
-            .then(res => {
-                console.log(res);
-                dispatch(editErrorType('DELETE'));
-                dispatch(openError());
-                navigator('/communityList');
-            })
-            .catch(err => {
-                console.log(err);
-                dispatch(editErrorType(err.response.data.code));
-                dispatch(openError());
-            })
-        }
-    }, result)
-
     return (
         <>
             <div className="communityDetail-Box">
@@ -90,7 +49,7 @@ const CommunityDetail = () => {
                 {/* 수정/삭제 버튼 - 작성자인 경우에만 true로 버튼 표시 */}
                 <div className="community-change">
                     {writer === communityData.community_writer && <ButtonOutlined size='large' text='수정' handleClick={handleModify} />} &nbsp;
-                    {writer === communityData.community_writer && <ButtonContain size='large' text='삭제' handleClick={(e)=>handleDelete(e)} />}
+                    {writer === communityData.community_writer && <DeleteModal checkType={'community'} no={community_no}/>}
                 </div>
             </div>
             <div>
