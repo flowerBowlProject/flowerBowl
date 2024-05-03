@@ -25,6 +25,15 @@ public interface RecipeRepository extends JpaRepository<Recipe, Long> {
             "WHERE user_role = \"ROLE_ADMIN\" " +
             "ORDER BY recipe_no DESC " +
             "LIMIT 5;", nativeQuery = true)
-    List<Recipe> findREcipesByRoleAdmin();
+    List<Recipe> findRecipesByRoleAdmin();
+
+    @Query(value = "SELECT r.*, " +
+            "(SELECT COUNT(*) " +
+            "FROM recipe_like l " +
+            "WHERE l.recipe_no = r.recipe_no) AS bookmark_cnt " +
+            "FROM recipe r " +
+            "ORDER BY bookmark_cnt DESC, recipe_no DESC " +
+            "LIMIT 5;", nativeQuery = true)
+    List<Recipe> findRecipesByPopularity();
 
 }
