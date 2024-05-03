@@ -7,8 +7,10 @@ import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { url } from "../url";
 import ButtonOutlinedStyle from "../Component/ButtonOutlinedStyle";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import ButtonContainStyle from "../Component/ButtonContainStyle";
+import ErrorConfirm from "../Hook/ErrorConfirm";
+import { editErrorType, openError } from "../persistStore";
 
 const RecipeList = () => {
   const [listData, setListData] = useState([]);
@@ -18,6 +20,7 @@ const RecipeList = () => {
   const params = new URLSearchParams(location.search);
   const keyword = params.get('keyword');
   const [pageInfo, setPageInfo] = useState(1);
+  const dispatch = useDispatch();
 
   {/* 정렬 구현 */ }
   const [selectButton, setSelectButton] = useState('최신순');
@@ -54,6 +57,9 @@ const RecipeList = () => {
           })
           .catch(err => {
             console.log(err);
+            dispatch(editErrorType(err.response.data.code));
+            dispatch(openError());
+
           })
       } else {
         axios.get(`${url}/api/user/search/recipes?keyword=${keyword}&page=1&size=${pageInfo}*8`, {
@@ -67,6 +73,8 @@ const RecipeList = () => {
           })
           .catch(err => {
             console.log(err);
+            dispatch(editErrorType(err.response.data.code));
+            dispatch(openError());
           })
       }
     } else {
@@ -80,6 +88,8 @@ const RecipeList = () => {
           })
           .catch((err) => {
             console.log(err);
+            dispatch(editErrorType(err.response.data.code));
+            dispatch(openError());
           });
       } else {
         axios
@@ -94,6 +104,8 @@ const RecipeList = () => {
           })
           .catch((err) => {
             console.log(err);
+            dispatch(editErrorType(err.response.data.code));
+            dispatch(openError());
           });
       }
     }
@@ -109,6 +121,8 @@ const RecipeList = () => {
         /* 로그인이 되어있지 않은 경우 - 로그인 후 이용 가능 alrt - 변수명 수정 후 확인 필요*/
       }
       console.log("로그인 후 이용 가능");
+      dispatch(editErrorType('NT'));
+      dispatch(openError());
     } else {
       axios
         .post(`${url}/api/recipes/like/${recipe_no}`, null, {
@@ -129,6 +143,8 @@ const RecipeList = () => {
           {
             /* 토큰 만료에 대한 처리 진행 */
           }
+          dispatch(editErrorType(err.response.data.code));
+          dispatch(openError());
         });
     }
   };
@@ -154,6 +170,8 @@ const RecipeList = () => {
 
   return (
     <div className="viewList-Box">
+      <ErrorConfirm error={useSelector(state => state.errorType)} />
+
       <div className="sortList">
         <div className="sortList-left">
           <Button sx={{ color: selectButton === '최신순' ? "main.br" : "main.or" }} onClick={() => handleClick('최신순')}> 최신순 </Button>
@@ -174,7 +192,7 @@ const RecipeList = () => {
       <div className="viewList">
         {/* 리스트 출력*/}
         {listData.length !== 0 &&
-          listData.slice(0, pageInfo*8).map((data, index) => (
+          listData.slice(0, pageInfo * 8).map((data, index) => (
             <div style={{ position: "relative" }}>
               <Bookmark
                 key={index}

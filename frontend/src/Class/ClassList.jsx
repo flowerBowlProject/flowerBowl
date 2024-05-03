@@ -5,9 +5,11 @@ import RecipeReviewCard from "../Component/CardComp";
 import Bookmark from "../Component/Bookmark";
 import { useLocation, useNavigate } from 'react-router-dom';
 import axios from "axios";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { url } from "../url";
 import ButtonOutlinedStyle from "../Component/ButtonOutlinedStyle";
+import {editErrorType, openError } from '../persistStore';
+import ErrorConfirm from "../Hook/ErrorConfirm";
 
 const ViewList = () => {
     const [listData, setListData] = useState([]);
@@ -17,6 +19,7 @@ const ViewList = () => {
     const params = new URLSearchParams(location.search);
     const keyword = params.get('keyword');
     const [pageInfo, setPageInfo] = useState(1);
+    const dispatch = useDispatch();
 
     {/* 정렬 구현 */ }
     const [selectButton, setSelectButton] = useState('최신순');
@@ -50,6 +53,8 @@ const ViewList = () => {
                     })
                     .catch(err => {
                         console.log(err);
+                        dispatch(editErrorType(err.response.data.code));
+                        dispatch(openError());
                     })
             } else {
                 console.log(keyword)
@@ -60,11 +65,12 @@ const ViewList = () => {
                 })
                     .then(res => {
                         setListData(res.data.lessons);
-                        //setPageInfo(res.data.pageInfo);
                         console.log(res);
                     })
                     .catch(err => {
                         console.log(err);
+                        dispatch(editErrorType(err.response.data.code));
+                        dispatch(openError());
                     })
             }
         } else {
@@ -77,6 +83,8 @@ const ViewList = () => {
                     })
                     .catch(err => {
                         console.log(err);
+                        dispatch(editErrorType('err.response.data.code'));
+                        dispatch(openError());
                     })
             } else {
                 axios.get(`${url}/api/user/lessons?page=1&size=${pageInfo}*8`, {
@@ -90,6 +98,8 @@ const ViewList = () => {
                     })
                     .catch(err => {
                         console.log(err);
+                        dispatch(editErrorType(err.response.data.code));
+                        dispatch(openError());
                     })
             }
         }
@@ -99,6 +109,8 @@ const ViewList = () => {
         console.log("북마크 클릭");
         if (accessToken === '') {
             console.log('로그인 후 이용해 주세요.');
+            dispatch(editErrorType('NT'));
+            dispatch(openError());
         } else {
             if (lesson_like_status) {
                 console.log('북마크 해제')
@@ -118,6 +130,8 @@ const ViewList = () => {
                     .catch(err => {
                         console.log(err);
                         console.log('북마크 해제 실패')
+                        dispatch(editErrorType(err.response.data.code));
+                        dispatch(openError());
                     })
             } else {
                 console.log('북마크 등록')
@@ -139,13 +153,19 @@ const ViewList = () => {
                     .catch(err => {
                         console.log(err);
                         console.log('북마크 등록 실패');
+                        dispatch(editErrorType(err.response.data.code));
+                        dispatch(openError());
                     })
             }
         }
     }
 
     const clickRegister = () => {
-        navigator(`/registerClass`);
+        if(accessToken===''){
+            dispatch(editErrorType('NT'));
+            dispatch(openError());
+        }
+        navigator(`/registerClass`); 
     }
 
     const clickDetail = (e, lesson_no) => {
@@ -154,6 +174,8 @@ const ViewList = () => {
 
     return (
         <div className="viewList-Box">
+            <ErrorConfirm error={useSelector(state=>state.errorType)}/>
+
             <div className="sortList">
                 <div className="sortList-left">
                     <Button sx={{ color: selectButton === '최신순' ? "main.br" : "main.or" }} onClick={() => handleClick('최신순')}> 최신순 </Button>

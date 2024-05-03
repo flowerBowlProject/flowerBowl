@@ -14,6 +14,8 @@
     min-height: 25vw;
     max-height: 40vw;
     margin: 2% auto;
+    display: flex;
+    justify-content: center;
 }
 
 /* 클래스 제목 + 작성자 + 수강일 + 오픈채팅 링크*/
