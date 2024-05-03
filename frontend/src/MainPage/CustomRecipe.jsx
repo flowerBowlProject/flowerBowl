@@ -1,8 +1,23 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import {Grid,Typography,Skeleton,Pagination } from '@mui/material';
+import axios from 'axios';
+import { url } from '../url';
 const  CustomRecipe=()=>{
-    return(
+    useEffect(()=>{
+        const fetchData=async()=>{
+            try{
+                const response=await axios.get(`${url}/api/recipes/guest`)
+                console.log(response.data.posts)
+
+            }catch(error){
+                console.log(error.response.data)
+            }
+        }
+        fetchData();
+    },[])
     
+    
+    return(
         <Grid container sx={{backgroundColor:'main.br'}} pt='5vw' >
             <Grid xs={5.1} item mt='3vw' ml='3vw'>
                 <Typography  variant='h4' >  

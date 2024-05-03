@@ -1,17 +1,20 @@
 import React from 'react';
 import {Grid,Typography,Avatar } from '@mui/material';
 import {useState} from 'react';
+import {Link} from 'react-router-dom';
 const Menu=({menuName})=>{
     return(
         <Grid xs={12} container columnGap='2vw' direction='row'>
                {menuName.map((item,idx)=>(
                     <Grid xs key={idx} container direction='column' alignContent='center'>
-                        <Grid  xs  item ml='1.2vw'>
-                            <Avatar src={`../../images/${item[1]}.png`} />
-                        </Grid>
-                        <Grid item xs>
-                            <Typography align='center'  width='4.6vw'>{item[0]}</Typography>
-                        </Grid>
+                        <Link to={`/categoryList?category=${item[0]}`} style={{textDecoration:'none'}}>
+                            <Grid  xs  item ml='1.2vw'>
+                                <Avatar  src={`../../images/${item[1]}.png`} width='40vw' />
+                            </Grid>
+                            <Grid item xs >
+                                <Typography  align='center'  width='4.6vw'>{item[0]}</Typography>
+                            </Grid>
+                        </Link>
                     </Grid>
                ))}
         </Grid>    
