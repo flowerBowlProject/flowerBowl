@@ -14,6 +14,8 @@
     width: 70%;
     height: 350px;
     margin: 2% auto;
+    display: flex;
+    justify-content: center;
 }
 
 /* 레시피 제목 + 작성자 + 작성일 */

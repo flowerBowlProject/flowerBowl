@@ -108,9 +108,7 @@ const RecipeDetail = () => {
             <ErrorConfirm error={useSelector(state => state.errorType)} />
 
                 {/* 이미지 조회 */}
-                <div className="recipe-Img">
-                    {/* 썸네일 첨부 필요 */}
-                </div>
+                <img className="recipe-Img" src={recipeData.recipe_sname}/>
                 <div className="recipe-element">
                     <div style={{ float: "left", textAlign: "center" }}>
                         <div className="recipe-title"> {recipeData.recipe_title} </div>

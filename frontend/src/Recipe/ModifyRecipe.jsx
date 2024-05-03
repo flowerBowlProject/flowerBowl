@@ -50,11 +50,27 @@ const RegisterRecipe = () => {
             setThumbnail(null);
             setSelectedFile(null);
         }
+
+        const formData = new FormData();
+        formData.append('file', file);
+        axios.post(`${url}/api/images/thumbnail`, formData,{
+            headers:{
+                Authorization : `Bearer ${accessToken}`,
+                'Content-Type': 'multipart/form-data',
+            }
+        })
+        .then(res=>{
+            console.log(res);
+            setRegisterData((registerData)=>({...registerData, recipe_sname:res.data.thumbnail_sname}));
+            setRegisterData((registerData)=>({...registerData, recipe_oname:res.data.thumbnail_oname}))
+        })
+        .catch(err=>{
+            console.log(err);
+        })
     };
 
     {/* 선택한 카테고리 값 받아와 저장 */ }
     const getCategory = category => {
-        console.log(category);
         setRegisterData((registerData) => ({ ...registerData, recipe_category: category }));
     }
 

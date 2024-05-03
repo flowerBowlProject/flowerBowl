@@ -39,7 +39,7 @@ const RegisterClass = () => {
 
     {/* 등록 클래스 데이터 + 썸네일 + 썸네일 선택 여부 */ }
     const [registerData, setRegisterData] = useState({
-        lesson_title: '', lesson_category: '', lesson_price: 0, lesson_sname:'짜장면', lesson_oname:'짜장면',
+        lesson_title: '', lesson_category: '', lesson_price: 0, lesson_sname:'', lesson_oname:'',
         lesson_addr: '', lesson_content: '', lesson_longitude: 0.0, lesson_latitude: 0.0, lesson_start: '', lesson_end: '', lesson_URL: ''
     });
     const [thumbnail, setThumbnail] = useState(null);
@@ -57,6 +57,23 @@ const RegisterClass = () => {
             setThumbnail(null);
             setSelectedFile(null);
         }
+
+        const formData = new FormData();
+        formData.append('file', file);
+        axios.post(`${url}/api/images/thumbnail`, formData,{
+            headers:{
+                Authorization : `Bearer ${accessToken}`,
+                'Content-Type': 'multipart/form-data',
+            }
+        })
+        .then(res=>{
+            console.log(res);
+            setRegisterData((registerData)=>({...registerData, lesson_sname:res.data.thumbnail_sname}));
+            setRegisterData((registerData)=>({...registerData, lesson_oname:res.data.thumbnail_oname}))
+        })
+        .catch(err=>{
+            console.log(err);
+        })
     };
 
     {/* 선택한 카테고리 값 받아와 저장 */ }
@@ -85,6 +102,9 @@ const RegisterClass = () => {
 
     {/* 클래스 등록 */}
     const handleRegister = () =>{
+
+        console.log(thumbnail);
+        console.log(selectedFile);
         {/* 수정 내용 작성 여부 확인 후 alert */ }
         if (registerData.lesson_title === '') {
             dispatch(editErrorType('TITLE'));

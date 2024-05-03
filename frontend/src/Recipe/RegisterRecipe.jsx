@@ -10,6 +10,7 @@ import axios from "axios";
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from "react-router-dom";
 import { editErrorType, openError } from "../persistStore";
+import ErrorConfirm from "../Hook/ErrorConfirm";
 
 const RegisterRecipe = () => {
     const accessToken = useSelector(state => state.accessToken);
@@ -17,8 +18,8 @@ const RegisterRecipe = () => {
     const dispatch = useDispatch();
 
     {/* 등록 레시피 데이터 + 썸네일 + 썸네일 선택 여부 */ }
-    const [registerData, setRegisterData] = useState({ recipe_title: '', recipe_category: '', recipe_stuff: [], recipe_content: '', recipe_sname:'짜장면', recipe_oname:'짜장면',
-        recipe_file_oname:['짜장면'], recipe_file_sname:['짜장면'] });
+    const [registerData, setRegisterData] = useState({ recipe_title: '', recipe_category: '', recipe_stuff: [], recipe_content: '', recipe_sname:'', recipe_oname:'',
+        recipe_file_oname:[], recipe_file_sname:[] });
     const [thumbnail, setThumbnail] = useState(null);
     const [selectedFile, setSelectedFile] = useState(null);
 
@@ -46,6 +47,23 @@ const RegisterRecipe = () => {
             setThumbnail(null);
             setSelectedFile(null);
         }
+
+        const formData = new FormData();
+        formData.append('file', file);
+        axios.post(`${url}/api/images/thumbnail`, formData,{
+            headers:{
+                Authorization : `Bearer ${accessToken}`,
+                'Content-Type': 'multipart/form-data',
+            }
+        })
+        .then(res=>{
+            console.log(res);
+            setRegisterData((registerData)=>({...registerData, recipe_sname:res.data.thumbnail_sname}));
+            setRegisterData((registerData)=>({...registerData, recipe_oname:res.data.thumbnail_oname}))
+        })
+        .catch(err=>{
+            console.log(err);
+        })
     };
 
     {/* 선택한 카테고리 값 받아와 저장 */ }
@@ -120,6 +138,7 @@ const RegisterRecipe = () => {
 
     return (
         <div className="registerRecipe-Box">
+            <ErrorConfirm error={useSelector(state => state.errorType)} />
 
             {/* 썸네일 선택 - 다시 클릭 시 재선택 */}
             <div style={{ display: 'flex', alignItems: 'flex-end'}}>
