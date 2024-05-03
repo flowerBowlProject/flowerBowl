@@ -5,9 +5,9 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class GetRecipesCategoryFaResDto extends RecipeResponseDto {
+public class GetRecipesAdminFaResDto extends RecipeResponseDto {
 
-    public GetRecipesCategoryFaResDto(String code, String message) {
+    public GetRecipesAdminFaResDto(String code, String message) {
         super(code, message);
     }
 

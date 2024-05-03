@@ -705,6 +705,30 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
+    public ResponseEntity<? extends RecipeResponseDto> getRecipesAdmin() throws Exception {
+        try {
+            List<Recipe> recipes = recipeRepository.findREcipesByRoleAdmin();
+
+            List<GetRecipesAdminDto> posts = ListUtils.emptyIfNull(recipes).stream().map((recipe -> {
+                return GetRecipesAdminDto.builder()
+                        .recipe_no(recipe.getRecipeNo())
+                        .recipe_sname(recipe.getRecipeSname())
+                        .recipe_title(recipe.getRecipeTitle())
+                        .recipe_content(recipe.getRecipeContent())
+                        .build();
+            })).toList();
+
+            GetRecipesAdminSuResDto responseBody = new GetRecipesAdminSuResDto(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, posts);
+            return ResponseEntity.status(HttpStatus.OK).body(responseBody);
+        } catch (Exception e) {
+            logPrint(e);
+
+            GetRecipesAdminFaResDto responseBody = new GetRecipesAdminFaResDto(ResponseCode.INTERNAL_SERVER_ERROR, ResponseMessage.INTERNAL_SERVER_ERROR);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseBody);
+        }
+    }
+
+    @Override
     public ResponseEntity<? extends RecipeResponseDto> updateRecipeLike(Long recipe_no, String userId) throws Exception {
         try {
             User user = userRepository.findByUserId(userId);
