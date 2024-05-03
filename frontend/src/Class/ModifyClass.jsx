@@ -40,7 +40,7 @@ const RegisterClass = () => {
             .then(res => {
                 console.log(res);
                 setRegisterData(res.data.lesson);
-                setThumbnail(res.data.lesson.lesson_sname); // thumbnail 조회 url로 set 필요
+                setThumbnail(res.data.lesson.lesson_sname);
             })
             .catch(err => {
                 console.log(err);
@@ -50,18 +50,35 @@ const RegisterClass = () => {
             })
     }, [lesson_no])
 
-    {/* 썸네일 선택 및 변경 - 사진 업로드 과정 추가 필요 */ }
     const chooseThumbnail = (e) => {
         const file = e.target.files[0];
 
-        if (file) {
+        if (e.target.files.length > 0) {
             setSelectedFile(file);
             const thumbnailURL = URL.createObjectURL(file);
             setThumbnail(thumbnailURL);
         } else {
-            setThumbnail(null);
+            console.log('파일 미선택')
+            setThumbnail(registerData.lesson_sname);
             setSelectedFile(null);
         }
+
+        const formData = new FormData();
+        formData.append('file', file);
+        axios.post(`${url}/api/images/thumbnail`, formData,{
+            headers:{
+                Authorization : `Bearer ${accessToken}`,
+                'Content-Type': 'multipart/form-data',
+            }
+        })
+        .then(res=>{
+            console.log(res);
+            setRegisterData((registerData)=>({...registerData, lesson_sname:res.data.thumbnail_sname}));
+            setRegisterData((registerData)=>({...registerData, lesson_oname:res.data.thumbnail_oname}))
+        })
+        .catch(err=>{
+            console.log(err);
+        })
     };
 
     {/* 선택한 카테고리 값 받아와 저장 */ }
@@ -88,6 +105,8 @@ const RegisterClass = () => {
         const name = e.target.name;
         setRegisterData((registerData) => ({ ...registerData, [name]: value }));
     }
+
+   
 
     {/* 클래스 수정 */ }
     const handleRegister = () => {
@@ -117,6 +136,7 @@ const RegisterClass = () => {
             dispatch(editErrorType('LINK'));
             dispatch(openError());
         } else {
+            console.log(registerData);
             console.log("수정 가능");
             axios.put(`${url}/api/lessons/${lesson_no}`, registerData, {
                 headers: {

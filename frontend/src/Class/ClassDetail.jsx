@@ -160,9 +160,7 @@ const ClassDetail = () => {
             <ErrorConfirm error={useSelector(state=>state.errorType)}/>
 
                 {/* 이미지 조회 */}
-                <div className="class-Img">
-                    {/* 썸네일 첨부 필요 */}
-                </div>
+                <img className="class-Img" src={classData.lesson_sname}/>
                 <div className="class-element">
                     <div style={{ float: "left", textAlign: "center" }}>
                         <div className="class-title"> {classData.lesson_title} </div>
