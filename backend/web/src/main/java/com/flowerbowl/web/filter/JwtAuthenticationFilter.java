@@ -1,5 +1,6 @@
 package com.flowerbowl.web.filter;
 
+import com.flowerbowl.web.common.JwtError;
 import com.flowerbowl.web.common.ResponseCode;
 import com.flowerbowl.web.common.ResponseMessage;
 import com.flowerbowl.web.domain.Role;
@@ -105,8 +106,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String authorization = request.getHeader("Authorization");
 
         boolean hasAuthorization = StringUtils.hasText(authorization); // null, 길이가 0, 공백으로 이루어 있는 지 검사
-        if (!hasAuthorization) return null;
-
+        if (!hasAuthorization) {
+            request.setAttribute("exception", JwtError.NOT_EXIST_TOKEN.getCode());
+            log.error("Jwt Exception [Err_Msg]: JWT token is null");
+            return null;
+        }
 
         boolean isBearer = authorization.startsWith("Bearer "); // authorization이 bearer 인증 방식 인지 학인
         if (!isBearer) return null;

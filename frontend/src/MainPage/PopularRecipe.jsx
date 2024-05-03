@@ -1,8 +1,21 @@
-import React from 'react';
+import Reac, { useEffect } from 'react';
 import {Grid,Typography,Skeleton } from '@mui/material';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
-
+import axios from 'axios';
+import { url } from '../url';
 const PopularRecipe=()=>{
+    useEffect(()=>{
+        const fetchData=async()=>{
+            try{
+                const response=await axios.get(`${url}/api/recipes/guest`)
+                console.log(response.data.posts)
+
+            }catch(error){
+                console.log(error.response.data)
+            }
+        }
+        fetchData();
+    },[])
     
     return(
         <Grid container my='5vw' direction='row' alignContent='center' >

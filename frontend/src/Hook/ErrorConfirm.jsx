@@ -2,11 +2,14 @@ import { useState, useEffect } from "react";
 import { Alert, Snackbar } from "@mui/material";
 import { useSelector, useDispatch } from "react-redux";
 import { closeError } from "../persistStore";
-const ErrorConfirm = ({ error }) => {
-    const open = useSelector(state => state.error);
-    const dispatch = useDispatch();
-    const handleClose = (event, reason) => {
-        if (reason === 'clickaway') { return; }
+import { useNavigate } from "react-router-dom";
+
+const ErrorConfirm = ({error})=>{
+    const open=useSelector(state=>state.error);
+    const navigate=useNavigate();
+    const dispatch=useDispatch();
+    const handleClose=(event,reason)=>{
+        if(reason==='clickaway'){return;}
         dispatch(closeError());
     }
     const [confirm, setConfirm] = useState({
@@ -18,9 +21,22 @@ const ErrorConfirm = ({ error }) => {
         let content = '';
 
         switch (error) {
+            case 'suWithdrawl':
+                severity='success'
+                content='회원탈퇴를 완료했습니다.'
+                break;
+            case 'vaildNewPw':
+                severity='error';
+                content='새로운 비밀번호가 유효하지 않습니다!'
+                break;
+            case 'suEdit':
+                severity='success';
+                content="회원정보를 수정했습니다.";
+                break;
             case 'NU':
-                severity = 'error';
-                content = "아이디가 존재하지 않습니다!";
+                severity='error';
+                content="아이디가 존재하지 않습니다!";
+                break;
             case 'EP':
                 severity = 'error';
                 content = '가입하지 않은 이메일이나 아이디입니다.';
@@ -97,6 +113,8 @@ const ErrorConfirm = ({ error }) => {
             case 'ET':
                 severity = 'info';
                 content = '로그인이 만료되었습니다.';
+                navigate('/')
+                dispatch({type:'accessToken',payload:""})
                 break;
             case 'IT':
             case 'NT':
@@ -171,15 +189,18 @@ const ErrorConfirm = ({ error }) => {
 
         setConfirm({ severity, content });
     }, [error]);
+    
+    
+            return(
+             <Snackbar open={open} autoHideDuration={3000} onClose={handleClose} anchorOrigin={{ vertical: 'top', horizontal: 'center' }}>
+                <Alert onClose={handleClose} severity={confirm.severity} variant='filled' sx={{width:'100%'}}>
+                       {confirm.content}
+                </Alert>
+             </Snackbar>
+            );
 
 
-    return (
-        <Snackbar open={open} autoHideDuration={6000} onClose={handleClose} anchorOrigin={{ vertical: 'top', horizontal: 'center' }}>
-            <Alert onClose={handleClose} severity={confirm.severity} variant='filled' sx={{ width: '100%' }}>
-                {confirm.content}
-            </Alert>
-        </Snackbar>
-    );
+
 
 
 }
