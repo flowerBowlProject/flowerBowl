@@ -1,0 +1,35 @@
+.drop-area {
+  border: 2px dashed #cccccc;
+  border-radius: 20px;
+  width: 35em;
+  height: 20em; /* 대형 정사각형 크기 조절 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  cursor: pointer; /* 입력창과의 간격 */
+}
+
+.drop-area.active {
+  background-color: #f0f0f0;
+}
+
+.drop-area p {
+  margin: 0;
+  font-size: 20px;
+  color: #aaaaaa;
+}
+
+/* 파일 선택 버튼 스타일 */
+.drop-area label {
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: #ffffff;
+  border: 1px solid #cccccc;
+  border-radius: 5px;
+  margin-top: 8em;
+  justify-content: center;
+  align-items: center;
+  margin-left: -5em;
+  cursor: pointer;
+}

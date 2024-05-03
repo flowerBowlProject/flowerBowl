@@ -1,0 +1,135 @@
+/* 버튼들 */
+.all {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* 버튼들 */
+/* 위 버튼 3개 */
+.buttons .rgPaidlist {
+  margin-left: -25em;
+}
+
+.buttons .rgReview {
+  margin-left: 1em;
+}
+
+.buttons .rgRegister {
+  margin-left: 1em;
+}
+
+.buttons {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  margin-bottom: 0.1em;
+  margin-left: -35em;
+}
+
+.division-line-or {
+  border-top: 2px solid var(--orange--color);
+  margin: 1em 0;
+  width: 35%;
+  transform: translateX(90%);
+}
+
+.division-line {
+  border-top: 2px solid var(--brown--color);
+  margin-top: 0em;
+  position: relative;
+}
+
+.teachingclass {
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  cursor: pointer;
+}
+
+.text-title,
+.text-content,
+.class-options {
+  text-align: center;
+  color: var(--brown--color);
+}
+
+.text-title {
+  font-weight: bold;
+  font-size: 1.2em;
+  justify-content: center;
+  align-items: center;
+  color: var(--brown--color);
+}
+
+.text-content {
+  color: var(--gray--color);
+}
+
+/* 평점 기능 - Adjust the Rating component if necessary */
+.rating {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+/* Adjust the textarea input size and alignment */
+.styled-input {
+  display: flex;
+  width: 90%; /* Responsive width */
+  justify-content: center;
+  border-radius: 5px;
+  resize: none;
+  height: 15em;
+  margin-top: 1em;
+  border: 1px solid #cccccc;
+  font-size: 15px;
+  background-color: var(--orange--color);
+  font-family: "GowunBatang-Regular";
+  color: white;
+}
+
+.styled-input::placeholder {
+  color: white;
+  text-align: center;
+  font-size: 1.5em;
+  font-family: "GowunBatang-Regular";
+  padding-top: 3em;
+}
+
+.input-content {
+  justify-content: center;
+  width: 40%;
+}
+
+/* 모달창 */
+.class-list-modal {
+  background-color: #fefefe;
+  padding: 20px;
+  margin-top: 20px;
+  border-radius: 5px;
+  width: 30%;
+  margin-left: auto;
+  margin-right: auto;
+  color: var(--brown--color);
+}
+
+.class-option {
+  padding: 10px;
+  cursor: pointer;
+}
+
+/* 하단버튼 */
+.bottom-buttons {
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+
+.bottom-buttons .rgok {
+  margin-left: -1em;
+}
+
+.bottom-buttons .rgcl {
+  margin-left: 1em;
+}

@@ -1,0 +1,24 @@
+:root {
+    /* color */
+    --yellow-color: #FEFBEC;
+    --grey--color: #B0A695;
+    --orange--color: #F6C47B;
+    --brown--color: #B9835C;
+
+    /* font-size */
+    --font-large: 18px;
+    --font-medium: 14px;
+    --font-small: 12px;
+    --font-micro: 10px;
+}
+
+body, input {
+  font-family: GowunBatang-Regular
+}
+
+@font-face {
+  font-family: 'GowunBatang-Regular';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2108@1.1/GowunBatang-Regular.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
