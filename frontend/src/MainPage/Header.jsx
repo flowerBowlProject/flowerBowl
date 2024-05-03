@@ -38,7 +38,7 @@ const Header = () => {
   const handleOpen = (event) => {
     const innerText = event.target.innerText;
     console.log(innerText)
-    if (innerText === "회원가입") setOpen([true, false, false, false]);
+    if      (innerText === "회원가입") setOpen([true, false, false, false]);
     else if (innerText === "로그인") setOpen([false, true, false, false]);
     else if (innerText === "아이디 찾기") setOpen([false, false, true, false]);
     else if (innerText === "비밀번호 찾기")

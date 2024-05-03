@@ -20,8 +20,10 @@ public interface ResponseCode {
     String NOT_EXIST_PAGE = "NPG"; // 존재하지 않는 페이지인 경우
     String NOT_EXIST_COMMUNITY = "NC"; // 존재하지 않는 커뮤니티 게시글인 경우
     String NOT_EXIST_CATEGORY = "NCT"; // 존재하지 않는 카테고리인 경우
+    String NOT_EXIST_COMMENT = "NCM"; // 존재하지 않는 댓글인 경우
     String FIND_ID_FAIL = "EI"; // 아이디 찾기 실패
     String FIND_PW_FAIL = "EP"; // 비번 찾기 시 실패
+    String WRONG_BOARD_TYPE = "WT"; // 잘못된 게시판 타입인 경우
 
 
     String MAIL_FAIL = "MF"; // 메일 발송 실패
