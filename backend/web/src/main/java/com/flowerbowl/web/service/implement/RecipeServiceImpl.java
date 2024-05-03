@@ -707,7 +707,7 @@ public class RecipeServiceImpl implements RecipeService {
     @Override
     public ResponseEntity<? extends RecipeResponseDto> getRecipesAdmin() throws Exception {
         try {
-            List<Recipe> recipes = recipeRepository.findREcipesByRoleAdmin();
+            List<Recipe> recipes = recipeRepository.findRecipesByRoleAdmin();
 
             List<GetRecipesAdminDto> posts = ListUtils.emptyIfNull(recipes).stream().map((recipe -> {
                 return GetRecipesAdminDto.builder()
@@ -724,6 +724,28 @@ public class RecipeServiceImpl implements RecipeService {
             logPrint(e);
 
             GetRecipesAdminFaResDto responseBody = new GetRecipesAdminFaResDto(ResponseCode.INTERNAL_SERVER_ERROR, ResponseMessage.INTERNAL_SERVER_ERROR);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseBody);
+        }
+    }
+
+    @Override
+    public ResponseEntity<? extends RecipeResponseDto> getRecipesPopular() throws Exception {
+        try {
+            List<Recipe> recipes = recipeRepository.findRecipesByPopularity();
+
+            List<GetRecipesPopularDto> posts = ListUtils.emptyIfNull(recipes).stream().map((recipe -> {
+                return GetRecipesPopularDto.builder()
+                        .recipe_no(recipe.getRecipeNo())
+                        .recipe_sname(recipe.getRecipeSname())
+                        .build();
+            })).toList();
+
+            GetRecipesPopularSuResDto responseBody = new GetRecipesPopularSuResDto(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, posts);
+            return ResponseEntity.status(HttpStatus.OK).body(responseBody);
+        } catch (Exception e) {
+            logPrint(e);
+
+            GetRecipesPopularFaResDto responseBody = new GetRecipesPopularFaResDto(ResponseCode.INTERNAL_SERVER_ERROR, ResponseMessage.INTERNAL_SERVER_ERROR);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseBody);
         }
     }
