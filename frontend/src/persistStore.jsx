@@ -28,9 +28,11 @@ export const SETMEMBERPW='SET/MEMBERPW'
 export const setMemberPw=(pw)=>({type:SETMEMBERPW,payload:pw});
 export const SETMEMBERNAME='SET/MEMBERNAME'
 export const setMemberName=(name)=>({type:SETMEMBERNAME,payload:name});
+export const SETMEMBERNEWPW='SET/MEMBERNEWPW'
+export const setMemberNewPw=(newPw)=>({type:SETMEMBERNEWPW,payload:newPw});
 
 export const initialState = {
-  member: { memberId:"",memberEmail:"",memberTel:'',memberPw:'',memberName:''},
+  member: { memberId:"",memberEmail:"",memberTel:'',memberPw:'',memberName:'',memberNewPw:''},
   accessToken: "",
   error:false,
   errorType:"",
@@ -105,8 +107,14 @@ const reducer = (currentState, action) => {
         memberName:action.payload
       }
       break;
+    case SETMEMBERNEWPW:
+      newState.member={
+        ...newState.member,
+        memberNewPw:action.payload
+      }
     case "nickname":
       newState.nickname = action.payload;
+      break;
     default:
   }
   return newState;
