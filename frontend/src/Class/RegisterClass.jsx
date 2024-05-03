@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import './RegisterClassStyle.css';
 
 import Category from '../Component/Category';
@@ -11,16 +11,35 @@ import { TextField } from "@mui/material";
 import AddressSearch from "./AddressSearch";
 import  axios  from "axios";
 import { url } from "../url";
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import ButtonContain from "../Component/ButtonContain";
 import dayjs from "dayjs";
 import ButtonOutlined from "../Component/ButtonOutlined";
+import { useNavigate } from "react-router-dom";
+import { editErrorType, openError } from "../persistStore";
+import ErrorConfirm from "../Hook/ErrorConfirm";
 
 const RegisterClass = () => {
     const accessToken = useSelector(state => state.accessToken);
+    const navigator = useNavigate();
+    const dispatch = useDispatch();
+
+    useEffect(()=>{
+        axios.get(`${url}/api/users/info`,{
+            headers:{
+                Authorization : `Bearer ${accessToken}`
+            }
+        })
+        .catch(err=>{
+            dispatch(editErrorType(err.response.data.code));
+            dispatch(openError());
+            navigator('/classList')
+        })
+    })
+
     {/* 등록 클래스 데이터 + 썸네일 + 썸네일 선택 여부 */ }
     const [registerData, setRegisterData] = useState({
-        lesson_title: '', lesson_category: '', lesson_price: 0, lesson_sname:'짜장면', lesson_oname:'짜장면',
+        lesson_title: '', lesson_category: '', lesson_price: 0, lesson_sname:'', lesson_oname:'',
         lesson_addr: '', lesson_content: '', lesson_longitude: 0.0, lesson_latitude: 0.0, lesson_start: '', lesson_end: '', lesson_URL: ''
     });
     const [thumbnail, setThumbnail] = useState(null);
@@ -38,6 +57,23 @@ const RegisterClass = () => {
             setThumbnail(null);
             setSelectedFile(null);
         }
+
+        const formData = new FormData();
+        formData.append('file', file);
+        axios.post(`${url}/api/images/thumbnail`, formData,{
+            headers:{
+                Authorization : `Bearer ${accessToken}`,
+                'Content-Type': 'multipart/form-data',
+            }
+        })
+        .then(res=>{
+            console.log(res);
+            setRegisterData((registerData)=>({...registerData, lesson_sname:res.data.thumbnail_sname}));
+            setRegisterData((registerData)=>({...registerData, lesson_oname:res.data.thumbnail_oname}))
+        })
+        .catch(err=>{
+            console.log(err);
+        })
     };
 
     {/* 선택한 카테고리 값 받아와 저장 */ }
@@ -47,7 +83,7 @@ const RegisterClass = () => {
 
     {/* 주소 및 위도/경도 받아와 저장 */ }
     const getAddress = address => {
-        setRegisterData((registerData) => ({ ...registerData, lesson_address: address.lesson_addr }));
+        setRegisterData((registerData) => ({ ...registerData, lesson_addr: address.lesson_address }));
         setRegisterData((registerData) => ({ ...registerData, lesson_longitude: address.lesson_longitude }));
         setRegisterData((registerData) => ({ ...registerData, lesson_latitude: address.lesson_latitude }));
     }
@@ -65,25 +101,36 @@ const RegisterClass = () => {
     }
 
     {/* 클래스 등록 */}
-    const handleRegister = (e) =>{
-        e.preventDefault();
+    const handleRegister = () =>{
 
-        const isFormDataChanged = () => {
-            // 모든 필드가 변경되었는지 여부를 저장할 변수
-            let isChanged = false;
-          
-            // 모든 필드를 순회하면서 변경 여부 확인
-            Object.values(registerData).forEach((value) => {
-              // 빈 값이거나 초기값이 아닌 경우 변경된 것으로 간주
-              if (value !== '' && value !== 0 && value !== '짜장면' && value !== 0.0) {
-                isChanged = true;
-              }
-            });
-          
-            return isChanged;
-        };
-
-        if(!isFormDataChanged()){
+        console.log(thumbnail);
+        console.log(selectedFile);
+        {/* 수정 내용 작성 여부 확인 후 alert */ }
+        if (registerData.lesson_title === '') {
+            dispatch(editErrorType('TITLE'));
+            dispatch(openError());
+        } else if (registerData.lesson_category === '') {
+            dispatch(editErrorType('CATEGORY'));
+            dispatch(openError());
+        } else if (registerData.lesson_sname === '' || registerData.lesson_oname === '') {
+            dispatch(editErrorType('THUMBNAIL'));
+            dispatch(openError());
+        } else if (registerData.lesson_address === null || registerData.lesson_latitude === 0.0 || registerData.lesson_longitude === 0.0) {
+            dispatch(editErrorType('ADDRESS'));
+            dispatch(openError());
+        } else if (registerData.lesson_content && registerData.lesson_content === '') {
+            dispatch(editErrorType('CONTENT'));
+            dispatch(openError());
+        } else if (registerData.lesson_start === '') {
+            dispatch(editErrorType('STARTDATE'));
+            dispatch(openError());
+        } else if (registerData.lesson_end === '') {
+            dispatch(editErrorType('ENDDATE'));
+            dispatch(openError());
+        } else if (registerData.lesson_URL.trim() === '') {
+            dispatch(editErrorType('LINK'));
+            dispatch(openError());
+        } else {
             console.log("등록 가능");
             axios.post(`${url}/api/lessons`, registerData, {
                 headers: {
@@ -92,34 +139,15 @@ const RegisterClass = () => {
             })
             .then(res=>{
                 console.log(res);
+                dispatch(editErrorType('REGISTER'));
+                dispatch(openError());
                 navigator('/classList');
             })
             .catch(err=>{
                 console.log(err);
+                dispatch(editErrorType(err.response.data.code));
+                dispatch(openError());
             })
-        }else{
-            console.log('등록 불가');
-
-            {/* 등록 내용 작성 여부 확인 후 alert */}
-            if(registerData.lesson_title.trim() === ''){
-                console.log('제목을 작성해 주세요.')
-            }else if(registerData.lesson_category.trim() === ''){
-                console.log('카테고리를 선택해 주세요')
-            }else if(registerData.lesson_sname.trim() === '' || registerData.lesson_oname.trim() === ''){
-                console.log('사진을 첨부해 주세요')
-            }else if(registerData.lesson_addr.trim() === '' || registerData.lesson_latitude === 0.0 || registerData.lesson_longitude ===0.0){
-                console.log('주소를 입력 후 주소 등록 버튼을 눌러주세요')
-            }else if(registerData.lesson_content.trim() === ''){
-                console.log('내용을 작성해 주세요')
-            }else if(registerData.lesson_start === ''){
-                console.log('시작일을 선택해 주세요')
-            }else if(registerData.lesson_end === ''){
-                console.log('종료일을 선택해 주세요')
-            }else if(registerData.lesson_URL.trim() === ''){
-                console.log('문의 채팅 링크를 입력해 주세요')
-            }else{
-                console.log('현재 글작성이 불가합니다. 관리자에게 문의해 주세요')
-            }
         }
     }
 
@@ -131,6 +159,7 @@ const RegisterClass = () => {
 
     return (
         <div className="registerClass-Box">
+            <ErrorConfirm error={useSelector(state => state.errorType)} />
 
             {/* 썸네일 선택 - 다시 클릭 시 재선택 */}
             <div style={{ display: 'flex', alignItems: 'flex-end' }}>
@@ -187,12 +216,12 @@ const RegisterClass = () => {
             </div>
 
             {/* 레시피 || 클래스 상세 내용 작성란 */}
-            <ToastEditor getToastEditor={getToastEditor} setContent={registerData.lesson_content}/>
+            <ToastEditor getToastEditor={getToastEditor} setContent={''}/>
 
             <div style={{ border: "1px solid #CBA285", marginBottom: "2%" }} />
             <div className="register_button">
             <ButtonOutlined size='large' text='등록' handleClick={(e)=>handleRegister(e)}/> &nbsp;
-            <ButtonContain size='large' text='취소'/>
+            <ButtonContain size='large' text='취소' handleClick={handleCancel}/>
             </div>
         </div>
     );

@@ -1,45 +1,74 @@
 import React, { useState } from "react";
 import './CommentStyle.css';
 import SubdirectoryArrowRightIcon from '@mui/icons-material/SubdirectoryArrowRight';
-import  axios  from "axios";
+import axios from "axios";
 import { url } from "../../url";
 import ButtonContain from "../ButtonContain";
+import ButtonOutlined from "../ButtonOutlined";
+import { useDispatch, useSelector } from "react-redux";
+import { editErrorType, openError } from "../../persistStore";
 
-const CommentReply = ({registerReply}) => {
-    const [data, setData] = useState({comment_no:1, comment_writer: "작성자1",
-    comment_date: "2024-04-05", comment_content: "댓글 내용1", parent_no: 1, comment_thumbnail:""});
+const CommentReply = ({ registerReply, typeString, no, parent_no,isLast, setChange, change }) => {
+    const writer = useSelector((state) => state.nickname);
+    const accessToken = useSelector(state => state.accessToken);
+    const dispatch = useDispatch();
+    const [registerData, setRegisterData] = useState({ type: typeString, post_no: no, comment_content: "", parent_no: parent_no });
 
-    {/* 등록 버튼 클릭 시 */}
-    const registerComment = () =>{
-        axios.post(`${url}/api/comments`)
-        .then(res=>{
+    {/* 등록 버튼 클릭 시 */ }
+    const registerComment = () => {
+        if (registerData.comment_content.trim() === '') {
+            console.log('대댓글을 작성해주세요');
+        } else {
+            axios.post(`${url}/api/comments`, registerData, {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`
+                }
+            })
+                .then(res => {
+                    console.log(res);
+                    registerReply();
+                    setChange(!change);
+                    dispatch(editErrorType('COMMENT'));
+                    dispatch(openError());
+                })
+                .catch(err => {
+                    if(err.response.data.code === 'NCM'){
+                        dispatch(editErrorType('COMMENT_ERROR'));
+                        dispatch(openError());
+                    }else{
+                        dispatch(editErrorType(err.response.data.code));
+                        dispatch(openError());
+                    }  
+                })
+        }
+    }
 
-        })
-        .catch(err=>{
-            
-        })
+    {/* 취소 버튼 클릭 시 */ }
+    const handleCancle = () => {
+        registerReply();
     }
 
     return (
         <>
             <div className="comment-child">
-            <SubdirectoryArrowRightIcon sx={{color:"#B9835C"}}/>
+                <SubdirectoryArrowRightIcon sx={{ color: "#B9835C" }} />
                 <div className="commentChild-thumbnail">
-                    {data.comment_thumbnail}
                 </div>
                 <div className="comment-body">
                     <div className="comment-element">
-                        {data.comment_writer}&nbsp;&nbsp;&nbsp;
-                        <div style={{ fontSize: '0.8rem', color: "#B0A695" }}>{data.comment_date}</div>
+                        {writer}&nbsp;&nbsp;&nbsp;
+                        <div style={{ fontSize: '0.8rem', color: "#B0A695" }}>{registerData.comment_date}</div>
                     </div>
-                    <textarea className="comment-content" id="comment-content" placeholder="대댓글을 작성해 주세요."/>
+                    <textarea className="comment-content" id="comment-content" placeholder="대댓글을 작성해 주세요."
+                        onChange={(e) => setRegisterData((registerData) => ({ ...registerData, comment_content: e.target.value }))}
+                    />
                 </div>
                 <div className="commentButtonChild-Box">
-                <ButtonContain size='large' text='로그인'/> &nbsp;
-                <ButtonContain size='large' text='로그인'/>
+                    <ButtonOutlined size='large' text='등록' handleClick={registerComment} /> &nbsp;
+                    <ButtonContain size='large' text='취소' handleClick={handleCancle} />
                 </div>
             </div>
-            {true && <div style={{ border: "0.5px solid #B0A695", width: "90%", margin: "1vw auto 1vw auto" }} />}
+            {isLast && <div style={{ border: "0.5px solid #B0A695", width: "90%", margin: "1vw auto 1vw auto" }} />}
         </>
     );
 }

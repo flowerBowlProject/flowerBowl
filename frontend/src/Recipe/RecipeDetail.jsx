@@ -4,11 +4,14 @@ import TurnedInNotIcon from '@mui/icons-material/TurnedInNot';
 import TurnedInIcon from '@mui/icons-material/TurnedIn';
 import Comment from "../Component/Comment/Comment";
 import ButtonContain from "../Component/ButtonContain";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { url } from "../url";
 import ButtonOutlined from "../Component/ButtonOutlined";
+import { Viewer } from "@toast-ui/react-editor";
+import { editErrorType, openError } from "../persistStore";
+import ErrorConfirm from "../Hook/ErrorConfirm";
 
 const RecipeDetail = () => {
     const [recipeData, setRecipeData] = useState({ });
@@ -16,6 +19,7 @@ const RecipeDetail = () => {
     const accessToken = useSelector((state) => state.accessToken);
     const writer = useSelector((state)=>state.nickname);
     const { recipe_no } = useParams();
+    const dispatch = useDispatch();
 
     useEffect(()=>{
         if(accessToken === ''){
@@ -26,6 +30,8 @@ const RecipeDetail = () => {
             })
             .catch(err=>{
                 console.log(err);
+                dispatch(editErrorType(err.response.data.code));
+                dispatch(openError());
             })
         }else{
             axios.get(`${url}/api/recipes/${recipe_no}`,{
@@ -35,13 +41,15 @@ const RecipeDetail = () => {
             })
             .then(res=>{
                 console.log(res);
-                setRecipeData(res.data.data)
+                setRecipeData(res.data.data);
             })
             .catch(err=>{
                 console.log(err);
+                dispatch(editErrorType(err.response.data.code));
+                dispatch(openError());
             })
         }
-    },[recipe_no])
+    },[recipe_no, accessToken])
 
     {/* 수정 페이지로 이동 */}
     const clickModify = () =>{
@@ -58,16 +66,22 @@ const RecipeDetail = () => {
         .then(res=>{
             console.log(res);
             // alert 창 띄우로 리스트 페이지로 이동 navigator('/recipeList');
+            dispatch(editErrorType('DELETE'));
+            dispatch(openError());
+            navigator('/recipeList');
         })
         .catch(err=>{
             console.log(err);
+            dispatch(editErrorType(err.response.data.code));
+            dispatch(openError());
         })
     }
 
     {/* 즐겨찾기 생성 / 삭제 */}
     const clickBookmark = () =>{
         if(accessToken === ''){
-            console.log('로그인 후 사용해 주세요')
+            dispatch(editErrorType('NT'));
+                dispatch(openError());
         }else{
             axios.post(`${url}/api/recipes/like/${recipe_no}`, null, {
                 headers: {
@@ -81,7 +95,9 @@ const RecipeDetail = () => {
             })
             .catch((err) => {
                 /* 토큰 만료에 대한 처리 진행 */
-                console.log(err);     
+                console.log(err);
+                dispatch(editErrorType(err.response.data.code));
+                dispatch(openError());
             });
         }
     }
@@ -89,14 +105,14 @@ const RecipeDetail = () => {
     return (
         <>
             <div className="recipeDetail-Box">
+            <ErrorConfirm error={useSelector(state => state.errorType)} />
+
                 {/* 이미지 조회 */}
-                <div className="recipe-Img">
-                    {/* 썸네일 첨부 필요 */}
-                </div>
+                <img className="recipe-Img" src={recipeData.recipe_sname}/>
                 <div className="recipe-element">
                     <div style={{ float: "left", textAlign: "center" }}>
                         <div className="recipe-title"> {recipeData.recipe_title} </div>
-                        <div className="class-category" style={{ color: "#B9835C" }}> category :  </div>
+                        <div className="class-category" style={{ color: "#B9835C" }}> category :  {recipeData.recipe_category}</div>
                     </div>
 
                     <div className="recipe-writerDate" style={{textAlign:"right"}}>
@@ -106,10 +122,11 @@ const RecipeDetail = () => {
                 </div>
 
                 <div className="recipe-stuff">
-                    재료 : {recipeData.recipe_stuff}
+                    재료 : {recipeData.recipe_stuff && recipeData.recipe_stuff.join(', ')}
                 </div>
 
-                <div className='recipe-body'>{recipeData.recipe_content}</div>
+                <div className='recipe-body'>{recipeData.recipe_content && <Viewer initialValue={recipeData.recipe_content} />}</div>
+
                 {/* 즐겨찾기 버튼 - 즐겨찾기 여부에 따른 true / false로 아이콘 표시 */}
                 <div className="recipe-bookmark" onClick={clickBookmark} style={{cursor :'pointer'}}>{recipeData.recipe_like_status ? <TurnedInIcon sx={{ fontSize: '60px', color: 'main.or' }} /> :
                     <TurnedInNotIcon sx={{ fontSize: '60px', color: 'main.or' }} />} 스크랩 </div>
@@ -121,7 +138,7 @@ const RecipeDetail = () => {
             </div>
             <div>
                 {/* 댓글 */}
-                <Comment />
+                <Comment typeString={1} no={recipe_no}/>
             </div>
         </>
     );
