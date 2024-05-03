@@ -63,6 +63,7 @@ const Header = () => {
     navigate('/')
     dispatch({type:'accessToken',payload:""})
     setRole('')
+    dispatch({type:'nickname', payload:''})
   }
   const handleMove=()=>{
     dispatch(closeError())

@@ -51,7 +51,7 @@ const Category = (props) => {
         >
           <MenuItem value={"디저트"}>디저트</MenuItem>
           <MenuItem value={"밥"}>밥</MenuItem>
-          <MenuItem value={"찌개/국"}>찌개/국</MenuItem>
+          <MenuItem value={"국/찌개"}>국/찌개</MenuItem>
           <MenuItem value={"고기류"}>고기류</MenuItem>
           <MenuItem value={"기타류"}>기타류</MenuItem>
           <MenuItem value={"과일류"}>과일류</MenuItem>
@@ -60,7 +60,7 @@ const Category = (props) => {
           <MenuItem value={"김치/젓갈"}>김치/젓갈</MenuItem>
           <MenuItem value={"퓨전"}>퓨전</MenuItem>
           <MenuItem value={"튀김류"}>튀김류</MenuItem>
-          <MenuItem value={"음료/술"}>음료/주류</MenuItem>
+          <MenuItem value={"음료/주류"}>음료/주류</MenuItem>
 
         </Select>
       </FormControl>
