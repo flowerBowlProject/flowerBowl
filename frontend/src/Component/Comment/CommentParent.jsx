@@ -3,9 +3,11 @@ import './CommentStyle.css';
 import CommentReply from "./CommentReply";
 import ButtonContain from "../ButtonContain";
 import ButtonOutlined from "../ButtonOutlined";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { url } from "../../url";
+import { editErrorType, openError } from "../../persistStore";
+import ErrorConfirm from "../../Hook/ErrorConfirm";
 
 const CommentParent = ({ data, isLast, typeString, no, change, setChange }) => {
     const [replyModal, setReplyModal] = useState(false);
@@ -13,15 +15,16 @@ const CommentParent = ({ data, isLast, typeString, no, change, setChange }) => {
     const [parentData, setParentData] = useState(data);
     const [commentModify, setCommentModify] = useState(true);
     const writer = useSelector((state) => state.nickname);
+    const dispatch = useDispatch();
 
     {/* 대댓글 클릭 시 - 컴포넌트에 부모 댓글 관련 정보 넘겨주기*/}
     const registerReply = () =>{
         if(accessToken === ''){
-            console.log('로그인 후 이용 가능')
+            dispatch(editErrorType('NT'));
+            dispatch(openError());
         }else{
             setReplyModal(!replyModal);
         }
-       
     }
 
     {/* 수정 버튼 클릭 시 */}
@@ -51,9 +54,18 @@ const CommentParent = ({ data, isLast, typeString, no, change, setChange }) => {
         .then(res=>{
             console.log(res);
             commentContent.disabled = true;
+            dispatch(editErrorType('MODIFY'));
+            dispatch(openError());
         })
         .catch(err=>{
             console.log(err);
+            if(err.response.data.code === 'NCM'){
+                dispatch(editErrorType('COMMENT_ERROR'));
+                dispatch(openError());
+            }else{
+                dispatch(editErrorType(err.response.data.code));
+                dispatch(openError());
+            }  
         })
     }
 
@@ -67,9 +79,18 @@ const CommentParent = ({ data, isLast, typeString, no, change, setChange }) => {
         .then(res=>{
             console.log(res);
             setChange(!change);
+            dispatch(editErrorType('DELETE'));
+            dispatch(openError());
         })
         .catch(err=>{
             console.log(err);
+            if(err.response.data.code === 'NCM'){
+                dispatch(editErrorType('COMMENT_ERROR'));
+                dispatch(openError());
+            }else{
+                dispatch(editErrorType(err.response.data.code));
+                dispatch(openError());
+            }   
         })
     }
     

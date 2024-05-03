@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import './RegisterClassStyle.css';
 
 import Category from '../Component/Category';
@@ -11,19 +11,35 @@ import { TextField } from "@mui/material";
 import AddressSearch from "./AddressSearch";
 import  axios  from "axios";
 import { url } from "../url";
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import ButtonContain from "../Component/ButtonContain";
 import dayjs from "dayjs";
 import ButtonOutlined from "../Component/ButtonOutlined";
 import { useNavigate } from "react-router-dom";
+import { editErrorType, openError } from "../persistStore";
+import ErrorConfirm from "../Hook/ErrorConfirm";
 
 const RegisterClass = () => {
     const accessToken = useSelector(state => state.accessToken);
     const navigator = useNavigate();
+    const dispatch = useDispatch();
+
+    useEffect(()=>{
+        axios.get(`${url}/api/users/info`,{
+            headers:{
+                Authorization : `Bearer ${accessToken}`
+            }
+        })
+        .catch(err=>{
+            dispatch(editErrorType(err.response.data.code));
+            dispatch(openError());
+            navigator('/classList')
+        })
+    })
 
     {/* 등록 클래스 데이터 + 썸네일 + 썸네일 선택 여부 */ }
     const [registerData, setRegisterData] = useState({
-        lesson_title: '', lesson_category: '', lesson_price: 0, lesson_sname:'짜장면', lesson_oname:'짜장면',
+        lesson_title: '', lesson_category: '', lesson_price: 0, lesson_sname:'', lesson_oname:'',
         lesson_addr: '', lesson_content: '', lesson_longitude: 0.0, lesson_latitude: 0.0, lesson_start: '', lesson_end: '', lesson_URL: ''
     });
     const [thumbnail, setThumbnail] = useState(null);
@@ -41,6 +57,23 @@ const RegisterClass = () => {
             setThumbnail(null);
             setSelectedFile(null);
         }
+
+        const formData = new FormData();
+        formData.append('file', file);
+        axios.post(`${url}/api/images/thumbnail`, formData,{
+            headers:{
+                Authorization : `Bearer ${accessToken}`,
+                'Content-Type': 'multipart/form-data',
+            }
+        })
+        .then(res=>{
+            console.log(res);
+            setRegisterData((registerData)=>({...registerData, lesson_sname:res.data.thumbnail_sname}));
+            setRegisterData((registerData)=>({...registerData, lesson_oname:res.data.thumbnail_oname}))
+        })
+        .catch(err=>{
+            console.log(err);
+        })
     };
 
     {/* 선택한 카테고리 값 받아와 저장 */ }
@@ -69,24 +102,35 @@ const RegisterClass = () => {
 
     {/* 클래스 등록 */}
     const handleRegister = () =>{
-       {/* 등록 내용 작성 여부 확인 후 alert */}
-       if(registerData.lesson_title === ''){
-            console.log('제목을 작성해 주세요.')
-        }else if(registerData.lesson_category === ''){
-            console.log('카테고리를 선택해 주세요')
-        }else if(registerData.lesson_sname === '' || registerData.lesson_oname === ''){
-            console.log('사진을 첨부해 주세요')
-        }else if(registerData.lesson_addr === '' || registerData.lesson_latitude === 0.0 || registerData.lesson_longitude ===0.0){
-            console.log('주소를 입력 후 주소 등록 버튼을 눌러주세요')
-        }else if(registerData.lesson_content === ''){
-            console.log('내용을 작성해 주세요')
-        }else if(registerData.lesson_start === ''){
-            console.log('시작일을 선택해 주세요')
-        }else if(registerData.lesson_end === ''){
-            console.log('종료일을 선택해 주세요')
-        }else if(registerData.lesson_URL === ''){
-            console.log('문의 채팅 링크를 입력해 주세요')
-        }else{
+
+        console.log(thumbnail);
+        console.log(selectedFile);
+        {/* 수정 내용 작성 여부 확인 후 alert */ }
+        if (registerData.lesson_title === '') {
+            dispatch(editErrorType('TITLE'));
+            dispatch(openError());
+        } else if (registerData.lesson_category === '') {
+            dispatch(editErrorType('CATEGORY'));
+            dispatch(openError());
+        } else if (registerData.lesson_sname === '' || registerData.lesson_oname === '') {
+            dispatch(editErrorType('THUMBNAIL'));
+            dispatch(openError());
+        } else if (registerData.lesson_address === null || registerData.lesson_latitude === 0.0 || registerData.lesson_longitude === 0.0) {
+            dispatch(editErrorType('ADDRESS'));
+            dispatch(openError());
+        } else if (registerData.lesson_content && registerData.lesson_content === '') {
+            dispatch(editErrorType('CONTENT'));
+            dispatch(openError());
+        } else if (registerData.lesson_start === '') {
+            dispatch(editErrorType('STARTDATE'));
+            dispatch(openError());
+        } else if (registerData.lesson_end === '') {
+            dispatch(editErrorType('ENDDATE'));
+            dispatch(openError());
+        } else if (registerData.lesson_URL.trim() === '') {
+            dispatch(editErrorType('LINK'));
+            dispatch(openError());
+        } else {
             console.log("등록 가능");
             axios.post(`${url}/api/lessons`, registerData, {
                 headers: {
@@ -95,10 +139,14 @@ const RegisterClass = () => {
             })
             .then(res=>{
                 console.log(res);
+                dispatch(editErrorType('REGISTER'));
+                dispatch(openError());
                 navigator('/classList');
             })
             .catch(err=>{
                 console.log(err);
+                dispatch(editErrorType(err.response.data.code));
+                dispatch(openError());
             })
         }
     }
@@ -111,6 +159,7 @@ const RegisterClass = () => {
 
     return (
         <div className="registerClass-Box">
+            <ErrorConfirm error={useSelector(state => state.errorType)} />
 
             {/* 썸네일 선택 - 다시 클릭 시 재선택 */}
             <div style={{ display: 'flex', alignItems: 'flex-end' }}>

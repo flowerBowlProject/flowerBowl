@@ -13,7 +13,9 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import axios from "axios";
 import { url } from "../url";
 import ButtonOutlined from "../Component/ButtonOutlined";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { editErrorType, openError } from "../persistStore";
+import ErrorConfirm from "../Hook/ErrorConfirm";
 
 const CommunityList = () => {
     const [listData, setListData] = useState([]);
@@ -23,6 +25,7 @@ const CommunityList = () => {
     const location = useLocation();
     const params = new URLSearchParams(location.search);
     const keyword = params.get('keyword');
+    const dispatch = useDispatch();
     
     const accessToken = useSelector(state => state.accessToken);
 
@@ -32,11 +35,12 @@ const CommunityList = () => {
             axios.get(`${url}/api/search/communities?keyword=${keyword}&page=1&size=10`)
             .then(res => {
                 setListData(res.data.communities);
-                //setPageInfo(res.data.pageInfo);
                 console.log(res);
             })
             .catch(err => {
                 console.log(err);
+                dispatch(editErrorType(err.response.data.code));
+                dispatch(openError());
             })
         }else{
             axios.get(`${url}/api/communities/list?page=${curPage}&size=10`)
@@ -47,6 +51,8 @@ const CommunityList = () => {
             })
             .catch(err => {
                 console.log(err);
+                dispatch(editErrorType(err.response.data.code));
+                dispatch(openError());
             })
         }
         
@@ -68,6 +74,10 @@ const CommunityList = () => {
 
     {/* 커뮤니티 글쓰기로 이동 */ }
     const handleRegister = () => {
+        if(accessToken === ''){
+            dispatch(editErrorType('NE'));
+            dispatch(openError());
+        }
         navigate('/registerCommunity');
     }
 
@@ -89,12 +99,16 @@ const CommunityList = () => {
         })
         .catch(err => {
             console.log(err);
+            dispatch(editErrorType(err.response.data.code));
+                dispatch(openError());
         })
     }
 
     return (
         <>
             <div className="communityList-Box">
+            <ErrorConfirm  error={useSelector(state => state.errorType)} />
+
                 <div style={{float:'right'}}>
                     <ButtonOutlined size='large' text='글쓰기' handleClick={handleRegister}/>
                 </div>
