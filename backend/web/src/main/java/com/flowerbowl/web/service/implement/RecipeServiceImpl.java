@@ -84,6 +84,11 @@ public class RecipeServiceImpl implements RecipeService {
                 fileSname = new ArrayList<>();
 
                 for (String source : request.getRecipe_file_sname()) {
+                    source = source.trim();
+                    if (source.isEmpty()) {
+                        continue;
+                    }
+
                     // request의 file_sname 리스트를 순회하며 업로드된 이미지가 실제로 사용됐는지 확인한다.
                     if (content.contains(source)) {
                         // file_sname에서 파일명을 가져오기 위해 "/"로 나누고 마지막 인덱스를 가져온다.
@@ -216,6 +221,11 @@ public class RecipeServiceImpl implements RecipeService {
                     List<String> recipeFileSnameList = recipeFile.getRecipeFileSname();
 
                     for (String source : request.getRecipe_file_sname()) {
+                        source = source.trim();
+                        if (source.isEmpty()) {
+                            continue;
+                        }
+
                         int lastIdx = source.split("/").length - 1;
                         String fileName = source.split("/")[lastIdx];
 
@@ -264,6 +274,11 @@ public class RecipeServiceImpl implements RecipeService {
                     fileSname = new ArrayList<>();
 
                     for (String source : request.getRecipe_file_sname()) {
+                        source = source.trim();
+                        if (source.isEmpty()) {
+                            continue;
+                        }
+
                         if (content.contains(source)) {
                             int lastIdx = source.split("/").length - 1;
                             String fileName = source.split("/")[lastIdx];
