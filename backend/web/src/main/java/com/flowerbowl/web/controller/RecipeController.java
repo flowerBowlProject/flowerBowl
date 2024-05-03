@@ -66,6 +66,11 @@ public class RecipeController {
         return recipeService.getRecipesAdmin();
     }
 
+    @GetMapping("/popular")
+    private ResponseEntity<? extends RecipeResponseDto> getRecipesPopular() throws Exception {
+        return recipeService.getRecipesPopular();
+    }
+
     @PostMapping("/like/{recipe_no}")
     private ResponseEntity<? extends RecipeResponseDto> likeRecipe(@PathVariable Long recipe_no, @AuthenticationPrincipal String userId) throws Exception {
         return recipeService.updateRecipeLike(recipe_no, userId);
