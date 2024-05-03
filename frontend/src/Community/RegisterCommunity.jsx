@@ -59,6 +59,8 @@ const RegisterCommunity = () => {
             })
             .then(res => {
                 console.log(res);
+                dispatch(editErrorType('REGISTER'));
+                dispatch(openError());
                 navigator('/communityList');
             })
             .catch(err => {

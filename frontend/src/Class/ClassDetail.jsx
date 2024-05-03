@@ -12,7 +12,7 @@ import { Editor, Viewer } from "@toast-ui/react-editor";
 import ClassPayment from "./ClassPayment";
 import ErrorConfirm from "../Hook/ErrorConfirm";
 import {editErrorType, openError } from '../persistStore';
-
+import DeleteModal from "../Hook/DeleteModal";
 
 const { kakao } = window;
 
@@ -132,28 +132,6 @@ const ClassDetail = () => {
         navigator(`/modifyClass/${lesson_no}`);
     }
 
-    {/* 클래스 삭제 */ }
-    const handleDelete = () => {
-        {/* alert로 삭제 여부 재확인 */ }
-        axios.put(`${url}/api/lessons`,{
-            "lesson_no" : lesson_no
-        },{
-            headers:{
-                Authorization : `Bearer ${accessToken}`
-            }
-        })
-        .then(res=>{
-            console.log(res);
-            dispatch(editErrorType('DELETE'));
-            dispatch(openError());
-            navigator('/classList');
-        })
-        .catch(err=>{
-            dispatch(editErrorType(err.response.data.code));
-            dispatch(openError());
-        })
-    }
-
     return (
         <>
             <div className="classDetail-Box">
@@ -193,7 +171,7 @@ const ClassDetail = () => {
                     가격 : {classData.lesson_price} &nbsp;&nbsp;&nbsp;
                     {writer !== classData.lesson_writer && <ClassPayment lesson_no={lesson_no}/> }
                     {writer === classData.lesson_writer && <ButtonOutlined size='large' text='수정' handleClick={(e)=>handleModify(e)} />} &nbsp;&nbsp;
-                    {writer === classData.lesson_writer && <ButtonContain size='large' text='삭제' handleClick={handleDelete} />}
+                    {writer === classData.lesson_writer && <DeleteModal checkType={'class'} no={lesson_no}/>}
                 </div>
             </div>
         </>

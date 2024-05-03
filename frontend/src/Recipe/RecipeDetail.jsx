@@ -12,6 +12,7 @@ import ButtonOutlined from "../Component/ButtonOutlined";
 import { Viewer } from "@toast-ui/react-editor";
 import { editErrorType, openError } from "../persistStore";
 import ErrorConfirm from "../Hook/ErrorConfirm";
+import DeleteModal from "../Hook/DeleteModal";
 
 const RecipeDetail = () => {
     const [recipeData, setRecipeData] = useState({ });
@@ -58,23 +59,7 @@ const RecipeDetail = () => {
 
     {/* 게시글 삭제 */}
     const clickDelete = () =>{
-        axios.delete(`${url}/api/recipes/${recipe_no}`,{
-            headers:{
-                Authorization: `Bearer ${accessToken}`
-            }
-        })
-        .then(res=>{
-            console.log(res);
-            // alert 창 띄우로 리스트 페이지로 이동 navigator('/recipeList');
-            dispatch(editErrorType('DELETE'));
-            dispatch(openError());
-            navigator('/recipeList');
-        })
-        .catch(err=>{
-            console.log(err);
-            dispatch(editErrorType(err.response.data.code));
-            dispatch(openError());
-        })
+        
     }
 
     {/* 즐겨찾기 생성 / 삭제 */}
@@ -133,7 +118,7 @@ const RecipeDetail = () => {
                 {/* 수정/삭제 버튼 - 작성자인 경우에만 true로 버튼 표시 */}
                 <div className="recipe-change">
                     {writer === recipeData.recipe_writer && <ButtonOutlined size='large' text='수정' handleClick={clickModify}/>} &nbsp;
-                    {writer === recipeData.recipe_writer && <ButtonContain size='large' text='삭제' handleClick={clickDelete}/>}
+                    {writer === recipeData.recipe_writer && <DeleteModal checkType={'recipe'} no={recipe_no}/>}
                 </div>
             </div>
             <div>
