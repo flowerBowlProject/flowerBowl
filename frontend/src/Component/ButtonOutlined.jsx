@@ -33,6 +33,11 @@ const ButtonOutlined = ({ text, size, handleClick=()=>{}, data }) => {
       return {
         width: "15vw",
       };
+    }else if (size === "heightLarge") {
+      return {
+        width: "6vw",
+        height:"6vw"
+      };
     }
   };
   const sizeStyle = handleSize(size);

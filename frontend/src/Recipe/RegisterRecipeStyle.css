@@ -35,7 +35,7 @@ input[type="file"]{
 }
 
 /* 제목 */
-.register-title{
+.register-Recipetitle{
     width: 50%;
     height: 3vw;
     font-size : 1.5rem;
@@ -45,14 +45,14 @@ input[type="file"]{
     text-align: center;
 }
 
-input{
-    outline: none;
+.register-Recipetitle:focus{
+    border: none;
+    border-bottom: 2px solid #CBA285;
 }
 
 
 /* 토스트 에디터 들어갈 박스 */
 .recipeText-Box{
-    height: 570px;
     margin-top: 1vw;
     border-top : 2px solid #CBA285;
     border-bottom: 2px solid #CBA285;

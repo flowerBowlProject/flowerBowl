@@ -11,7 +11,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class FindUserIdRequestDto {
 
-    private String user_nickname;
+//    private String user_nickname;
 
     @Email
     @NotBlank

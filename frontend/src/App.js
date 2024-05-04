@@ -33,13 +33,17 @@ import AdminSidebar from "./Mypage/AdminSidebar";
 import BookmarkPage from "./Mypage/Bookmark/BookmarkPage";
 import CheckClass from "./Mypage/Myclass/CheckClass";
 import PaymentDetail from "./Mypage/PaidList/PaymentDetail";
+import CategoryList from './Category/CategoryList';
+
 const App = () => {
   return (
     <>
       <Header />
       <Routes>
+      
         <Route path="/" element={<MainHomepage />} />
-        <Route path="/recipeList" element={<RecipeList />} />
+        <Route path="/categoryList" element={<CategoryList />} />
+        <Route path="/recipeList" element={<RecipeList/>} />
         <Route path="/registerRecipe" element={<RegisterRecipe />} />
         <Route path="/modifyRecipe/:recipe_no" element={<ModifyRecipe />} />
         <Route path="/recipeDetail/:recipe_no" element={<RecipeDetail />} />
@@ -53,7 +57,7 @@ const App = () => {
           element={<ModifyCommunity />}
         />
         <Route path="/communityList" element={<CommunityList />} />
-        <Route path="/searchList" element={<SearchList />} />
+        <Route path="/searchList/" element={<SearchList />} />
         <Route path="/classDetail/:lesson_no" element={<ClassDetail />} />
         <Route path="/modifyClass/:lesson_no" element={<ModifyClass />} />
         <Route path="/registerClass" element={<RegisterClass />} />
@@ -70,7 +74,6 @@ const App = () => {
             <Route path="making" element={<Checkmakingclass />} />
             <Route path="teaching" element={<Checkteachingclass />} />
           </Route>
-
           <Route path="checkmakingrecipe" element={<Checkmakingrecipe />} />
           <Route path="paymentDetail" element={<PaymentDetail />}>
             <Route path="checkPaidList" element={<CheckPaidList />} />

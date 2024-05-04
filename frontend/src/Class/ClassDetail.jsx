@@ -5,12 +5,14 @@ import TurnedInIcon from '@mui/icons-material/TurnedIn';
 import axios from "axios";
 import { url } from "../url";
 import ButtonContain from "../Component/ButtonContain";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from 'react-router-dom';
 import ButtonOutlined from "../Component/ButtonOutlined";
 import { Editor, Viewer } from "@toast-ui/react-editor";
 import ClassPayment from "./ClassPayment";
-
+import ErrorConfirm from "../Hook/ErrorConfirm";
+import {editErrorType, openError } from '../persistStore';
+import DeleteModal from "../Hook/DeleteModal";
 
 const { kakao } = window;
 
@@ -21,6 +23,7 @@ const ClassDetail = () => {
     const accessToken = useSelector(state => state.accessToken);
 
     const navigator = useNavigate();
+    const dispatch = useDispatch();
 
     useEffect(() => {
         if (accessToken === '') {
@@ -31,6 +34,8 @@ const ClassDetail = () => {
                 })
                 .catch(err => {
                     console.log(err);
+                    dispatch(editErrorType(err.response.data.code));
+                    dispatch(openError());
                 })
         } else {
             axios.get(`${url}/api/user/lessons/${lesson_no}`,{
@@ -44,6 +49,8 @@ const ClassDetail = () => {
                 })
                 .catch(err => {
                     console.log(err);
+                    dispatch(editErrorType(err.response.data.code));
+                    dispatch(openError());
                 })
         }
     }, [lesson_no])
@@ -74,8 +81,10 @@ const ClassDetail = () => {
     const clickBookmark = () =>{
         if(accessToken === '') {
             console.log('로그인 후 이용')
+            dispatch(editErrorType('NT'));
+            dispatch(openError());
         }else{
-            if(classData.lesson_likes_status){
+            if(classData.lesson_like_status){
             console.log('북마크 해제')
             axios.delete(`${url}/api/user/lessons/like/${lesson_no}`,{
                 headers:{
@@ -84,11 +93,13 @@ const ClassDetail = () => {
             })
             .then(res=>{
                 console.log('북마크 해제 성공')
-                setClassData((classData) => ({...classData, lesson_likes_status : false}))
+                setClassData((classData) => ({...classData, lesson_like_status : false}))
             })
             .catch(err=>{
                 console.log(err);
                 console.log('북마크 해제 실패')
+                dispatch(editErrorType(err.response.data.code));
+                dispatch(openError());
             })
         }else{
             console.log('북마크 등록')
@@ -101,44 +112,18 @@ const ClassDetail = () => {
             })
             .then(res=>{
                 console.log('북마크 등록 성공');
-                setClassData((classData) => ({...classData, lesson_likes_status : true}))
+                setClassData((classData) => ({...classData, lesson_like_status : true}))
 
             })
             .catch(err=>{
                 console.log(err);
                 console.log('북마크 등록 실패');
+                dispatch(editErrorType(err.response.data.code));
+                dispatch(openError());
             })
         }
         }
         
-    }
-
-    {/* 클래스 구매 */ }
-    const buyClass = () => {
-        /*axios.post(`${url}/api/user/lessons/payments`,{
-            "lesson_no": lesson_no
-        },{
-            headers:{
-                Authorization : `Bearer ${accessToken}`
-            }
-        })
-        .then(res=>{
-            console.log(res);
-            const payData = res.data.payinfo;
-            console.log(payData);
-            console.log(payData.order_no);
-            axios.post(`https://api.iamport.kr/verify/${payData.order_no}`,null)
-            .then(res=>{
-                console.log(res);
-            })
-            .catch(err=>{
-                console.log(err);
-            })
-        })
-        .catch(err=>{
-            console.log(err);
-        })*/
-
     }
 
     {/* 클래스 수정 */ }
@@ -147,32 +132,13 @@ const ClassDetail = () => {
         navigator(`/modifyClass/${lesson_no}`);
     }
 
-    {/* 클래스 삭제 */ }
-    const handleDelete = () => {
-        {/* alert로 삭제 여부 재확인 */ }
-        axios.put(`${url}/api/lessons`,{
-            "lesson_no" : lesson_no
-        },{
-            headers:{
-                Authorization : `Bearer ${accessToken}`
-            }
-        })
-        .then(res=>{
-            console.log(res);
-            navigator('/classList');
-        })
-        .catch(err=>{
-            console.log(err);
-        })
-    }
-
     return (
         <>
             <div className="classDetail-Box">
+            <ErrorConfirm error={useSelector(state=>state.errorType)}/>
+
                 {/* 이미지 조회 */}
-                <div className="class-Img">
-                    {/* 썸네일 첨부 필요 */}
-                </div>
+                <img className="class-Img" src={classData.lesson_sname}/>
                 <div className="class-element">
                     <div style={{ float: "left", textAlign: "center" }}>
                         <div className="class-title"> {classData.lesson_title} </div>
@@ -197,7 +163,7 @@ const ClassDetail = () => {
 
                 {/* 즐겨찾기 버튼 - 즐겨찾기 여부에 따른 true / false로 아이콘 표시 */}
                 <div className="class-bookmark" style={{cursor:'pointer'}} onClick={clickBookmark}>
-                    {classData.lesson_likes_status === true ? <TurnedInIcon sx={{ fontSize: '60px', color: 'main.or' }} /> :
+                    {classData.lesson_like_status === true ? <TurnedInIcon sx={{ fontSize: '60px', color: 'main.or' }} /> :
                         <TurnedInNotIcon sx={{ fontSize: '60px', color: 'main.or' }} />} 스크랩 </div>
 
                 {/* 수정/삭제 버튼 - 작성자인 경우에만 true로 버튼 표시 + 구매하기 버튼 - 작성자가 아닌 경우 노출 */}
@@ -205,7 +171,7 @@ const ClassDetail = () => {
                     가격 : {classData.lesson_price} &nbsp;&nbsp;&nbsp;
                     {writer !== classData.lesson_writer && <ClassPayment lesson_no={lesson_no}/> }
                     {writer === classData.lesson_writer && <ButtonOutlined size='large' text='수정' handleClick={(e)=>handleModify(e)} />} &nbsp;&nbsp;
-                    {writer === classData.lesson_writer && <ButtonContain size='large' text='삭제' handleClick={handleDelete} />}
+                    {writer === classData.lesson_writer && <DeleteModal checkType={'class'} no={lesson_no}/>}
                 </div>
             </div>
         </>

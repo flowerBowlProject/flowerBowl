@@ -49,12 +49,12 @@ public class SearchServiceImpl implements SearchService {
                     .map(RecipeShortDto::from).getContent();
             for(RecipeShortDto iter : recipeList){
                 Long recipe_no = iter.getRecipe_no();
-                iter.setRecipe_likes_num(recipeLikeRepository.countAllByRecipe_RecipeNo(recipe_no));
-                iter.setRecipe_comments_num(commentRepository.countAllByRecipe_RecipeNo(recipe_no));
+                iter.setRecipe_like_cnt(recipeLikeRepository.countAllByRecipe_RecipeNo(recipe_no));
+                iter.setComment_cnt(commentRepository.countAllByRecipe_RecipeNo(recipe_no));
                 if(loginStatus){ // 로그인 상태이면 // test OK
-                    iter.setRecipe_likes_status(recipeLikeRepository.existsRecipeLikeByRecipe_RecipeNoAndUser_UserId(recipe_no, userId));
+                    iter.setRecipe_like_status(recipeLikeRepository.existsRecipeLikeByRecipe_RecipeNoAndUser_UserId(recipe_no, userId));
                 }else{
-                    iter.setRecipe_likes_status(false);
+                    iter.setRecipe_like_status(false);
                 }
             }
             List<LessonShortDto> lessonList = jpaDataLessonRepository.findLessonByLessonDeleteStatusAndLessonTitleContainingOrLessonContentContainingOrderByLessonNoDesc(false, keyword, keyword, pageable)
@@ -63,11 +63,11 @@ public class SearchServiceImpl implements SearchService {
 //                    .map(LessonShortDto::from).getContent();
             for(LessonShortDto iter : lessonList){
                 Long lessonNo = iter.getLesson_no();
-                iter.setLesson_likes_num(lessonLikeRepository.countLessonLikeByLesson_LessonNo(lessonNo));
+                iter.setLesson_like_cnt(lessonLikeRepository.countLessonLikeByLesson_LessonNo(lessonNo));
                 if(loginStatus) { // 로그인 상태이면
-                    iter.setLesson_likes_status(lessonLikeRepository.existsLessonLikeByLesson_LessonNoAndUser_UserId(lessonNo, userId));
+                    iter.setLesson_like_status(lessonLikeRepository.existsLessonLikeByLesson_LessonNoAndUser_UserId(lessonNo, userId));
                 }else{
-                    iter.setLesson_likes_status(false);
+                    iter.setLesson_like_status(false);
                 }
             }
             List<CommunityShortDto> communityList = jpaDataCommunityRepository.findAllByCommunityTitleContainingOrCommunityContentContainingOrderByCommunityNoDesc(keyword, keyword, pageable)
@@ -89,15 +89,15 @@ public class SearchServiceImpl implements SearchService {
             for(RecipeShortDto iter : recipeList){
                 Long recipe_no = iter.getRecipe_no();
                 // 좋아요 수 // test OK
-                iter.setRecipe_likes_num(recipeLikeRepository.countAllByRecipe_RecipeNo(recipe_no));
+                iter.setRecipe_like_cnt(recipeLikeRepository.countAllByRecipe_RecipeNo(recipe_no));
                 log.info("recipe_no : {}, likes_num : {}",recipe_no, recipeLikeRepository.countAllByRecipe_RecipeNo(recipe_no));
                 // 댓글 수 // test OK
-                iter.setRecipe_comments_num(commentRepository.countAllByRecipe_RecipeNo(recipe_no));
+                iter.setComment_cnt(commentRepository.countAllByRecipe_RecipeNo(recipe_no));
                 // 좋아요 상태 // test OK
                 if(loginStatus){ // 로그인 상태이면 // test OK
-                    iter.setRecipe_likes_status(recipeLikeRepository.existsRecipeLikeByRecipe_RecipeNoAndUser_UserId(recipe_no, userId));
+                    iter.setRecipe_like_status(recipeLikeRepository.existsRecipeLikeByRecipe_RecipeNoAndUser_UserId(recipe_no, userId));
                 }else{ // 비로그인 // test OK
-                    iter.setRecipe_likes_status(false);
+                    iter.setRecipe_like_status(false);
                 }
             }
             return ResponseEntity.status(HttpStatus.OK).body(new SearchRecipeResponseDto("SU", "success", pageInfo, recipeList));
@@ -118,13 +118,13 @@ public class SearchServiceImpl implements SearchService {
             // 즐겨찾기 수
             for(LessonShortDto iter : lessonList){
                 Long lessonNo = iter.getLesson_no();
-                iter.setLesson_likes_num(lessonLikeRepository.countLessonLikeByLesson_LessonNo(lessonNo));
+                iter.setLesson_like_cnt(lessonLikeRepository.countLessonLikeByLesson_LessonNo(lessonNo));
                 if(loginStatus) { // 로그인 상태이면
                     log.info("lesson test 로그인상태");
-                    iter.setLesson_likes_status(lessonLikeRepository.existsLessonLikeByLesson_LessonNoAndUser_UserId(lessonNo, userId));
+                    iter.setLesson_like_status(lessonLikeRepository.existsLessonLikeByLesson_LessonNoAndUser_UserId(lessonNo, userId));
                 }else{
                     log.info("lesson test 게스트상태");
-                    iter.setLesson_likes_status(false);
+                    iter.setLesson_like_status(false);
                 }
             }
             return ResponseEntity.status(HttpStatus.OK).body(new SearchLessonResponseDto("SU", "success",pageInfo, lessonList));
