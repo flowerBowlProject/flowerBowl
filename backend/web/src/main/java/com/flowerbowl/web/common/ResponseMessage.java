@@ -29,6 +29,7 @@ public interface ResponseMessage {
     String NOT_MATCH_USER = "This user does not match"; // 아이디 매칭 실패
     String WRONG_BOARD_TYPE = "Wrong board type"; // 잘못된 게시판 타입인 경우
     String WITHDRAWAL_USER = "Withdrawal User";
+    String DUPLICATE_LICENSE = "Already applied for License"; // 쉐프 중복 신청 시
 
 
     String WRONG_FILE_EXTENSION = "Wrong File Extension"; // 허용되지 않은 파일 확장자인 경우

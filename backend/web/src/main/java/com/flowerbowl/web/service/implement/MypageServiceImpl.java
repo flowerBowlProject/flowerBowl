@@ -274,6 +274,10 @@ public class MypageServiceImpl implements MypageService {
 
             User user = userRepository.findByUserId(userId);
             License license = new License(dto, user);
+            Long userNo = user.getUserNo();
+            boolean existsLicense = licenseRepository.existsByUserUserNo(userNo);
+            if(existsLicense) return InsertLicenseResponseDto.duplicateLicense();
+
             licenseRepository.save(license);
 
         } catch (Exception exception) {
