@@ -26,5 +26,5 @@ public class PatchProfileRequestDto {
 
     private String user_password;
     private String user_file_sname;
-    private String user_file_oanme;
+    private String user_file_oname;
 }
