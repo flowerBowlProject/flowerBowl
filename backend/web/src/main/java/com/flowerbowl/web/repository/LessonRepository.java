@@ -24,9 +24,9 @@ public interface LessonRepository extends JpaRepository<Lesson, Long> {
     @Query(value = "select l.*, " +
             "(select count(*) " +
             "from lesson_like ll " +
-            "where l.lesson_no = ll.lesson_no) as like_cnt " +
+            "where ll.lesson_no = l.lesson_no) as like_cnt " +
             "from lesson l " +
-            "order by like_cnt desc , lesson_no desc "
-            , nativeQuery = true)
-    Page<Lesson> getMostLiked(Pageable pageable);
+            "order by like_cnt desc , lesson_no desc " +
+            "limit 5", nativeQuery = true)
+    List<Lesson> getMostLiked();
 }

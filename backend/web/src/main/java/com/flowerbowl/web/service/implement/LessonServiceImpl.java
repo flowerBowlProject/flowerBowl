@@ -504,10 +504,9 @@ public class LessonServiceImpl implements LessonService {
     }
     // 인기 클래스 조회
     @Override
-    public ResponseEntity<? super FindAllResponseDto> getMostLikedLesson(Pageable pageable){
+    public ResponseEntity<? super FindAllResponseDto> getMostLikedLesson(){
         try {
-            List<LessonMostLikeDto> lessonMostLikeDtoList = lessonRepository.getMostLiked(pageable)
-                    .map(LessonMostLikeDto::from).getContent();
+            List<LessonMostLikeDto> lessonMostLikeDtoList = lessonRepository.getMostLiked().stream().map(LessonMostLikeDto::from).toList();
             return ResponseEntity.status(HttpStatus.OK).body(lessonMostLikeDtoList);
         } catch (Exception e){
             log.info("LessonService getMostLikedLesson error : {}", e.getMessage());
