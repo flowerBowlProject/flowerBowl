@@ -17,5 +17,5 @@ public class ChefResponseDto extends ResponseDto {
     }
     private String code;
     private String message;
-    private List<ChefCandidiateDto> candidiate = new ArrayList<>();
+    private List<ChefCandidiateDto> candidiate = new ArrayList<>()
 }

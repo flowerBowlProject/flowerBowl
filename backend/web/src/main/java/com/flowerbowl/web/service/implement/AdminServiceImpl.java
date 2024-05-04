@@ -37,23 +37,28 @@ public class AdminServiceImpl implements AdminService {
     @Override
     public ResponseEntity<? super ChefResponseDto> candidateList() {
         try{
-            ChefResponseDto chefResponseDto = new ChefResponseDto();
-            List<License> license = adminLicenseJpaDataRepository.findAllByLicenseStatus(false);
-            for(License tmp : license){
-                ChefCandidiateDto chefCandidiateDto = new ChefCandidiateDto();
-                chefCandidiateDto.setLicense_no(tmp.getLicenseNo());
-                chefCandidiateDto.setLicense_date(tmp.getLicenseDate());
-                chefCandidiateDto.setLicense_sname(tmp.getLicenseFileSname());
-                chefCandidiateDto.setLicense_oname(tmp.getLicenseFileOname());
-                chefCandidiateDto.setLicense_status(false);
-                chefCandidiateDto.setUser_no(tmp.getUser().getUserNo());
-                chefCandidiateDto.setUser_name(tmp.getUser().getUserNickname());
+            List<License> licenseList = adminLicenseJpaDataRepository.findAllByLicenseStatus(false);
+            List<ChefCandidiateDto> chefCandidiateDtoList = licenseList.stream().map(ChefCandidiateDto::from).toList();
 
-                chefResponseDto.getCandidiate().add(chefCandidiateDto);
-            }
+            ChefResponseDto chefResponseDto = new ChefResponseDto();
+            chefResponseDto.setCode("SU");
+            chefResponseDto.setMessage("success");
+            chefResponseDto.setCandidiate(chefCandidiateDtoList);
+//            for(License tmp : license){
+//                ChefCandidiateDto chefCandidiateDto = new ChefCandidiateDto();
+//                chefCandidiateDto.setLicense_no(tmp.getLicenseNo());
+//                chefCandidiateDto.setLicense_date(tmp.getLicenseDate());
+//                chefCandidiateDto.setLicense_sname(tmp.getLicenseFileSname());
+//                chefCandidiateDto.setLicense_oname(tmp.getLicenseFileOname());
+//                chefCandidiateDto.setLicense_status(false);
+//                chefCandidiateDto.setUser_no(tmp.getUser().getUserNo());
+//                chefCandidiateDto.setUser_name(tmp.getUser().getUserNickname());
+//
+//                chefResponseDto.getCandidiate().add(chefCandidiateDto);
+//            }
             return ResponseEntity.status(HttpStatus.OK).body(chefResponseDto);
         }catch (Exception e){
-            e.printStackTrace();
+            log.info("adminService candidiateList : {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseDto("ISE", "Internal Server Error"));
         }
     }
