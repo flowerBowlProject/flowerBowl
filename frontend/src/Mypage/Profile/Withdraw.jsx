@@ -14,7 +14,6 @@ import {useNavigate} from 'react-router-dom';
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
-
 export default function Withdrawl({hanldeWithDrawlUser}) {
   const [open, setOpen] = React.useState(false);
   const dispatch=useDispatch();

@@ -2,12 +2,14 @@
   border: 2px dashed #cccccc;
   border-radius: 20px;
   width: 35em;
-  height: 20em; /* 대형 정사각형 크기 조절 */
+  height: 20em;
   display: flex;
   align-items: center;
   justify-content: center;
   text-align: center;
-  cursor: pointer; /* 입력창과의 간격 */
+  cursor: pointer;
+  position: relative;
+  z-index: 1;
 }
 
 .drop-area.active {
@@ -18,6 +20,7 @@
   margin: 0;
   font-size: 20px;
   color: #aaaaaa;
+  z-index: 1;
 }
 
 /* 파일 선택 버튼 스타일 */
@@ -32,4 +35,31 @@
   align-items: center;
   margin-left: -5em;
   cursor: pointer;
+  z-index: 1;
+}
+
+.preview-container {
+  max-height: 200px;
+}
+
+/* .file-preview {
+  border: 1px solid #ccc;
+} */
+
+.image-preview {
+  display: block;
+  max-width: 150vw;
+  max-height: 35vh;
+  margin-top: -3em;
+  margin-right: 6em;
+  z-index: 5;
+}
+
+.file-label {
+  cursor: pointer;
+  display: block; /* Ensures the label is always visible and occupies full width */
+  padding: 10px;
+  background-color: #f8f9fa;
+  border: 1px solid #ccc;
+  z-index: 5;
 }
