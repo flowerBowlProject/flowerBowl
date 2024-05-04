@@ -1,7 +1,6 @@
 import { React, useState, useEffect } from "react";
 import "./CheckPaidList.css";
 import ButtonContain from "../../Component/ButtonContain";
-import ButtonOutlined from "../../Component/ButtonOutlined";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { url } from "../../url";
@@ -9,17 +8,18 @@ import { useSelector } from "react-redux";
 
 const CheckPaidList = () => {
   const accessToken = useSelector((state) => state?.accessToken);
-
   // 정렬기능
   const [sortDirection, setSortDirection] = useState("asc");
   const [sortReceipt, setSortReceipt] = useState("asc");
   const [listData, setListData] = useState([]);
   const [refreshData, setRefreshData] = useState(false);
-  const [slice,setSlice]= useState(8);
-  const handleClickMoreDetail=()=>{
-    if(listData.length>slice)
-    setSlice(slice+8)
-  }
+  // const { pay_no } = useParams();
+  // console.log("pay_no 제대로 전달되지 않음:", pay_no);
+  const [slice, setSlice] = useState(8);
+  const handleClickMoreDetail = () => {
+    if (listData.length > slice) setSlice(slice + 8);
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -94,9 +94,12 @@ const CheckPaidList = () => {
   };
 
   // 취소/환불 api연결
-  const handleDelete = async (payNo) => {
+  const handleDelete = async (pay_no) => {
+    const deleteUrl = `${url}/api/mypage/pays/${pay_no}`;
+    console.log("Attempting to delete:", deleteUrl); // Log the URL
+
     try {
-      const response = await axios.delete(`${url}/api/mypage/pays/${payNo}`, {
+      const response = await axios.delete(deleteUrl, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
@@ -107,13 +110,15 @@ const CheckPaidList = () => {
         setRefreshData(!refreshData); // toggle to trigger a re-fetch
       }
     } catch (error) {
-      console.error("Failed to delete lesson:", error);
+      console.error("Failed to delete payment:", error);
+      if (error.response) {
+        console.log("Error response data:", error.response.data); // Log the error response data
+      }
     }
   };
 
   return (
     <>
-  
       {/* 내용 */}
       <section className="table-content">
         <table className="custom-table">
@@ -151,7 +156,10 @@ const CheckPaidList = () => {
           </thead>
 
           <tbody>
-          {[...listData.slice(0,slice), ...Array(8-listData.slice(slice-8,slice).length)].map((data, index) => (
+            {[
+              ...listData.slice(0, slice),
+              ...Array(8 - listData.slice(slice - 8, slice).length),
+            ].map((data, index) => (
               <tr key={index}>
                 <td>{data ? index + 1 : ""}</td>
                 <td>{data ? data.pay_date : ""}</td>
@@ -161,7 +169,7 @@ const CheckPaidList = () => {
                 <td>
                   {data ? (
                     <ButtonContain
-                      handleClick={handleDelete}
+                      handleClick={() => handleDelete(data.pay_no)}
                       size="small"
                       text="취소/환불"
                     />
@@ -177,7 +185,11 @@ const CheckPaidList = () => {
 
       {/* 더보기 버튼    */}
       <section className="bottom-add">
-        <ButtonContain size="medium" text="더보기" handleClick={handleClickMoreDetail}/>
+        <ButtonContain
+          size="medium"
+          text="더보기"
+          handleClick={handleClickMoreDetail}
+        />
       </section>
     </>
   );

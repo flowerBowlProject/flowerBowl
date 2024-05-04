@@ -6,12 +6,16 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import Slide from "@mui/material/Slide";
+import axios from "axios";
+import { url } from "../../url";
+import { useSelector } from "react-redux";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
 export default function Withdrawl() {
+  const accessToken = useSelector((state) => state.accessToken);
   const [open, setOpen] = React.useState(false);
 
   const handleClickOpen = () => {

@@ -3,6 +3,7 @@ import "./FileDropArea.css";
 
 function FileDropArea() {
   const [dragActive, setDragActive] = useState(false);
+  const [files, setFiles] = useState([]);
 
   // 드래그 이벤트 핸들러
   const handleDrag = useCallback((event) => {
@@ -20,15 +21,32 @@ function FileDropArea() {
     event.preventDefault();
     event.stopPropagation();
     setDragActive(false);
-    const files = event.dataTransfer.files;
-    console.log(files);
+    const newFiles = Array.from(event.dataTransfer.files);
+    setFiles(newFiles);
   }, []);
 
   // 파일 선택 핸들러
   const handleFileSelect = useCallback((event) => {
-    const files = event.target.files;
-    console.log(files);
+    const newFiles = Array.from(event.target.files);
+    setFiles(newFiles);
   }, []);
+
+  // 파일 미리보기 생성
+  const filePreview = useCallback(() => {
+    return files.map((file, index) => (
+      <div key={index} className="file-preview">
+        {file.type.startsWith("image/") ? (
+          <img
+            src={URL.createObjectURL(file)}
+            alt={file.name}
+            className="image-preview"
+          />
+        ) : (
+          <p>{file.name}</p>
+        )}
+      </div>
+    ));
+  }, [files]);
 
   return (
     <div
@@ -51,6 +69,7 @@ function FileDropArea() {
         style={{ display: "none" }}
       />
       <label htmlFor="fileinput">파일 선택</label>
+      <div className="preview-container">{filePreview()}</div>
     </div>
   );
 }

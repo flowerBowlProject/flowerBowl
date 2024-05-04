@@ -10,6 +10,7 @@ const CheckClassList = () => {
   const [sortDirection, setSortDirection] = useState("asc");
   const [listData, setListData] = useState([]);
   const accessToken = useSelector((state) => state.accessToken);
+  const [refreshData, setRefreshData] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -52,6 +53,41 @@ const CheckClassList = () => {
     });
   };
 
+  // 취소/환불 api연결
+  const handleDelete = async (pay_no) => {
+    console.log("이거 있는지 pay_no:", pay_no);
+    // if (!pay_no) {
+    //   console.error("Invalid payment number.");
+    //   return; // 적절한 pay_no 값이 없으면 함수를 종료합니다.
+    // }
+
+    const deleteUrl = `${url}/api/chef/mypage/pays/${pay_no}`;
+    console.log("Attempting to delete:", deleteUrl); // Log the URL
+
+    try {
+      const response = await axios.delete(deleteUrl, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+
+      console.log(response.data);
+
+      if (response.status === 200) {
+        console.log("Success:", response.data.message);
+        setListData((currentData) =>
+          currentData.filter((item) => item.pay_no !== pay_no)
+        );
+        setRefreshData(!refreshData); // Optionally, toggle to trigger a re-fetch
+      }
+    } catch (error) {
+      console.error("Failed to delete payment:", error);
+      if (error.response) {
+        console.log("Error response data:", error.response.data); // Log the error response data
+      }
+    }
+  };
+
   return (
     <>
       {/* 내용 */}
@@ -88,7 +124,15 @@ const CheckClassList = () => {
                 <td>{data ? data.user_nickname : ""}</td>
                 <td>{data ? data.user_phone : ""}</td>
                 <td>
-                  {data ? <ButtonContain size="small" text="취소/환불" /> : ""}
+                  {data ? (
+                    <ButtonContain
+                      handleClick={() => handleDelete(data.pay_no)}
+                      size="small"
+                      text="취소/환불"
+                    />
+                  ) : (
+                    ""
+                  )}
                 </td>
               </tr>
             ))}
