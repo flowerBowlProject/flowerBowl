@@ -5,6 +5,7 @@ import com.flowerbowl.web.dto.response.lesson.*;
 import com.flowerbowl.web.service.LessonService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
@@ -91,5 +92,22 @@ public class LessonsController {
     @DeleteMapping(value = "/user/lessons/like/{lesson_no}")
     public ResponseEntity<ResponseDto> lessonUnlike(@AuthenticationPrincipal String userId, @PathVariable(value = "lesson_no") Long lesson_no){
         return lessonService.LessonUnlike(lesson_no, userId);
+    }
+    // 인기 클래스 조회 // 북마크가 가장 많은 5개
+    @GetMapping("/guest/lessons/like")
+    public ResponseEntity<? super FindAllResponseDto> getMostLikedLesson(@PageableDefault(page = 0, size = 5) Pageable pageable){
+        return lessonService.getMostLikedLesson(pageable);
+    }
+
+    // 카테고리별 클래스 조회 로그인
+    @GetMapping(value = "/user/lessons/category") // api/user/lessons/category?category="국"&page=0&size=6
+    public ResponseEntity<? super LessonCategoryResponseDto> lessonCategoryLogin(@AuthenticationPrincipal String userId, @RequestParam(value = "category") String koreanName, @PageableDefault(page = 0, size = 10) Pageable pageable){
+        return lessonService.getLessonsCategory(true, koreanName, userId, pageable);
+    }
+    // 카테고리별 클래스 조회 비로그인
+    @GetMapping(value = "/guest/lessons/category") // api/user/lessons/category?category="국"&page=0&size=6
+    public ResponseEntity<? super LessonCategoryResponseDto> lessonCategoryLogin(@RequestParam(value = "category") String koreanName, @PageableDefault(page = 0, size = 10) Pageable pageable){
+        log.info("guest category : {}", koreanName);
+        return lessonService.getLessonsCategory(false, koreanName, "guest", pageable);
     }
 }
