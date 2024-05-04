@@ -95,8 +95,9 @@ public class LessonsController {
     }
     // 인기 클래스 조회 // 북마크가 가장 많은 5개
     @GetMapping("/guest/lessons/like")
-    public ResponseEntity<? super FindAllResponseDto> getMostLikedLesson(@PageableDefault(page = 0, size = 5) Pageable pageable){
-        return lessonService.getMostLikedLesson(pageable);
+    public ResponseEntity<? super FindAllResponseDto> getMostLikedLesson(){
+//    public ResponseEntity<? super FindAllResponseDto> getMostLikedLesson(@PageableDefault(page = 0, size = 5) Pageable pageable){
+        return lessonService.getMostLikedLesson();
     }
 
     // 카테고리별 클래스 조회 로그인
