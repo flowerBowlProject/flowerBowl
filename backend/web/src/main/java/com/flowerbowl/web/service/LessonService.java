@@ -19,6 +19,6 @@ public interface LessonService {
     ResponseEntity<? super PaymentInfoResponseDto> buyLesson(Long lesson_no, String userId);
     ResponseEntity<ResponseDto> LessonLike(Long lesson_no, String userId);
     ResponseEntity<ResponseDto> LessonUnlike(Long lesson_no, String userId);
-    ResponseEntity<? super FindAllResponseDto> getMostLikedLesson(Pageable pageable);
+    ResponseEntity<? super FindAllResponseDto> getMostLikedLesson();
     ResponseEntity<? super LessonCategoryResponseDto> getLessonsCategory(Boolean loginStatus, String koreaName, String userId, Pageable pageable);
 }
