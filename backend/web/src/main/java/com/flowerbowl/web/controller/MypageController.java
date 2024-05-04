@@ -1,15 +1,13 @@
 package com.flowerbowl.web.controller;
 
+import com.flowerbowl.web.dto.request.mypage.InsertLicenseRequestDto;
 import com.flowerbowl.web.dto.response.mypage.*;
 import com.flowerbowl.web.service.MypageService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -71,8 +69,6 @@ public class MypageController {
     public ResponseEntity<? super DeletePayByUserResponseDto> deletePayByUser(
             @AuthenticationPrincipal String userId,
             @PathVariable(name = "pay_no") Long payNo) {
-        log.info("id={}", userId);
-        log.info("no={}",payNo);
 
         return mypageService.deletePayByUser(userId, payNo);
 
@@ -82,9 +78,15 @@ public class MypageController {
     public ResponseEntity<? super DeletePayByChefResponseDto> deletePayByChef(
             @AuthenticationPrincipal String userId,
             @PathVariable(name = "pay_no") Long payNo) {
-        log.info("id={}", userId);
-        log.info("no={}",payNo);
 
         return mypageService.deletePayByChef(userId, payNo);
+    }
+
+    @PostMapping("/api/mypage/chefs")
+    public ResponseEntity<? super InsertLicenseResponseDto> insertLicense(
+            @AuthenticationPrincipal String userId,
+            @RequestBody InsertLicenseRequestDto dto) {
+
+        return mypageService.insertLicense(dto, userId);
     }
 }

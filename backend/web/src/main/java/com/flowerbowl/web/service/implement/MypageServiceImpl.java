@@ -2,6 +2,7 @@ package com.flowerbowl.web.service.implement;
 
 import com.flowerbowl.web.domain.*;
 import com.flowerbowl.web.dto.object.mypage.*;
+import com.flowerbowl.web.dto.request.mypage.InsertLicenseRequestDto;
 import com.flowerbowl.web.dto.response.ResponseDto;
 import com.flowerbowl.web.dto.response.mypage.*;
 import com.flowerbowl.web.repository.*;
@@ -22,6 +23,7 @@ import java.util.List;
 public class MypageServiceImpl implements MypageService {
 
     private final UserRepository userRepository;
+    private final LicenseRepository licenseRepository;
     private final PayRepository payRepository;
     private final LessonLikeRepository lessonLikeRepository;
     private final LessonRepository lessonRepository;
@@ -263,6 +265,24 @@ public class MypageServiceImpl implements MypageService {
 
 
         return DeletePayByChefResponseDto.success();
+    }
+
+    @Override
+    public ResponseEntity<? super InsertLicenseResponseDto> insertLicense(InsertLicenseRequestDto dto, String userId) {
+
+        try {
+
+            User user = userRepository.findByUserId(userId);
+            License license = new License(dto, user);
+            licenseRepository.save(license);
+
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            return ResponseDto.databaseError();
+        }
+
+
+        return InsertLicenseResponseDto.success();
     }
 
 

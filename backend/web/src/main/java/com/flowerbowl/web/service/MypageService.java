@@ -1,5 +1,7 @@
 package com.flowerbowl.web.service;
 
+import com.flowerbowl.web.dto.request.mypage.InsertLicenseRequestDto;
+import com.flowerbowl.web.dto.response.ResponseDto;
 import com.flowerbowl.web.dto.response.mypage.*;
 import org.springframework.http.ResponseEntity;
 
@@ -48,9 +50,13 @@ public interface MypageService {
     ResponseEntity<? super DeletePayByUserResponseDto> deletePayByUser(String userId, Long payNo);
 
 
-
     /**
      * @return 쉐프가 결제 취소
      */
     ResponseEntity<? super DeletePayByChefResponseDto> deletePayByChef(String userId, Long payNo);
+
+    /**
+     * @return 쉐프 신청
+     */
+    ResponseEntity<? super InsertLicenseResponseDto> insertLicense(InsertLicenseRequestDto dto, String userId);
 }

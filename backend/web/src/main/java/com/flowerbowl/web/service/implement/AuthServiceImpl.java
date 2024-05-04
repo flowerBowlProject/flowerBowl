@@ -179,6 +179,9 @@ public class AuthServiceImpl implements AuthService {
             boolean isMatch = passwordEncoder.matches(userPw, encodePw);
             if (!isMatch) return SignInResponseDto.signInFail();
 
+            Boolean userWdStatus = user.getUserWdStatus();
+            if (userWdStatus) return SignInResponseDto.withdrawalUser();
+
             token = jwtProvider.create(userId);
 
         } catch (Exception exception) {

@@ -170,7 +170,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
             "INNER JOIN  " +
             "    user u ON l.user_no = u.user_no " +
             "WHERE  " +
-            "    u.user_id = :userId " +
+            "    u.user_id = :userId AND " +
+            "    l.lesson_delete_status = FALSE " +
             "GROUP BY  " +
             "    l.lesson_date, " +
             "    l.lesson_title, " +
