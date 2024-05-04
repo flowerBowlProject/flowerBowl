@@ -3,6 +3,7 @@ package com.flowerbowl.web.controller;
 import com.flowerbowl.web.dto.request.mypage.InsertLicenseRequestDto;
 import com.flowerbowl.web.dto.response.mypage.*;
 import com.flowerbowl.web.service.MypageService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -85,7 +86,7 @@ public class MypageController {
     @PostMapping("/api/mypage/chefs")
     public ResponseEntity<? super InsertLicenseResponseDto> insertLicense(
             @AuthenticationPrincipal String userId,
-            @RequestBody InsertLicenseRequestDto dto) {
+            @RequestBody @Valid InsertLicenseRequestDto dto) {
 
         return mypageService.insertLicense(dto, userId);
     }
