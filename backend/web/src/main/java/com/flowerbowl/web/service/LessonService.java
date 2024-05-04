@@ -1,5 +1,6 @@
 package com.flowerbowl.web.service;
 
+import com.flowerbowl.web.dto.object.lesson.LessonShortDto;
 import com.flowerbowl.web.dto.request.lesson.CreateRequestDto;
 import com.flowerbowl.web.dto.request.lesson.LessonRequestDto;
 import com.flowerbowl.web.dto.response.lesson.*;
@@ -18,4 +19,6 @@ public interface LessonService {
     ResponseEntity<? super PaymentInfoResponseDto> buyLesson(Long lesson_no, String userId);
     ResponseEntity<ResponseDto> LessonLike(Long lesson_no, String userId);
     ResponseEntity<ResponseDto> LessonUnlike(Long lesson_no, String userId);
+    ResponseEntity<? super FindAllResponseDto> getMostLikedLesson(Pageable pageable);
+    ResponseEntity<? super LessonCategoryResponseDto> getLessonsCategory(Boolean loginStatus, String koreaName, String userId, Pageable pageable);
 }
