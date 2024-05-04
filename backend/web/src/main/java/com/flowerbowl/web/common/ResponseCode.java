@@ -26,6 +26,7 @@ public interface ResponseCode {
     String WRONG_BOARD_TYPE = "WT"; // 잘못된 게시판 타입인 경우
     String NOT_MATCH_USER = "MU"; // 동일 유저 체크
     String WITHDRAWAL_USER = "WU"; // 회원 탈퇴한 유저가 로그인 시
+    String DUPLICATE_LICENSE = "DL"; // 중복 쉐프 신청 시
 
 
     String WRONG_FILE_EXTENSION = "WF"; // 허용되지 않은 파일 확장자인 경우
