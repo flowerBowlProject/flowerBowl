@@ -8,4 +8,5 @@ import org.springframework.stereotype.Repository;
 public interface BannerJpaDataRepository extends JpaRepository<Banner, Long> {
     Long countAllByBannerNoGreaterThan(Long base);
 //    void
+
 }
