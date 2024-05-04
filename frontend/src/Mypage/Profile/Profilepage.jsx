@@ -1,3 +1,4 @@
+
 import React, { useState ,useEffect} from "react";
 import FormSignup from "../../Component/FormSignup";
 import PersonIcon from "@mui/icons-material/Person";
@@ -31,8 +32,32 @@ const Profile = () => {
   const [emailCode,setEmailCode]=useState('');
   const CheckEmailOpen=useSelector(state=>state.emailCheck)
   const handleChangeImage = (event) => {
-    setImageFile(event.target.files[0]);
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreviewUrl(reader.result);
+        setProfileImageFile(file);
+        sessionStorage.setItem("profileImageUrl", reader.result);
+      };
+      reader.readAsDataURL(file);
+      // setImageFile(file);
+    }
   };
+
+  //쉐프신청
+  const handleChefApplicationImageChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setChefApplicationImagePreviewUrl(reader.result);
+        setChefApplicationImageFile(file);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   const handleChangeEmailCode=(e)=>{
     const value=e.target.value
     setEmailCode(value);
@@ -172,6 +197,7 @@ const Profile = () => {
 
      }
      }
+
   const handleBut = (type, bool) => {
     switch(type){
       case 'pw':
@@ -187,14 +213,22 @@ const Profile = () => {
   };
   return (
     <>
-      <Grid container direction="row">
+      <Grid container direction="row" className="profileContainer">
         <Grid item xs={3}>
           <Grid container direction="column" ml="1.5em" mt="2em">
             <Grid item ml="-1em">
               <div className="ProfileImage">
-                <PersonIcon
-                  sx={{ color: "black", width: "100px", height: "100px" }}
-                />
+                {imagePreviewUrl ? (
+                  <img
+                    src={imagePreviewUrl}
+                    alt="Profile"
+                    style={{ width: "100px", height: "100px" }}
+                  />
+                ) : (
+                  <PersonIcon
+                    sx={{ color: "black", width: "100px", height: "100px" }}
+                  />
+                )}
               </div>
             </Grid>
             <Grid item mt="0.5em" ml="-0.5em">
@@ -216,9 +250,17 @@ const Profile = () => {
             <Grid item mt="3em" ml="-1em">
               <Tooltip title="파일을 첨부해주세요" followCursor>
                 <div className="ProfileImage">
-                  <PersonIcon
-                    sx={{ color: "black", width: "100px", height: "100px" }}
-                  />
+                  {imagePreviewUrl ? (
+                    <img
+                      src={chefApplicationImagePreviewUrl}
+                      alt="Profile"
+                      style={{ width: "100px", height: "100px" }}
+                    />
+                  ) : (
+                    <PersonIcon
+                      sx={{ color: "black", width: "100px", height: "100px" }}
+                    />
+                  )}
                 </div>
               </Tooltip>
             </Grid>
@@ -233,7 +275,7 @@ const Profile = () => {
                   style={{ display: "none" }}
                   type="file"
                   name="imageFile"
-                  onChange={handleChangeImage}
+                  onClick={handleChefApplicationImageChange}
                 />
                 쉐프 신청
               </ButtonContainStyle>
@@ -310,7 +352,6 @@ const Profile = () => {
               <FormSignup
                 size="joy"
                 title="새 비밀번호 변경"
-                place_text="******"
                 helper_text="영문, 숫자, 특수문자 포함 8~15자로 작성해주세요."
                 pass_exis={true}
                 vaild="newPw"
@@ -322,7 +363,6 @@ const Profile = () => {
               <FormSignup
                 size="joy"
                 title="새 비밀번호 확인"
-                place_text="******"
                 helper_text="비밀번호가 일치하지 않습니다."
                 pass_exis={true}
                 vaild={passConfirm}

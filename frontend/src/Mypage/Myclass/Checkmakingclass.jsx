@@ -17,11 +17,10 @@ const Checkmakingclass = () => {
   const [sortComment, setSortComment] = useState("asc");
   const [listData, setListData] = useState([]);
   const [refreshData, setRefreshData] = useState(false);
-  const [slice,setSlice]= useState(8);
-  const handleClickMoreDetail=()=>{
-    if(listData.length>slice)
-    setSlice(slice+8)
-  }
+  const [slice, setSlice] = useState(8);
+  const handleClickMoreDetail = () => {
+    if (listData.length > slice) setSlice(slice + 8);
+  };
   //액세스토큰 확인
   // console.log("Access Token:", accessToken);
 
@@ -74,7 +73,7 @@ const Checkmakingclass = () => {
   const toggleSortBookmark = () => {
     setSortBookmark((prevDirection) => {
       const newDirection = prevDirection === "asc" ? "desc" : "asc";
-      sortDataByAttribute("bookmark_cnt", newDirection); // Sort data after updating the direction
+      sortDataByAttribute("lesson_like_cnt", newDirection); // Sort data after updating the direction
       return newDirection;
     });
   };
@@ -107,17 +106,30 @@ const Checkmakingclass = () => {
   // 삭제버튼 api연결
   const handleDelete = async (lessonNo) => {
     console.log("Delete button clicked", lessonNo); // 로그: 함수 호출과 수업 번호 확인
+    // console.log("Request data:", { lesson_no: lessonNo });
+    // console.log("Headers:", { Authorization: `Bearer ${accessToken}` });
 
     try {
-      const response = await axios.put(`${url}/api/lessons`, {
-        lesson_no: lessonNo,
-        headers: { Authorization: `Bearer ${accessToken}` },
-      });
+      const response = await axios.put(
+        `${url}/api/lessons`,
+        {
+          lesson_no: lessonNo,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
-      console.log("API Response", response); // 로그: API 응답 전체 확인
+      // console.log("API Response", response); // 로그: API 응답 전체 확인
 
       if (response.status === 200) {
-        console.log("Success:", response.data.message); // 로그: 성공 메시지 확인
+        console.log("Success:", response.data.message);
+        setListData((currentData) =>
+          currentData.filter((lesson) => lesson.lesson_no !== lessonNo)
+        );
         setRefreshData(!refreshData);
       }
     } catch (error) {
@@ -128,11 +140,9 @@ const Checkmakingclass = () => {
   if (!accessToken) {
     return <div>로딩중입니다..</div>;
   }
-  
+
   return (
     <>
-      
-
       {/* 내용 */}
       <section className="table-content">
         <table className="custom-table">
@@ -181,15 +191,17 @@ const Checkmakingclass = () => {
             </tr>
           </thead>
           <tbody>
-            {[...listData.slice(0,slice), ...Array(8-listData.slice(slice-8,slice).length)].map((data, index) => (
-              
+            {[
+              ...listData.slice(0, slice),
+              ...Array(8 - listData.slice(slice - 8, slice).length),
+            ].map((data, index) => (
               <tr key={index}>
                 <td>{data ? index + 1 : ""}</td>
                 <td>{data ? data.lesson_date : ""}</td>
                 <td onClick={(e) => clickDetail(e, data.lesson_no)}>
                   {data ? data.lesson_title : ""}
                 </td>
-                <td>{data ? data.lesson_like_cnt.toLocaleString(): ""}</td>
+                <td>{data ? data.lesson_like_cnt.toLocaleString() : ""}</td>
                 <td>{data ? data.review_cnt.toLocaleString() : ""}</td>
                 <td>
                   {data ? (
@@ -204,7 +216,9 @@ const Checkmakingclass = () => {
                   )}
                 </td>
                 <td>
-                  {data ? <ButtonContain size="verySmall" text="수정" handleClick={handleClickMoreDetail}/> : ""}
+                  <Link to={`/modifyClass/${data?.lesson_no}`}>
+                    {data ? <ButtonContain size="verySmall" text="수정" /> : ""}
+                  </Link>
                 </td>
               </tr>
             ))}
@@ -214,7 +228,11 @@ const Checkmakingclass = () => {
 
       {/* 더보기 버튼    */}
       <section className="bottom-add">
-        <ButtonContain size="medium" text="더보기" />
+        <ButtonContain
+          size="medium"
+          text="더보기"
+          handleClick={handleClickMoreDetail}
+        />
       </section>
     </>
   );

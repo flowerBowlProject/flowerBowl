@@ -22,7 +22,12 @@ import CheckClassList from "./Mypage/ApplyClass/CheckClassList";
 import { BookmarkClass, BookmarkRecipe } from "./Mypage/Bookmark/";
 import { Checkmakingclass, Checkteachingclass } from "./Mypage/Myclass/";
 import Checkmakingrecipe from "./Mypage/Myrecipe/Checkmakingrecipe";
-import { CheckPaidList, CheckReview, RegisterReview } from "./Mypage/PaidList/";
+import {
+  CheckPaidList,
+  CheckReview,
+  RegisterReview,
+  EditReview,
+} from "./Mypage/PaidList/";
 import Sidebar from "./Mypage/Sidebar";
 import AdminSidebar from "./Mypage/AdminSidebar";
 import BookmarkPage from "./Mypage/Bookmark/BookmarkPage";
@@ -56,25 +61,25 @@ const App = () => {
         <Route path="/classDetail/:lesson_no" element={<ClassDetail />} />
         <Route path="/modifyClass/:lesson_no" element={<ModifyClass />} />
         <Route path="/registerClass" element={<RegisterClass />} />
-        <Route path="/classList" element={<ClassList/>}/>
+        <Route path="/classList" element={<ClassList />} />
 
         <Route path="/Mypage" element={<Sidebar />}>
           <Route path="profile" element={<Profilepage />} />
           <Route path="checkClassList" element={<CheckClassList />} />
-          <Route path="bookmark" element={<BookmarkPage/>} >
+          <Route path="bookmark" element={<BookmarkPage />}>
             <Route path="class" element={<BookmarkClass />} />
-            <Route path="recipe" element={<BookmarkRecipe />} />  
+            <Route path="recipe" element={<BookmarkRecipe />} />
           </Route>
-          <Route path="checkClass" element={<CheckClass/>}>
+          <Route path="checkClass" element={<CheckClass />}>
             <Route path="making" element={<Checkmakingclass />} />
             <Route path="teaching" element={<Checkteachingclass />} />
           </Route>
-          
-        <Route path="checkmakingrecipe" element={<Checkmakingrecipe />} />
-          <Route path="paymentDetail" element={<PaymentDetail/>} >
+          <Route path="checkmakingrecipe" element={<Checkmakingrecipe />} />
+          <Route path="paymentDetail" element={<PaymentDetail />}>
             <Route path="checkPaidList" element={<CheckPaidList />} />
             <Route path="checkReview" element={<CheckReview />} />
             <Route path="registerReview" element={<RegisterReview />} />
+            <Route path="editReview/:review_no" element={<EditReview />} />
           </Route>
         </Route>
 
