@@ -1,10 +1,14 @@
 package com.flowerbowl.web.domain;
 
 import jakarta.persistence.*;
-import lombok.Getter;
+import lombok.*;
 
 @Getter
 @Entity
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@Setter
 public class LessonFile {
 
     @Id
@@ -22,5 +26,10 @@ public class LessonFile {
     @JoinColumn(name = "lesson_no") // Lesson table
     private Lesson lesson;
 
+
+    public String getRealOname(){
+        int idx = lessonFileOname.split("/").length - 1;
+        return lessonFileOname.split("/")[idx];
+    }
 }
 
