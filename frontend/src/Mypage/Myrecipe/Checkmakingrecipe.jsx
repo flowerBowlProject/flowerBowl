@@ -16,11 +16,10 @@ const Checkmakingrecipe = () => {
   const [sortBookmark, setSortBookmark] = useState("asc");
   const [sortComment, setSortComment] = useState("asc");
   const [listData, setListData] = useState([]);
-  const [slice,setSlice]= useState(8);
-  const handleClickMoreDetail=()=>{
-    if(listData.length>slice)
-    setSlice(slice+8)
-  }
+  const [slice, setSlice] = useState(8);
+  const handleClickMoreDetail = () => {
+    if (listData.length > slice) setSlice(slice + 8);
+  };
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -31,7 +30,7 @@ const Checkmakingrecipe = () => {
         });
         setListData(response.data.myRecipes);
         //코드 확인
-         console.log(response.data.myRecipes);
+        console.log(response.data.myRecipes);
       } catch (error) {
         console.error("Error fetching data:", error);
         setListData([]);
@@ -39,6 +38,23 @@ const Checkmakingrecipe = () => {
     };
     fetchData();
   }, [accessToken]);
+
+  //삭제버튼
+  const handleDeleteRecipe = async (recipe_no) => {
+    try {
+      const response = await axios.delete(`${url}/api/recipes/${recipe_no}`, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+      if (response.status === 200) {
+        setListData(listData.filter((item) => item.recipe_no !== recipe_no));
+        console.log(response.data.message);
+      }
+    } catch (error) {
+      console.error("Error during deletion:", error);
+    }
+  };
 
   //   날짜정렬
   const sortTableDataByDate = (direction = "asc") => {
@@ -66,7 +82,7 @@ const Checkmakingrecipe = () => {
   const toggleSortBookmark = () => {
     setSortBookmark((prevDirection) => {
       const newDirection = prevDirection === "asc" ? "desc" : "asc";
-      sortDataByAttribute("bookmark_cnt", newDirection); // Sort data after updating the direction
+      sortDataByAttribute("recipe_like_cnt", newDirection); // Sort data after updating the direction
       return newDirection;
     });
   };
@@ -146,7 +162,10 @@ const Checkmakingrecipe = () => {
             </tr>
           </thead>
           <tbody>
-          {[...listData.slice(0,slice), ...Array(8-listData.slice(slice-8,slice).length)].map((data, index) => (
+            {[
+              ...listData.slice(0, slice),
+              ...Array(8 - listData.slice(slice - 8, slice).length),
+            ].map((data, index) => (
               <tr key={index}>
                 <td>{data ? index + 1 : ""}</td>
                 <td>{data ? data.recipe_date : ""}</td>
@@ -154,10 +173,20 @@ const Checkmakingrecipe = () => {
                 <td>{data ? data.recipe_like_cnt.toLocaleString() : ""}</td>
                 <td>{data ? data.comment_cnt.toLocaleString() : ""}</td>
                 <td>
-                  {data ? <ButtonOutlined size="verySmall" text="삭제" /> : ""}
+                  {data ? (
+                    <ButtonOutlined
+                      handleClick={() => handleDeleteRecipe(data.recipe_no)}
+                      size="verySmall"
+                      text="삭제"
+                    />
+                  ) : (
+                    ""
+                  )}
                 </td>
                 <td>
-                  {data ? <ButtonContain size="verySmall" text="수정" /> : ""}
+                  <Link to={`/modifyRecipe/${data?.recipe_no}`}>
+                    {data ? <ButtonContain size="verySmall" text="수정" /> : ""}
+                  </Link>
                 </td>
               </tr>
             ))}
@@ -167,7 +196,11 @@ const Checkmakingrecipe = () => {
 
       {/* 더보기 버튼    */}
       <section className="bottom-add">
-        <ButtonContain size="medium" text="더보기" handleClick={handleClickMoreDetail} />
+        <ButtonContain
+          size="medium"
+          text="더보기"
+          handleClick={handleClickMoreDetail}
+        />
       </section>
     </>
   );
