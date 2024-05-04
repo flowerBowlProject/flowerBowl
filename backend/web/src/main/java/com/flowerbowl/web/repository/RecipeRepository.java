@@ -3,8 +3,11 @@ package com.flowerbowl.web.repository;
 import com.flowerbowl.web.domain.Category;
 import com.flowerbowl.web.domain.Recipe;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -36,4 +39,12 @@ public interface RecipeRepository extends JpaRepository<Recipe, Long> {
             "LIMIT 5;", nativeQuery = true)
     List<Recipe> findRecipesByPopularity();
 
+    @Modifying
+    @Transactional
+    @Query(value = "UPDATE recipe " +
+            "SET " +
+            "   recipe_writer = :newNickname " +
+            "WHERE " +
+            "   user_no = (SELECT user_no FROM user WHERE user_id = :userId) ", nativeQuery = true)
+    void updateRecipeWriter(@Param("userId") String userId, @Param("newNickname") String newNickname);
 }
