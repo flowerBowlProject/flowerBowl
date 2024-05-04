@@ -62,6 +62,7 @@ public class WebConfig {
                 .authorizeHttpRequests(request -> request
                                 .requestMatchers("/", "/file/**", "/error", // 스프링이 웰컴 페이지를 찾으려고 하는데 못 찾으니까 error페이지로 이동하려고 하는거 같다
                                         "/api/recipes/guest", "/api/recipes/guest/**",
+                                        "/api/recipes/admin", "/api/recipes/popular",
                                         "/api/communities/detail/*",
                                         "/api/guest/**", "/api/banners",
                                         "/api/users/findId", "/api/users/findPw",

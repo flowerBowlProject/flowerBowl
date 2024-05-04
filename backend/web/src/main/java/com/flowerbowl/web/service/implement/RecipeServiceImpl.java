@@ -84,6 +84,11 @@ public class RecipeServiceImpl implements RecipeService {
                 fileSname = new ArrayList<>();
 
                 for (String source : request.getRecipe_file_sname()) {
+                    source = source.trim();
+                    if (source.isEmpty()) {
+                        continue;
+                    }
+
                     // request의 file_sname 리스트를 순회하며 업로드된 이미지가 실제로 사용됐는지 확인한다.
                     if (content.contains(source)) {
                         // file_sname에서 파일명을 가져오기 위해 "/"로 나누고 마지막 인덱스를 가져온다.
@@ -216,6 +221,11 @@ public class RecipeServiceImpl implements RecipeService {
                     List<String> recipeFileSnameList = recipeFile.getRecipeFileSname();
 
                     for (String source : request.getRecipe_file_sname()) {
+                        source = source.trim();
+                        if (source.isEmpty()) {
+                            continue;
+                        }
+
                         int lastIdx = source.split("/").length - 1;
                         String fileName = source.split("/")[lastIdx];
 
@@ -264,6 +274,11 @@ public class RecipeServiceImpl implements RecipeService {
                     fileSname = new ArrayList<>();
 
                     for (String source : request.getRecipe_file_sname()) {
+                        source = source.trim();
+                        if (source.isEmpty()) {
+                            continue;
+                        }
+
                         if (content.contains(source)) {
                             int lastIdx = source.split("/").length - 1;
                             String fileName = source.split("/")[lastIdx];
@@ -685,6 +700,52 @@ public class RecipeServiceImpl implements RecipeService {
             logPrint(e);
 
             GetRecipesCategoryFaResDto responseBody = new GetRecipesCategoryFaResDto(ResponseCode.INTERNAL_SERVER_ERROR, ResponseMessage.INTERNAL_SERVER_ERROR);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseBody);
+        }
+    }
+
+    @Override
+    public ResponseEntity<? extends RecipeResponseDto> getRecipesAdmin() throws Exception {
+        try {
+            List<Recipe> recipes = recipeRepository.findRecipesByRoleAdmin();
+
+            List<GetRecipesAdminDto> posts = ListUtils.emptyIfNull(recipes).stream().map((recipe -> {
+                return GetRecipesAdminDto.builder()
+                        .recipe_no(recipe.getRecipeNo())
+                        .recipe_sname(recipe.getRecipeSname())
+                        .recipe_title(recipe.getRecipeTitle())
+                        .recipe_content(recipe.getRecipeContent())
+                        .build();
+            })).toList();
+
+            GetRecipesAdminSuResDto responseBody = new GetRecipesAdminSuResDto(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, posts);
+            return ResponseEntity.status(HttpStatus.OK).body(responseBody);
+        } catch (Exception e) {
+            logPrint(e);
+
+            GetRecipesAdminFaResDto responseBody = new GetRecipesAdminFaResDto(ResponseCode.INTERNAL_SERVER_ERROR, ResponseMessage.INTERNAL_SERVER_ERROR);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseBody);
+        }
+    }
+
+    @Override
+    public ResponseEntity<? extends RecipeResponseDto> getRecipesPopular() throws Exception {
+        try {
+            List<Recipe> recipes = recipeRepository.findRecipesByPopularity();
+
+            List<GetRecipesPopularDto> posts = ListUtils.emptyIfNull(recipes).stream().map((recipe -> {
+                return GetRecipesPopularDto.builder()
+                        .recipe_no(recipe.getRecipeNo())
+                        .recipe_sname(recipe.getRecipeSname())
+                        .build();
+            })).toList();
+
+            GetRecipesPopularSuResDto responseBody = new GetRecipesPopularSuResDto(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, posts);
+            return ResponseEntity.status(HttpStatus.OK).body(responseBody);
+        } catch (Exception e) {
+            logPrint(e);
+
+            GetRecipesPopularFaResDto responseBody = new GetRecipesPopularFaResDto(ResponseCode.INTERNAL_SERVER_ERROR, ResponseMessage.INTERNAL_SERVER_ERROR);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseBody);
         }
     }
