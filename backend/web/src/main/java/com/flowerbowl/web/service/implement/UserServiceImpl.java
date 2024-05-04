@@ -7,6 +7,9 @@ import com.flowerbowl.web.dto.request.user.PatchProfileRequestDto;
 import com.flowerbowl.web.dto.response.ResponseDto;
 import com.flowerbowl.web.dto.response.user.*;
 import com.flowerbowl.web.provider.EmailProvider;
+import com.flowerbowl.web.repository.CommunityRepository;
+import com.flowerbowl.web.repository.LessonRepository;
+import com.flowerbowl.web.repository.RecipeRepository;
 import com.flowerbowl.web.repository.UserRepository;
 import com.flowerbowl.web.service.UserService;
 import com.flowerbowl.web.util.EmailUtil;
@@ -28,6 +31,9 @@ import java.util.List;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+    private final LessonRepository lessonRepository;
+    private final CommunityRepository communityRepository;
+    private final RecipeRepository recipeRepository;
 
     private final EmailProvider emailProvider;
 
@@ -86,10 +92,18 @@ public class UserServiceImpl implements UserService {
 //            BeanUtils.copyProperties(dto, user); 나중에 사용해보자
 
             if (StringUtils.hasText(dto.getNew_email())) user.setUserEmail(dto.getNew_email());
-            if (StringUtils.hasText(dto.getNew_nickname())) user.setUserNickname(dto.getNew_nickname());
             if (StringUtils.hasText(dto.getNew_phone())) user.setUserPhone(dto.getNew_phone());
-            if (StringUtils.hasText(dto.getUser_file_oanme())) user.setUserFileOname(dto.getUser_file_oanme());
+            if (StringUtils.hasText(dto.getUser_file_oname())) user.setUserFileOname(dto.getUser_file_oname());
             if (StringUtils.hasText(dto.getUser_file_sname())) user.setUserFileSname(dto.getUser_file_sname());
+
+            // save전 인데 여기에 하는게 맞나? 오류가 있으면 catch문에 걸리니까 상관 없을 거 같다
+            if (StringUtils.hasText(dto.getNew_nickname())) {
+                user.setUserNickname(dto.getNew_nickname());
+                lessonRepository.updateLessonWriter(userId, dto.getNew_nickname());
+                recipeRepository.updateRecipeWriter(userId, dto.getNew_nickname());
+                communityRepository.updateCommunityWriter(userId, dto.getNew_nickname());
+            }
+
             user.setUserPwChanged(false);
             userRepository.save(user);
 
