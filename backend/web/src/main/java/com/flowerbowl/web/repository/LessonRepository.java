@@ -12,4 +12,6 @@ public interface LessonRepository extends JpaRepository<Lesson, Long> {
     List<Lesson> findAllByLessonNoIn(List<Long> lessonNos);
 
     Lesson findByLessonNo(Long lessonNo);
+
+    Boolean existsLessonByLessonNo(Long lesson_no);
 }

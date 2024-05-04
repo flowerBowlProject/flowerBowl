@@ -1,10 +1,10 @@
-import React,{useState} from "react";
+import React,{useState,useEffect} from "react";
 import { Grid, Typography } from "@mui/material";
 import ButtonContainStyle from "./ButtonContainStyle.jsx";
 import Input_search_style from "../MainPage/InputSearchStyle.jsx";
 import { validation,validationPassConfirm } from "../Hook/Validation.jsx";
 import { useSelector,useDispatch } from "react-redux";
-import { HideDuplication, SETMEMBEREMAIL, setMemberPw, setMemberTel, setMermberEmail } from "../persistStore.jsx";
+import { HideDuplication, SETMEMBEREMAIL, setMemberNewPw, setMemberPw, setMemberTel, setMermberEmail } from "../persistStore.jsx";
 const FormSignup = ({
   title,
   but_text,
@@ -17,7 +17,9 @@ const FormSignup = ({
   setPass,
   pass_confirm,
   handleBut=()=>{},
-  handleCheck=()=>{}
+  handleCheck=()=>{},
+  disable,
+  valueUser
 }) => {
   const dispatch=useDispatch();
   const duplicationBoolean=useSelector(state=>state.duplicationBoolean[vaild])
@@ -39,10 +41,14 @@ const FormSignup = ({
       dispatch(setMemberPw(value))
     }else if(vaild==='tel'){
       dispatch(setMemberTel(value))
+    }else if(vaild==='newPw'){
+      dispatch(setMemberNewPw(value))
     }
     
   }
- 
+  useEffect(()=>{
+    setText(valueUser);
+  },[valueUser])
   const handleSize=()=>{
     if(size==='joy'){
         return{
@@ -88,11 +94,12 @@ const FormSignup = ({
         </Grid>
         <Grid xs item mt="0.2vw" height={form_size.height} >
           <Input_search_style
-            value={text}
+            disabled={disable}
             type={pass_exis ? "password" : "text"}
             sx={{ width: "20vw",height:form_size.height_2 }}
             variant="outlined"
             size="small"
+            value={text}
             onBlur={(e)=>handleBlur(e)}
             onChange={handleChange}
             placeholder={place_text}

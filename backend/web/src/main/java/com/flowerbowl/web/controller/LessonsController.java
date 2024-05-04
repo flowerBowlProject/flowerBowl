@@ -1,10 +1,7 @@
 package com.flowerbowl.web.controller;
 
 import com.flowerbowl.web.dto.request.lesson.*;
-import com.flowerbowl.web.dto.response.lesson.ResponseDto;
-import com.flowerbowl.web.dto.response.lesson.FindAllResponseDto;
-import com.flowerbowl.web.dto.response.lesson.FindOneResponseDto;
-import com.flowerbowl.web.dto.response.lesson.PaymentInfoResponseDto;
+import com.flowerbowl.web.dto.response.lesson.*;
 import com.flowerbowl.web.service.LessonService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -67,6 +64,11 @@ public class LessonsController {
     @GetMapping("/guest/lessons/{lesson_no}")
     public ResponseEntity<? super FindOneResponseDto> lessonsFindOneGuest(@PathVariable(value = "lesson_no") Long lesson_no){
         return lessonService.findOneGuestResponseDto(lesson_no);
+    }
+    // 특정 클래스 리뷰조회 (로그인 + 비로그인) // GET
+    @GetMapping("/guest/lessons/reviews")
+    public ResponseEntity<? super ReviewsResponseDto> lessonsReviews(@RequestParam("lessonNo") Long lesson_no, @PageableDefault(page = 0, size = 8) Pageable pageable){
+        return lessonService.findReviews(lesson_no, pageable);
     }
 
     // 클래스 구매 // review_enable에도 넣어줘야함

@@ -23,8 +23,10 @@ public interface ResponseMessage {
     String NOT_EXIST_PAGE = "This page does not exist"; // 존재하지 않는 페이지인 경우
     String NOT_EXIST_COMMUNITY = "This community does not exist"; // 존재하지 않는 커뮤니티 게시글인 경우
     String NOT_EXIST_CATEGORY = "This category does not exist"; // 존재하지 않는 카테고리인 경우
+    String NOT_EXIST_COMMENT = "This comment or Parent comment does not exist"; // 존재하지 않는 댓글인 경우
     String FIND_ID_FAIL = "Email incorrect"; // 아이디 찾기 실패
     String FIND_PW_FAIL = "Information mismatch"; // 비번 찾기 실패
+    String WRONG_BOARD_TYPE = "Wrong board type"; // 잘못된 게시판 타입인 경우
 
 
     String MAIL_FAIL = "Mail Send Fail"; // 메일 발송 실패

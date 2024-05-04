@@ -6,18 +6,19 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import Slide from "@mui/material/Slide";
-import axios from "axios";
+import axios from 'axios';
 import { url } from "../../url";
-import { useSelector } from "react-redux";
-
+import { useDispatch , useSelector} from "react-redux";
+import { editErrorType, openError } from "../../persistStore";
+import {useNavigate} from 'react-router-dom';
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
-
-export default function Withdrawl() {
-  const accessToken = useSelector((state) => state.accessToken);
+export default function Withdrawl({hanldeWithDrawlUser}) {
   const [open, setOpen] = React.useState(false);
-
+  const dispatch=useDispatch();
+  const navigate=useNavigate();
+  const accessToken=useSelector(state=>state.accessToken)
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -25,7 +26,10 @@ export default function Withdrawl() {
   const handleClose = () => {
     setOpen(false);
   };
-
+  const handleWithDrawl=()=>{
+    setOpen(false)
+    hanldeWithDrawlUser()
+  }
   return (
     <React.Fragment>
       <Button
@@ -66,7 +70,7 @@ export default function Withdrawl() {
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose} sx={{ color: "main.br" }}>
+          <Button onClick={handleWithDrawl} sx={{ color: "main.br" }}>
             예, 화반 탈퇴할래요
           </Button>
           <Button onClick={handleClose} sx={{ color: "main.br" }}>

@@ -21,7 +21,7 @@ const CardComp = ({title, like_count, date, comment_count, sname, onClick, type}
           component="img"
           height="250"
           width="250"
-          image="../images/mookuk.jpeg"
+          image={sname}
           alt="레시피 사진"
           sx={{ borderBottom: "#F6C47B solid 2px" }}
         />

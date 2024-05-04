@@ -1,16 +1,22 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { url } from "../url";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import ButtonContain from "../Component/ButtonContain";
+import { editErrorType, openError } from "../persistStore";
 
 const { IMP } = window;
 
 const ClassPayment = ({ lesson_no }) => {
     const [paymentData, setPaymentData] = useState({});
     const accessToken = useSelector(state => state.accessToken);
+    const dispatch = useDispatch();
 
     const buyClass = async () => {
+        if(accessToken==''){
+            dispatch(editErrorType('NT'));
+            dispatch(openError());
+        }
         try {
             const response = await axios.post(`${url}/api/user/lessons/payments`, {
                 "lesson_no": lesson_no
@@ -20,11 +26,11 @@ const ClassPayment = ({ lesson_no }) => {
                 }
             });
             console.log(response);
-            setPaymentData(response.data.payinfo);
+            setPaymentData(response.data.request_pay);
             if (window.IMP) {
-                window.IMP.init([response.data.payinfo.store_id]); // 결제 데이터 정의
+                window.IMP.init([response.data.store_id]); // 결제 데이터 정의
             }
-            window.IMP.request_pay(response.data.payinfo, callback);
+            window.IMP.request_pay(response.data.request_pay, callback);
         } catch (error) {
             console.log(error);
         }
@@ -33,7 +39,7 @@ const ClassPayment = ({ lesson_no }) => {
     const callback = (response) => {
         const { success, error_msg, imp_uid, merchant_uid, pay_method, paid_amount, status } = response;
         if (success) {
-            console.log('성공');
+            console.log('결제 완료되었습니다.');
         } else {
             console.log('실패');
         }

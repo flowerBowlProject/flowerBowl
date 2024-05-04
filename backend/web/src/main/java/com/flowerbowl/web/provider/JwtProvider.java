@@ -82,7 +82,7 @@ public class JwtProvider {
             log.error("class={}", exception.getClass());
             return null;
         } catch (Exception exception) {
-            request.setAttribute("exception", JwtError.NOT_EXIST_TOKEN.getCode());
+            request.setAttribute("exception", JwtError.NOT_FIND_EXCEPTION.getCode());
             log.error("Jwt Exception [Err_Msg]: {}", exception.getMessage());
             log.error("class={}", exception.getClass());
             return null;
