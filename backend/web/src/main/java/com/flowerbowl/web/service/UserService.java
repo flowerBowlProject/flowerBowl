@@ -21,7 +21,7 @@ public interface UserService {
 
     /**
      *
-     * @return user_wd_status false로 변경
+     * @return 회원 탈퇴
      */
     ResponseEntity<? super PatchWdResponseDto> patchWd(String userId);
 

@@ -32,4 +32,9 @@ public class SignInResponseDto extends ResponseDto {
         ResponseDto body = new ResponseDto(ResponseCode.SIGN_IN_FAIL, ResponseMessage.SIGN_IN_FAIL);
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(body);
     }
+
+    public static ResponseEntity<? super ResponseDto> withdrawalUser() {
+        ResponseDto body = new ResponseDto(ResponseCode.WITHDRAWAL_USER, ResponseMessage.WITHDRAWAL_USER);
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(body);
+    }
 }

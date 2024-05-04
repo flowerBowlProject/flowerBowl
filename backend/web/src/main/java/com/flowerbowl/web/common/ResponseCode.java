@@ -24,7 +24,8 @@ public interface ResponseCode {
     String FIND_ID_FAIL = "EI"; // 아이디 찾기 실패
     String FIND_PW_FAIL = "EP"; // 비번 찾기 시 실패
     String WRONG_BOARD_TYPE = "WT"; // 잘못된 게시판 타입인 경우
-    String NOT_MATCH_USER = "MU";
+    String NOT_MATCH_USER = "MU"; // 동일 유저 체크
+    String WITHDRAWAL_USER = "WU"; // 회원 탈퇴한 유저가 로그인 시
 
 
     String WRONG_FILE_EXTENSION = "WF"; // 허용되지 않은 파일 확장자인 경우
