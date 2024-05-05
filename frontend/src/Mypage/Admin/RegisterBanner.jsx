@@ -1,26 +1,40 @@
 import { React, useState } from "react";
 import FileDropArea from "./FileDropArea";
-import TextInput from "./TextInput";
 import ButtonContain from "../../Component/ButtonContain";
 import "./RegisterBanner.css";
 import axios from "axios";
 import { url } from "../../url";
 import { useSelector } from "react-redux";
+import "./TextInput.css";
 
 const RegisterBanner = () => {
   const accessToken = useSelector((state) => state?.accessToken);
   const [refreshData, setRefreshData] = useState(false);
+  const [content_oname, setContent_oname] = useState("");
+  const [content_sname, setContent_sname] = useState("");
+  const [content, setContent] = useState("");
 
-  const updateBanner = async (banner_sname, banner_oname, content) => {
+  const handleContent = (e) => {
+    setContent(e.target.value);
+  };
+
+  const onUploadSuccess = (oname, sname) => {
+    setContent_oname(oname);
+    setContent_sname(sname);
+  };
+
+  const updateBanner = async () => {
     const updateUrl = `${url}/api/admin/banners`;
-    console.log("Attempting to update:", updateUrl); // Log the URL
+    console.log(
+      `banner_sname: ${content_sname}, banner_oname: ${content_oname}, content: ${content}`
+    );
 
     try {
       const response = await axios.put(
         updateUrl,
         {
-          admin_banner_sname: banner_sname,
-          admin_banner_oname: banner_oname,
+          admin_banner_sname: content_sname,
+          admin_banner_oname: content_oname,
           admin_content: content,
         },
         {
@@ -47,10 +61,17 @@ const RegisterBanner = () => {
     <>
       <div className="division-line"></div>
       <div className="dragdrop">
-        <FileDropArea />
+        <FileDropArea onUploadSuccess={onUploadSuccess} />
       </div>
       <div className="inputbanner">
-        <TextInput />
+        <div className="text-input-container">
+          <textarea
+            className="text-input"
+            placeholder="내용을 입력하세요"
+            value={content}
+            onChange={handleContent}
+          />
+        </div>
       </div>
 
       <div className="fileadd">
