@@ -111,6 +111,8 @@ public class LessonServiceImpl implements LessonService {
 
                         file_oname.add(newFileOname);
                         file_sname.add(newFileSname);
+                    }else{
+                        log.info("lessonService/lessonCreate request로 file_name은 왔지만 content에 포함x, : {}", source);
                     }
                 }
             }
@@ -128,13 +130,21 @@ public class LessonServiceImpl implements LessonService {
             Lesson lessonResult = lessonRepository.save(lesson);
 
             // DB file에 넣어줌
-            if(file_oname.size() != file_sname.size()){
+            if(file_oname != null && file_sname != null && (file_oname.size() != file_sname.size())){
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseDto("ISE", "file_oname과 file_sname의 사이즈가 다릅니다."));
             }
 
             LessonFile lessonFile = new LessonFile();
             lessonFile.setLesson(lessonResult);
-            for(int i = 0; i < file_oname.size(); i++){
+            int iterNum = 0;
+            if(file_oname == null){
+                iterNum = 0;
+                log.info("file_oname0 : null");
+            }else{
+                iterNum = file_oname.size();
+                log.info("file_oname1 : {}", iterNum);
+            }
+            for(int i = 0; i < iterNum; i++){
                 lessonFile.setLessonFileSname(file_sname.get(i));
                 lessonFile.setLessonFileOname(file_oname.get(i));
                 lessonFileRepository.save(lessonFile);
@@ -212,7 +222,7 @@ public class LessonServiceImpl implements LessonService {
             // file 수정
             List<LessonFile> lessonFileList = lessonFileRepository.findLessonFilesByLesson_LessonNo(lesson_no);
             // requestFIleOname : temp/lesson/파일명
-            List<String> requestFileOname = lessonRequestDto.getLesson_file_oname();
+            List<String> requestFileOname = lessonRequestDto.getLesson_file_oname(); // 이게 null일 수 도 있음
             List<String> requestFileSname = lessonRequestDto.getLesson_file_sname();
 
             /*
@@ -225,14 +235,20 @@ public class LessonServiceImpl implements LessonService {
                     .map(LessonFile::getRealOname)
                     .collect(Collectors.toSet());
 
-            if(requestFileOname.size() != requestFileSname.size()){
+            if(requestFileOname != null && requestOname != null && (requestFileOname.size() != requestFileSname.size())){
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseDto("FA", "fileOname과 fileSname의 크기 다릅니다."));
             }
 
             // requestFileOname : temp/lesson/파일명
             // temp/
             String content = lessonRequestDto.getLesson_content();
-            for(int i = 0; i < requestFileOname.size(); i++){
+            int iterNum = 0;
+            if(requestFileOname == null){
+                iterNum = 0;
+            }else{
+                iterNum = requestFileOname.size();
+            }
+            for(int i = 0; i < iterNum; i++){
                 // 기존에 없는 파일이 추가된 경우 // curFileOname :  lesson/파일명
                 int idx = requestFileOname.get(i).split("/").length - 1;
                 String fileOnameWoDir = requestFileOname.get(i).split("/")[idx]; // fileOname without dir
