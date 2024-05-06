@@ -334,9 +334,9 @@ public class LessonServiceImpl implements LessonService {
         }
     }
 
-    // 특정 클래스 조회(로그인) // 즐겨찾기 목록
+    // 특정 클래스 조회(로그인 + 비로그인) // 즐겨찾기 목록
     @Override
-    public ResponseEntity<? super FindOneResponseDto> findOneResponseDto(Long lesson_no, String userId){
+    public ResponseEntity<? super FindOneResponseDto> findOneResponseDto(Boolean loginStatus, Long lesson_no, String userId){
 //    public void findOneResponseDto(Long lesson_no){
         try{
             User user = userRepository.findByUserId(userId);
@@ -345,11 +345,19 @@ public class LessonServiceImpl implements LessonService {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseDto("FA","해당하는 lesson_no을 가진 클래스가 없습니다."));
             }
             Lesson lesson = lessonJpaDataRepository.findLessonByLessonNo(lesson_no);
-            Boolean like_status = muziLessonLikeRepository.existsByUser_UserNoAndLesson_LessonNo(user.getUserNo(), lesson_no);
-            LessonResponseDto lessonResponseDto = new LessonResponseDto(lesson);
-            lessonResponseDto.setLesson_like_status(like_status);
+            // file_oname, file_sname 설정
+            List<LessonFile> lessonFileList = lessonFileRepository.findLessonFilesByLesson_LessonNo(lesson_no);
+            log.info("lessonFileSize : {}", lessonFileList.size());
+            LessonResponseDto lessonResponseDto = new LessonResponseDto(lesson, lessonFileList);
+            if(loginStatus){
+                Boolean like_status = muziLessonLikeRepository.existsByUser_UserNoAndLesson_LessonNo(user.getUserNo(), lesson_no);
+                lessonResponseDto.setLesson_like_status(like_status);
+            }else{
+                lessonResponseDto.setLesson_like_status(false);
+            }
             Long likes_no = muziLessonLikeRepository.countLessonLikeByLesson_LessonNo(lesson_no);
             lessonResponseDto.setLesson_like_cnt(likes_no);
+
             return ResponseEntity.status(HttpStatus.OK).body(new FindOneResponseDto(lessonResponseDto));
         }catch (Exception e){
             log.info("LessonService findOneResponseDto Exception : {}", e.getMessage());
@@ -357,25 +365,6 @@ public class LessonServiceImpl implements LessonService {
         }
     }
 
-    // 특정 클래스 조회(비로그인)
-    @Override
-    public ResponseEntity<? super FindOneResponseDto> findOneGuestResponseDto(Long lesson_no){
-        try{
-            // 해당하는 lesson이 없는 경우
-            if(!lessonJpaDataRepository.existsLessonByLessonNo(lesson_no)){
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseDto("FA","해당하는 lesson_no을 가진 클래스가 없습니다."));
-            }
-            Lesson lesson = lessonJpaDataRepository.findLessonByLessonNo(lesson_no);
-            LessonResponseDto lessonResponseDto = new LessonResponseDto(lesson);
-            lessonResponseDto.setLesson_like_status(false);
-            Long likes_no = muziLessonLikeRepository.countLessonLikeByLesson_LessonNo(lesson_no);
-            lessonResponseDto.setLesson_like_cnt(likes_no);
-            return ResponseEntity.status(HttpStatus.OK).body(new FindOneResponseDto(lessonResponseDto));
-        }catch (Exception e){
-            log.info("LessonService findOneGuestResponseDto Exception : {}", e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseDto("ISE", "Internal Server Error"));
-        }
-    }
     // 특정 클래스 리뷰 조회 (비로그인 + 로그인)
     public ResponseEntity<? super ReviewsResponseDto> findReviews(Long lesson_no, Pageable pageable){
         try {
