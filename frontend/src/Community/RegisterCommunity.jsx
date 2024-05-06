@@ -15,7 +15,7 @@ const RegisterCommunity = () => {
     const navigator = useNavigate();
     const dispatch = useDispatch();
 
-    const [registerData, setRegisterData] = useState({ community_title: '', community_content: '' });
+    const [registerData, setRegisterData] = useState({ community_title: '', community_content: '', community_file_oname:[], community_file_sname:[] });
 
     useEffect(()=>{
         axios.get(`${url}/api/users/info`,{
@@ -33,6 +33,11 @@ const RegisterCommunity = () => {
     {/* 토스트 에디터 값 받아와 저장 */ }
     const getToastEditor = content => {
         setRegisterData((registerData) => ({ ...registerData, community_content: content }));
+    }
+
+    const getToastImg = contentImg =>{
+        setRegisterData(prevState => ({...prevState, community_file_oname: [...prevState.community_file_oname, contentImg.oname]}));
+        setRegisterData(prevState => ({...prevState, community_file_sname: [...prevState.community_file_sname, contentImg.sname]}));
     }
 
     {/* 변경사항 적용 */ }
@@ -84,7 +89,7 @@ const RegisterCommunity = () => {
             <input className="communityregister-title" type='text' placeholder="제목을 작성해 주세요." name="community_title" onChange={(e)=>setValue(e)}/>
 
             <div className="communityText-Box">
-                <ToastEditor getToastEditor={getToastEditor} setContent={registerData.community_content}/>
+                <ToastEditor getToastEditor={getToastEditor} getToastImg={getToastImg} setContent={registerData.community_content}/>
             </div>
 
             {/* 등록 + 취소 버튼 컴포넌트 위치 */}

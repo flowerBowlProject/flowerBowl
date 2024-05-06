@@ -21,16 +21,21 @@ const RegisterRecipe = () => {
     const accessToken = useSelector((state) => state.accessToken);
     const navigator = useNavigate();
     const dispatch = useDispatch();
+    const [toastContent, setToastContent] = useState("");
 
     useEffect(() => {
+        if(accessToken===''){
+            navigator(`/recipeDetail/${recipe_no}`)
+        }
         axios.get(`${url}/api/recipes/${recipe_no}`, {
             headers: {
                 Authorization: `Bearer ${accessToken}`
             }
         })
             .then(res => {
-                console.log(res);
                 setRegisterData(res.data.data);
+                setThumbnail(res.data.data.recipe_sname);
+                setToastContent(res.data.data.recipe_content);
             })
             .catch(err => {
                 console.log(err);
@@ -75,8 +80,13 @@ const RegisterRecipe = () => {
     }
 
     {/* 토스트 에디터 값 받아와 저장 */ }
-    const getToastEditor = content => {
-        setRegisterData((registerData) => ({ ...registerData, lesson_content: content }));
+    const getToastEditor = contentData => {
+        setRegisterData((registerData) => ({ ...registerData, recipe_content: contentData }));
+    }
+
+    const getToastImg = contentImg =>{
+        setRegisterData(prevState => ({...prevState, recipe_file_oname: [...prevState.recipe_file_oname, contentImg.oname]}));
+        setRegisterData(prevState => ({...prevState, recipe_file_sname: [...prevState.recipe_file_sname, contentImg.sname]}));
     }
 
     {/* 재료 입력 값 받아와서 저장 */ }
@@ -111,7 +121,8 @@ const RegisterRecipe = () => {
             dispatch(editErrorType('STUFF'));
             dispatch(openError());
         } else {
-            axios.put(`${url}/recipes/${recipe_no}`, registerData, {
+            console.log(registerData)
+            axios.put(`${url}/api/recipes/${recipe_no}`, registerData, {
                 headers: {
                     Authorization: `Bearer ${accessToken}`
                 }
@@ -130,6 +141,12 @@ const RegisterRecipe = () => {
         }
     }
 
+    const thumbDelete = () =>{
+        setThumbnail(null);
+        setRegisterData((registerData) => ({ ...registerData, recipe_sname: ""}));
+        setRegisterData((registerData) => ({ ...registerData, recipe_oname: ""}));
+    }
+
     const handleCancel = () => {
         navigator(`/recipeDetail/${recipe_no}`);
     }
@@ -143,7 +160,7 @@ const RegisterRecipe = () => {
                 <div className='recipeRegister-thumbnail'>
                     {thumbnail ? (
                         <label>
-                            <img className='thumbImg-preview' src={thumbnail} alt='Thumbnail Preview' onClick={() => setThumbnail(null)} />
+                            <img className='thumbImg-preview' src={thumbnail} alt='Thumbnail Preview' onClick={thumbDelete} />
                         </label>
                     ) : (
                         <label className='recipeChoose-thumbnail'>
@@ -163,7 +180,7 @@ const RegisterRecipe = () => {
                     <RecipeStuff getStuff={getStuff} setStuff={registerData.recipe_stuff} />
                 </div>
                 {/* 레시피 || 클래스 상세 내용 작성란 */}
-                <ToastEditor getToastEditor={getToastEditor} setContent={registerData.recipe_content} />
+                <ToastEditor getToastEditor={getToastEditor} getToastImg={getToastImg} setContent={toastContent} />
             </div>
 
             <div className="register_button" style={{ marginTop: "2%" }}>
