@@ -26,6 +26,7 @@ import ErrorConfirm from "../../Hook/ErrorConfirm";
 import ButtonOutlined from "../../Component/ButtonOutlined";
 import { useTheme } from "@emotion/react";
 import { useNavigate } from "react-router-dom";
+
 const Profile = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -37,35 +38,41 @@ const Profile = () => {
   const [checkPwChange, setCheckPwChange] = useState(true);
   const [imageFile, setImageFile] = useState(null);
   const [imageUrl, setImageUrl] = useState(null);
+  const [profileSName, setProfileSName] = useState("");
+  const [profileOName, setProfileOName] = useState("");
+  const [chefImageUrl, setChefImageUrl] = useState(null);
+  const [chefImageFile, setChefImageFile] = useState(null);
+  const [chefDetails, setChefDetails] = useState({
+    chef_oname: "",
+    chef_sname: "",
+  });
   const [passConfirm, setPassConfirm] = useState("");
   const [butDisable, setButDisable] = useState(true);
   const user = useSelector((state) => state.member);
   const [emailCode, setEmailCode] = useState("");
   const CheckEmailOpen = useSelector((state) => state.emailCheck);
 
-  const handleChangeImage = (event) => {
+  //이미지 변경
+  const handleChangeImage = async (event) => {
     const file = event.target.files[0];
     setImageFile(file);
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
         setImageUrl(reader.result);
+        handleUploadImage(file);
       };
       reader.readAsDataURL(file);
     } else {
       setImageUrl(null);
     }
   };
-  //프로필 이미지 업로드
+
+  //프로필 이미지 업로드 api연결
   const handleUploadImage = async (file) => {
-    if (!imageFile) {
-      alert("Please select an image file first.");
-      return;
-    }
-
     const formData = new FormData();
-    formData.append("image", imageFile);
-
+    formData.append("file", file);
+    console.log("Sending FormData:", formData.get("file"));
     try {
       const response = await axios.post(`${url}/api/images/profile`, formData, {
         headers: {
@@ -73,8 +80,20 @@ const Profile = () => {
           "Content-Type": "multipart/form-data",
         },
       });
-      console.log("프로필 사진 변경이 완료되었습니다.", response.data);
-      alert(`프로필 사진 변경이 완료되었습니다. ${response.data.message}`);
+      if (response.data.code === "SU") {
+        console.log("프로필 사진 변경이 완료되었습니다.", response.data);
+        setProfileOName(response.data.profile_oname);
+        setProfileSName(response.data.profile_sname);
+        alert(`프로필 사진 변경이 완료되었습니다. ${response.data.message}`);
+      } else {
+        console.error(
+          "프로필 사진 변경 실패: 응답 코드가 'SU'가 아닙니다.",
+          response.data
+        );
+        alert(
+          `프로필 사진 변경에 실패했습니다. 응답 메시지: ${response.data.message}`
+        );
+      }
     } catch (error) {
       console.error("프로필 사진 변경 실패", error);
       alert(
@@ -82,6 +101,80 @@ const Profile = () => {
           error.response?.data?.message || error.message
         }`
       );
+    }
+  };
+
+  //쉐프 이미지 변경
+  const handleUploadImageChef = async (event) => {
+    const file = event.target.files[0];
+    setChefImageFile(file);
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setChefImageUrl(reader.result);
+        uploadChefImage(file);
+      };
+      reader.readAsDataURL(file);
+    } else {
+      setChefImageUrl(null);
+    }
+  };
+
+  //쉐프 이미지 업로드 api연결
+  const uploadChefImage = async (file) => {
+    const formData = new FormData();
+    formData.append("file", file);
+    try {
+      const response = await axios.post(`${url}/api/images/chef`, formData, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      if (response.data.code === "SU") {
+        console.log("쉐프 이미지 업로드 성공", response.data.message);
+        setChefDetails({
+          chef_oname: response.data.chef_oname,
+          chef_sname: response.data.chef_sname,
+        });
+      } else {
+        console.error("쉐프 이미지 업로드 실패", response.data.message);
+      }
+    } catch (error) {
+      console.error("쉐프 이미지 업로드 실패", error);
+    }
+  };
+
+  //쉐프 신청 api 연결
+  const handleApplyChef = async () => {
+    console.log(
+      "Sending chef application with:",
+      chefDetails.chef_oname,
+      chefDetails.chef_sname
+    );
+    // 전송되는 페이로드를 명확히 로깅합니다
+    const payload = {
+      chef_oname: chefDetails.chef_oname,
+      chef_sname: chefDetails.chef_sname,
+    };
+    console.log("Payload being sent:", payload);
+
+    try {
+      const response = await axios.post(`${url}/api/mypage/chefs`, payload, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+      console.log("Chef application successful:", response.data);
+    } catch (error) {
+      console.error("Error during chef application:", error);
+      console.error("Request data:", error.config.data);
+      console.error("Request headers:", error.config.headers);
+      if (error.response) {
+        console.error("Error response data:", error.response.data);
+        console.error("Error response status:", error.response.status);
+        console.error("Error response headers:", error.response.headers);
+      }
     }
   };
 
@@ -234,37 +327,6 @@ const Profile = () => {
     }
   };
 
-  //쉐프 신청
-  const handleApplyChef = async () => {
-    try {
-      const response = await axios.post(
-        `${url}/api/mypage/chefs`,
-        {
-          chef_oname: imageFile ? imageFile.name : "",
-          chef_sname: imageFile ? imageFile.path : "",
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
-      );
-
-      if (response.data.code === "SU") {
-        console.log("쉐프 신청에 성공했습니다.", response.data.message);
-      } else {
-        console.log(
-          "Response Code:",
-          response.data.code,
-          "Message:",
-          response.data.message
-        );
-      }
-    } catch (error) {
-      console.error("쉐프 신청에 실패했습니다.:", error);
-    }
-  };
-
   return (
     <>
       <Grid container direction="row">
@@ -302,26 +364,45 @@ const Profile = () => {
               </ButtonContainStyle>
             </Grid>
             <Grid item mt="3em" ml="-1em">
-              <Tooltip title="파일을 첨부해주세요" followCursor>
-                <div className="ProfileImage">
-                  <input
-                    id={"file-input"}
-                    style={{ display: "none" }}
-                    type="file"
-                    name="imageFile"
-                  />
-                  <PersonIcon
-                    sx={{ color: "black", width: "100px", height: "100px" }}
-                  />
-                </div>
-              </Tooltip>
+              <div className="ChefProfileImage">
+                <Tooltip
+                  title="아이콘을 클릭해 파일을 첨부해주세요."
+                  followCursor
+                >
+                  <label htmlFor="chef-file-input">
+                    {chefImageUrl ? (
+                      <img
+                        src={chefImageUrl}
+                        alt="Chef Profile"
+                        style={{ width: "100px", height: "100px" }}
+                      />
+                    ) : (
+                      <PersonIcon
+                        sx={{ color: "black", width: "100px", height: "100px" }}
+                      />
+                    )}
+                    <input
+                      id="chef-file-input"
+                      style={{ display: "none" }}
+                      type="file"
+                      name="chefImageFile"
+                      onChange={handleUploadImageChef}
+                    />
+                  </label>
+                </Tooltip>
+              </div>
             </Grid>
             <Grid item mt="0.5em" ml="-0.5em">
               <ButtonContainStyle
                 component="label"
                 width="5vw"
                 sx={{ height: "1vw" }}
-                onClick={handleApplyChef}
+                onClick={() =>
+                  handleApplyChef(
+                    chefDetails.chef_oname,
+                    chefDetails.chef_sname
+                  )
+                }
               >
                 쉐프 신청
               </ButtonContainStyle>
