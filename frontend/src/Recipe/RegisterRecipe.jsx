@@ -68,18 +68,23 @@ const RegisterRecipe = () => {
 
     {/* 선택한 카테고리 값 받아와 저장 */ }
     const getCategory = category => {
-        console.log(category);
         setRegisterData((registerData) => ({ ...registerData, recipe_category: category }));
     }
 
     {/* 토스트 에디터 값 받아와 저장 */}
-    const getToastEditor = content =>{
-        setRegisterData((registerData) => ({ ...registerData, recipe_content: content}));
+    const getToastEditor = contentData =>{
+        setRegisterData((registerData) => ({ ...registerData, recipe_content: contentData}));
     }
+    
+    const getToastImg = contentImg =>{
+        setRegisterData(prevState => ({...prevState, recipe_file_oname: [...prevState.recipe_file_oname, contentImg.oname]}));
+        setRegisterData(prevState => ({...prevState, recipe_file_sname: [...prevState.recipe_file_sname, contentImg.sname]}));
+    }
+
+    console.log(registerData);
 
     {/* 재료 입력 값 받아와서 저장 */}
     const getStuff = stuff =>{
-        console.log(stuff);
         setRegisterData((registerData) => ({...registerData, recipe_stuff: stuff}));
     }
 
@@ -88,6 +93,12 @@ const RegisterRecipe = () => {
         const value = e.target.value;
         const name = e.target.name;
         setRegisterData((registerData) => ({ ...registerData, [name]: value }));
+    }
+
+    const thumbDelete = () =>{
+        setThumbnail(null);
+        setRegisterData((registerData) => ({ ...registerData, recipe_sname: ""}));
+        setRegisterData((registerData) => ({ ...registerData, recipe_oname: ""}));
     }
 
     const handleRegister = () =>{
@@ -116,7 +127,6 @@ const RegisterRecipe = () => {
                 }
             })
             .then(res=>{
-                console.log(res);
                 dispatch(editErrorType('REGISTER'));
                 dispatch(openError());
                 navigator('/recipeList');
@@ -129,7 +139,6 @@ const RegisterRecipe = () => {
         }
             
     }
-    
 
     const handleCancel = () =>{
         navigator('/recipeList');
@@ -145,7 +154,7 @@ const RegisterRecipe = () => {
                 <div className='recipeRegister-thumbnail'>
                     {thumbnail ? (
                         <label>
-                            <img className='thumbImg-preview' src={thumbnail} alt='Thumbnail Preview' onClick={() => setThumbnail(null)} />
+                            <img className='thumbImg-preview' src={thumbnail} alt='Thumbnail Preview' onClick={thumbDelete} />
                         </label>
                     ) : (
                         <label className='recipeChoose-thumbnail'>
@@ -165,7 +174,7 @@ const RegisterRecipe = () => {
                         <RecipeStuff getStuff={getStuff}/>
                 </div>
                 {/* 레시피 || 클래스 상세 내용 작성란 */}
-                <ToastEditor getToastEditor={getToastEditor} setContent={''}/>
+                <ToastEditor getToastEditor={getToastEditor} getToastImg={getToastImg} setContent={''}/>
             </div>
             
             <div className="register_button" style={{ marginTop: "2%" }}>
