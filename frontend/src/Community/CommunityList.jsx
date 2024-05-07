@@ -88,9 +88,8 @@ const CommunityList = () => {
     }
 
     {/* 페이지네이션 */}
-    const pageChange = (e) =>{
-        const checkPage = Number(e.target.outerText);
-        console.log(checkPage);
+    const pageChange = (e, value) =>{
+        const checkPage = value;
         setCurPage(checkPage);
         axios.get(`${url}/api/communities/list?page=${checkPage}&size=10`)
         .then(res => {
@@ -127,7 +126,7 @@ const CommunityList = () => {
                         <TableBody>
                             {listData.map((listData, index) => (
                                 <StyledTableRow key={index} hover onClick={(e) => handleDetail(listData.community_no, e)}>
-                                    <StyledTableCell align="center">{index + 1}</StyledTableCell>
+                                    <StyledTableCell align="center">{(index+1)+(curPage-1)*10}</StyledTableCell>
                                     <StyledTableCell align="center">{listData.community_title}</StyledTableCell>
                                     <StyledTableCell align="center">{listData.community_writer}</StyledTableCell>
                                     <StyledTableCell align="center">{listData.community_date}</StyledTableCell>
@@ -140,9 +139,9 @@ const CommunityList = () => {
             </div>
 
             <div className="community-page">
-                <Pagination count={Math.ceil(pageInfo.totalElement/10)}
+                {pageInfo.totalElement !== 0 && <Pagination count={Math.ceil(pageInfo.totalElement/10)}
                 page = {curPage}
-                onChange={pageChange} />
+                onChange={(e, value)=>pageChange(e, value)} />}
             </div>
         </>
     );
