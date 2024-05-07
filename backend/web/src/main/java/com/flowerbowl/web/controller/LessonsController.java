@@ -60,13 +60,14 @@ public class LessonsController {
     // GET
     @GetMapping("/user/lessons/{lesson_no}")
     public ResponseEntity<? super FindOneResponseDto> lessonsFindOne(@AuthenticationPrincipal String userId, @PathVariable Long lesson_no){
-        return lessonService.findOneResponseDto(lesson_no, userId);
+        return lessonService.findOneResponseDto(true, lesson_no, userId);
     }
     // 특정 클래스 조회 (비로그인)
     // GET
     @GetMapping("/guest/lessons/{lesson_no}")
     public ResponseEntity<? super FindOneResponseDto> lessonsFindOneGuest(@PathVariable(value = "lesson_no") Long lesson_no){
-        return lessonService.findOneGuestResponseDto(lesson_no);
+//        return lessonService.findOneGuestResponseDto(lesson_no);
+        return lessonService.findOneResponseDto(false, lesson_no, "guest");
     }
     // 특정 클래스 리뷰조회 (로그인 + 비로그인) // GET
     @GetMapping("/guest/lessons/reviews")
