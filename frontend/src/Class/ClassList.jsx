@@ -8,8 +8,9 @@ import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { url } from "../url";
 import ButtonOutlinedStyle from "../Component/ButtonOutlinedStyle";
-import {editErrorType, openError } from '../persistStore';
+import { editErrorType, openError } from '../persistStore';
 import ErrorConfirm from "../Hook/ErrorConfirm";
+import ButtonContainStyle from "../Component/ButtonContainStyle";
 
 const ViewList = () => {
     const [listData, setListData] = useState([]);
@@ -43,13 +44,21 @@ const ViewList = () => {
     }
 
     useEffect(() => {
+        console.log(pageInfo);
         if (keyword !== null) {
             if (accessToken === '') {
-                axios.get(`${url}/api/search/lessons?keyword=${keyword}&page=1&size=${pageInfo}*8`)
+                axios.get(`${url}/api/search/lessons?keyword=${keyword}&page=1&size=${pageInfo*8}`)
                     .then(res => {
-                        setListData(res.data.lesson);
-                        //setPageInfo(res.data.pageInfo);
                         console.log(res);
+                        let sorted;
+                        switch (selectButton) {
+                            case "인기순":
+                                sorted = [...res.data.lesson].sort((a, b) => b.lesson_like_cnt - a.lesson_like_cnt);
+                                break;
+                            default:
+                                sorted = res.data.lesson; // 기본값은 변경하지 않음
+                        }
+                        setListData(sorted);
                     })
                     .catch(err => {
                         console.log(err);
@@ -58,14 +67,22 @@ const ViewList = () => {
                     })
             } else {
                 console.log(keyword)
-                axios.get(`${url}/api/user/search/lessons?keyword=${keyword}&page=1&size=${pageInfo}*8`, {
+                axios.get(`${url}/api/user/search/lessons?keyword=${keyword}&page=1&size=${pageInfo*8}`, {
                     headers: {
                         Authorization: `Bearer ${accessToken}`
                     }
                 })
                     .then(res => {
-                        setListData(res.data.lessons);
                         console.log(res);
+                        let sorted;
+                        switch (selectButton) {
+                            case "인기순":
+                                sorted = [...res.data.lessons].sort((a, b) => b.lesson_like_cnt - a.lesson_like_cnt);
+                                break;
+                            default:
+                                sorted = res.data.lessons; // 기본값은 변경하지 않음
+                        }
+                        setListData(sorted);
                     })
                     .catch(err => {
                         console.log(err);
@@ -76,10 +93,18 @@ const ViewList = () => {
         } else {
             {/* 로그인에 따른 조회 */ }
             if (accessToken == '') {
-                axios.get(`${url}/api/guest/lessons?page=1&size=${pageInfo}*8`)
+                axios.get(`${url}/api/guest/lessons?page=1&size=${pageInfo*8}`)
                     .then(res => {
                         console.log(res);
-                        setListData(res.data.lessons);
+                        let sorted;
+                        switch (selectButton) {
+                            case "인기순":
+                                sorted = [...listData].sort((a, b) => b.lesson_like_cnt - a.lesson_like_cnt);
+                                break;
+                            default:
+                                sorted = listData; // 기본값은 변경하지 않음
+                        }
+                        setListData(sorted);
                     })
                     .catch(err => {
                         console.log(err);
@@ -87,14 +112,22 @@ const ViewList = () => {
                         dispatch(openError());
                     })
             } else {
-                axios.get(`${url}/api/user/lessons?page=1&size=${pageInfo}*8`, {
+                axios.get(`${url}/api/user/lessons?page=1&size=${pageInfo*8}`, {
                     headers: {
                         Authorization: `Bearer ${accessToken}`
                     }
                 })
                     .then(res => {
                         console.log(res);
-                        setListData(res.data.lessons);
+                        let sorted;
+                        switch (selectButton) {
+                            case "인기순":
+                                sorted = [...res.data.lessons].sort((a, b) => b.lesson_like_cnt - a.lesson_like_cnt);
+                                break;
+                            default:
+                                sorted = res.data.lessons; // 기본값은 변경하지 않음
+                        }
+                        setListData(sorted);
                     })
                     .catch(err => {
                         console.log(err);
@@ -103,12 +136,12 @@ const ViewList = () => {
                     })
             }
         }
-    }, [keyword, accessToken])
+    }, [keyword, accessToken, pageInfo])
+
 
     const clickBookmark = (e, lesson_no, lesson_like_status, index) => {
         console.log("북마크 클릭");
         if (accessToken === '') {
-            console.log('로그인 후 이용해 주세요.');
             dispatch(editErrorType('NT'));
             dispatch(openError());
         } else {
@@ -161,20 +194,25 @@ const ViewList = () => {
     }
 
     const clickRegister = () => {
-        if(accessToken===''){
+        if (accessToken === '') {
             dispatch(editErrorType('NT'));
             dispatch(openError());
         }
-        navigator(`/registerClass`); 
+        navigator(`/registerClass`);
     }
 
     const clickDetail = (e, lesson_no) => {
         navigator(`/classDetail/${lesson_no}`);
     }
 
+    {/* 더보기 클릭 */ }
+    const clickMore = () => {
+        setPageInfo(pageInfo + 1);
+    }
+
     return (
         <div className="viewList-Box">
-            <ErrorConfirm error={useSelector(state=>state.errorType)}/>
+            <ErrorConfirm error={useSelector(state => state.errorType)} />
 
             <div className="sortList">
                 <div className="sortList-left">
@@ -194,7 +232,7 @@ const ViewList = () => {
                             title={data.lesson_title} like_count={data.lesson_like_cnt} comment_count={0} sname={data.lesson_sname} date={data.lesson_date} type={false} />
                     </div>)}
             </div>
-            <Button className="moreButton"> 더보기 </Button>
+            <ButtonContainStyle className="moreButton" onClick={clickMore}> 더보기 </ButtonContainStyle>
         </div>
     );
 }

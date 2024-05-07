@@ -72,9 +72,8 @@ const Comment = ({ typeString, no }) => {
     }
 
     {/* 페이지네이션 */}
-    const pageChange = (e) =>{
-        const checkPage = Number(e.target.outerText);
-        console.log(checkPage);
+    const pageChange = (e, value) =>{
+        const checkPage =value;
         setCurPage(checkPage);
         axios.get(`${url}/api/comments?type=${typeString}&post_no=${no}&page=${curPage}&size=${pageInfo.size}`)
         .then(res => {
@@ -113,9 +112,9 @@ const Comment = ({ typeString, no }) => {
             {/* 페이지네이션 */}
             <div className="comment-page">
                 {/* 전체 게시물 페이지 수로 count 변경 필요 */}
-                <Pagination count={Math.ceil(pageInfo.totalElement/10)}
+                {pageInfo.totalElement !== 0 && <Pagination count={Math.ceil(pageInfo.totalElement/10)}
                 page = {curPage}
-                onChange={pageChange} />
+                onChange={(e, value)=>pageChange(e,value)} />}
             </div>
         </>
     );
