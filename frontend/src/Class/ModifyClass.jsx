@@ -99,8 +99,13 @@ const RegisterClass = () => {
     }
 
     {/* 토스트 에디터 값 받아와 저장 */ }
-    const getToastEditor = content => {
-        setRegisterData((registerData) => ({ ...registerData, lesson_content: content }));
+    const getToastEditor = contentData => {
+        setRegisterData((registerData) => ({ ...registerData, lesson_content: contentData }));
+    }
+
+    const getToastImg = contentImg =>{
+        setRegisterData(prevState => ({...prevState, lesson_file_oname: [...prevState.lesson_file_oname, contentImg.oname]}));
+        setRegisterData(prevState => ({...prevState, lesson_file_sname: [...prevState.lesson_file_sname, contentImg.sname]}));
     }
 
     {/* 그 외의 변경사항 적용 */ }
@@ -109,8 +114,6 @@ const RegisterClass = () => {
         const name = e.target.name;
         setRegisterData((registerData) => ({ ...registerData, [name]: value }));
     }
-
-   
 
     {/* 클래스 수정 */ }
     const handleRegister = () => {
@@ -227,7 +230,7 @@ const RegisterClass = () => {
             </div>
 
             {/* 레시피 || 클래스 상세 내용 작성란 */}
-            <ToastEditor getToastEditor={getToastEditor} setContent={toastContent} />
+            <ToastEditor getToastEditor={getToastEditor} getToastImg={getToastImg} setContent={toastContent} />
 
             <div style={{ border: "1px solid #CBA285", marginBottom: "2%" }} />
             <div className="register_button">
