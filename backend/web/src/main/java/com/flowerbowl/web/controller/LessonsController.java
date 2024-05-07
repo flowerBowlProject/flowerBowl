@@ -2,14 +2,17 @@ package com.flowerbowl.web.controller;
 
 import com.flowerbowl.web.dto.request.lesson.*;
 import com.flowerbowl.web.dto.response.lesson.*;
+import com.flowerbowl.web.handler.*;
 import com.flowerbowl.web.service.LessonService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -25,20 +28,60 @@ public class LessonsController {
     // POST
     @PostMapping(value = "/lessons")
     public ResponseEntity<ResponseDto> lessonsRegister(@AuthenticationPrincipal String userId, @RequestBody CreateRequestDto createRequestDto){
-        return lessonService.LessonCreate(createRequestDto, userId);
+        try{
+            return lessonService.LessonCreate(createRequestDto, userId);
+        }catch (UserNotFoundException e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseDto("FA", "userId에 대응되는 user가 없습니다."));
+        }catch (FileSizeNotMatchException e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseDto("ISE", "file_oname과 file_sname의 사이즈가 다릅니다."));
+        } catch (Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseDto("ISE", "Internal Server Error"));
+        }
     }
 
     // 클래스 수정
     // PUT
     @PutMapping(value = "/lessons/{lesson_no}")
     public ResponseEntity<ResponseDto> lessonsModify(@AuthenticationPrincipal String userId, @RequestBody LessonRequestDto lessonRequestDto, @PathVariable(value = "lesson_no") Long lesson_no){
-        return lessonService.LessonModify(lessonRequestDto, lesson_no, userId);
+        try{
+            return lessonService.LessonModify(lessonRequestDto, lesson_no, userId);
+        }catch (LessonNotFoundException e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseDto("FA", "lesson_no에 대응되는 lesson이 없습니다."));
+        } catch (UserNotFoundException e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseDto("FA", "userId에 대응되는 user가 없습니다."));
+        }catch (DoesNotMatchException e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseDto("FA", "해당하는 user가 작성한 lesson이 아닙니다."));
+        }catch (FileSizeNotMatchException e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseDto("FA", "fileOname과 fileSname의 크기 다릅니다."));
+        }catch (LessonFileNotFoundException e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseDto("FA", "삭제할 fileOname에 맞는 파일명이 DB에 존재하지 않습니다."));
+        } catch (Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseDto("ISE", "Internal Server Error"));
+        }
     }
     // 클래스 삭제
     // PUT
     @PutMapping(value = "/lessons")
     public ResponseEntity<ResponseDto> lessonsDelete(@AuthenticationPrincipal String userId, @RequestBody DeleteRequestDto deleteRequestDto){
-        return lessonService.lessonDelete(deleteRequestDto.getLesson_no(), userId);
+        try {
+            return lessonService.lessonDelete(deleteRequestDto.getLesson_no(), userId);
+        }catch (LessonNotFoundException e){
+            log.info("LessonService lessonDelete Exception : {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseDto("FA","해당하는 lesson_no을 가진 클래스가 없습니다."));
+        } catch (UserNotFoundException e){
+            log.info("LessonService lessonDelete Exception : {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseDto("FA", "userId에 대응되는 user가 없습니다."));
+        }catch (DoesNotMatchException e){
+            log.info("LessonService lessonDelete Exception : {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseDto("FA", "해당하는 user가 작성한 lesson이 아닙니다."));
+        }catch (LessonAlreadyDeletedException e){
+            log.info("LessonService lessonDelete Exception : {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseDto("FA", "이미 삭제된 클래스입니다."));
+        }
+        catch (Exception e){
+            log.info("LessonService LessonDelete Exception : {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseDto("ISE", "Internal Server Error"));
+        }
     }
 
     // 전체 클래스 조회 (로그인)
@@ -79,9 +122,17 @@ public class LessonsController {
     // POST
     @PostMapping(value = "/user/lessons/payments")
     public ResponseEntity<? super PaymentInfoResponseDto> lessonsBuy(@AuthenticationPrincipal String userId, @RequestBody PaymentInfoRequestDto paymentInfoRequestDto){
-//    public ResponseEntity<? super PaymentInfoResponseDto> lessonsBuy(@RequestBody PaymentInfoRequestDto paymentInfoRequestDto){
-//        String userId = "test";
-        return lessonService.buyLesson(paymentInfoRequestDto.getLesson_no(), userId);
+        try {
+            return lessonService.buyLesson(paymentInfoRequestDto.getLesson_no(), userId);
+        }catch (LessonNotFoundException e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseDto("FA","해당하는 lesson_no을 가진 클래스가 없습니다."));
+        }catch (UserNotFoundException e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseDto("FA", "해당하는 user_id를 가진 유저가 없습니다."));
+        }catch (LessonAlreadyPaidException e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseDto("FA", "이미 구매한 클래스입니다."));
+        } catch (Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseDto("ISE", "Internal Server Error"));
+        }
     }
     // 클래스 즐겨찾기 등록 // POST
     @PostMapping(value = "/user/lessons/like")
