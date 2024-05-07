@@ -2,14 +2,19 @@ package com.flowerbowl.web.dto.object.lesson;
 
 import com.flowerbowl.web.domain.Category;
 import com.flowerbowl.web.domain.Lesson;
+import com.flowerbowl.web.domain.LessonFile;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
+@Slf4j
 public class LessonResponseDto {
     private String lesson_title;
     private String lesson_price;
@@ -27,9 +32,11 @@ public class LessonResponseDto {
     private Category lesson_category;
     private Boolean lesson_like_status; // 이것도 query로 해결
     private String lesson_contents;
+    private List<String> lesson_file_oname = new ArrayList<>();
+    private List<String> lesson_file_sname = new ArrayList<>();
 
     public LessonResponseDto(){}
-    public LessonResponseDto(Lesson lesson){
+    public LessonResponseDto(Lesson lesson, List<LessonFile> lessonFileList){
         lesson_title = lesson.getLessonTitle();
         lesson_price = lesson.getLessonPrice();
         lesson_date = lesson.getLessonDate();
@@ -44,5 +51,11 @@ public class LessonResponseDto {
         lesson_category = lesson.getLessonCategory();
         lesson_contents = lesson.getLessonContent();
         lesson_URL = lesson.getLessonURL();
+
+        for(LessonFile iter : lessonFileList){
+            log.info("iter : {} {} {}", iter.getLesson(), iter.getLessonFileOname(), iter.getLessonFileSname());
+            lesson_file_oname.add(iter.getLessonFileOname());
+            lesson_file_sname.add(iter.getLessonFileSname());
+        }
     }
 }
