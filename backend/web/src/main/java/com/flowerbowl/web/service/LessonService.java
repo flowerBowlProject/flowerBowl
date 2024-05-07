@@ -6,9 +6,11 @@ import com.flowerbowl.web.dto.request.lesson.LessonRequestDto;
 import com.flowerbowl.web.dto.response.lesson.*;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 
 public interface LessonService {
     ResponseEntity<ResponseDto> LessonCreate(CreateRequestDto createRequestDto, String userId);
+    @Transactional
     ResponseEntity<ResponseDto> LessonModify(LessonRequestDto lessonRequestDto, Long lesson_no, String userId);
     ResponseEntity<ResponseDto> lessonDelete(Long lesson_no, String userId);
     ResponseEntity<? super FindAllResponseDto> findAll(Pageable pageable, Boolean loginStatus, String userId);
