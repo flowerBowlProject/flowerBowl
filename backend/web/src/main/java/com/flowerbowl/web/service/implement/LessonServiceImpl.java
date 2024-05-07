@@ -5,6 +5,7 @@ import com.flowerbowl.web.dto.object.lesson.*;
 import com.flowerbowl.web.dto.response.lesson.*;
 import com.flowerbowl.web.dto.request.lesson.CreateRequestDto;
 import com.flowerbowl.web.dto.request.lesson.LessonRequestDto;
+import com.flowerbowl.web.handler.*;
 import com.flowerbowl.web.repository.*;
 import com.flowerbowl.web.repository.lesson.*;
 import com.flowerbowl.web.repository.lesson.PayRepository;
@@ -45,8 +46,8 @@ public class LessonServiceImpl implements LessonService {
     // 클래스 등록
     @Transactional
     @Override
-    public ResponseEntity<ResponseDto> LessonCreate(CreateRequestDto createRequestDto, String userId){
-        try{
+    public ResponseEntity<ResponseDto> LessonCreate(CreateRequestDto createRequestDto, String userId) {
+        try {
             Lesson lesson = new Lesson();
             lesson.setLessonTitle(createRequestDto.getLesson_title());
             lesson.setLessonPrice(createRequestDto.getLesson_price());
@@ -64,14 +65,14 @@ public class LessonServiceImpl implements LessonService {
 
             // temp/thumbnail/파일명
             String lesson_oname = createRequestDto.getLesson_oname();
-            if(lesson_oname != null && lesson_oname.trim().isEmpty()){
+            if (lesson_oname != null && lesson_oname.trim().isEmpty()) {
                 lesson_oname = null;
             }
             String lesson_sname = createRequestDto.getLesson_sname();
-            if(lesson_sname != null && lesson_sname.trim().isEmpty()){
+            if (lesson_sname != null && lesson_sname.trim().isEmpty()) {
                 lesson_sname = null;
             }
-            if(lesson_sname != null && lesson_oname != null){
+            if (lesson_sname != null && lesson_oname != null) {
                 String new_lesson_oname = "lessonThumbnail/" + lesson_oname.split("/")[2];
 
                 imageService.copyS3(lesson_oname, new_lesson_oname);
@@ -79,7 +80,6 @@ public class LessonServiceImpl implements LessonService {
                 lesson_oname = new_lesson_oname;
                 lesson_sname = "https://flowerbowl.s3.ap-northeast-2.amazonaws.com/" + new_lesson_oname;
             }
-
             lesson.setLessonSname(lesson_sname);
             lesson.setLessonOname(lesson_oname);
 
@@ -89,14 +89,14 @@ public class LessonServiceImpl implements LessonService {
             String content = createRequestDto.getLesson_content();
 
             // 둘다 비어있지 않은 경우
-            if(!CollectionUtils.isEmpty(createRequestDto.getLesson_file_oname()) && !CollectionUtils.isEmpty(createRequestDto.getLesson_file_sname())){
+            if (!CollectionUtils.isEmpty(createRequestDto.getLesson_file_oname()) && !CollectionUtils.isEmpty(createRequestDto.getLesson_file_sname())) {
                 log.info("lessonCreate 둘다 비어있지 않은 경우");
                 file_sname = new ArrayList<>();
                 file_oname = new ArrayList<>();
 
-                for(String source : createRequestDto.getLesson_file_sname()){
+                for (String source : createRequestDto.getLesson_file_sname()) {
                     log.info("before contain source");
-                    if(content.contains(source)){
+                    if (content.contains(source)) {
                         log.info("lessonCreate content.contains(source) : source : {}", source);
                         String fileName = source.split("/")[source.split("/").length - 1];
 
@@ -111,7 +111,7 @@ public class LessonServiceImpl implements LessonService {
 
                         file_oname.add(newFileOname);
                         file_sname.add(newFileSname);
-                    }else{
+                    } else {
                         log.info("lessonService/lessonCreate request로 file_name은 왔지만 content에 포함x, : {}", source);
                     }
                 }
@@ -121,8 +121,8 @@ public class LessonServiceImpl implements LessonService {
             lesson.setLessonContent(content);
 //            User user = lessonUserRepository.findUserByUserNo(user_no);
             User user = userRepository.findByUserId(userId);
-            if(user == null){
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseDto("FA", "userId에 대응되는 user가 없습니다."));
+            if (user == null) {
+                throw new UserNotFoundException();
             }
             lesson.setUser(user);
             lesson.setLessonWriter(user.getUserNickname());
@@ -130,21 +130,21 @@ public class LessonServiceImpl implements LessonService {
             Lesson lessonResult = lessonRepository.save(lesson);
 
             // DB file에 넣어줌
-            if(file_oname != null && file_sname != null && (file_oname.size() != file_sname.size())){
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseDto("ISE", "file_oname과 file_sname의 사이즈가 다릅니다."));
+            if (file_oname != null && file_sname != null && (file_oname.size() != file_sname.size())) {
+                throw new FileSizeNotMatchException();
             }
 
             LessonFile lessonFile = new LessonFile();
             lessonFile.setLesson(lessonResult);
             int iterNum = 0;
-            if(file_oname == null){
+            if (file_oname == null) {
                 iterNum = 0;
                 log.info("file_oname0 : null");
-            }else{
+            } else {
                 iterNum = file_oname.size();
                 log.info("file_oname1 : {}", iterNum);
             }
-            for(int i = 0; i < iterNum; i++){
+            for (int i = 0; i < iterNum; i++) {
                 lessonFile.setLessonFileSname(file_sname.get(i));
                 lessonFile.setLessonFileOname(file_oname.get(i));
                 lessonFileRepository.save(lessonFile);
@@ -163,27 +163,38 @@ public class LessonServiceImpl implements LessonService {
 //            }
 
             return ResponseEntity.status(HttpStatus.OK).body(new ResponseDto());
-        }catch (Exception e){
+        }catch (UserNotFoundException e){
+            log.info("userId에 해당하는 user가 없습니다.");
+            throw new UserNotFoundException();
+//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseDto("FA", "userId에 대응되는 user가 없습니다."));
+        }catch (FileSizeNotMatchException e){
             log.info("LessonService LessonCreate Exception : {}", e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseDto("ISE", "Internal Server Error"));
+            throw new FileSizeNotMatchException();
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseDto("ISE", "file_oname과 file_sname의 사이즈가 다릅니다."));
+        } catch (Exception e){
+            log.info("LessonService LessonCreate Exception : {}", e.getMessage());
+            throw new RuntimeException();
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseDto("ISE", "Internal Server Error"));
         }
     }
 
     // 클래스 수정
-    @Transactional
     @Override
+    @Transactional(rollbackFor = {LessonNotFoundException.class, UserNotFoundException.class, DoesNotMatchException.class, FileSizeNotMatchException.class, LessonFileNotFoundException.class, Exception.class})
     public ResponseEntity<ResponseDto> LessonModify(LessonRequestDto lessonRequestDto, Long lesson_no, String userId){
         try{
-            Lesson lesson = lessonsRepository.findByLesson_no(lesson_no);
-            if(lesson == null) return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseDto("FA", "lesson_no에 대응되는 lesson이 없습니다."));
+//            Lesson lesson = lessonsRepository.findByLesson_no(lesson_no);
+            Lesson lesson = lessonRepository.findByLessonNo(lesson_no);
+            if(lesson == null) throw new LessonNotFoundException();
             User user = userRepository.findByUserId(userId);
-            if(user == null){
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseDto("FA", "userId에 대응되는 user가 없습니다."));
-            }
+            if(user == null) throw new UserNotFoundException();
 //            if(lesson.getUser().getUserId() != userId){
             if(!lesson.getUser().getUserId().equals(userId)){
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseDto("FA", "해당하는 user가 작성한 lesson이 아닙니다."));
+                throw new DoesNotMatchException();
+//
             }
+
+
             lesson.setLessonTitle(lessonRequestDto.getLesson_title());
             lesson.setLessonPrice(lessonRequestDto.getLesson_price());
             lesson.setLessonAddr(lessonRequestDto.getLesson_addr());
@@ -224,6 +235,9 @@ public class LessonServiceImpl implements LessonService {
             // requestFIleOname : temp/lesson/파일명
             List<String> requestFileOname = lessonRequestDto.getLesson_file_oname(); // 이게 null일 수 도 있음
             List<String> requestFileSname = lessonRequestDto.getLesson_file_sname();
+            if(requestFileOname != null && requestFileSname != null && (requestFileOname.size() != requestFileSname.size())){
+                throw new FileSizeNotMatchException();
+            }
 
             /*
                 1. 현재 파일에 없고, 새로운 파일에 있는 경우 => 새로 만들어줌
@@ -234,10 +248,6 @@ public class LessonServiceImpl implements LessonService {
             Set<String> curFileOname = lessonFileList.stream()
                     .map(LessonFile::getRealOname)
                     .collect(Collectors.toSet());
-
-            if(requestFileOname != null && requestOname != null && (requestFileOname.size() != requestFileSname.size())){
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseDto("FA", "fileOname과 fileSname의 크기 다릅니다."));
-            }
 
             // requestFileOname : temp/lesson/파일명
             // temp/
@@ -284,14 +294,40 @@ public class LessonServiceImpl implements LessonService {
 
                 // DB에서 삭제 // DB에는 oname : lesson/파일명
                 if(!lessonFileRepository.existsLessonFileByLessonFileOname(fileOname)){
-                    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseDto("ISA", "삭제할 fileOname에 맞는 파일명이 DB에 존재하지 않습니다."));
+                    throw new LessonFileNotFoundException();
                 }
                 lessonFileRepository.deleteLessonFileByLessonFileOname(fileOname);
             }
             return ResponseEntity.status(HttpStatus.OK).body(new ResponseDto());
-        }catch (Exception e){
+        }catch (LessonNotFoundException e){
             log.info("LessonService LessonModify Exception : {}", e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseDto("ISE", "Internal Server Error"));
+            log.info("lesson_no에 대응되는 lesson이 없습니다.");
+            throw new LessonFileNotFoundException();
+//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseDto("FA", "lesson_no에 대응되는 lesson이 없습니다."));
+        } catch (UserNotFoundException e){
+            log.info("LessonService LessonModify Exception : {}", e.getMessage());
+            log.info("userId에 대응되는 user가 없습니다.");
+            throw new UserNotFoundException();
+//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseDto("FA", "userId에 대응되는 user가 없습니다."));
+        }catch (DoesNotMatchException e){
+            log.info("LessonService LessonModify Exception : {}", e.getMessage());
+            log.info("해당하는 user가 작성한 lesson이 아닙니다.");
+            throw new DoesNotMatchException();
+//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseDto("FA", "해당하는 user가 작성한 lesson이 아닙니다."));
+        }catch (FileSizeNotMatchException e){
+            log.info("LessonService LessonModify Exception : {}", e.getMessage());
+            log.info("fileOname과 fileSname의 크기 다릅니다.");
+            throw new FileSizeNotMatchException();
+//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseDto("FA", "fileOname과 fileSname의 크기 다릅니다."));
+        }catch (LessonFileNotFoundException e){
+            log.info("LessonService LessonModify Exception : {}", e.getMessage());
+            log.info("삭제할 fileOname에 맞는 파일명이 DB에 존재하지 않습니다.");
+            throw new LessonFileNotFoundException();
+//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseDto("FA", "삭제할 fileOname에 맞는 파일명이 DB에 존재하지 않습니다."));
+        } catch (Exception e){
+            log.info("LessonService LessonModify Exception : {}", e.getMessage());
+            throw new RuntimeException();
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseDto("ISE", "Internal Server Error"));
         }
     }
     // 클래스 삭제 // 실제 삭제가 아닌 값의 변경
@@ -300,24 +336,44 @@ public class LessonServiceImpl implements LessonService {
     public ResponseEntity<ResponseDto> lessonDelete(Long lesson_no, String userId){
         try{
             if(!lessonJpaDataRepository.existsLessonByLessonNo(lesson_no)){
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseDto("FA","해당하는 lesson_no을 가진 클래스가 없습니다."));
+                throw new LessonNotFoundException();
+
             }
             User user = userRepository.findByUserId(userId);
             if(user == null){
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseDto("FA", "userId에 대응되는 user가 없습니다."));
+                throw new UserNotFoundException();
+
             }
             Lesson lesson = lessonJpaDataRepository.findLessonByLessonNo(lesson_no);
             if(!lesson.getUser().getUserId().equals(userId)){
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseDto("FA", "해당하는 user가 작성한 lesson이 아닙니다."));
+                throw new DoesNotMatchException();
             }
             if(lesson.getLessonDeleteStatus()){
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseDto("FA", "이미 삭제된 클래스입니다."));
+                throw new LessonAlreadyDeletedException();
             }
             lesson.setLessonDeleteStatus(true);
             return ResponseEntity.status(HttpStatus.OK).body(new ResponseDto());
-        }catch (Exception e){
+        }catch (LessonNotFoundException e){
+            log.info("LessonService lessonDelete Exception : {}", e.getMessage());
+            throw new LessonNotFoundException();
+//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseDto("FA","해당하는 lesson_no을 가진 클래스가 없습니다."));
+        } catch (UserNotFoundException e){
+            log.info("LessonService lessonDelete Exception : {}", e.getMessage());
+            throw new UserNotFoundException();
+//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseDto("FA", "userId에 대응되는 user가 없습니다."));
+        }catch (DoesNotMatchException e){
+            log.info("LessonService lessonDelete Exception : {}", e.getMessage());
+            throw new DoesNotMatchException();
+//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseDto("FA", "해당하는 user가 작성한 lesson이 아닙니다."));
+        }catch (LessonAlreadyDeletedException e){
+            log.info("LessonService lessonDelete Exception : {}", e.getMessage());
+            throw new LessonAlreadyDeletedException();
+//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseDto("FA", "이미 삭제된 클래스입니다."));
+        }
+        catch (Exception e){
             log.info("LessonService LessonDelete Exception : {}", e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseDto("ISE", "Internal Server Error"));
+            throw new RuntimeException();
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseDto("ISE", "Internal Server Error"));
         }
     }
 
@@ -406,23 +462,23 @@ public class LessonServiceImpl implements LessonService {
         try{
             // 해당 클래스가 없는 경우
             if(!lessonJpaDataRepository.existsLessonByLessonNo(lesson_no)){
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseDto("FA","해당하는 lesson_no을 가진 클래스가 없습니다."));
+                throw new LessonNotFoundException();
             }
             // 클래스를 구매한 유저 정보를 받아옴
             User user = userRepository.findByUserId(userId);
             if(user == null){
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseDto("FA", "해당하는 user_id를 가진 유저가 없습니다."));
+                throw new UserNotFoundException();
             }
             // 구매 정보 저장 // 구매 정보가 있는지 여부를 먼저 확인해야함
             if(payRepository.existsPayByLesson_LessonNoAndUser(lesson_no, user)){
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseDto("FA", "이미 구매한 클래스입니다."));
+                throw new LessonAlreadyPaidException();
             }
             Pay pay = new Pay();
             pay.setUser(user);
             // lesson // clinet에게 전송할 때도 사용
             Lesson lesson = lessonsRepository.findByLesson_no(lesson_no);
             if(lesson.getLessonDeleteStatus()){
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseDto("FA", "해당 클래스는 삭제된 클래스 입니다."));
+                throw new LessonAlreadyDeletedException();
             }
             pay.setLesson(lesson);
             pay.setPayDate(LocalDateTime.now());
@@ -459,10 +515,24 @@ public class LessonServiceImpl implements LessonService {
 
             return ResponseEntity.status(HttpStatus.OK).body(new PaymentInfoResponseDto(payInfo));
 
-        }catch (Exception e){
+        }catch (LessonNotFoundException e){
+            log.info("LessonService buyLesson Exception : {}", e.getMessage());
+            throw new LessonNotFoundException();
+//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseDto("FA","해당하는 lesson_no을 가진 클래스가 없습니다."));
+        }catch (UserNotFoundException e){
+            log.info("LessonService buyLesson Exception : {}", e.getMessage());
+            throw new UserNotFoundException();
+//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseDto("FA", "해당하는 user_id를 가진 유저가 없습니다."));
+        }catch (LessonAlreadyPaidException e){
+            log.info("LessonService buyLesson Exception : {}", e.getMessage());
+            throw new LessonAlreadyPaidException();
+//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseDto("FA", "이미 구매한 클래스입니다."));
+        }
+        catch (Exception e){
             log.info("LessonService buyLesson Exception : {}", e.getMessage());
             log.info("getStackTrace()[0] : {}", e.getStackTrace()[0]);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseDto("ISE", "Internal Server Error"));
+            throw new RuntimeException();
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseDto("ISE", "Internal Server Error"));
         }
     }
 
