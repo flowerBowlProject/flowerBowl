@@ -19,6 +19,7 @@ const RegisterCommunity = () =>{
     const [registerData, setRegisterData] = useState({});
     const navigator = useNavigate();
     const dispatch = useDispatch();
+    const [toastContent, setToastContent] = useState("");
 
 
     {/* 초기 커뮤니티 값 가져오기 */}
@@ -44,6 +45,7 @@ const RegisterCommunity = () =>{
         .then(res=>{
             console.log(res);
             setRegisterData(res.data.data);
+            setToastContent(res.data.data.community_content);
         })
         .catch(err=>{
             console.log(err);
@@ -125,7 +127,7 @@ const RegisterCommunity = () =>{
             <input className="communityregister-title" type='text' placeholder="제목을 작성해 주세요." name="community_title" value={registerData.community_title} onChange={(e)=>setValue(e)}/>
             
             <div className="communityText-Box">
-                <ToastEditor getToastEditor={getToastEditor} setContent={registerData.community_content}/>
+                <ToastEditor getToastEditor={getToastEditor} setContent={toastContent}/>
             </div>
 
             {/* 등록 + 취소 버튼 컴포넌트 위치 */}

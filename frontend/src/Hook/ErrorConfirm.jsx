@@ -115,6 +115,7 @@ const ErrorConfirm = ({error})=>{
                 content = '로그인이 만료되었습니다.';
                 navigate('/')
                 dispatch({type:'accessToken',payload:""})
+                dispatch({type:"nickname", payload:""})
                 break;
             case 'IT':
             case 'NT':

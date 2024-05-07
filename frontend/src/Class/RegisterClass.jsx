@@ -40,7 +40,8 @@ const RegisterClass = () => {
     {/* 등록 클래스 데이터 + 썸네일 + 썸네일 선택 여부 */ }
     const [registerData, setRegisterData] = useState({
         lesson_title: '', lesson_category: '', lesson_price: 0, lesson_sname:'', lesson_oname:'',
-        lesson_addr: '', lesson_content: '', lesson_longitude: 0.0, lesson_latitude: 0.0, lesson_start: '', lesson_end: '', lesson_URL: ''
+        lesson_addr: '', lesson_content: '', lesson_longitude: 0.0, lesson_latitude: 0.0, lesson_start: '', lesson_end: '', lesson_URL: '',
+        lesson_file_sname:[], lesson_file_oname:[]
     });
     const [thumbnail, setThumbnail] = useState(null);
     const [selectedFile, setSelectedFile] = useState(null);
@@ -89,8 +90,14 @@ const RegisterClass = () => {
     }
 
     {/* 토스트 에디터 값 받아와 저장 */}
-    const getToastEditor = content =>{
-        setRegisterData((registerData) => ({ ...registerData, lesson_content: content}));
+    const getToastEditor = contentData =>{
+        console.log(contentData);
+        setRegisterData((registerData) => ({ ...registerData, lesson_content: contentData}));
+    }
+
+    const getToastImg = contentImg =>{
+        setRegisterData(prevState => ({...prevState, lesson_file_oname: [...prevState.lesson_file_oname, contentImg.oname]}));
+        setRegisterData(prevState => ({...prevState, lesson_file_sname: [...prevState.lesson_file_sname, contentImg.sname]}));
     }
 
     {/* 그 외의 변경사항 적용 */}
@@ -132,6 +139,7 @@ const RegisterClass = () => {
             dispatch(openError());
         } else {
             console.log("등록 가능");
+            console.log(registerData);
             axios.post(`${url}/api/lessons`, registerData, {
                 headers: {
                     Authorization: `Bearer ${accessToken}`
@@ -151,6 +159,12 @@ const RegisterClass = () => {
         }
     }
 
+    const thumbDelete = () =>{
+        setThumbnail(null);
+        setRegisterData((registerData) => ({ ...registerData, lesson_sname: ""}));
+        setRegisterData((registerData) => ({ ...registerData, lesson_oname: ""}));
+    }
+
     {/* 취소 버튼 클릭 */}
     const handleCancel = () =>{
         // 뒤로가기 - 리스트 페이지로 이동 - 현재는 리스트로 이동하도록 구현
@@ -166,7 +180,7 @@ const RegisterClass = () => {
                 <div className='thumbnail'>
                     {thumbnail ? (
                         <label>
-                            <img className='thumbImg-preview' src={thumbnail} alt='Thumbnail Preview' onClick={() => setThumbnail(null)} />
+                            <img className='thumbImg-preview' src={thumbnail} alt='Thumbnail Preview' onClick={thumbDelete} />
                         </label>
                     ) : (
                         <label className='register-thumbnail'>
@@ -216,7 +230,7 @@ const RegisterClass = () => {
             </div>
 
             {/* 레시피 || 클래스 상세 내용 작성란 */}
-            <ToastEditor getToastEditor={getToastEditor} setContent={''}/>
+            <ToastEditor getToastEditor={getToastEditor} getToastImg={getToastImg} setContent={''}/>
 
             <div style={{ border: "1px solid #CBA285", marginBottom: "2%" }} />
             <div className="register_button">
