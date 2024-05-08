@@ -84,7 +84,11 @@ const Profile = () => {
         console.log("프로필 사진 변경이 완료되었습니다.", response.data);
         setProfileOName(response.data.profile_oname);
         setProfileSName(response.data.profile_sname);
-        alert(`프로필 사진 변경이 완료되었습니다. ${response.data.message}`);
+        dispatch(editErrorType("PROFILE SUCCESS"));
+        dispatch(openError());
+        //로컬스토리지 저장
+        localStorage.setItem("profileImageUrl", response.data.profile_sname);
+        setImageUrl(response.data.profile_sname);
       } else {
         console.error(
           "프로필 사진 변경 실패: 응답 코드가 'SU'가 아닙니다.",
@@ -137,6 +141,9 @@ const Profile = () => {
           chef_oname: response.data.chef_oname,
           chef_sname: response.data.chef_sname,
         });
+        //로컬 스토리지 저장
+        localStorage.setItem("chefImageUrl", response.data.chef_sname);
+        setChefImageUrl(response.data.chef_sname);
       } else {
         console.error("쉐프 이미지 업로드 실패", response.data.message);
       }
@@ -202,7 +209,21 @@ const Profile = () => {
       dispatch(openError());
     }
   };
+
+  //변경사진 마운트
   useEffect(() => {
+    // Retrieve image URLs from local storage
+    const savedProfileImageUrl = localStorage.getItem("profileImageUrl");
+    const savedChefImageUrl = localStorage.getItem("chefImageUrl");
+
+    if (savedProfileImageUrl) {
+      setImageUrl(savedProfileImageUrl);
+    }
+    if (savedChefImageUrl) {
+      setChefImageUrl(savedChefImageUrl);
+    }
+
+    //유저 정보
     const fetchData = async () => {
       try {
         const response = await axios.get(`${url}/api/users/info`, {
