@@ -7,12 +7,16 @@ import "./BookmarkRecipe.css";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { url } from "../../url";
-import { useSelector } from "react-redux";
+import ErrorConfirm from "../../Hook/ErrorConfirm";
+import { useDispatch, useSelector } from "react-redux";
+import { editErrorType, openError } from "../../persistStore";
 
 const BookmarkClass = () => {
   const navigator = useNavigate();
   const [listData, setListData] = useState([]);
   const accessToken = useSelector((state) => state.accessToken);
+  const dispatch = useDispatch();
+  const errorType = useSelector((state) => state.errorType);
   const [slice, setSlice] = useState(8);
 
   useEffect(() => {
@@ -29,7 +33,8 @@ const BookmarkClass = () => {
           setListData(updatedListData);
         }
       } catch (error) {
-        console.error("Error fetching data:", error);
+        dispatch(editErrorType(error.response.data.code));
+        dispatch(openError());
         setListData([]);
       }
     };
@@ -59,6 +64,8 @@ const BookmarkClass = () => {
       }
     } catch (error) {
       console.error("Error in bookmark toggle:", error);
+      dispatch(editErrorType(error.response.data.code));
+      dispatch(openError());
     }
   };
 
@@ -69,6 +76,7 @@ const BookmarkClass = () => {
 
   return (
     <>
+      <ErrorConfirm error={errorType} />
       <div className="division-line"></div>
 
       <div className="bookmark-content">

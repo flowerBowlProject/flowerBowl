@@ -21,6 +21,7 @@ import {
   setMemberid,
   setMemberTel,
   setMemberNewPw,
+  setChefRole,
 } from "../../persistStore";
 import ErrorConfirm from "../../Hook/ErrorConfirm";
 import ButtonOutlined from "../../Component/ButtonOutlined";
@@ -51,6 +52,7 @@ const Profile = () => {
   const user = useSelector((state) => state.member);
   const [emailCode, setEmailCode] = useState("");
   const CheckEmailOpen = useSelector((state) => state.emailCheck);
+  const isChef = useSelector((state) => state.isChef);
 
   //이미지 변경
   const handleChangeImage = async (event) => {
@@ -94,17 +96,11 @@ const Profile = () => {
           "프로필 사진 변경 실패: 응답 코드가 'SU'가 아닙니다.",
           response.data
         );
-        alert(
-          `프로필 사진 변경에 실패했습니다. 응답 메시지: ${response.data.message}`
-        );
       }
     } catch (error) {
       console.error("프로필 사진 변경 실패", error);
-      alert(
-        `프로필 사진 변경에 실패했습니다. ${
-          error.response?.data?.message || error.message
-        }`
-      );
+      dispatch(editErrorType(error.response.data.code));
+      dispatch(openError());
     }
   };
 
@@ -149,6 +145,8 @@ const Profile = () => {
       }
     } catch (error) {
       console.error("쉐프 이미지 업로드 실패", error);
+      dispatch(editErrorType(error.response.data.code)); //기본에러
+      dispatch(openError());
     }
   };
 
@@ -172,11 +170,15 @@ const Profile = () => {
           Authorization: `Bearer ${accessToken}`,
         },
       });
+      dispatch(editErrorType("CHEF APPLY"));
+      dispatch(openError());
       console.log("Chef application successful:", response.data);
     } catch (error) {
       console.error("Error during chef application:", error);
       console.error("Request data:", error.config.data);
       console.error("Request headers:", error.config.headers);
+      dispatch(editErrorType(error.response.data.code));
+      dispatch(openError());
       if (error.response) {
         console.error("Error response data:", error.response.data);
         console.error("Error response status:", error.response.status);
@@ -235,13 +237,15 @@ const Profile = () => {
         dispatch(setMemberName(response.data.user_nickname));
         dispatch(setMemberTel(response.data.user_phone));
         dispatch(setMermberEmail(response.data.user_email));
+        const isChef = response.data.user_role === "ROLE_CHEF";
+        dispatch(setChefRole(isChef));
       } catch (error) {
         dispatch(editErrorType(error.response.data.code));
         dispatch(openError());
       }
     };
     fetchData();
-  }, [accessToken]);
+  }, [accessToken, dispatch]);
   const handleEditUser = async () => {
     if (
       (user.memberNewPw.length >= 1 && newPwChange) ||
@@ -349,231 +353,247 @@ const Profile = () => {
   };
 
   return (
-    <>
-      <Grid container direction="row">
-        <Grid item xs={3}>
-          <Grid container direction="column" ml="1.5em" mt="2em">
-            <Grid item ml="-1em">
-              <div className="ProfileImage">
-                {imageUrl ? (
-                  <img
-                    src={imageUrl}
-                    alt="Profile"
-                    style={{ width: "100px", height: "100px" }}
-                  />
-                ) : (
-                  <PersonIcon
-                    sx={{ color: "black", width: "100px", height: "100px" }}
-                  />
-                )}
-              </div>
+    <Grid container direction="row">
+      <Grid item xs={3}>
+        <Grid container direction="column" ml="1.5em" mt="2em">
+          {isChef && ( // ROLE_CHEF일 때만 쉐프 모자 이미지 표시
+            <Grid item>
+              <img
+                src="/images/쉐프모자.png"
+                alt="쉐프 모자"
+                style={{
+                  width: "100px",
+                  height: "100px",
+                  marginLeft: "-17px",
+                  marginBottom: "-20px",
+                }}
+              />
             </Grid>
-            <Grid item mt="0.5em" ml="-0.5em">
-              <ButtonContainStyle
-                component="label"
-                width="5vw"
-                sx={{ height: "1vw" }}
-              >
-                <input
-                  id={"file-input"}
-                  style={{ display: "none" }}
-                  type="file"
-                  name="imageFile"
-                  onChange={handleChangeImage}
+          )}
+          <Grid item ml="-1em">
+            <div className="ProfileImage">
+              {imageUrl ? (
+                <img
+                  src={imageUrl}
+                  alt="Profile"
+                  style={{ width: "100px", height: "100px" }}
                 />
-                사진 변경
-              </ButtonContainStyle>
-            </Grid>
-            <Grid item mt="3em" ml="-1em">
-              <div className="ChefProfileImage">
-                <Tooltip
-                  title="아이콘을 클릭해 파일을 첨부해주세요."
-                  followCursor
+              ) : (
+                <PersonIcon
+                  sx={{ color: "black", width: "100px", height: "100px" }}
+                />
+              )}
+            </div>
+          </Grid>
+          <Grid item mt="0.5em" ml="-0.5em">
+            <ButtonContainStyle
+              component="label"
+              width="5vw"
+              sx={{ height: "1vw" }}
+            >
+              <input
+                id="file-input"
+                style={{ display: "none" }}
+                type="file"
+                name="imageFile"
+                onChange={handleChangeImage}
+              />
+              사진 변경
+            </ButtonContainStyle>
+          </Grid>
+          {!isChef && (
+            <>
+              <Grid item mt="3em" ml="-1em">
+                <div className="ChefProfileImage">
+                  <Tooltip
+                    title="아이콘을 클릭해 파일을 첨부해주세요."
+                    followCursor
+                  >
+                    <label htmlFor="chef-file-input">
+                      {chefImageUrl ? (
+                        <img
+                          src={chefImageUrl}
+                          alt="Chef Profile"
+                          style={{ width: "100px", height: "100px" }}
+                        />
+                      ) : (
+                        <PersonIcon
+                          sx={{
+                            color: "black",
+                            width: "100px",
+                            height: "100px",
+                          }}
+                        />
+                      )}
+                      <input
+                        id="chef-file-input"
+                        style={{ display: "none" }}
+                        type="file"
+                        name="chefImageFile"
+                        onChange={handleUploadImageChef}
+                      />
+                    </label>
+                  </Tooltip>
+                </div>
+              </Grid>
+              <Grid item mt="0.5em" ml="-0.5em">
+                <ButtonContainStyle
+                  component="label"
+                  width="5vw"
+                  sx={{ height: "1vw" }}
+                  onClick={() =>
+                    handleApplyChef(
+                      chefDetails.chef_oname,
+                      chefDetails.chef_sname
+                    )
+                  }
                 >
-                  <label htmlFor="chef-file-input">
-                    {chefImageUrl ? (
-                      <img
-                        src={chefImageUrl}
-                        alt="Chef Profile"
-                        style={{ width: "100px", height: "100px" }}
-                      />
-                    ) : (
-                      <PersonIcon
-                        sx={{ color: "black", width: "100px", height: "100px" }}
-                      />
-                    )}
-                    <input
-                      id="chef-file-input"
-                      style={{ display: "none" }}
-                      type="file"
-                      name="chefImageFile"
-                      onChange={handleUploadImageChef}
-                    />
-                  </label>
-                </Tooltip>
-              </div>
-            </Grid>
-            <Grid item mt="0.5em" ml="-0.5em">
-              <ButtonContainStyle
-                component="label"
-                width="5vw"
-                sx={{ height: "1vw" }}
-                onClick={() =>
-                  handleApplyChef(
-                    chefDetails.chef_oname,
-                    chefDetails.chef_sname
-                  )
-                }
-              >
-                쉐프 신청
-              </ButtonContainStyle>
-            </Grid>
-          </Grid>
+                  쉐프 신청
+                </ButtonContainStyle>
+              </Grid>
+            </>
+          )}
         </Grid>
-
-        <Grid item xs={4.5}>
-          <Grid container direction="column">
-            <Grid item>
-              <Grid container direction="column" ml="-10em" rowGap={4}>
-                <Grid item>
-                  <FormSignup
-                    size="joy"
-                    title="아이디"
-                    valueUser={user.memberId}
-                    helper_text="8~15자로 작성해 주세요."
-                    vaild="id"
-                    disable={true}
-                  />
-                </Grid>
-                <Grid item>
-                  <FormSignup
-                    size="joy"
-                    title="닉네임"
-                    but_text="중복확인"
-                    valueUser={user.memberName}
-                    but_exis={true}
-                    vaild="name"
-                    handleCheck={handleCheckName}
-                  />
-                </Grid>
-                <Grid item>
-                  <FormSignup
-                    size="joy"
-                    title="휴대폰 번호"
-                    valueUser={user.memberTel}
-                    helper_text="올바른 휴대폰 번호를 입력해 주세요."
-                    but_exis={false}
-                    vaild="tel"
-                  />
-                </Grid>
-                <Grid item>
-                  <FormSignup
-                    size="joy"
-                    title="이메일"
-                    but_text="이메일 인증"
-                    valueUser={user.memberEmail}
-                    but_exis={true}
-                    helper_text="올바른 이메일을 입력해 주세요."
-                    vaild="email"
-                    handleCheck={hanldeSendEmail}
-                  />
-                </Grid>
-              </Grid>
-            </Grid>
-
-            {/* 모니터일 때 ml=18em */}
-            <Grid item ml="15em" mb="2em" mt="2.5em">
-              <div className="change">
-                <ButtonContain
-                  text="변경"
-                  size="medium"
-                  disable={butDisable}
-                  handleClick={handleEditUser}
-                />
-              </div>
-            </Grid>
-          </Grid>
-        </Grid>
-
-        <Grid item xs={4.5}>
-          <Grid container direction="column" ml="-10em" rowGap={-5}>
-            <Grid item height="7em">
-              <FormSignup
-                size="joy"
-                handleBut={handleBut}
-                title="비밀번호"
-                helper_text="영문,숫자,특수문자 포함 8~15자로 작성해 주세요."
-                place_text="*****"
-                pass_exis={true}
-                vaild="pw"
-              />
-            </Grid>
-            <Grid item height="7em">
-              <FormSignup
-                size="joy"
-                title="새 비밀번호 변경"
-                place_text="******"
-                helper_text="영문, 숫자, 특수문자 포함 8~15자로 작성해주세요."
-                pass_exis={true}
-                vaild="newPw"
-                setPass={setPassConfirm}
-                handleBut={handleBut}
-              />
-            </Grid>
-            <Grid item height="7em">
-              <FormSignup
-                size="joy"
-                title="새 비밀번호 확인"
-                place_text="******"
-                helper_text="비밀번호가 일치하지 않습니다."
-                pass_exis={true}
-                vaild={passConfirm}
-                pass_confirm={true}
-                handleBut={handleBut}
-              />
-            </Grid>
-            <Grid item>
-              <div className="withdrawl">
-                <Withdrawl hanldeWithDrawlUser={hanldeWithDrawlUser} />
-              </div>
-            </Grid>
-          </Grid>
-        </Grid>
-        <Modal open={CheckEmailOpen} onClose={handleCloseEmailCheck}>
-          <Box
-            mt="15vw"
-            mx="37.5vw"
-            width="25vw"
-            height="15vw"
-            backgroundColor="main.or"
-            borderRadius={1}
-            border={`3px solid ${theme.palette.main.br}`}
-          >
-            <Grid container mt="3.5vw">
-              <Grid item xs={6} textAlign="center" pt="0.7vw">
-                <Typography>인증코드</Typography>
-              </Grid>
-              <Grid item xs={6} textAlign="left">
-                <TextField
-                  onChange={handleChangeEmailCode}
-                  variant="filled"
-                  size="small"
-                  sx={{ width: "10vw" }}
-                />
-              </Grid>
-              <Grid item xs textAlign="center" mt="4vw">
-                <ButtonOutlined
-                  text="전송"
-                  size="verySmall"
-                  handleClick={handleCertifiedEmail}
-                />
-              </Grid>
-            </Grid>
-          </Box>
-        </Modal>
       </Grid>
+      <Grid item xs={4.5}>
+        <Grid container direction="column">
+          <Grid item>
+            <Grid container direction="column" ml="-10em" rowGap={4}>
+              <Grid item>
+                <FormSignup
+                  size="joy"
+                  title="아이디"
+                  valueUser={user.memberId}
+                  helper_text="8~15자로 작성해 주세요."
+                  vaild="id"
+                  disable={true}
+                />
+              </Grid>
+              <Grid item>
+                <FormSignup
+                  size="joy"
+                  title="닉네임"
+                  but_text="중복확인"
+                  valueUser={user.memberName}
+                  but_exis={true}
+                  vaild="name"
+                  handleCheck={handleCheckName}
+                />
+              </Grid>
+              <Grid item>
+                <FormSignup
+                  size="joy"
+                  title="휴대폰 번호"
+                  valueUser={user.memberTel}
+                  helper_text="올바른 휴대폰 번호를 입력해 주세요."
+                  but_exis={false}
+                  vaild="tel"
+                />
+              </Grid>
+              <Grid item>
+                <FormSignup
+                  size="joy"
+                  title="이메일"
+                  but_text="이메일 인증"
+                  valueUser={user.memberEmail}
+                  but_exis={true}
+                  helper_text="올바른 이메일을 입력해 주세요."
+                  vaild="email"
+                  handleCheck={hanldeSendEmail}
+                />
+              </Grid>
+            </Grid>
+          </Grid>
+          <Grid item ml="15em" mb="2em" mt="2.5em">
+            <div className="change">
+              <ButtonContain
+                text="변경"
+                size="medium"
+                disable={butDisable}
+                handleClick={handleEditUser}
+              />
+            </div>
+          </Grid>
+        </Grid>
+      </Grid>
+      <Grid item xs={4.5}>
+        <Grid container direction="column" ml="-10em" rowGap={-5}>
+          <Grid item height="7em">
+            <FormSignup
+              size="joy"
+              handleBut={handleBut}
+              title="비밀번호"
+              helper_text="영문,숫자,특수문자 포함 8~15자로 작성해 주세요."
+              place_text="*****"
+              pass_exis={true}
+              vaild="pw"
+            />
+          </Grid>
+          <Grid item height="7em">
+            <FormSignup
+              size="joy"
+              title="새 비밀번호 변경"
+              place_text="******"
+              helper_text="영문, 숫자, 특수문자 포함 8~15자로 작성해주세요."
+              pass_exis={true}
+              vaild="newPw"
+              setPass={setPassConfirm}
+              handleBut={handleBut}
+            />
+          </Grid>
+          <Grid item height="7em">
+            <FormSignup
+              size="joy"
+              title="새 비밀번호 확인"
+              place_text="******"
+              helper_text="비밀번호가 일치하지 않습니다."
+              pass_exis={true}
+              vaild={passConfirm}
+              pass_confirm={true}
+              handleBut={handleBut}
+            />
+          </Grid>
+          <Grid item>
+            <div className="withdrawl">
+              <Withdrawl hanldeWithDrawlUser={hanldeWithDrawlUser} />
+            </div>
+          </Grid>
+        </Grid>
+      </Grid>
+      <Modal open={CheckEmailOpen} onClose={handleCloseEmailCheck}>
+        <Box
+          mt="15vw"
+          mx="37.5vw"
+          width="25vw"
+          height="15vw"
+          backgroundColor="main.or"
+          borderRadius={1}
+          border={`3px solid ${theme.palette.main.br}`}
+        >
+          <Grid container mt="3.5vw">
+            <Grid item xs={6} textAlign="center" pt="0.7vw">
+              <Typography>인증코드</Typography>
+            </Grid>
+            <Grid item xs={6} textAlign="left">
+              <TextField
+                onChange={handleChangeEmailCode}
+                variant="filled"
+                size="small"
+                sx={{ width: "10vw" }}
+              />
+            </Grid>
+            <Grid item xs textAlign="center" mt="4vw">
+              <ButtonOutlined
+                text="전송"
+                size="verySmall"
+                handleClick={handleCertifiedEmail}
+              />
+            </Grid>
+          </Grid>
+        </Box>
+      </Modal>
       <ErrorConfirm error={useSelector((state) => state.errorType)} />
-    </>
+    </Grid>
   );
 };
 

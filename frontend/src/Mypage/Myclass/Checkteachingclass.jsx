@@ -5,7 +5,9 @@ import "./Checkteachingclass.css";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { url } from "../../url";
-import { useSelector } from "react-redux";
+import ErrorConfirm from "../../Hook/ErrorConfirm";
+import { useDispatch, useSelector } from "react-redux";
+import { editErrorType, openError } from "../../persistStore";
 
 const Checkteachingclass = () => {
   const navigate = useNavigate();
@@ -15,7 +17,9 @@ const Checkteachingclass = () => {
   const [sortDirectionRating, setSortDirectionRating] = useState("asc");
   const [listData, setListData] = useState([]);
   const accessToken = useSelector((state) => state.accessToken);
-  const [slice,setSlice]= useState(8);
+  const dispatch = useDispatch();
+  const errorType = useSelector((state) => state.errorType);
+  const [slice, setSlice] = useState(8);
   //액세스토큰 확인
   // console.log("Access Token:", accessToken);
 
@@ -32,6 +36,8 @@ const Checkteachingclass = () => {
         // console.log(response.data.payLessons);
       } catch (error) {
         console.error("Error fetching data:", error);
+        dispatch(editErrorType(error.response.data.code));
+        dispatch(openError());
         setListData([]);
       }
     };
@@ -88,13 +94,12 @@ const Checkteachingclass = () => {
       return newDirection;
     });
   };
-  const handleClickMoreDetail=()=>{
-    if(listData.length>slice)
-    setSlice(slice+8)
-  }
+  const handleClickMoreDetail = () => {
+    if (listData.length > slice) setSlice(slice + 8);
+  };
   return (
     <>
-      
+      <ErrorConfirm error={errorType} />
       {/* 내용 */}
       <section className="table-content">
         <table className="custom-table">
@@ -133,7 +138,10 @@ const Checkteachingclass = () => {
             </tr>
           </thead>
           <tbody>
-            {[...listData.slice(0,slice), ...Array(8-listData.slice(slice-8,slice).length)].map((data, index) => (
+            {[
+              ...listData.slice(0, slice),
+              ...Array(8 - listData.slice(slice - 8, slice).length),
+            ].map((data, index) => (
               <tr key={index}>
                 <td>{data ? index + 1 : ""}</td>
                 <td>{data ? data.pay_date : ""}</td>
@@ -163,7 +171,11 @@ const Checkteachingclass = () => {
 
       {/* 더보기 버튼    */}
       <section className="bottom-add">
-        <ButtonContain size="medium" text="더보기" handleClick={handleClickMoreDetail} />
+        <ButtonContain
+          size="medium"
+          text="더보기"
+          handleClick={handleClickMoreDetail}
+        />
       </section>
     </>
   );
