@@ -4,10 +4,14 @@ import ButtonContain from "../../Component/ButtonContain";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { url } from "../../url";
-import { useSelector } from "react-redux";
+import ErrorConfirm from "../../Hook/ErrorConfirm";
+import { useDispatch, useSelector } from "react-redux";
+import { editErrorType, openError } from "../../persistStore";
 
 const CheckPaidList = () => {
   const accessToken = useSelector((state) => state?.accessToken);
+  const dispatch = useDispatch();
+  const errorType = useSelector((state) => state.errorType);
   // 정렬기능
   const [sortDirection, setSortDirection] = useState("asc");
   const [sortReceipt, setSortReceipt] = useState("asc");
@@ -32,7 +36,8 @@ const CheckPaidList = () => {
         //코드 확인
         // console.log(response.data.payLessons);
       } catch (error) {
-        console.error("Error fetching data:", error);
+        dispatch(editErrorType(error.response.data.code));
+        dispatch(openError());
         setListData([]);
       }
     };
@@ -106,19 +111,20 @@ const CheckPaidList = () => {
       });
 
       if (response.status === 200) {
+        dispatch(editErrorType("CANCEL SUCCESS"));
+        dispatch(openError());
         console.log("Success:", response.data.message);
         setRefreshData(!refreshData); // toggle to trigger a re-fetch
       }
     } catch (error) {
-      console.error("Failed to delete payment:", error);
-      if (error.response) {
-        console.log("Error response data:", error.response.data); // Log the error response data
-      }
+      dispatch(editErrorType(error.response.data.code));
+      dispatch(openError());
     }
   };
 
   return (
     <>
+      <ErrorConfirm error={errorType} />
       {/* 내용 */}
       <section className="table-content">
         <table className="custom-table">
