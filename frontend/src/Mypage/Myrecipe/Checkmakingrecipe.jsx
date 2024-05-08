@@ -5,11 +5,15 @@ import "./Checkmakingrecipe.css";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { url } from "../../url";
-import { useSelector } from "react-redux";
+import ErrorConfirm from "../../Hook/ErrorConfirm";
+import { useDispatch, useSelector } from "react-redux";
+import { editErrorType, openError } from "../../persistStore";
 
 const Checkmakingrecipe = () => {
   const navigate = useNavigate();
   const accessToken = useSelector((state) => state?.accessToken);
+  const dispatch = useDispatch();
+  const errorType = useSelector((state) => state.errorType);
 
   // 정렬기능
   const [sortDirection, setSortDirection] = useState("asc");
@@ -33,6 +37,8 @@ const Checkmakingrecipe = () => {
         console.log(response.data.myRecipes);
       } catch (error) {
         console.error("Error fetching data:", error);
+        dispatch(editErrorType(error.response.data.code));
+        dispatch(openError());
         setListData([]);
       }
     };
@@ -53,6 +59,8 @@ const Checkmakingrecipe = () => {
       }
     } catch (error) {
       console.error("Error during deletion:", error);
+      dispatch(editErrorType(error.response.data.code));
+      dispatch(openError());
     }
   };
 
@@ -114,6 +122,7 @@ const Checkmakingrecipe = () => {
 
   return (
     <>
+      <ErrorConfirm error={errorType} />
       {/* 내용 */}
       <section className="table-content">
         <table className="custom-table">

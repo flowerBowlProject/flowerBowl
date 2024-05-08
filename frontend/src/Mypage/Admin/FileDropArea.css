@@ -1,7 +1,7 @@
 .drop-area {
   border: 2px dashed #cccccc;
   border-radius: 20px;
-  width: 35em;
+  width: 35em; /* Adjust the size as per your design requirements */
   height: 20em;
   display: flex;
   align-items: center;
@@ -9,57 +9,37 @@
   text-align: center;
   cursor: pointer;
   position: relative;
-  z-index: 1;
-}
-
-.drop-area.active {
   background-color: #f0f0f0;
 }
 
-.drop-area p {
-  margin: 0;
-  font-size: 20px;
-  color: #aaaaaa;
-  z-index: 1;
-}
-
-/* 파일 선택 버튼 스타일 */
 .drop-area label {
   display: inline-block;
   padding: 10px 20px;
   background-color: #ffffff;
   border: 1px solid #cccccc;
   border-radius: 5px;
-  margin-top: 8em;
-  justify-content: center;
-  align-items: center;
-  margin-left: -5em;
   cursor: pointer;
-  z-index: 1;
+  position: absolute; /* Updated positioning */
+  bottom: 10px; /* Position label at the bottom */
+  left: 50%;
+  transform: translateX(-50%); /* Center the label horizontally */
 }
 
 .preview-container {
-  max-height: 200px;
+  width: 100%;
+  height: 100%;
+  overflow: hidden; /* Updated to hide overflow */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: 0;
+  left: 0;
 }
-
-/* .file-preview {
-  border: 1px solid #ccc;
-} */
 
 .image-preview {
-  display: block;
-  max-width: 150vw;
-  max-height: 35vh;
-  margin-top: -3em;
-  margin-right: 6em;
-  z-index: 5;
-}
-
-.file-label {
-  cursor: pointer;
-  display: block; /* Ensures the label is always visible and occupies full width */
-  padding: 10px;
-  background-color: #f8f9fa;
-  border: 1px solid #ccc;
-  z-index: 5;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
 }

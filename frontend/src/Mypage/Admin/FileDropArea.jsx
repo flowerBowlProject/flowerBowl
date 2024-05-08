@@ -1,37 +1,69 @@
 import React, { useCallback, useState } from "react";
 import "./FileDropArea.css";
+import axios from "axios";
+import { url } from "../../url";
+import ErrorConfirm from "../../Hook/ErrorConfirm";
+import { useDispatch, useSelector } from "react-redux";
+import { editErrorType, openError } from "../../persistStore";
 
-function FileDropArea() {
-  const [dragActive, setDragActive] = useState(false);
+function FileDropArea({ onUploadSuccess }) {
+  const accessToken = useSelector((state) => state?.accessToken);
+  const dispatch = useDispatch();
+  const errorType = useSelector((state) => state.errorType);
   const [files, setFiles] = useState([]);
 
-  // 드래그 이벤트 핸들러
-  const handleDrag = useCallback((event) => {
+  const handleDragOver = useCallback((event) => {
     event.preventDefault();
-    event.stopPropagation();
-    if (event.type === "dragenter" || event.type === "dragover") {
-      setDragActive(true);
-    } else if (event.type === "dragleave") {
-      setDragActive(false);
-    }
   }, []);
 
-  // 드롭 이벤트 핸들러
-  const handleDrop = useCallback((event) => {
-    event.preventDefault();
-    event.stopPropagation();
-    setDragActive(false);
-    const newFiles = Array.from(event.dataTransfer.files);
-    setFiles(newFiles);
-  }, []);
-
-  // 파일 선택 핸들러
   const handleFileSelect = useCallback((event) => {
     const newFiles = Array.from(event.target.files);
     setFiles(newFiles);
+    uploadFiles(newFiles);
   }, []);
 
-  // 파일 미리보기 생성
+  const handleDrop = useCallback((event) => {
+    console.log("handleDrop");
+    event.preventDefault();
+    const newFiles = Array.from(event.dataTransfer.files);
+    setFiles(newFiles);
+    uploadFiles(newFiles);
+  }, []);
+
+  //파일 업로드
+  const uploadFiles = useCallback(
+    (files) => {
+      files.forEach((file) => {
+        if (file.type.startsWith("image/")) {
+          console.log(accessToken);
+          const formData = new FormData();
+          formData.append("file", file);
+
+          axios
+            .post(`${url}/api/images/content`, formData, {
+              headers: {
+                Authorization: `Bearer ${accessToken}`,
+                "Content-Type": "multipart/form-data",
+              },
+            })
+            .then((response) => {
+              const { code, message, content_oname, content_sname } =
+                response.data;
+              console.log(
+                `Upload success - Code: ${code}, Message: ${message}, Original Filename: ${content_oname}, Stored S3 URL: ${content_sname}`
+              );
+              onUploadSuccess(content_oname, content_sname);
+            })
+            .catch((error) => {
+              dispatch(editErrorType(error.response.data.code));
+              dispatch(openError());
+            });
+        }
+      });
+    },
+    [onUploadSuccess]
+  );
+
   const filePreview = useCallback(() => {
     return files.map((file, index) => (
       <div key={index} className="file-preview">
@@ -49,27 +81,28 @@ function FileDropArea() {
   }, [files]);
 
   return (
-    <div
-      className={`drop-area ${dragActive ? "active" : ""}`}
-      onDragEnter={handleDrag}
-      onDragOver={handleDrag}
-      onDragLeave={handleDrag}
-      onDrop={handleDrop}
-    >
-      {dragActive ? (
-        <p>파일을 여기에 놓으세요</p>
+    <div className="drop-area" onDragOver={handleDragOver} onDrop={handleDrop}>
+      <ErrorConfirm error={errorType} />
+      {files.length > 0 ? (
+        <>
+          <div className="preview-container">{filePreview()}</div>
+          <label htmlFor="fileinput" onClick={handleDrop}>
+            파일 선택
+          </label>
+        </>
       ) : (
-        <p>파일을 이 영역으로 드래그하거나 클릭하여 선택하세요</p>
+        <>
+          <p>파일을 드래그하거나 파일 선택을 클릭해주세요.</p>
+          <label htmlFor="fileinput">파일 선택</label>
+        </>
       )}
       <input
         type="file"
         id="fileinput"
         multiple
-        onInput={handleFileSelect}
+        onChange={handleFileSelect}
         style={{ display: "none" }}
       />
-      <label htmlFor="fileinput">파일 선택</label>
-      <div className="preview-container">{filePreview()}</div>
     </div>
   );
 }

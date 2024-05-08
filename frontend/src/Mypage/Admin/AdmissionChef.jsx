@@ -4,13 +4,17 @@ import ButtonOutlined from "../../Component/ButtonOutlined";
 import "./AdmissionChef.css";
 import axios from "axios";
 import { url } from "../../url";
-import { useSelector } from "react-redux";
+import ErrorConfirm from "../../Hook/ErrorConfirm";
+import { useDispatch, useSelector } from "react-redux";
+import { editErrorType, openError } from "../../persistStore";
 
 const AdmissionChef = () => {
   // 정렬기능
   const [sortDirection, setSortDirection] = useState("asc");
   const [listData, setListData] = useState([]);
   const accessToken = useSelector((state) => state.accessToken);
+  const dispatch = useDispatch();
+  const errorType = useSelector((state) => state.errorType);
   const [slice, setSlice] = useState(8);
   const handleClickMoreDetail = () => {
     if (listData.length > slice) setSlice(slice + 8);
@@ -25,17 +29,9 @@ const AdmissionChef = () => {
         });
         setListData(response.data.candidiate.reverse());
         console.log(response.data.candidiate);
-        // console.log(typeof response.data.candidiate);
-
-        // const candidateData = Array.isArray(response.data?.candidiate)
-        //   ? response.data.candidiate
-        //   : [];
-        // setListData(candidateData);
-
-        //코드 확인
-        // console.log(response.data.likeRecipes);
       } catch (error) {
-        console.error("Error fetching data:", error);
+        dispatch(editErrorType(error.response.data.code));
+        dispatch(openError());
         setListData([]);
       }
     };
@@ -65,6 +61,7 @@ const AdmissionChef = () => {
     });
   };
 
+  //쉐프 허가
   const handleApproveRequest = async (userNo) => {
     try {
       const response = await axios.put(
@@ -77,18 +74,17 @@ const AdmissionChef = () => {
         }
       );
       if (response.status === 200) {
-        alert(`쉐프 허가 승인 완료되었습니다: ${response.data.message}`);
+        dispatch(editErrorType("CHEF APPLY SUCCESS"));
+        dispatch(openError());
         setListData(listData.filter((item) => item.user_no !== userNo));
       }
     } catch (error) {
-      alert(
-        `쉐프 허가 승인 오류났습니다: ${
-          error.response?.data?.message || error.message
-        }`
-      );
+      dispatch(editErrorType(error.response.data.code));
+      dispatch(openError());
     }
   };
 
+  //쉐프 반려
   const handleDenialRequest = async (license_no) => {
     if (!license_no) {
       alert("Invalid license number provided.");
@@ -106,16 +102,19 @@ const AdmissionChef = () => {
         }
       );
       if (response.status === 200) {
-        alert(`반려가 완료되었습니다.`);
+        dispatch(editErrorType("CHEF APPLY FAIL"));
+        dispatch(openError());
         setListData(listData.filter((item) => item.license_no !== license_no));
       }
     } catch (error) {
-      alert(`쉐프 반려가 오류났습니다.`);
+      dispatch(editErrorType(error.response.data.code));
+      dispatch(openError());
     }
   };
 
   return (
     <>
+      <ErrorConfirm error={errorType} />
       {/* 내용 */}
       <div className="admissionall">
         <section className="table-content">

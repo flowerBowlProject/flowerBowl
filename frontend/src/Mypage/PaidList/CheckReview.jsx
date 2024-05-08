@@ -5,7 +5,9 @@ import ButtonOutlined from "../../Component/ButtonOutlined";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { url } from "../../url";
-import { useSelector } from "react-redux";
+import ErrorConfirm from "../../Hook/ErrorConfirm";
+import { useDispatch, useSelector } from "react-redux";
+import { editErrorType, openError } from "../../persistStore";
 
 const CheckReview = () => {
   // 정렬기능
@@ -13,6 +15,8 @@ const CheckReview = () => {
   const [sortDirectionRating, setSortDirectionRating] = useState("asc");
   const [listData, setListData] = useState([]);
   const accessToken = useSelector((state) => state.accessToken);
+  const dispatch = useDispatch();
+  const errorType = useSelector((state) => state.errorType);
   const [slice, setSlice] = useState(8);
   const handleClickMoreDetail = () => {
     if (listData.length > slice) setSlice(slice + 8);
@@ -37,7 +41,8 @@ const CheckReview = () => {
         //코드 확인
         // console.log(response.data.likeRecipes);
       } catch (error) {
-        console.error("Error fetching data:", error);
+        dispatch(editErrorType(error.response.data.code));
+        dispatch(openError());
         setListData([]);
       }
     };
@@ -84,6 +89,7 @@ const CheckReview = () => {
     setListData(sortedData);
   };
 
+  //리뷰 삭제
   const handleDeleteReview = async (review_no) => {
     console.log(`Attempting to delete review with ID: ${review_no}`);
     console.log(typeof review_no);
@@ -100,12 +106,15 @@ const CheckReview = () => {
       setListData(newListData);
       console.log(`Updated list data after deletion:`, newListData);
     } catch (error) {
+      dispatch(editErrorType(error.response.data.code));
+      dispatch(openError());
       console.error("Error deleting review:", error.response || error);
     }
   };
 
   return (
     <>
+      <ErrorConfirm error={errorType} />
       {/* 내용 */}
       <section className="table-content">
         <table className="custom-table">
