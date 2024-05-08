@@ -6,7 +6,9 @@ import ButtonOutlined from "../../Component/ButtonOutlined";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { url } from "../../url";
-import { useSelector } from "react-redux";
+import ErrorConfirm from "../../Hook/ErrorConfirm";
+import { useDispatch, useSelector } from "react-redux";
+import { editErrorType, openError } from "../../persistStore";
 
 const RegisterReview = () => {
   const [value, setValue] = useState(0);
@@ -15,6 +17,8 @@ const RegisterReview = () => {
   const [selectedTitle, setSelectedTitle] = useState("");
   const [reviewContent, setReviewContent] = useState("");
   const accessToken = useSelector((state) => state.accessToken);
+  const dispatch = useDispatch();
+  const errorType = useSelector((state) => state.errorType);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -28,6 +32,8 @@ const RegisterReview = () => {
         setTitle(response.data.availableReviews);
       } catch (error) {
         console.error("Error fetching data:", error);
+        dispatch(editErrorType(error.response.data.code));
+        dispatch(openError());
       }
     };
     getTitle();
@@ -75,18 +81,18 @@ const RegisterReview = () => {
       );
       navigate("/mypage/paymentDetail/checkReview");
       console.log("Response:", response.data);
+      dispatch(editErrorType("REVIEW UPDATE SUCCESS"));
+      dispatch(openError());
     } catch (error) {
+      dispatch(editErrorType(error.response.data.code));
+      dispatch(openError());
       console.error("Error posting review:", error);
-      if (error.response) {
-        console.error("Error data:", error.response.data);
-        console.error("Error status:", error.response.status);
-        console.error("Error headers:", error.response.headers);
-      }
     }
   };
 
   return (
     <div className="all">
+      <ErrorConfirm error={errorType} />
       {/* 클래스 목록 */}
       <section className="teachingclass">
         <div className="division-line-or"></div>

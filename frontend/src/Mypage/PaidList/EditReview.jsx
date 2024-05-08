@@ -6,7 +6,9 @@ import ButtonOutlined from "../../Component/ButtonOutlined";
 import axios from "axios";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import { url } from "../../url";
-import { useSelector } from "react-redux";
+import ErrorConfirm from "../../Hook/ErrorConfirm";
+import { useDispatch, useSelector } from "react-redux";
+import { editErrorType, openError } from "../../persistStore";
 
 const EditReview = () => {
   // const [value, setValue] = useState(0);
@@ -15,6 +17,8 @@ const EditReview = () => {
   const [reviewScore, setReviewScore] = useState(0);
   const [reviewContent, setReviewContent] = useState("");
   const accessToken = useSelector((state) => state.accessToken);
+  const dispatch = useDispatch();
+  const errorType = useSelector((state) => state.errorType);
   const { review_no } = useParams();
   const navigate = useNavigate();
 
@@ -28,12 +32,15 @@ const EditReview = () => {
         setReviewScore(response.data.review_score);
         setReviewContent(response.data.review_content);
       } catch (error) {
+        dispatch(editErrorType(error.response.data.code));
+        dispatch(openError());
         console.error("Error fetching data:", error);
       }
     };
     fetchData();
   }, [accessToken, review_no]);
 
+  //리뷰 수정
   const handleUpdateReview = async () => {
     try {
       const updateData = {
@@ -47,15 +54,19 @@ const EditReview = () => {
           headers: { Authorization: `Bearer ${accessToken}` },
         }
       );
-      // console.log("Update successful:", response.data.message);
+      dispatch(editErrorType("REVIEW SUCCESS"));
+      dispatch(openError());
       navigate("/mypage/paymentDetail/checkReview");
     } catch (error) {
+      dispatch(editErrorType(error.response.data.code));
+      dispatch(openError());
       console.error("업데이트에 실패했습니다:", error);
     }
   };
 
   return (
     <div className="all">
+      <ErrorConfirm error={errorType} />
       {/* 클래스 목록 */}
       <section className="teachingclass">
         <div className="division-line-or"></div>

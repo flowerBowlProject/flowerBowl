@@ -4,11 +4,15 @@ import ButtonContain from "../../Component/ButtonContain";
 import "./RegisterBanner.css";
 import axios from "axios";
 import { url } from "../../url";
-import { useSelector } from "react-redux";
+import ErrorConfirm from "../../Hook/ErrorConfirm";
+import { useDispatch, useSelector } from "react-redux";
+import { editErrorType, openError } from "../../persistStore";
 import "./TextInput.css";
 
 const RegisterBanner = () => {
   const accessToken = useSelector((state) => state?.accessToken);
+  const dispatch = useDispatch();
+  const errorType = useSelector((state) => state.errorType);
   const [refreshData, setRefreshData] = useState(false);
   const [content_oname, setContent_oname] = useState("");
   const [content_sname, setContent_sname] = useState("");
@@ -45,20 +49,19 @@ const RegisterBanner = () => {
       );
 
       if (response.status === 200) {
-        alert("배너 등록이 완료되었습니다.");
-        console.log("등록이 완료되었습니다.", response.data.message);
+        dispatch(editErrorType("BANNER APPLY SUCCESS"));
+        dispatch(openError());
         setRefreshData(!refreshData); // toggle to trigger a re-fetch
       }
     } catch (error) {
-      console.error("등록에 실패했습니다:", error);
-      if (error.response) {
-        console.log("Error response data:", error.response.data); // Log the error response data
-      }
+      dispatch(editErrorType(error.response.data.code));
+      dispatch(openError());
     }
   };
 
   return (
     <>
+      <ErrorConfirm error={errorType} />
       <div className="division-line"></div>
       <div className="dragdrop">
         <FileDropArea onUploadSuccess={onUploadSuccess} />

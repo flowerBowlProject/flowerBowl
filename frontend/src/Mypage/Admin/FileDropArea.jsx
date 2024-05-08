@@ -2,10 +2,14 @@ import React, { useCallback, useState } from "react";
 import "./FileDropArea.css";
 import axios from "axios";
 import { url } from "../../url";
-import { useSelector } from "react-redux";
+import ErrorConfirm from "../../Hook/ErrorConfirm";
+import { useDispatch, useSelector } from "react-redux";
+import { editErrorType, openError } from "../../persistStore";
 
 function FileDropArea({ onUploadSuccess }) {
   const accessToken = useSelector((state) => state?.accessToken);
+  const dispatch = useDispatch();
+  const errorType = useSelector((state) => state.errorType);
   const [files, setFiles] = useState([]);
 
   const handleDragOver = useCallback((event) => {
@@ -31,7 +35,6 @@ function FileDropArea({ onUploadSuccess }) {
     (files) => {
       files.forEach((file) => {
         if (file.type.startsWith("image/")) {
-          console.log(808);
           console.log(accessToken);
           const formData = new FormData();
           formData.append("file", file);
@@ -52,7 +55,8 @@ function FileDropArea({ onUploadSuccess }) {
               onUploadSuccess(content_oname, content_sname);
             })
             .catch((error) => {
-              console.error("Upload error:", error);
+              dispatch(editErrorType(error.response.data.code));
+              dispatch(openError());
             });
         }
       });
@@ -78,6 +82,7 @@ function FileDropArea({ onUploadSuccess }) {
 
   return (
     <div className="drop-area" onDragOver={handleDragOver} onDrop={handleDrop}>
+      <ErrorConfirm error={errorType} />
       {files.length > 0 ? (
         <>
           <div className="preview-container">{filePreview()}</div>
