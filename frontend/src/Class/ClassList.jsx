@@ -99,12 +99,12 @@ const ViewList = () => {
                         let sorted;
                         switch (selectButton) {
                             case "인기순":
-                                sorted = [...listData].sort((a, b) => b.lesson_like_cnt - a.lesson_like_cnt);
+                                sorted = [...res.data.lessons].sort((a, b) => b.lesson_like_cnt - a.lesson_like_cnt);
                                 break;
                             default:
                                 sorted = listData; // 기본값은 변경하지 않음
                         }
-                        setListData(sorted);
+                        setListData(res.data.lessons);
                     })
                     .catch(err => {
                         console.log(err);

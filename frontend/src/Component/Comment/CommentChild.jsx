@@ -88,9 +88,7 @@ const CommentChild = ({ data, isLast, change, setChange }) => {
         <>
             <div className="comment-child">
                 <SubdirectoryArrowRightIcon sx={{ color: "#B9835C" }} />
-                <div className="commentChild-thumbnail">
-                    {data.comment_thumbnail}
-                </div>
+                <img src={childData.user_file_sname || "../../images/blankProfile.png"} className="commentChild-thumbnail"/>
                 <div className="comment-body">
                     <div className="comment-element">
                         {data.comment_writer}&nbsp;&nbsp;&nbsp;
