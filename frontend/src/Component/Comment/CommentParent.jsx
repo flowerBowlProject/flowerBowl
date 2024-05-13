@@ -97,9 +97,7 @@ const CommentParent = ({ data, isLast, typeString, no, change, setChange }) => {
     return (
         <>
             <div className="comment-parent">
-                <div className="commentParent-thumbnail">
-                    {data.comment_thumbnail}
-                </div>
+                <img src={data.user_file_sname || "../../images/blankProfile.png"} className="commentParent-thumbnail"/>
                 <div className="comment-body">
                     <div className="comment-element">
                         {data.comment_writer}&nbsp;&nbsp;&nbsp;

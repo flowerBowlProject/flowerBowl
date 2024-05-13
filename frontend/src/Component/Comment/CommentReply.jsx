@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import './CommentStyle.css';
 import SubdirectoryArrowRightIcon from '@mui/icons-material/SubdirectoryArrowRight';
 import axios from "axios";
@@ -12,7 +12,23 @@ const CommentReply = ({ registerReply, typeString, no, parent_no,isLast, setChan
     const writer = useSelector((state) => state.nickname);
     const accessToken = useSelector(state => state.accessToken);
     const dispatch = useDispatch();
+    const [userThumbnail, setUserThumbnail] = useState(null);
     const [registerData, setRegisterData] = useState({ type: typeString, post_no: no, comment_content: "", parent_no: parent_no });
+
+    useEffect(()=>{
+        axios.get(`${url}/api/users/info`,{
+            headers:{
+                Authorization : `Bearer ${accessToken}`
+            }
+        })
+        .then(res=>{
+            console.log(res);
+            setUserThumbnail(res.data.user_file_sname);
+        })
+        .catch(err=>{
+            console.log(err);
+        })
+    },[])
 
     {/* 등록 버튼 클릭 시 */ }
     const registerComment = () => {
@@ -52,8 +68,7 @@ const CommentReply = ({ registerReply, typeString, no, parent_no,isLast, setChan
         <>
             <div className="comment-child">
                 <SubdirectoryArrowRightIcon sx={{ color: "#B9835C" }} />
-                <div className="commentChild-thumbnail">
-                </div>
+                <img src={userThumbnail || "../../images/blankProfile.png"} className="commentChild-thumbnail"/>
                 <div className="comment-body">
                     <div className="comment-element">
                         {writer}&nbsp;&nbsp;&nbsp;
