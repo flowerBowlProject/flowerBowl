@@ -1,38 +1,77 @@
 import { React, useState, useEffect } from "react";
-import Inputbutton from "../../Component/Input/Inputbutton";
+import ButtonContain from "../../Component/ButtonContain";
+import ButtonOutlined from "../../Component/ButtonOutlined";
 import "./Checkmakingrecipe.css";
-import MyPageLayout from "../MyPageLayout";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
+import { url } from "../../url";
+import ErrorConfirm from "../../Hook/ErrorConfirm";
+import { useDispatch, useSelector } from "react-redux";
+import { editErrorType, openError } from "../../persistStore";
 
 const Checkmakingrecipe = () => {
+  const navigate = useNavigate();
+  const accessToken = useSelector((state) => state?.accessToken);
+  const dispatch = useDispatch();
+  const errorType = useSelector((state) => state.errorType);
+
   // 정렬기능
   const [sortDirection, setSortDirection] = useState("asc");
   const [sortBookmark, setSortBookmark] = useState("asc");
   const [sortComment, setSortComment] = useState("asc");
+  const [listData, setListData] = useState([]);
+  const [slice, setSlice] = useState(8);
+  const handleClickMoreDetail = () => {
+    if (listData.length > slice) setSlice(slice + 8);
+  };
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(`${url}/api/mypage/recipes`, {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
+        setListData(response.data.myRecipes);
+        //코드 확인
+        console.log(response.data.myRecipes);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        dispatch(editErrorType(error.response.data.code));
+        dispatch(openError());
+        setListData([]);
+      }
+    };
+    fetchData();
+  }, [accessToken]);
 
-  // 받아올 테이블 데이터
-  const [tableData, setTableData] = useState([
-    {
-      date: "2024/02/20",
-      description: "화이트데이 초콜릿 만들기 클래스",
-      bookmark: 800,
-      comment: 4861,
-    },
-    {
-      date: "2023/12/25",
-      description: "크리스마스 스페셜 만들기",
-      bookmark: 495,
-      comment: 300,
-    },
-  ]);
+  //삭제버튼
+  const handleDeleteRecipe = async (recipe_no) => {
+    try {
+      const response = await axios.delete(`${url}/api/recipes/${recipe_no}`, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+      if (response.status === 200) {
+        setListData(listData.filter((item) => item.recipe_no !== recipe_no));
+        console.log(response.data.message);
+      }
+    } catch (error) {
+      console.error("Error during deletion:", error);
+      dispatch(editErrorType(error.response.data.code));
+      dispatch(openError());
+    }
+  };
 
   //   날짜정렬
   const sortTableDataByDate = (direction = "asc") => {
-    const sortedData = [...tableData].sort((a, b) => {
-      const dateA = new Date(a.date);
-      const dateB = new Date(b.date);
+    const sortedData = [...listData].sort((a, b) => {
+      const dateA = new Date(a.recipe_date);
+      const dateB = new Date(b.recipe_date);
       return direction === "asc" ? dateB - dateA : dateA - dateB;
     });
-    setTableData(sortedData);
+    setListData(sortedData);
   };
 
   const toggleSortDirection = () => {
@@ -51,7 +90,7 @@ const Checkmakingrecipe = () => {
   const toggleSortBookmark = () => {
     setSortBookmark((prevDirection) => {
       const newDirection = prevDirection === "asc" ? "desc" : "asc";
-      sortDataByAttribute("bookmark", newDirection); // Sort data after updating the direction
+      sortDataByAttribute("recipe_like_cnt", newDirection); // Sort data after updating the direction
       return newDirection;
     });
   };
@@ -60,29 +99,30 @@ const Checkmakingrecipe = () => {
   const toggleSortComment = () => {
     setSortComment((prevDirection) => {
       const newDirection = prevDirection === "asc" ? "desc" : "asc";
-      sortDataByAttribute("comment", newDirection); // Sort data after updating the direction
+      sortDataByAttribute("comment_cnt", newDirection); // Sort data after updating the direction
       return newDirection;
     });
   };
 
-  //북마크, 댓글 정렬
+  //북마크, 댓글  정렬
   const sortDataByAttribute = (attribute, direction) => {
-    const sortedData = [...tableData].sort((a, b) => {
-      const valueA = a[attribute];
-      const valueB = b[attribute];
+    const sortedData = [...listData].sort((a, b) => {
+      const valueA = Number(a[attribute]);
+      const valueB = Number(b[attribute]);
 
-      if (direction === "asc") {
-        return valueB - valueA; // Ascending order
+      if (direction === "desc") {
+        return valueA - valueB;
       } else {
-        return valueA - valueB; // Descending order
+        return valueB - valueA;
       }
     });
 
-    setTableData(sortedData);
+    setListData(sortedData);
   };
 
   return (
-    <MyPageLayout>
+    <>
+      <ErrorConfirm error={errorType} />
       {/* 내용 */}
       <section className="table-content">
         <table className="custom-table">
@@ -131,36 +171,47 @@ const Checkmakingrecipe = () => {
             </tr>
           </thead>
           <tbody>
-            {[...tableData, ...Array(8 - tableData.length)].map(
-              (item, index) => (
-                <tr key={index}>
-                  <td>{item ? index + 1 : ""}</td>
-                  <td>{item ? item.date : ""}</td>
-                  <td>{item ? item.description : ""}</td>
-                  <td>{item ? item.bookmark.toLocaleString() : ""}</td>
-                  <td>{item ? item.comment.toLocaleString() : ""}</td>
-                  <td>
-                    {item ? (
-                      <Inputbutton text="삭제" i={false} w="small" />
-                    ) : (
-                      ""
-                    )}
-                  </td>
-                  <td>
-                    {item ? <Inputbutton text="수정" i={true} w="small" /> : ""}
-                  </td>
-                </tr>
-              )
-            )}
+            {[
+              ...listData.slice(0, slice),
+              ...Array(8 - listData.slice(slice - 8, slice).length),
+            ].map((data, index) => (
+              <tr key={index}>
+                <td>{data ? index + 1 : ""}</td>
+                <td>{data ? data.recipe_date : ""}</td>
+                <td>{data ? data.recipe_title : ""}</td>
+                <td>{data ? data.recipe_like_cnt.toLocaleString() : ""}</td>
+                <td>{data ? data.comment_cnt.toLocaleString() : ""}</td>
+                <td>
+                  {data ? (
+                    <ButtonOutlined
+                      handleClick={() => handleDeleteRecipe(data.recipe_no)}
+                      size="verySmall"
+                      text="삭제"
+                    />
+                  ) : (
+                    ""
+                  )}
+                </td>
+                <td>
+                  <Link to={`/modifyRecipe/${data?.recipe_no}`}>
+                    {data ? <ButtonContain size="verySmall" text="수정" /> : ""}
+                  </Link>
+                </td>
+              </tr>
+            ))}
           </tbody>
         </table>
       </section>
 
       {/* 더보기 버튼    */}
       <section className="bottom-add">
-        <Inputbutton text="더보기" i={true} w="large" />
+        <ButtonContain
+          size="medium"
+          text="더보기"
+          handleClick={handleClickMoreDetail}
+        />
       </section>
-    </MyPageLayout>
+    </>
   );
 };
 

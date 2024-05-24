@@ -1,7 +1,6 @@
 .comment-Box{
     width: 70%;
-    border-top: 2px solid #B9835C;
-    margin: 5% auto 1% auto;
+    margin: 0 auto 1vw auto;
 }
 
 /* 댓글 작성란 */
@@ -105,7 +104,6 @@
 }
 
 .commentButton-Box:nth-child(3){
-    width: 100%;
     height: 100%;
     display: flex;
     position: relative;
@@ -123,8 +121,9 @@
 
 .commentButton{
     position: absolute;
-    align-items: center;
-    bottom:0
+    bottom:0;
+    right: 0;
+    display: flex;
 }
 
 /* 자식 댓글 css */
@@ -146,7 +145,7 @@
 }
 
 .commentButtonChild-Box:nth-child(4){
-    position: relative;
+    display: flex;
     margin-top: auto;
 }
 

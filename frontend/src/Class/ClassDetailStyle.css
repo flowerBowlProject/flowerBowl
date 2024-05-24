@@ -4,7 +4,6 @@
     border-top: 2px solid #B9835C;
     border-bottom: 2px solid #B9835C;
     min-height: 50vw;
-    
 }
 
 /* 클래스 썸네일 */
@@ -12,8 +11,11 @@
     border-radius: 30px;
     border: 2px solid #F6C47B;
     width: 70%;
-    height: 350px;
+    min-height: 25vw;
+    max-height: 40vw;
     margin: 2% auto;
+    display: flex;
+    justify-content: center;
 }
 
 /* 클래스 제목 + 작성자 + 수강일 + 오픈채팅 링크*/
@@ -74,7 +76,7 @@ a{
     margin: 40px auto;
     font-size: 1.2rem;
     padding: 0 5%;
-    min-height: 30vw;
+    min-height: 20vw;
     width: 70%;
 }
 
@@ -84,7 +86,7 @@ a{
     display: flex;    
     align-items: center;
     width: 12vw;
-    border-radius: 10%;
+    border-radius: 10px;
     margin: 0 auto;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
 }
@@ -93,6 +95,7 @@ a{
 .class-change{
     display: flex;
     justify-content: right;
-    margin: 2%0;
+    align-items: center;
+    margin: 2% 0;
     font-size: 1.2rem;
 }

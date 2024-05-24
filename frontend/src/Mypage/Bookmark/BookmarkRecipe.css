@@ -1,21 +1,44 @@
 .division-line {
   border-top: 2px solid var(--brown--color);
-  margin: 50px auto;
-  width: 80%;
+  margin-top: 1em;
+  margin-bottom: 1em;
+  margin-left: -1em;
+  width: 100%;
   position: relative;
 }
 
-.bookmark-content {
+.classbutton {
+  margin-left: 1em;
+}
+
+/* .bookmark-content {
   display: flex;
   flex-wrap: wrap;
   text-align: center;
-  justify-content: space-between; /* To evenly distribute items on each row */
+  justify-content: space-between;
+} */
+
+.bookmark-content {
+  clear: both;
+  min-height: 800px;
+  /* border-top : 2px solid #F6C47B;
+    border-bottom : 2px solid #F6C47B; */
+  margin-top: -1em;
+  margin-left: -1em;
+  margin-bottom: -2em;
+  display: flex;
+  flex-wrap: wrap;
 }
 
 .bookmark-content > * {
   flex-basis: calc(25% - 20px); /* 25% width with some spacing between items */
   margin-bottom: 20px; /* Adjust spacing between rows */
   flex-grow: 0; /* Prevent items from growing beyond their specified width */
+}
+
+/* 북마크 붙이는 코드 */
+.bookmark-wrapper {
+  position: relative;
 }
 
 @media (max-width: 768px) {
@@ -25,15 +48,15 @@
   }
 }
 
-.add{
-  position: relative; /* Keep the button fixed at the bottom of the viewport */
-  bottom: 10px; /* Distance from the bottom of the viewport */
-  left: 50%; /* Start at 50% from the left of the viewport */
-  transform: translate(-50%, 0); /* Shift it back by 50% of its own width */
-  display: flex; /* Using flexbox for center alignment */
-  align-items: center; /* Center items vertically */
-  justify-content: center; /* Center items horizontally */
-  /* Ensure the button has some dimensions if it's not defined by its content */
-  min-width: 100px; /* Minimum width */ /* Padding for aesthetic spacing */
-  text-align: center; /* Ensure text within the button is centered */
+.add {
+  position: relative;
+  bottom: 0.5em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.bookmark-button {
+  margin-bottom: 1em;
 }

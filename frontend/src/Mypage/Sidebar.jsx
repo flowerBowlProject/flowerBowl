@@ -1,183 +1,142 @@
-import * as React from "react";
-import PropTypes from "prop-types";
-import AppBar from "@mui/material/AppBar";
-import Box from "@mui/material/Box";
-import Divider from "@mui/material/Divider";
-import CssBaseline from "@mui/material/CssBaseline";
-import Drawer from "@mui/material/Drawer";
-import List from "@mui/material/List";
+import React, { useState, useEffect } from "react";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
-import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import Toolbar from "@mui/material/Toolbar";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import Grid from "@mui/material/Grid";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import BookmarkIcon from "@mui/icons-material/Bookmark";
+import ImportContactsIcon from "@mui/icons-material/ImportContacts";
+import BlenderIcon from "@mui/icons-material/Blender";
+import PaymentIcon from "@mui/icons-material/Payment";
+import ListIcon from "@mui/icons-material/List";
+import "./Sidebar.css";
+import { Link, Outlet,NavLink } from "react-router-dom";
+import axios from "axios";
+import { url } from "../url";
+import { useSelector ,useDispatch} from "react-redux";
+import { editErrorType,openError } from "../persistStore";
 
-// https://mui.com/material-ui/react-drawer/
+const Row = ({ icon, name, isHovered, isFixed, link }) => {
+  const color = isFixed || isHovered ? "main.wh" : "main.or";
+  
+  return (
+    <NavLink to={link} style={{textDecoration:'none'}} className={({isActive})=>isActive? 'selected':'unselected'} >
+      <ListItem
+        sx={{
+          backgroundColor: isFixed || isHovered ? "main.or" : "inherit",
+          color: isFixed || isHovered ? "main.wh" : "inherit",
+          "&:hover": {
+            backgroundColor: "main.or",
+            color: "main.wh",
+          },
+        }}
+      >
+        <ListItemButton
+          sx={{ "&:hover": { border: "none", backgroundColor: "transparent" } }}
+        >
+          <ListItemIcon sx={{ color: isFixed || isHovered ? "main.wh" : "inherit" }}>{icon}</ListItemIcon>
+          <ListItemText primary={name} sx={{ color: isFixed || isHovered ? "main.wh" : "inherit" }} />
+        </ListItemButton>
+      </ListItem>
+    </NavLink>
+  );
+};
 
-const drawerWidth = 240;
-
-function Sidebar(props) {
-  const { window } = props;
-  const [mobileOpen, setMobileOpen] = React.useState(false);
-  const [isClosing, setIsClosing] = React.useState(false);
-
-  const handleDrawerClose = () => {
-    setIsClosing(true);
-    setMobileOpen(false);
-  };
-
-  const handleDrawerTransitionEnd = () => {
-    setIsClosing(false);
-  };
-
-  const handleDrawerToggle = () => {
-    if (!isClosing) {
-      setMobileOpen(!mobileOpen);
+const Sidebar = ({ fixedItem = "" }) => {
+  const accessToken=useSelector((state)=>state.accessToken)
+  const dispatch=useDispatch();
+  const [items,setItems]=useState([
+    { name: "프로필", icon: <AccountCircleIcon />, link: "/Mypage/profile" },
+    { name: "북마크", icon: <BookmarkIcon />, link: "/Mypage/bookmark" },
+    {
+      name: "마이 클래스",
+      icon: <ImportContactsIcon />,
+      link: "/Mypage/checkClass",
+    },
+    {
+      name: "마이 레시피",
+      icon: <BlenderIcon />,
+      link: "/Mypage/checkmakingrecipe",
+    },
+    { name: "결제 내역", icon: <PaymentIcon />, link: "/Mypage/paymentDetail" },
+    {
+      name: "클래스 신청 내역",
+      icon: <ListIcon />,
+      link: "/Mypage/checkClassList",
     }
-  };
+  ])
+  
+    
+  
+  const handleCheckRole=async()=>{
+    try{
+      const response=await axios.get(`${url}/api/users/info`,{
+        headers:{
+          Authorization: `Bearer ${accessToken}`
+        }
+      })
+      const updatedItems = [...items]; // 복사본 생성
+      updatedItems[5].role = response.data.user_role;
+      setItems(updatedItems); // 상태 업데이트
+    }catch(error){
+      dispatch(editErrorType(error.response.data.code))
+      dispatch(openError())
+    }
 
-  const drawer = (
-    <div>
-      <Toolbar />
-      <List>
-        <Divider sx={{ borderColor: "main.or", borderWidth: "1px" }} />
-        {[
-          "프로필",
-          "북마크",
-          "마이 클래스",
-          "마이 레시피",
-          "결제내역",
-          "클래스 신청내역",
-        ].map((text, index) => (
-          <React.Fragment key={text}>
-            <ListItem
-              key={text}
-              disablePadding
-              sx={{
-                color: "main.br",
-                textAlign: "center",
-                "&:hover": { backgroundColor: "main.or" },
-                "&:active": { backgroundColor: "main.or" },
-              }}
-            >
-              <ListItemButton
+  }
+  const initialHoverIndex = items.findIndex((item) => item.name === fixedItem);
+  const [hoverIndex, setHoverIndex] = useState(initialHoverIndex);
+  useEffect(() => {
+    setHoverIndex(initialHoverIndex);
+  }, [initialHoverIndex]);
+  useEffect(()=>{
+    handleCheckRole();
+  },[])
+  return (
+    <Grid container direction="row">
+      <Grid item xs={2.5}>
+        <Grid container direction="column" mt="5vw">
+          {items.map((item, i) => {
+            console.log(item.role)
+            if(item.role==='ROLE_CHEF'||i!==5){
+              
+            return (
+              <Grid
+                item
+                key={i}
+                width="18vw"
+                onMouseEnter={() => setHoverIndex(i)}
+                onMouseLeave={() => setHoverIndex(initialHoverIndex)}
                 sx={{
-                  justifyContent: "center",
-                  width: "100%",
-                  height: "60px",
-                  "&:hover": { backgroundColor: "main.or", color: "white" },
-                  "&:active": { backgroundColor: "main.or", color: "white" },
+                  borderTop:
+                    i === 1 || i === 3 || i === 5
+                      ? "none"
+                      : "2px solid #F6C47B",
+                  borderRight: "2px solid #F6C47B",
+                  borderBottom:
+                    i === 1 || i === 3 ? "none" : "2px solid #F6C47B",
+                  "&:hover": { backgroundColor: "main.or", color: "main.wh" },
                 }}
               >
-                <ListItemIcon></ListItemIcon>
-                <ListItemText
-                  primary={text}
-                  sx={{
-                    "&:hover": { color: "white" },
-                    "&:active": { color: "white" },
-                  }}
+                <Row
+                  name={item.name}
+                  icon={item.icon}
+                  isFixed={i === initialHoverIndex}
+                  isHovered={hoverIndex === i}
+                  link={item.link}
+                  link2={item.link2?item.link2:null}
                 />
-              </ListItemButton>
-            </ListItem>
-
-            {index <
-              [
-                "프로필",
-                "북마크",
-                "마이 클래스",
-                "마이 레시피",
-                "결제내역",
-                "클래스 신청내역",
-                "",
-              ].length -
-                1 && (
-              <Divider sx={{ borderColor: "main.or", borderWidth: "1px" }} />
-            )}
-          </React.Fragment>
-        ))}
-      </List>
-    </div>
+              </Grid>
+            );}
+          })}
+        </Grid>
+      </Grid>
+      <Grid item xs={9.5} mt="5vw">
+        <Outlet />
+      </Grid>
+    </Grid>
   );
-
-  const container =
-    window !== undefined ? () => window().document.body : undefined;
-
-  return (
-    <Box sx={{ display: "flex" }}>
-      <CssBaseline />
-      <AppBar
-        position="fixed"
-        sx={{
-          width: { sm: `calc(100% - ${drawerWidth}px)` },
-          ml: { sm: `${drawerWidth}px` },
-        }}
-      ></AppBar>
-      <Box
-        component="nav"
-        sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
-        aria-label="mailbox folders"
-      >
-        {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
-        <Drawer
-          container={container}
-          variant="temporary"
-          open={mobileOpen}
-          onTransitionEnd={handleDrawerTransitionEnd}
-          onClose={handleDrawerClose}
-          ModalProps={{
-            keepMounted: true, // Better open performance on mobile.
-          }}
-          sx={{
-            display: { xs: "block", sm: "none" },
-            "& .MuiDrawer-paper": {
-              boxSizing: "border-box",
-              width: drawerWidth,
-              borderRight: "2px solid",
-              borderLeft: "2px solid",
-              borderColor: "main.or",
-            },
-          }}
-        >
-          {drawer}
-        </Drawer>
-        <Drawer
-          variant="permanent"
-          sx={{
-            display: { xs: "none", sm: "block" },
-            "& .MuiDrawer-paper": {
-              boxSizing: "border-box",
-              width: drawerWidth,
-              borderLeft: "2px solid",
-              borderRight: "2px solid",
-              borderColor: "main.or",
-            },
-          }}
-          open
-        >
-          {drawer}
-        </Drawer>
-      </Box>
-      {/* 메인콘텐츠 영역 정의 */}
-      <Box
-        component="main"
-        sx={{
-          flexGrow: 1,
-          p: 3,
-          width: { sm: `calc(100% - ${drawerWidth}px)` },
-        }}
-      >
-        <Toolbar />
-      </Box>
-    </Box>
-  );
-}
-
-Sidebar.propTypes = {
-  /**
-   * Injected by the documentation to work in an iframe.
-   * Remove this when copying and pasting into your project.
-   */
-  window: PropTypes.func,
 };
 
 export default Sidebar;
