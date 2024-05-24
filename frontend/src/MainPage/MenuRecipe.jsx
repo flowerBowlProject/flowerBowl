@@ -32,9 +32,9 @@ const MenuRecipe=()=>{
     ]);
     const [menuName_2,setMenuName_2]=useState([
         ['디저트','dessert'],
-        ['찌개&국','stew'],
+        ['국/찌개','stew'],
         ['밥','rice'],
-        ['음료/술','drink'],
+        ['음료/주류','drink'],
         ['기타류','chef'],
         ['과일류','fruits'],
     ]);
