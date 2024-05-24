@@ -1,39 +1,57 @@
 import { React, useState, useEffect } from "react";
-import Inputbutton from "../../Component/Input/Inputbutton";
+import ButtonContain from "../../Component/ButtonContain";
+import ButtonOutlined from "../../Component/ButtonOutlined";
 import "./AdmissionChef.css";
-import MyPageAdminLayout from "../MyPageAdminLayout";
+import axios from "axios";
+import { url } from "../../url";
+import ErrorConfirm from "../../Hook/ErrorConfirm";
+import { useDispatch, useSelector } from "react-redux";
+import { editErrorType, openError } from "../../persistStore";
 
 const AdmissionChef = () => {
   // 정렬기능
   const [sortDirection, setSortDirection] = useState("asc");
-
-  // 받아올 테이블 데이터
-  const [tableData, setTableData] = useState([
-    {
-      date: "2024/02/20",
-      user: "@내꿈은너야",
-      file: "https://unsplash.com/ko/%EC%82%AC%EC%A7%84/%EC%A0%91%EC%8B%9C%EC%97%90-%EC%9D%8C%EC%8B%9D%EC%9D%84-%EB%8B%B4%EB%8A%94-%EC%82%AC%EB%9E%8C-cQbOSRpElxw",
-    },
-    {
-      date: "2023/12/25",
-      user: "@메리크리스마스",
-      file: "https://unsplash.com/ko/%EC%82%AC%EC%A7%84/%EC%A0%91%EC%8B%9C%EC%97%90-%EC%9D%8C%EC%8B%9D%EC%9D%84-%EC%A4%80%EB%B9%84%ED%95%98%EB%8A%94-%EB%B6%80%EC%97%8C%EC%97%90%EC%84%9C-%EB%82%A8%EC%9E%90-J1RKeY6Kv8c",
-    },
-  ]);
+  const [listData, setListData] = useState([]);
+  const accessToken = useSelector((state) => state.accessToken);
+  const dispatch = useDispatch();
+  const errorType = useSelector((state) => state.errorType);
+  const [slice, setSlice] = useState(8);
+  const handleClickMoreDetail = () => {
+    if (listData.length > slice) setSlice(slice + 8);
+  };
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(`${url}/api/admin/chefs`, {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
+        setListData(response.data.candidiate.reverse());
+        console.log(response.data.candidiate);
+      } catch (error) {
+        dispatch(editErrorType(error.response.data.code));
+        dispatch(openError());
+        setListData([]);
+      }
+    };
+    fetchData();
+  }, [accessToken]);
 
   //   날짜정렬
-  const sortTableDataByDate = (direction = "asc") => {
-    const sortedData = [...tableData].sort((a, b) => {
-      const dateA = new Date(a.date);
-      const dateB = new Date(b.date);
-      return direction === "asc" ? dateB - dateA : dateA - dateB;
-    });
-    setTableData(sortedData);
+  const extractDate = (datetime) => {
+    return datetime.split("T")[0];
   };
 
-  useEffect(() => {
-    sortTableDataByDate(sortDirection);
-  }, []);
+  const sortTableDataByDate = (direction = "asc") => {
+    const sortedData = [...listData].sort((a, b) => {
+      const dateA = new Date(a.license_date);
+      const dateB = new Date(b.license_date);
+      return direction === "asc" ? dateB - dateA : dateA - dateB;
+    });
+
+    setListData(sortedData);
+  };
 
   const toggleSortDirection = () => {
     setSortDirection((prevDirection) => {
@@ -43,43 +61,98 @@ const AdmissionChef = () => {
     });
   };
 
-  return (
-    <MyPageAdminLayout>
-      {/* 내용 */}
-      <section className="table-content">
-        <table className="custom-table">
-          <thead>
-            <tr>
-              <th>No</th>
-              <th>
-                신청일자
-                <button className="sort-button" onClick={toggleSortDirection}>
-                  <span
-                    className={
-                      sortDirection === "asc" ? "arrow-up" : "arrow-down"
-                    }
-                  >
-                    {sortDirection === "asc" ? "▲" : "▼"}
-                  </span>
-                </button>
-              </th>
-              <th>신청자</th>
-              <th>첨부파일</th>
-              <th></th>
-            </tr>
-          </thead>
+  //쉐프 허가
+  const handleApproveRequest = async (userNo) => {
+    try {
+      const response = await axios.put(
+        `${url}/api/admin/chefs`,
+        { user_no: userNo },
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+      if (response.status === 200) {
+        dispatch(editErrorType("CHEF APPLY SUCCESS"));
+        dispatch(openError());
+        setListData(listData.filter((item) => item.user_no !== userNo));
+      }
+    } catch (error) {
+      dispatch(editErrorType(error.response.data.code));
+      dispatch(openError());
+    }
+  };
 
-          <tbody>
-            {[...tableData, ...Array(8 - tableData.length)].map(
-              (item, index) => (
+  //쉐프 반려
+  const handleDenialRequest = async (license_no) => {
+    if (!license_no) {
+      alert("Invalid license number provided.");
+      console.error("Invalid license number:", license_no);
+      return;
+    }
+
+    try {
+      const response = await axios.delete(
+        `${url}/api/admin/chefs/${license_no}`,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+      if (response.status === 200) {
+        dispatch(editErrorType("CHEF APPLY FAIL"));
+        dispatch(openError());
+        setListData(listData.filter((item) => item.license_no !== license_no));
+      }
+    } catch (error) {
+      dispatch(editErrorType(error.response.data.code));
+      dispatch(openError());
+    }
+  };
+
+  return (
+    <>
+      <ErrorConfirm error={errorType} />
+      {/* 내용 */}
+      <div className="admissionall">
+        <section className="table-content">
+          <table className="custom-table">
+            <thead>
+              <tr>
+                <th className="no">No</th>
+                <th className="applyDate">
+                  신청일자
+                  <button className="sort-button" onClick={toggleSortDirection}>
+                    <span
+                      className={
+                        sortDirection === "asc" ? "arrow-up" : "arrow-down"
+                      }
+                    >
+                      {sortDirection === "asc" ? "▲" : "▼"}
+                    </span>
+                  </button>
+                </th>
+                <th className="applyer">신청자</th>
+                <th className="attachFile">첨부파일</th>
+                <th></th>
+              </tr>
+            </thead>
+
+            <tbody>
+              {[
+                ...listData.slice(0, slice),
+                ...Array(8 - listData.slice(slice - 8, slice).length),
+              ].map((data, index) => (
                 <tr key={index}>
-                  <td>{item ? index + 1 : ""}</td>
-                  <td>{item ? item.date : ""}</td>
-                  <td>{item ? item.user : ""}</td>
+                  <td>{data ? index + 1 : ""}</td>
+                  <td>{data ? extractDate(data.license_date) : ""}</td>
+                  <td className="applyer">{data ? data.user_name : ""}</td>
                   <td>
-                    {item && item.file ? (
+                    {data && data.license_sname ? (
                       <img
-                        src={item.file}
+                        src={data.license_sname}
                         alt="첨부파일"
                         className="attachment-image"
                       />
@@ -88,27 +161,47 @@ const AdmissionChef = () => {
                     )}
                   </td>
                   <td className="button-group">
-                    {item ? (
+                    {data ? (
                       <>
-                        <Inputbutton text="신청 허가" i={true} w="large" />
-                        <Inputbutton text="신청 반려" i={false} w="large" />
+                        <span className="adok">
+                          <ButtonContain
+                            size="medium"
+                            text="신청 허가"
+                            handleClick={() =>
+                              handleApproveRequest(data.user_no)
+                            }
+                          />
+                        </span>
+                        <span className="adcl">
+                          <ButtonOutlined
+                            size="medium"
+                            text="신청 반려"
+                            handleClick={() =>
+                              handleDenialRequest(data.license_no)
+                            }
+                          />
+                        </span>
                       </>
                     ) : (
                       ""
                     )}
                   </td>
                 </tr>
-              )
-            )}
-          </tbody>
-        </table>
-      </section>
+              ))}
+            </tbody>
+          </table>
+        </section>
 
-      {/* 더보기 버튼    */}
-      <section className="bottom-add">
-        <Inputbutton text="더보기" i={true} w="large" />
-      </section>
-    </MyPageAdminLayout>
+        {/* 더보기 버튼    */}
+        <section className="bottom-add">
+          <ButtonContain
+            size="medium"
+            text="더보기"
+            handleClick={handleClickMoreDetail}
+          />
+        </section>
+      </div>
+    </>
   );
 };
 

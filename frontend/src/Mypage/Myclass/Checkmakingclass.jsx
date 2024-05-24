@@ -1,39 +1,65 @@
 import { React, useState, useEffect } from "react";
-import Inputbutton from "../../Component/Input/Inputbutton";
+import ButtonContain from "../../Component/ButtonContain";
+import ButtonOutlined from "../../Component/ButtonOutlined";
 import "./Checkmakingclass.css";
-import MyPageLayout from "../MyPageLayout";
-
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
+import { url } from "../../url";
+import ErrorConfirm from "../../Hook/ErrorConfirm";
+import { useDispatch, useSelector } from "react-redux";
+import { editErrorType, openError } from "../../persistStore";
 
 const Checkmakingclass = () => {
+  const navigate = useNavigate();
+  const accessToken = useSelector((state) => state?.accessToken);
+  const dispatch = useDispatch();
+  const errorType = useSelector((state) => state.errorType);
+
   // 정렬기능
   const [sortDirection, setSortDirection] = useState("asc");
   const [sortBookmark, setSortBookmark] = useState("asc");
   const [sortComment, setSortComment] = useState("asc");
+  const [listData, setListData] = useState([]);
+  const [refreshData, setRefreshData] = useState(false);
+  const [slice, setSlice] = useState(8);
+  const handleClickMoreDetail = () => {
+    if (listData.length > slice) setSlice(slice + 8);
+  };
+  //액세스토큰 확인
+  // console.log("Access Token:", accessToken);
 
-  // 받아올 테이블 데이터
-  const [tableData, setTableData] = useState([
-    {
-      date: "2024/02/20",
-      description: "화이트데이 초콜릿 만들기 클래스",
-      bookmark: 800,
-      comment: 4861,
-    },
-    {
-      date: "2023/12/25",
-      description: "크리스마스 스페셜 만들기",
-      bookmark: 495,
-      comment: 300,
-    },
-  ]);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(`${url}/api/chef/lessons`, {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
+        setListData(response.data.myLessons);
+        //코드 확인
+      } catch (error) {
+        dispatch(editErrorType(error.response.data.code));
+        dispatch(openError());
+        setListData([]);
+      }
+    };
+    fetchData();
+  }, [accessToken, refreshData]);
+
+  // 상세페이지 이동
+  const clickDetail = (e, lesson_no) => {
+    navigate(`/classDetail/${lesson_no}`);
+  };
 
   //   날짜정렬
   const sortTableDataByDate = (direction = "asc") => {
-    const sortedData = [...tableData].sort((a, b) => {
-      const dateA = new Date(a.date);
-      const dateB = new Date(b.date);
+    const sortedData = [...listData].sort((a, b) => {
+      const dateA = new Date(a.lesson_date);
+      const dateB = new Date(b.lesson_date);
       return direction === "asc" ? dateB - dateA : dateA - dateB;
     });
-    setTableData(sortedData);
+    setListData(sortedData);
   };
 
   const toggleSortDirection = () => {
@@ -52,7 +78,7 @@ const Checkmakingclass = () => {
   const toggleSortBookmark = () => {
     setSortBookmark((prevDirection) => {
       const newDirection = prevDirection === "asc" ? "desc" : "asc";
-      sortDataByAttribute("bookmark", newDirection); // Sort data after updating the direction
+      sortDataByAttribute("lesson_like_cnt", newDirection); // Sort data after updating the direction
       return newDirection;
     });
   };
@@ -61,34 +87,70 @@ const Checkmakingclass = () => {
   const toggleSortComment = () => {
     setSortComment((prevDirection) => {
       const newDirection = prevDirection === "asc" ? "desc" : "asc";
-      sortDataByAttribute("comment", newDirection); // Sort data after updating the direction
+      sortDataByAttribute("review_cnt", newDirection); // Sort data after updating the direction
       return newDirection;
     });
   };
 
-  //북마크, 댓글 정렬
+  //북마크, 댓글  정렬
   const sortDataByAttribute = (attribute, direction) => {
-    const sortedData = [...tableData].sort((a, b) => {
-      const valueA = a[attribute];
-      const valueB = b[attribute];
+    const sortedData = [...listData].sort((a, b) => {
+      const valueA = Number(a[attribute]);
+      const valueB = Number(b[attribute]);
 
-      if (direction === "asc") {
-        return valueB - valueA; // Ascending order
+      if (direction === "desc") {
+        return valueA - valueB;
       } else {
-        return valueA - valueB; // Descending order
+        return valueB - valueA;
       }
     });
 
-    setTableData(sortedData);
+    setListData(sortedData);
   };
 
+  // 삭제버튼 api연결
+  const handleDelete = async (lessonNo) => {
+    console.log("Delete button clicked", lessonNo); // 로그: 함수 호출과 수업 번호 확인
+    // console.log("Request data:", { lesson_no: lessonNo });
+    // console.log("Headers:", { Authorization: `Bearer ${accessToken}` });
+
+    try {
+      const response = await axios.put(
+        `${url}/api/lessons`,
+        {
+          lesson_no: lessonNo,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      // console.log("API Response", response); // 로그: API 응답 전체 확인
+
+      if (response.status === 200) {
+        console.log("Success:", response.data.message);
+        setListData((currentData) =>
+          currentData.filter((lesson) => lesson.lesson_no !== lessonNo)
+        );
+        setRefreshData(!refreshData);
+      }
+    } catch (error) {
+      console.error("Failed to delete lesson:", error); // 로그: 에러 상황에서의 오류 메시지
+      dispatch(editErrorType(error.response.data.code));
+      dispatch(openError());
+    }
+  };
+
+  if (!accessToken) {
+    return <div>로딩중입니다..</div>;
+  }
+
   return (
-    <MyPageLayout>
-      {/* 버튼들 */}
-      <section className="buttons">
-        <Inputbutton text="수강클래스 조회" i={false} w="medium" />
-        <Inputbutton text="창작클래스 조회" i={true} w="medium" />
-      </section>
+    <>
+      <ErrorConfirm error={errorType} />
 
       {/* 내용 */}
       <section className="table-content">
@@ -138,36 +200,50 @@ const Checkmakingclass = () => {
             </tr>
           </thead>
           <tbody>
-            {[...tableData, ...Array(8 - tableData.length)].map(
-              (item, index) => (
-                <tr key={index}>
-                  <td>{item ? index + 1 : ""}</td>
-                  <td>{item ? item.date : ""}</td>
-                  <td>{item ? item.description : ""}</td>
-                  <td>{item ? item.bookmark.toLocaleString() : ""}</td>
-                  <td>{item ? item.comment.toLocaleString() : ""}</td>
-                  <td>
-                    {item ? (
-                      <Inputbutton text="삭제" i={false} w="small" />
-                    ) : (
-                      ""
-                    )}
-                  </td>
-                  <td>
-                    {item ? <Inputbutton text="수정" i={true} w="small" /> : ""}
-                  </td>
-                </tr>
-              )
-            )}
+            {[
+              ...listData.slice(0, slice),
+              ...Array(8 - listData.slice(slice - 8, slice).length),
+            ].map((data, index) => (
+              <tr key={index}>
+                <td>{data ? index + 1 : ""}</td>
+                <td>{data ? data.lesson_date : ""}</td>
+                <td onClick={(e) => clickDetail(e, data.lesson_no)}>
+                  {data ? data.lesson_title : ""}
+                </td>
+                <td>{data ? data.lesson_like_cnt.toLocaleString() : ""}</td>
+                <td>{data ? data.review_cnt.toLocaleString() : ""}</td>
+                <td>
+                  {data ? (
+                    <ButtonOutlined
+                      handleClick={handleDelete}
+                      size="verySmall"
+                      text="삭제"
+                      data={data.lesson_no}
+                    />
+                  ) : (
+                    ""
+                  )}
+                </td>
+                <td>
+                  <Link to={`/modifyClass/${data?.lesson_no}`}>
+                    {data ? <ButtonContain size="verySmall" text="수정" /> : ""}
+                  </Link>
+                </td>
+              </tr>
+            ))}
           </tbody>
         </table>
       </section>
 
       {/* 더보기 버튼    */}
       <section className="bottom-add">
-        <Inputbutton text="더보기" i={true} w="large" />
+        <ButtonContain
+          size="medium"
+          text="더보기"
+          handleClick={handleClickMoreDetail}
+        />
       </section>
-      </MyPageLayout>
+    </>
   );
 };
 

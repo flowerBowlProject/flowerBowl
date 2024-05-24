@@ -1,37 +1,61 @@
 import { React, useState, useEffect } from "react";
-import Inputbutton from "../../Component/Input/Inputbutton";
 import "./CheckReview.css";
-import MyPageLayout from "../MyPageLayout";
+import ButtonContain from "../../Component/ButtonContain";
+import ButtonOutlined from "../../Component/ButtonOutlined";
+import { Link } from "react-router-dom";
+import axios from "axios";
+import { url } from "../../url";
+import ErrorConfirm from "../../Hook/ErrorConfirm";
+import { useDispatch, useSelector } from "react-redux";
+import { editErrorType, openError } from "../../persistStore";
 
 const CheckReview = () => {
   // 정렬기능
-  const [sortDirection, setSortDirection] = useState("asc");
+  const [sortDirection, setSortDirection] = useState("desc");
   const [sortDirectionRating, setSortDirectionRating] = useState("asc");
+  const [listData, setListData] = useState([]);
+  const accessToken = useSelector((state) => state.accessToken);
+  const dispatch = useDispatch();
+  const errorType = useSelector((state) => state.errorType);
+  const [slice, setSlice] = useState(8);
+  const handleClickMoreDetail = () => {
+    if (listData.length > slice) setSlice(slice + 8);
+  };
 
-  // 받아올 테이블 데이터
-  const [tableData, setTableData] = useState([
-    {
-      date: "2024/02/20",
-      description: "화이트데이 초콜릿 만들기 클래스",
-      chef: "@내꿈은너야",
-      rating: 3,
-    },
-    {
-      date: "2023/12/25",
-      description: "크리스마스 스페셜 만들기",
-      chef: "@메리크리스마스",
-      rating: 5,
-    },
-  ]);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(`${url}/api/reviews`, {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
+        if (response.data.writtenReviews) {
+          const sortedData = response.data.writtenReviews.sort((a, b) => {
+            const dateA = new Date(a.review_date);
+            const dateB = new Date(b.review_date);
+            return sortDirection === "asc" ? dateA - dateB : dateB - dateA;
+          });
+          setListData(sortedData);
+        }
+        //코드 확인
+        // console.log(response.data.likeRecipes);
+      } catch (error) {
+        dispatch(editErrorType(error.response.data.code));
+        dispatch(openError());
+        setListData([]);
+      }
+    };
+    fetchData();
+  }, [accessToken, sortDirection]);
 
-  //   날짜정렬
-  const sortTableDataByDate = (direction = "asc") => {
-    const sortedData = [...tableData].sort((a, b) => {
-      const dateA = new Date(a.date);
-      const dateB = new Date(b.date);
-      return direction === "asc" ? dateB - dateA : dateA - dateB;
+  const sortTableDataByDate = (direction = sortDirection) => {
+    const sortedData = [...listData].sort((a, b) => {
+      const dateA = new Date(a.review_date);
+      const dateB = new Date(b.review_date);
+      return direction === "asc" ? dateA - dateB : dateB - dateA;
     });
-    setTableData(sortedData);
+    setListData(sortedData);
   };
 
   const toggleSortDirection = () => {
@@ -42,20 +66,16 @@ const CheckReview = () => {
     });
   };
 
-  useEffect(() => {
-    sortTableDataByDate(sortDirection);
-  }, []);
-
   //별점정렬
   const toggleSortDirectionRating = () => {
     setSortDirectionRating((prevDirection) => {
       const newDirection = prevDirection === "asc" ? "desc" : "asc";
-      sortDataByAttribute("rating", newDirection); // Sort data after updating the direction
+      sortDataByAttribute("review_score", newDirection); // Sort data after updating the direction
       return newDirection;
     });
   };
   const sortDataByAttribute = (attribute, direction) => {
-    const sortedData = [...tableData].sort((a, b) => {
+    const sortedData = [...listData].sort((a, b) => {
       const valueA = a[attribute];
       const valueB = b[attribute];
 
@@ -66,20 +86,35 @@ const CheckReview = () => {
       }
     });
 
-    setTableData(sortedData);
+    setListData(sortedData);
+  };
+
+  //리뷰 삭제
+  const handleDeleteReview = async (review_no) => {
+    console.log(`Attempting to delete review with ID: ${review_no}`);
+    console.log(typeof review_no);
+    try {
+      const response = await axios.delete(`${url}/api/reviews/${review_no}`, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+      console.log("Delete response:", response);
+      const newListData = listData.filter(
+        (item) => item.review_no !== review_no
+      );
+      setListData(newListData);
+      console.log(`Updated list data after deletion:`, newListData);
+    } catch (error) {
+      dispatch(editErrorType(error.response.data.code));
+      dispatch(openError());
+      console.error("Error deleting review:", error.response || error);
+    }
   };
 
   return (
-    <MyPageLayout>
-      {/* 버튼들 */}
-      <section className="buttons">
-        <span className="write-review">
-          <Inputbutton text="리뷰 작성" i={false} w="medium" />
-        </span>
-        <Inputbutton text="리뷰 조회" i={true} w="medium" />
-        <Inputbutton text="결제 내역" i={false} w="medium" />
-      </section>
-
+    <>
+      <ErrorConfirm error={errorType} />
       {/* 내용 */}
       <section className="table-content">
         <table className="custom-table">
@@ -94,7 +129,7 @@ const CheckReview = () => {
                       sortDirection === "asc" ? "arrow-up" : "arrow-down"
                     }
                   >
-                    {sortDirection === "asc" ? "▲" : "▼"}
+                    {sortDirection === "asc" ? "▼" : "▲"}
                   </span>
                 </button>
               </th>
@@ -120,49 +155,62 @@ const CheckReview = () => {
             </tr>
           </thead>
           <tbody>
-            {[...tableData, ...Array(8 - tableData.length)].map(
-              (item, index) => (
-                <tr key={index}>
-                  <td>{item ? index + 1 : ""}</td>
-                  <td>{item ? item.date : ""}</td>
-                  <td>{item ? item.description : ""}</td>
-                  <td>{item ? item.chef : ""}</td>
-                  <td>
-                    {item ? (
-                      <>
-                        <span className="star-filled">
-                          {"★".repeat(item.rating)}
-                        </span>
-                        <span className="star-empty">
-                          {"☆".repeat(5 - item.rating)}
-                        </span>
-                      </>
-                    ) : (
-                      ""
-                    )}
-                  </td>
-                  <td>
-                    {item ? (
-                      <Inputbutton text="삭제" i={false} w="small" />
-                    ) : (
-                      ""
-                    )}
-                  </td>
-                  <td>
-                    {item ? <Inputbutton text="수정" i={true} w="small" /> : ""}
-                  </td>
-                </tr>
-              )
-            )}
+            {[
+              ...listData.slice(0, slice),
+              ...Array(8 - listData.slice(slice - 8, slice).length),
+            ].map((data, index) => (
+              <tr key={index}>
+                <td>{data ? index + 1 : ""}</td>
+                <td>{data ? data.review_date : ""}</td>
+                <td>{data ? data.lesson_title : ""}</td>
+                <td>{data ? data.lesson_writer : ""}</td>
+                <td>
+                  {data ? (
+                    <>
+                      <span className="star-filled">
+                        {"★".repeat(data.review_score)}
+                      </span>
+                      <span className="star-empty">
+                        {"☆".repeat(5 - data.review_score)}
+                      </span>
+                    </>
+                  ) : (
+                    ""
+                  )}
+                </td>
+                <td>
+                  {data ? (
+                    <ButtonOutlined
+                      handleClick={() => handleDeleteReview(data.review_no)}
+                      size="verySmall"
+                      text="삭제"
+                    />
+                  ) : (
+                    ""
+                  )}
+                </td>
+                <td>
+                  <Link
+                    to={`/mypage/paymentDetail/editReview/${data?.review_no}`}
+                  >
+                    {data ? <ButtonContain size="verySmall" text="수정" /> : ""}
+                  </Link>
+                </td>
+              </tr>
+            ))}
           </tbody>
         </table>
       </section>
 
       {/* 더보기 버튼    */}
       <section className="bottom-add">
-        <Inputbutton text="더보기" i={true} w="large" />
+        <ButtonContain
+          size="medium"
+          text="더보기"
+          handleClick={handleClickMoreDetail}
+        />
       </section>
-    </MyPageLayout>
+    </>
   );
 };
 

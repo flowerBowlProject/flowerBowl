@@ -1,28 +1,59 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import './CommunityDetailStyle.css';
-import TurnedInNotIcon from '@mui/icons-material/TurnedInNot';
-import TurnedInIcon from '@mui/icons-material/TurnedIn';
-import Inputbutton from "../Component/Input/Inputbutton";
+import { useLocation } from "react-router";
+import { useDispatch, useSelector } from 'react-redux';
+import { useParams, useNavigate } from 'react-router-dom';
+import axios from "axios";
+import { url } from "../url";
+import Comment from "../Component/Comment/Comment";
+import ButtonOutlined from "../Component/ButtonOutlined";
+import { Viewer } from "@toast-ui/react-editor";
+import { editErrorType, openError } from "../persistStore";
+import ErrorConfirm from "../Hook/ErrorConfirm";
+import DeleteModal from "../Hook/DeleteModal";
 
 const CommunityDetail = () => {
-    const [communityData, setCommunityData] = useState({ community_title: '커뮤니티 제목', community_content: '커뮤니티 내용' });
+    const [communityData, setCommunityData] = useState({});
+    const { community_no } = useParams();
+    const writer = useSelector((state) => state.nickname);
+    const location = useLocation();
+    const navigator = useNavigate();
+    const accessToken = useSelector(state => state.accessToken);
+    const dispatch = useDispatch();
+
+    {/* 데이터 불러오기 */ }
+    useEffect(() => {
+        axios.get(`${url}/api/communities/detail/${community_no}`)
+            .then(res => {
+                setCommunityData(res.data.data);
+            })
+            .catch(err => {
+                console.log(err);
+                dispatch(editErrorType(err.response.data.code));
+                dispatch(openError());
+            })
+    }, [])
+
+    {/* 커뮤니티 수정 */ }
+    const handleModify = () => {
+        navigator('/modifyCommunity/' + community_no);
+    }
 
     return (
         <>
             <div className="communityDetail-Box">
+                <ErrorConfirm error={useSelector(state => state.errorType)} />
+
                 <div className="community-title"> {communityData.community_title} </div>
-                <div className='community-body'>{communityData.community_content}</div>
-                {/* 즐겨찾기 버튼 - 즐겨찾기 여부에 따른 true / false로 아이콘 표시 */}
-                <div className="community-bookmark">{true ? <TurnedInNotIcon sx={{ fontSize: '60px', color: 'main.or'}}/> : 
-                <TurnedInIcon sx={{ fontSize: '60px', color: 'main.or'}}/>} 스크랩 </div>
+                <div className='community-body'>{communityData.community_content && <Viewer initialValue={communityData.community_content} />}</div>
                 {/* 수정/삭제 버튼 - 작성자인 경우에만 true로 버튼 표시 */}
                 <div className="community-change">
-                    {true && <Inputbutton variant="outlined" text="수정" i= {false} w="medium-large"/>} &nbsp;
-                    {true && <Inputbutton variant="outlined" text="삭제" i= {true} w="medium-large"/>}
+                    {writer === communityData.community_writer && <ButtonOutlined size='large' text='수정' handleClick={handleModify} />} &nbsp;
+                    {writer === communityData.community_writer && <DeleteModal checkType={'community'} no={community_no}/>}
                 </div>
             </div>
             <div>
-                {/* 댓글 */}
+                <Comment typeString={2} no={community_no} />
             </div>
         </>
     );

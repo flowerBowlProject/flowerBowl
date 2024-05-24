@@ -1,6 +1,6 @@
 /* 카드 박스 */
 .card-Box {
-    max-width: 250px;
+    width: 250px;
     height: 350px;
     margin: 5px;
     box-shadow: none !important;

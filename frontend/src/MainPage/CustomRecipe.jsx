@@ -1,18 +1,33 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import {Grid,Typography,Skeleton,Pagination } from '@mui/material';
+import axios from 'axios';
+import { url } from '../url';
 const  CustomRecipe=()=>{
-    return(
+    useEffect(()=>{
+        const fetchData=async()=>{
+            try{
+                const response=await axios.get(`${url}/api/recipes/guest`)
+                console.log(response.data.posts)
+
+            }catch(error){
+                console.log(error.response.data)
+            }
+        }
+        fetchData();
+    },[])
     
+    
+    return(
         <Grid container sx={{backgroundColor:'main.br'}} pt='5vw' >
-            <Grid xs={5} ml='3vw' item mt='3vw'>
-                <Typography  variant='h4'> 
+            <Grid xs={5.1} item mt='3vw' ml='3vw'>
+                <Typography  variant='h4' >  
                     자체 제작 레시피 - 관리자가 작성한 레시피
                 </Typography>
-                <Typography mt='1vw'>
+                <Typography mt='1vw' >
                     화반에서 제공하는 레시피를 따라해 보세요~
                 </Typography>
             </Grid>
-            <Grid xs item container direction='column' alignItems='center'>
+            <Grid xs={6.5}   item container direction='column' alignItems='center'>
                 <Grid item>
                     <Skeleton variant='rectangular' width='40vw' height='20vw'  />
                 </Grid>

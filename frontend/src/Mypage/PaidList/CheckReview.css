@@ -1,20 +1,15 @@
-
-.buttons .inputbutton {
-  width: 8%;
-  margin-left: 3em;
-  margin-bottom: 3em;
+/* 위 버튼 3개 */
+.buttons .paidlist {
+  margin-left: 11em;
+  /* /* margin-left: 15em;모니터적용 */
 }
 
-.buttons .outputbutton {
-  width: 8%;
-  margin-bottom: 3em;
-  margin-left: 2em;
+.buttons .review {
+  margin-left: 1em;
 }
 
-.buttons .write-review {
-  width: 8%;
-  margin-bottom: 3em;
-  margin-left: 4em;
+.buttons .register {
+  margin-left: 1em;
 }
 
 /* 더보기버튼 */
@@ -135,4 +130,8 @@
 
 .custom-table {
   width: 100%;
+}
+
+.table-content {
+  margin-top: 1em;
 }
