@@ -1,0 +1,56 @@
+import ButtonOutLinedStyle from "./ButtonOutlinedStyle";
+import { useState } from "react";
+const ButtonOutlined = ({ text, size, handleClick=()=>{}, data }) => {
+  const handleSize = (size) => {
+    if (size === "verySmall") {
+      return {
+        width: "2vw",
+        height: "1vw",
+        size: "small",
+      };
+    } else if (size === "small") {
+      return {
+        width: "5vw",
+        height: "1vw",
+        size: "small",
+      };
+    } else if (size === "medium") {
+      return {
+        width: "5vw",
+        height: "1.5vw",
+      };
+    } else if (size === "large") {
+      return {
+        width: "5vw",
+        height: "2vw",
+      };
+    } else if (size === "doubleLarge") {
+      return {
+        width: "7vw",
+        height: "2vw",
+      };
+    } else if (size === "veryLarge") {
+      return {
+        width: "15vw",
+      };
+    }else if (size === "heightLarge") {
+      return {
+        width: "6vw",
+        height:"6vw"
+      };
+    }
+  };
+  const sizeStyle = handleSize(size);
+  return (
+    <ButtonOutLinedStyle
+      onClick={(e) => (data ? handleClick(data) : handleClick(e))}
+      width={sizeStyle.width}
+      variant="outlined"
+      size={sizeStyle.size}
+      sx={{ height: sizeStyle.height }}
+    >
+      {text}
+    </ButtonOutLinedStyle>
+  );
+};
+export default ButtonOutlined;

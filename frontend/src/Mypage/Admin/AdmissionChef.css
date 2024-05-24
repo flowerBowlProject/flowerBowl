@@ -1,0 +1,67 @@
+.admissionall {
+  margin-left: -4em;
+}
+
+.custom-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.custom-table .applyer {
+  padding-left: 5em;
+}
+
+.custom-table .no,
+.custom-table .applyDate {
+  padding-right: 3em;
+}
+
+/* 회색줄 사이 간격 */
+.custom-table td {
+  padding-top: 1em;
+  padding-bottom: 1em;
+}
+
+/* 정렬기능버튼 */
+.sort-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: inherit;
+}
+
+.arrow-up {
+  color: var(--brown--color);
+}
+
+.arrow-down {
+  color: var(--brown--color);
+}
+
+.sort-button:focus {
+  outline: none;
+}
+
+/* 메인컨텐트중앙 */
+.table-content {
+  max-width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* 첨부파일 */
+.attachment-image {
+  max-width: 100px;
+  max-height: 100px;
+  object-fit: cover;
+}
+
+.bottom-add {
+  margin-bottom: 1em;
+  margin-top: 5em;
+}
+
+.adcl {
+  margin-left: 1.5em;
+}

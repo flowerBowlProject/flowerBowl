@@ -1,0 +1,62 @@
+.division-line {
+  border-top: 2px solid var(--brown--color);
+  margin-top: 1em;
+  margin-bottom: 1em;
+  margin-left: -1em;
+  width: 100%;
+  position: relative;
+}
+
+.classbutton {
+  margin-left: 1em;
+}
+
+/* .bookmark-content {
+  display: flex;
+  flex-wrap: wrap;
+  text-align: center;
+  justify-content: space-between;
+} */
+
+.bookmark-content {
+  clear: both;
+  min-height: 800px;
+  /* border-top : 2px solid #F6C47B;
+    border-bottom : 2px solid #F6C47B; */
+  margin-top: -1em;
+  margin-left: -1em;
+  margin-bottom: -2em;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.bookmark-content > * {
+  flex-basis: calc(25% - 20px); /* 25% width with some spacing between items */
+  margin-bottom: 20px; /* Adjust spacing between rows */
+  flex-grow: 0; /* Prevent items from growing beyond their specified width */
+}
+
+/* 북마크 붙이는 코드 */
+.bookmark-wrapper {
+  position: relative;
+}
+
+@media (max-width: 768px) {
+  .bookmark-content > * {
+    flex-basis: calc(25% - 10px); /* Adjust width for smaller screens */
+    margin-bottom: 10px; /* Adjust spacing between rows for smaller screens */
+  }
+}
+
+.add {
+  position: relative;
+  bottom: 0.5em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.bookmark-button {
+  margin-bottom: 1em;
+}
