@@ -37,10 +37,9 @@ jobs:
           echo "$FIREBASE_SERVICE_ACCOUNT_KEY" > "$HOME/firebase-key.json"
         shell: bash
 
-      - name: Firebase login
+      - name: Generate Firebase token
         run: |
-          cd frontend
-          firebase login --no-localhost --token "${{ secrets.FIREBASE_TOKEN }}"
+          firebase login:ci --token "${{ secrets.FIREBASE_TOKEN }}"
   
       - name: Deploy to Firebase
         env:
