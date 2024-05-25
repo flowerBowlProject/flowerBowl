@@ -10,8 +10,26 @@ jobs:
   build_and_deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - run: npm run build
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          cd frontend
+          npm install
+
+      
+      - name: Build project
+        run: |
+          cd frontend
+          npm run build
+
+
+      - name: Deploy
+        run: |
+          cd frontend
+          npm run deploy-
+
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: ${{ secrets.GITHUB_TOKEN }}
