@@ -16,7 +16,7 @@ jobs:
       - name: Install dependencies
         run: |
           cd frontend
-          npm install
+          npm install --legacy-peer-deps
 
       
       - name: Build project
@@ -28,7 +28,7 @@ jobs:
       - name: Deploy
         run: |
           cd frontend
-          npm run deploy-
+          npm run deploy
 
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
