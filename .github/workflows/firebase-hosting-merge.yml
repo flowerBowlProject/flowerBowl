@@ -35,8 +35,9 @@ jobs:
           GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
         run: |
           cd frontend
+          echo $FIREBASE_SERVICE_ACCOUNT_KEY > firebase-key.json
+          export GOOGLE_APPLICATION_CREDENTIALS=firebase-key.json
           firebase deploy --only hosting
-
           
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
