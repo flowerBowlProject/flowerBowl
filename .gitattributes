@@ -1,0 +1,5 @@
+frontend/node_modules/.cache/default-development/19.pack filter=lfs diff=lfs merge=lfs -text
+frontend/node_modules/.cache/default-development/38.pack filter=lfs diff=lfs merge=lfs -text
+frontend/node_modules/.cache/default-development/6.pack filter=lfs diff=lfs merge=lfs -text
+frontend/node_modules/node/bin/node.exe filter=lfs diff=lfs merge=lfs -text
+frontend/node_modules/.cache/default-development/51.pack filter=lfs diff=lfs merge=lfs -text
