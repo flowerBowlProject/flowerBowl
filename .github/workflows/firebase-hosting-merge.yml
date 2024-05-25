@@ -30,12 +30,12 @@ jobs:
           npm install -g firebase-tools
       
 
-      - name : Deploy to Firebase
+      - name: Deploy to Firebase
         env:
-          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+          GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
         run: |
           cd frontend
-          npm run deploy
+          firebase deploy --only hosting
 
           
       - uses: FirebaseExtended/action-hosting-deploy@v0
