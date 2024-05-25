@@ -40,5 +40,7 @@ jobs:
       - name: Deploy to Firebase
         env: 
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
-        run: firebase deploy --only hosting:${{ secrets.FIREBASE_HOSTING_ID }} -P ${{ secrets.FIREBASE_PROJECT_ID }}
+        run: |
+          cd frontend
+          firebase deploy --only hosting:${{ secrets.FIREBASE_HOSTING_ID }} -P ${{ secrets.FIREBASE_PROJECT_ID }}
 
