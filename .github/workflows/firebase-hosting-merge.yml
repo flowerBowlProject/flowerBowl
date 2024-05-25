@@ -30,16 +30,23 @@ jobs:
           npm install -g firebase-tools
       
 
+#      - name: Set up Firebase authentication
+#        env:
+#          FIREBASE_SERVICE_ACCOUNT_KEY: {{ secrets.FIREBASE_SERVICE_ACCOUNT_KEY }}
+#        run: |
+#          echo "$FIREBASE_SERVICE_ACCOUNT_KEY" > "$HOME/firebase-key.json"
+#        shell: bash
+
       - name: Set up Firebase authentication
         env:
-          FIREBASE_SERVICE_ACCOUNT_KEY: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_KEY }}
+          FIREBASE_SERVICE_ACCOUNT_KEY: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
         run: |
           echo "$FIREBASE_SERVICE_ACCOUNT_KEY" > "$HOME/firebase-key.json"
         shell: bash
 
       - name: Deploy to Firebase
         env: 
-          GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
+          GOOGLE_APPLICATION_CREDENTIALS: $HOME/firebase-key.json
         run: |
           cd frontend
           firebase deploy --only hosting --project ${{ secrets.FIREBASE_PROJECT_ID }}
