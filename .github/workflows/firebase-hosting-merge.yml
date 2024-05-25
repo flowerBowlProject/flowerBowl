@@ -38,9 +38,10 @@ jobs:
         shell: bash
   
       - name: Deploy to Firebase
-        env: 
-          FIREBASE_TOKEN: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_KEY }}
+        env:
+          GOOGLE_APPLICATION_CREDENTIALS: ${{secrets.GOOGLE_APPLICATION_CREDENTIALS}}
         run: |
+          echo "$GOOGLE_APPLICATION_CREDENTIALS" > "$HOME/firebase-key.json"
           cd frontend
-          firebase deploy --only hosting:${{ secrets.FIREBASE_HOSTING_ID }} -P ${{ secrets.FIREBASE_PROJECT_ID }}
+          firebase deploy --only hosting
 
