@@ -49,6 +49,6 @@ jobs:
           GOOGLE_APPLICATION_CREDENTIALS: $HOME/firebase-key.json
         run: |
           cd frontend
-          $ firebase login --interactive
+          firebase login --interactive
           firebase deploy --only hosting --project ${{ secrets.FIREBASE_PROJECT_ID }}
 
