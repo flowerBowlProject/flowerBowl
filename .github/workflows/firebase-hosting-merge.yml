@@ -17,25 +17,15 @@ jobs:
         run: |
           cd frontend
           npm install --legacy-peer-deps
-
       
       - name: Build project
         run: |
           cd frontend
           CI=false npm run build
 
-
       - name: Install Firebase CLI
         run: |
           npm install -g firebase-tools
-      
-
-#      - name: Set up Firebase authentication
-#        env:
-#          FIREBASE_SERVICE_ACCOUNT_KEY: {{ secrets.FIREBASE_SERVICE_ACCOUNT_KEY }}
-#        run: |
-#          echo "$FIREBASE_SERVICE_ACCOUNT_KEY" > "$HOME/firebase-key.json"
-#        shell: bash
 
       - name: Set up Firebase authentication
         env:
