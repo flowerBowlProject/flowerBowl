@@ -48,4 +48,6 @@ jobs:
           firebaseServiceAccount: "${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}"
           projectId: ${{secrets.FIREBASE_PROJECT_ID}}
           channelId: live
+          entryPoint: frontend
+
           
