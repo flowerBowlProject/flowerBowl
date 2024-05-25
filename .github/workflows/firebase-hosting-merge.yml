@@ -42,13 +42,12 @@ jobs:
           FIREBASE_SERVICE_ACCOUNT_KEY: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
         run: |
           echo "$FIREBASE_SERVICE_ACCOUNT_KEY" > "$HOME/firebase-key.json"
-        shell: bash
-
+          echo "GOOGLE_APPLICATION_CREDENTIALS=$HOME/firebase-key.json" >> $GITHUB_ENV
+          
       - name: Deploy to Firebase
         env: 
           GOOGLE_APPLICATION_CREDENTIALS: $HOME/firebase-key.json
         run: |
           cd frontend
-          firebase login --interactive
           firebase deploy --only hosting --project ${{ secrets.FIREBASE_PROJECT_ID }}
 
