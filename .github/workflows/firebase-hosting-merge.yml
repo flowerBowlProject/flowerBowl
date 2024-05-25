@@ -31,8 +31,10 @@ jobs:
       
 
       - name: Set up Firebase authentication
+        env:
+          FIREBASE_SERVICE_ACCOUNT_KEY: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_KEY }}
         run: |
-          echo ${{ secrets.FIREBASE_SERVICE_ACCOUNT_KEY }} > "${HOME}/firebase-key.json"
+          echo "$FIREBASE_SERVICE_ACCOUNT_KEY" > "$HOME/firebase-key.json"
         shell: bash
   
       - name: Deploy to Firebase
