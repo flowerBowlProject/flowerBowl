@@ -39,7 +39,7 @@ jobs:
   
       - name: Deploy to Firebase
         env:
-          GOOGLE_APPLICATION_CREDENTIALS: "${HOME}/firebase-key.json"
+          GOOGLE_APPLICATION_CREDENTIALS: "$HOME/firebase-key.json"
         run: |
             cd frontend
             firebase deploy --only hosting
