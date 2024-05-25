@@ -39,22 +39,38 @@ const CategoryList = () => {
     }));
 
     useEffect(() => {
+            const guestCategory=async()=>{
+                const request1=axios.get(`${url}/api/recipes/guest/list?category=${category}`)
+                const request2=axios.get(`${url}/api/guest/lessons/category?category=${category}&size=10`)
+                try{
+                    const [responseOne,responseTwo]= await axios.all([request1,request2]);
+                    console.log(responseOne.data.posts);
+                    console.log(responseTwo.data.lessons);
+                }catch(error){
+                    console.log(error);
+                }
+            }
         if (accessToken === '') {
+            guestCategory();
             axios.get(`${url}/api/recipes/guest/list?category=${category}`)
                 .then(res => {
-                    console.log(res.data.posts)
+                    setSearchRecipeList(res.data.posts)
+                    console.log(res.data)
                 })
                 .catch(err => {
                     console.log(err);
                 })
         }else{
+            const request1=axios.get(`${url}/api/recipes/list?category=${category}`)
+            const request2=axios.get(`${url}/api/user/lessons/category?category=밥&size=10`)
             axios.get(`${url}/api/recipes/list?category=${category}`,{
                 headers:{
                     Authorization: `Bearer ${accessToken}`
                 }
             })
                 .then(res => {
-                    console.log(res.data.posts)
+                    setSearchRecipeList(res.data.posts)
+                    console.log(res.data)
                 })
                 .catch(err => {
                     console.log(err);
