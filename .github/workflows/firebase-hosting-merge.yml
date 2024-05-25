@@ -41,6 +41,6 @@ jobs:
         env: 
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_KEY }}
         run: |
+          cd frontend
           firebase deploy --only hosting:${{ secrets.FIREBASE_HOSTING_ID }} -P ${{ secrets.FIREBASE_PROJECT_ID }}
-
 
