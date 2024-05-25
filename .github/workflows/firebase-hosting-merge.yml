@@ -42,5 +42,5 @@ jobs:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
         run: |
           cd frontend
-          firebase deploy --only hosting:${{ secrets.FIREBASE_HOSTING_ID }} -P ${{ secrets.FIREBASE_PROJECT_ID }}
+          firebase deploy --only hosting --project ${{ secrets.FIREBASE_PROJECT_ID }}
 
