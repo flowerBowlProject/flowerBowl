@@ -53,19 +53,19 @@ const PopularRecipe=()=>{
             </Grid>
             <Grid direction="row" sm={12} container  justifyContent="center" my='2vw' >
                 <Grid item sm ml='3vw'>
-                    {popularRecipe[0].recipe_sname?<img alt={popularRecipe[0].recipe_sname} onClick={handleClick} id='img1' src={popularRecipe[0].recipe_sname} style={{width:'16vw' ,height:'16vw', cursor: 'pointer'}}/>:<Skeleton variant="rectangular" width='16vw' height='16vw' />}
+                    {popularRecipe[0]?.recipe_sname?<img alt={popularRecipe[0].recipe_sname} onClick={handleClick} id='img1' src={popularRecipe[0].recipe_sname} style={{width:'16vw' ,height:'16vw', cursor: 'pointer'}}/>:<Skeleton variant="rectangular" width='16vw' height='16vw' />}
                 </Grid> 
                 <Grid item sm>
-                {popularRecipe[1].recipe_sname?<img alt={popularRecipe[1].recipe_sname}   onClick={handleClick} id='img2' src={popularRecipe[1].recipe_sname} style={{width:'16vw' ,height:'16vw', cursor: 'pointer'}}/>:<Skeleton variant="rectangular" width='16vw' height='16vw' />}
+                {popularRecipe[1]?.recipe_sname?<img alt={popularRecipe[1].recipe_sname}   onClick={handleClick} id='img2' src={popularRecipe[1].recipe_sname} style={{width:'16vw' ,height:'16vw', cursor: 'pointer'}}/>:<Skeleton variant="rectangular" width='16vw' height='16vw' />}
                 </Grid> 
                 <Grid item sm>
-                {popularRecipe[2].recipe_sname?<img alt={popularRecipe[2].recipe_sname}  onClick={handleClick} id='img3' src={popularRecipe[2].recipe_sname} style={{width:'16vw' ,height:'16vw', cursor: 'pointer'}}/>:<Skeleton variant="rectangular" width='16vw' height='16vw' />}
+                {popularRecipe[2]?.recipe_sname?<img alt={popularRecipe[2].recipe_sname}  onClick={handleClick} id='img3' src={popularRecipe[2].recipe_sname} style={{width:'16vw' ,height:'16vw', cursor: 'pointer'}}/>:<Skeleton variant="rectangular" width='16vw' height='16vw' />}
                 </Grid> 
                 <Grid item sm>
-                {popularRecipe[3].recipe_sname?<img alt={popularRecipe[3].recipe_sname}  onClick={handleClick} id='img4' src={popularRecipe[3].recipe_sname} style={{width:'16vw' ,height:'16vw', cursor: 'pointer'}}/>:<Skeleton variant="rectangular" width='16vw' height='16vw' />}
+                {popularRecipe[3]?.recipe_sname?<img alt={popularRecipe[3].recipe_sname}  onClick={handleClick} id='img4' src={popularRecipe[3].recipe_sname} style={{width:'16vw' ,height:'16vw', cursor: 'pointer'}}/>:<Skeleton variant="rectangular" width='16vw' height='16vw' />}
                 </Grid> 
                 <Grid item sm>
-                {popularRecipe[4].recipe_sname?<img alt={popularRecipe[4].recipe_sname} onClick={handleClick}  id='img5' src={popularRecipe[4].recipe_sname} style={{width:'16vw' ,height:'16vw', cursor: 'pointer'}}/>:<Skeleton variant="rectangular" width='16vw' height='16vw' />}
+                {popularRecipe[4]?.recipe_sname?<img alt={popularRecipe[4].recipe_sname} onClick={handleClick}  id='img5' src={popularRecipe[4].recipe_sname} style={{width:'16vw' ,height:'16vw', cursor: 'pointer'}}/>:<Skeleton variant="rectangular" width='16vw' height='16vw' />}
                 </Grid> 
             </Grid>
         </Grid>
