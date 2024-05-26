@@ -34,7 +34,7 @@ const CheckPaidList = () => {
         });
         setListData(response.data.pays);
         //코드 확인
-        // console.log(response.data.payLessons);
+        // console.log(response.data.pays);
       } catch (error) {
         dispatch(editErrorType(error.response.data.code));
         dispatch(openError());
