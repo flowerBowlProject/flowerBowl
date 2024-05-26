@@ -246,6 +246,8 @@ const Profile = () => {
     };
     fetchData();
   }, [accessToken, dispatch]);
+
+  //프로필수정
   const handleEditUser = async () => {
     if (
       (user.memberNewPw.length >= 1 && newPwChange) ||
@@ -260,7 +262,9 @@ const Profile = () => {
         user_file_sname: "",
         user_file_oname: "",
       };
-      if (nickNameChange) reqeustData.new_nickname = user.memberName;
+      if (nickNameChange) {
+        reqeustData.new_nickname = user.memberName;
+      }
       if (emailChange) reqeustData.new_email = user.memberEmail;
       if (user.memberNewPw !== "") {
         reqeustData.new_pw = user.memberNewPw;
@@ -295,6 +299,7 @@ const Profile = () => {
       dispatch(setMemberName(name));
       dispatch(editErrorType("SUNAME"));
       dispatch(openError());
+      setButDisable(false);
     } catch (error) {
       console.log(error);
       dispatch(editErrorType(error.response.data.code));
@@ -302,6 +307,14 @@ const Profile = () => {
       dispatch(ShowDuplication("name"));
     }
   };
+
+  //전화번호 수정
+  const handleTelChange = (e) => {
+    const newTel = e.target.value;
+    dispatch(setMemberTel(newTel));
+    handleBut("newTel", false); // 전화번호를 바꾸면 변경 버튼을 활성화
+  };
+
   const hanldeSendEmail = async (mail) => {
     if (user.memberId === "") {
       dispatch(editErrorType("idError"));
@@ -317,6 +330,7 @@ const Profile = () => {
 
         dispatch(openEmailCheck());
         dispatch(setMermberEmail(mail));
+        setButDisable(false);
       } catch (error) {
         dispatch(editErrorType(error.response.data.code));
         dispatch(openError());
@@ -340,6 +354,15 @@ const Profile = () => {
   };
   const handleBut = (type, bool) => {
     switch (type) {
+      case "new_nickname":
+        setButDisable(false);
+        break;
+      case "newTel":
+        setButDisable(false);
+        break;
+      case "email":
+        setButDisable(false);
+        break;
       case "pw":
         setButDisable(bool);
         break;
@@ -477,7 +500,10 @@ const Profile = () => {
                   valueUser={user.memberName}
                   but_exis={true}
                   vaild="name"
-                  handleCheck={handleCheckName}
+                  handleCheck={(name) => {
+                    handleCheckName(name);
+                    handleBut("new_nickname", false);
+                  }}
                 />
               </Grid>
               <Grid item>
@@ -488,6 +514,7 @@ const Profile = () => {
                   helper_text="올바른 휴대폰 번호를 입력해 주세요."
                   but_exis={false}
                   vaild="tel"
+                  onChange={handleTelChange}
                 />
               </Grid>
               <Grid item>
