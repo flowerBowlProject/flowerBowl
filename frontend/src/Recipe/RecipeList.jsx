@@ -160,7 +160,12 @@ const RecipeList = () => {
     /* 등록 페이지 이동 */
   }
   const clickRegister = () => {
-    navigator("/registerRecipe");
+    if(accessToken === ''){
+      dispatch(editErrorType('NE'));
+      dispatch(openError());
+  }else{
+      navigator("/registerRecipe");
+  }
   };
 
   {/* 더보기 클릭 */ }

@@ -197,25 +197,26 @@ const ViewList = () => {
         if (accessToken === '') {
             dispatch(editErrorType('NT'));
             dispatch(openError());
-        }
-        axios.get(`${url}/api/users/info`,{
+        }else{
+             axios.get(`${url}/api/users/info`,{
             headers:{
                 Authorization : `Bearer ${accessToken}`
             }
-        })
-        .then(res=>{
-            console.log(res);
-            if(res.data.user_role==='ROLE_CHEF'){
-                navigator('/registerClass');
-            }else{
-                dispatch(editErrorType('ONLYCHEF'));
+            })
+            .then(res=>{
+                console.log(res);
+                if(res.data.user_role==='ROLE_CHEF'){
+                    navigator('/registerClass');
+                }else{
+                    dispatch(editErrorType('ONLYCHEF'));
+                    dispatch(openError());
+                }
+            })
+            .catch(err=>{
+                dispatch(editErrorType('NN'));
                 dispatch(openError());
-            }
-        })
-        .catch(err=>{
-            dispatch(editErrorType('NN'));
-            dispatch(openError());
-        })
+            })
+        }
     }
 
     const clickDetail = (e, lesson_no) => {

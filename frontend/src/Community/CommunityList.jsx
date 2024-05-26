@@ -77,8 +77,10 @@ const CommunityList = () => {
         if(accessToken === ''){
             dispatch(editErrorType('NE'));
             dispatch(openError());
+        }else{
+            navigate('/registerCommunity');
         }
-        navigate('/registerCommunity');
+        
     }
 
     {/* 디테일 페이지 조회 */ }
