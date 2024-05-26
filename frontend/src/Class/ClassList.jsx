@@ -44,7 +44,6 @@ const ViewList = () => {
     }
 
     useEffect(() => {
-        console.log(pageInfo);
         if (keyword !== null) {
             if (accessToken === '') {
                 axios.get(`${url}/api/search/lessons?keyword=${keyword}&page=1&size=${pageInfo*8}`)
@@ -194,11 +193,30 @@ const ViewList = () => {
     }
 
     const clickRegister = () => {
+        console.log('등록 클릭');
         if (accessToken === '') {
             dispatch(editErrorType('NT'));
             dispatch(openError());
+        }else{
+             axios.get(`${url}/api/users/info`,{
+            headers:{
+                Authorization : `Bearer ${accessToken}`
+            }
+            })
+            .then(res=>{
+                console.log(res);
+                if(res.data.user_role==='ROLE_CHEF'){
+                    navigator('/registerClass');
+                }else{
+                    dispatch(editErrorType('ONLYCHEF'));
+                    dispatch(openError());
+                }
+            })
+            .catch(err=>{
+                dispatch(editErrorType('NN'));
+                dispatch(openError());
+            })
         }
-        navigator(`/registerClass`);
     }
 
     const clickDetail = (e, lesson_no) => {

@@ -45,7 +45,7 @@ spring:
     host: smtp.gmail.com
     port: 587
     username: gaebalyong30@gmail.com
-    password: "qjmh rbet jcbh xzvp"
+    password: "qhjq gidi fmmt qran"
     properties:
       mail:
         smtp:
@@ -88,3 +88,10 @@ secret-key: HfdHzFynv0TnzLtkk9xBpCJc2AzwAtW2qhvVgMrA1kk=
 
 payment:
   store_id: imp75223852
+## 키 생성 명령어 keytool -genkey -alias flowerbowl -storetype PKCS12 -keyalg RSA -keysize 2048 -keystore keystore.p12 -validity 4000
+#server:
+#  ssl:
+#    key-store: keystore.p12
+#    key-store-password: 123456
+#    keyStoreType: PKCS12
+#    keyAlias: flowerbowl

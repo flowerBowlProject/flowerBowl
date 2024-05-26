@@ -85,13 +85,15 @@ const RegisterClass = () => {
     {/* 주소 및 위도/경도 받아와 저장 */ }
     const getAddress = address => {
         setRegisterData((registerData) => ({ ...registerData, lesson_addr: address.lesson_address }));
-        setRegisterData((registerData) => ({ ...registerData, lesson_longitude: address.lesson_longitude }));
-        setRegisterData((registerData) => ({ ...registerData, lesson_latitude: address.lesson_latitude }));
+    }
+    
+    const getAddressXY = addressXY =>{
+        setRegisterData((registerData) => ({ ...registerData, lesson_longitude: addressXY.lesson_longitude }));
+        setRegisterData((registerData) => ({ ...registerData, lesson_latitude: addressXY.lesson_latitude }));
     }
 
     {/* 토스트 에디터 값 받아와 저장 */}
     const getToastEditor = contentData =>{
-        console.log(contentData);
         setRegisterData((registerData) => ({ ...registerData, lesson_content: contentData}));
     }
 
@@ -109,9 +111,7 @@ const RegisterClass = () => {
 
     {/* 클래스 등록 */}
     const handleRegister = () =>{
-
-        console.log(thumbnail);
-        console.log(selectedFile);
+        console.log(registerData);
         {/* 수정 내용 작성 여부 확인 후 alert */ }
         if (registerData.lesson_title === '') {
             dispatch(editErrorType('TITLE'));
@@ -224,7 +224,7 @@ const RegisterClass = () => {
 
             {/* 장소 */}
             <div className="classElement2-Box">
-                <AddressSearch getAddress={getAddress} />
+                <AddressSearch getAddress={getAddress} getAddressXY={getAddressXY}/>
                 <TextField id="outlined-basic" type="text" label="오픈 채팅" variant="outlined" readOnly sx={{ marginLeft: '1vw', width: '40vw' }} placeholder='오픈채팅 링크를 입력해 주세요.'
                     name="lesson_URL" onChange={(e)=> setValue(e)} color="secondary"/>
             </div>

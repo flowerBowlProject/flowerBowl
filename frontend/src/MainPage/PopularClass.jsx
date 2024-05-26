@@ -33,7 +33,6 @@ const PopularClass=()=>{
             try{
                 const response=await axios.get(`${url}/api/guest/lessons/like`)
                 setPopularLesson(response.data)
-
             }catch(error){
                 console.log(error)
             }
