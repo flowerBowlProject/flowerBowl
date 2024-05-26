@@ -49,28 +49,28 @@ const PopularClass=()=>{
             </Grid>
             <Grid container my='2vw' direction='row' alignItems='flex-end' justifyContent='space-around'>
                 <Grid item >
-                    {popularLesson[0].lesson_sname?
+                    {popularLesson[0]?.lesson_sname?
                     <img src={popularLesson[0].lesson_sname} alt={popularLesson[0].lesson_sname}  style={{width:'15vw', height:'15vw',borderRadius:'15vw', cursor: 'pointer'}} />
                     :<Skeleton variant='circular' width='15vw' height='15vw' />
                     }
                 </Grid>
                 <Grid item  >
-                    {popularLesson[1].lesson_sname?
+                    {popularLesson[1]?.lesson_sname?
                     <img src={popularLesson[1].lesson_sname} alt={popularLesson[1].lesson_sname} style={{width:'20vw', height:'20vw' ,borderRadius:'15vw', cursor: 'pointer'}}/>
                     :<Skeleton variant='circular' width='20vw' height='20vw' />
                     }
                 </Grid>
                 <Grid item >
-                    {popularLesson[2].lesson_sname?
+                    {popularLesson[2]?.lesson_sname?
                     <img src={popularLesson[2].lesson_sname} alt={popularLesson[2].lesson_sname} style={{width:'15vw', height:'15vw' ,borderRadius:'15vw', cursor: 'pointer'}}/>
                     :<Skeleton variant='circular' width='15vw' height='15vw' />
                     }
                 </Grid>
             </Grid>
             <Grid container direction='row' justifyContent='space-around' >
-                <ClassContent m='-1vw' title={popularLesson[0].lesson_title} content={popularLesson[0].lesson_content} recipeNo={popularLesson[0].lesson_no} />
-                <ClassContent m='0.5vw' title={popularLesson[1].lesson_title} content={popularLesson[1].lesson_content} recipeNo={popularLesson[1].lesson_no}/>
-                <ClassContent m='2vw' title={popularLesson[2].lesson_title} content={popularLesson[2].lesson_content} recipeNo={popularLesson[2].lesson_no}/>
+                <ClassContent m='-1vw' title={popularLesson[0]?.lesson_title} content={popularLesson[0]?.lesson_content} recipeNo={popularLesson[0]?.lesson_no} />
+                <ClassContent m='0.5vw' title={popularLesson[1]?.lesson_title} content={popularLesson[1]?.lesson_content} recipeNo={popularLesson[1]?.lesson_no}/>
+                <ClassContent m='2vw' title={popularLesson[2]?.lesson_title} content={popularLesson[2]?.lesson_content} recipeNo={popularLesson[2]?.lesson_no}/>
             </Grid>
         </Grid>
         
