@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@CrossOrigin(origins = "https://flowbowl.web.app")
 @RequestMapping("/api/users")
 @Slf4j
 public class UserController {
