@@ -17,27 +17,31 @@ const ClassPayment = ({ lesson_no }) => {
             dispatch(editErrorType('NT'));
             dispatch(openError());
         }
-        try {
-            const response = await axios.post(`${url}/api/user/lessons/payments`, {
-                "lesson_no": lesson_no
-            }, {
-                headers: {
-                    Authorization: `Bearer ${accessToken}`
-                }
-            });
-            console.log(response);
-            setPaymentData(response.data.request_pay);
-            if (window.IMP) {
-                window.IMP.init([response.data.store_id]); // 결제 데이터 정의
+
+        axios.post(`${url}/api/user/lessons/payments`, {
+            "lesson_no": lesson_no
+        }, {
+            headers: {
+                Authorization: `Bearer ${accessToken}`
             }
-            window.IMP.request_pay(response.data.request_pay, callback);
-        } catch (error) {
-            console.log(error);
-        }
+        })
+        .then(res=>{
+                if (window.IMP) {
+                    window.IMP.init([res.data.store_id]); // 결제 데이터 정의
+                }
+                window.IMP.request_pay(res.data?.request_pay, callback);
+            })
+        .catch(err=>{
+            if(err.response.data.code==='FA'){
+                dispatch(editErrorType('BUYCOMPLETE'));
+                dispatch(openError());
+            }
+        })
     };
 
     const callback = (response) => {
         const { success, error_msg, imp_uid, merchant_uid, pay_method, paid_amount, status } = response;
+        console.log(response);
         if (success) {
             console.log('결제 완료되었습니다.');
         } else {

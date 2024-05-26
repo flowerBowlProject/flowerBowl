@@ -241,6 +241,10 @@ const ErrorConfirm = ({ error }) => {
         severity="warning";
         content="쉐프만 작성 가능합니다.";
         break;
+      case "BUYCOMPLETE":
+        severity="warning";
+        content="이미 구매한 클래스입니다.";
+        break;
 
       default:
         severity = "error";
