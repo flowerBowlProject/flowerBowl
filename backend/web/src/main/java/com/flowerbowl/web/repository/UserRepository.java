@@ -35,6 +35,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     boolean existsByUserNickname(String userNickname);
 
+    boolean existsByUserPhone(String userPhone);
+
     @Query(value = "SELECT " +
             "   l.lesson_no, " +
             "   l.lesson_title " +
@@ -97,25 +99,21 @@ public interface UserRepository extends JpaRepository<User, Long> {
             "    p.pay_date DESC", nativeQuery = true)
     List<Object[]> findPurchaser(@Param("userId") String userId);
 
-    @Query(value = "SELECT " +
+    @Query(value = " SELECT " +
             "    DATE_FORMAT(p.pay_date, '%Y-%m-%d') AS pay_date, " +
             "    p.pay_price, " +
             "    l.lesson_title, " +
             "    l.lesson_writer, " +
             "    l.lesson_no, " +
             "    p.pay_no " +
-            "FROM " +
+            "FROM  " +
             "    pay p " +
-            "    INNER JOIN lesson l ON p.lesson_no = l.lesson_no " +
+            "INNER JOIN  " +
+            "    lesson l ON p.lesson_no = l.lesson_no " +
+            "INNER JOIN " +
+            "    user u ON p.user_no = u.user_no " +
             "WHERE " +
-            "    p.lesson_no IN ( " +
-            "        SELECT " +
-            "            p2.lesson_no " +
-            "        FROM " +
-            "            pay p2 " +
-            "            INNER JOIN user u ON p2.user_no = u.user_no " +
-            "        WHERE " +
-            "            u.user_id = :userId)" +
+            "    u.user_id = :userId " +
             "ORDER BY " +
             "    p.pay_date DESC", nativeQuery = true)
     List<Object[]> findPaysByUserId(@Param("userId") String userId);
