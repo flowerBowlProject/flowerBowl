@@ -237,6 +237,15 @@ const ErrorConfirm = ({ error }) => {
         content = "배너등록이 완료되었습니다.";
         break;
 
+      case "ONLYCHEF":
+        severity="warning";
+        content="쉐프만 작성 가능합니다.";
+        break;
+      case "BUYCOMPLETE":
+        severity="warning";
+        content="이미 구매한 클래스입니다.";
+        break;
+
       default:
         severity = "error";
         content = "알 수 없는 오류가 발생했습니다.";

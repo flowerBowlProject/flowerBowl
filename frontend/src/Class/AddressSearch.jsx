@@ -17,7 +17,6 @@ const AddressSearch = (props) => {
   },[props.setAddress])
 
   const searchAddress = () => {
-    console.log('버튼 클릭')
     axios
       .get("https://dapi.kakao.com/v2/local/search/address.json", {
         params: {
@@ -39,6 +38,7 @@ const AddressSearch = (props) => {
         }));
 
         props.getAddress(address);
+        props.getAddressXY({lesson_longitude : data.address.x, lesson_latitude:data.address.y});
       })
       .catch((err) => {
         console.log(err);
