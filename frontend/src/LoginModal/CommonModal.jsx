@@ -142,6 +142,30 @@ const CommonModal = ({
         break;
     }
   };
+
+  //카카오로그인
+  const handleKaKaoLogin = async () => {
+    try {
+      const response = await axios.get(`${url}/api/oauth2/kakao`);
+      console.log(response);
+    } catch (error) {
+      console.log(error);
+      dispatch(editErrorType("KAKAO_LOGIN_ERROR"));
+      dispatch(openError());
+    }
+  };
+  //네이버로그인
+  const handleNaverLogin = async () => {
+    try {
+      const response = await axios.get(`${url}/api/oauth2/naver`);
+      console.log(response);
+    } catch (error) {
+      console.log(error);
+      dispatch(editErrorType("NAVER_LOGIN_ERROR"));
+      dispatch(openError());
+    }
+  };
+
   const [butDisable, setButDisable] = useState(true);
   const [butDisable_2, setButDisable_2] = useState(true);
   return (
@@ -211,6 +235,7 @@ const CommonModal = ({
                     src="../../images/But_kakao.png"
                     className="kakao"
                     height="40vw"
+                    onClick={handleKaKaoLogin}
                   />
                 </Grid>
                 <Grid item xs textAlign="left">
@@ -218,6 +243,7 @@ const CommonModal = ({
                     src="../../images/But_naver.png"
                     className="naver"
                     width="150px"
+                    onClick={handleNaverLogin}
                   />
                 </Grid>
               </Grid>
