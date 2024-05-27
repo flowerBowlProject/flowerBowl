@@ -89,7 +89,7 @@ const RegisterCommunity = () => {
             <input className="communityregister-title" type='text' placeholder="제목을 작성해 주세요." name="community_title" onChange={(e)=>setValue(e)}/>
 
             <div className="communityText-Box">
-                <ToastEditor getToastEditor={getToastEditor} getToastImg={getToastImg} setContent={registerData.community_content}/>
+                <ToastEditor getToastEditor={getToastEditor} getToastImg={getToastImg} setContent={''}/>
             </div>
 
             {/* 등록 + 취소 버튼 컴포넌트 위치 */}
