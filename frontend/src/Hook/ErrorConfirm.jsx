@@ -245,7 +245,22 @@ const ErrorConfirm = ({ error }) => {
         severity="warning";
         content="이미 구매한 클래스입니다.";
         break;
-
+        case "BUYCOMPLETE":
+          severity="warning";
+          content="이미 구매한 클래스입니다.";
+          break;
+          case "NAVER_LOGIN_ERROR":
+        severity="warning";
+        content="네이버 로그인이 불가능합니다.";
+        break;
+        case "KAKAO_LOGIN_ERROR":
+        severity="warning";
+        content="카카오 로그인이 불가능합니다.";
+        break;
+        case "BUYCANCEL":
+        severity="warning";
+        content="결제가 취소되었습니다.";
+        break;
       default:
         severity = "error";
         content = "알 수 없는 오류가 발생했습니다.";

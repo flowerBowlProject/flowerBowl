@@ -145,25 +145,11 @@ const CommonModal = ({
 
   //카카오로그인
   const handleKaKaoLogin = async () => {
-    try {
-      const response = await axios.get(`${url}/api/oauth2/kakao`);
-      console.log(response);
-    } catch (error) {
-      console.log(error);
-      dispatch(editErrorType("KAKAO_LOGIN_ERROR"));
-      dispatch(openError());
-    }
+    window.open(`${url}/api/oauth2/kakao`, '_blank');
   };
   //네이버로그인
   const handleNaverLogin = async () => {
-    try {
-      const response = await axios.get(`${url}/api/oauth2/naver`);
-      console.log(response);
-    } catch (error) {
-      console.log(error);
-      dispatch(editErrorType("NAVER_LOGIN_ERROR"));
-      dispatch(openError());
-    }
+    window.open(`${url}/api/oauth2/naver`, '_blank');     
   };
 
   const [butDisable, setButDisable] = useState(true);
