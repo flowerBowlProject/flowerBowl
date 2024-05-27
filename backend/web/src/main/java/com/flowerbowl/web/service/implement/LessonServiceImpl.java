@@ -483,7 +483,7 @@ public class LessonServiceImpl implements LessonService {
             pay.setPayPrice(lesson.getLessonPrice());
             // pay_code
             Long cntPay = payRepository.countAllByPayNoGreaterThan(-1L);
-            String pay_code = LocalDate.now().toString() + "_" + cntPay; // ex) 2019-09-19_lesson_no;
+            String pay_code = LocalDateTime.now().toString() + "_" + cntPay; // ex) 2019-09-19_lesson_no;
             pay.setPayCode(pay_code);
             System.out.println(pay.getLesson().getLessonNo());
 
