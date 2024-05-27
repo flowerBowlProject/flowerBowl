@@ -134,6 +134,22 @@ public class LessonsController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseDto("ISE", "Internal Server Error"));
         }
     }
+    // 결제 오류시 결제 테이블에서 삭제
+    @PutMapping(value = "/user/lessons")
+    public ResponseEntity<ResponseDto> lessonBuyErrorController(@AuthenticationPrincipal String userId, @RequestBody PayErrorRequestDto payErrorRequestDto){
+        try{
+            return lessonService.LessonBuyErrorHandler(payErrorRequestDto, userId);
+        } catch (UserNotFoundException userNotFoundException){
+            log.info("error msg : {}", userNotFoundException.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseDto("FA", "user not found exception"));
+        } catch (PayNotFindException e){
+            log.info("error msg : {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseDto("FA", "pay not found exception"));
+        } catch (Exception e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseDto("FA", "bad request"));
+        }
+    }
+
     // 클래스 즐겨찾기 등록 // POST
     @PostMapping(value = "/user/lessons/like")
     public ResponseEntity<ResponseDto> lessonLike(@AuthenticationPrincipal String userId, @RequestBody LessonLikeRequestDto lessonLikeRequestDto){
