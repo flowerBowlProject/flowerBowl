@@ -48,17 +48,19 @@ const ToastEditor = (props) => {
                             }
                         })
                             .then(res => {
+                                const decodeSname = decodeURIComponent(res.data.content_sname);
+                                console.log(decodeSname);
                                 setContentData(prevState => ({
                                     ...prevState,
                                     oname: [...prevState.oname, res.data.content_oname],
-                                    sname: [...prevState.sname, res.data.content_sname]
+                                    sname: [...prevState.sname, decodeSname]
                                 }));
 
                                 props.getToastImg({
                                     oname: res.data.content_oname,
-                                    sname: res.data.content_sname
+                                    sname: decodeSname
                                 });
-                                callback(res.data.content_sname);
+                                callback(decodeSname);
                             })
                             .catch(err => {
                                 console.log(err);
