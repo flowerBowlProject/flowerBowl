@@ -34,6 +34,7 @@ import BookmarkPage from "./Mypage/Bookmark/BookmarkPage";
 import CheckClass from "./Mypage/Myclass/CheckClass";
 import PaymentDetail from "./Mypage/PaidList/PaymentDetail";
 import CategoryList from './Category/CategoryList';
+import OAuth2Success from "./LoginModal/OAuth2Success";
 
 const App = () => {
   return (
@@ -41,6 +42,8 @@ const App = () => {
       <Header />
       <Routes>
       
+        <Route path="/auth/oauth-response" element={<OAuth2Success />} />
+
         <Route path="/" element={<MainHomepage />} />
         <Route path="/categoryList" element={<CategoryList />} />
         <Route path="/recipeList" element={<RecipeList/>} />
