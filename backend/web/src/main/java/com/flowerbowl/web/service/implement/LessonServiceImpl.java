@@ -337,12 +337,10 @@ public class LessonServiceImpl implements LessonService {
         try{
             if(!lessonJpaDataRepository.existsLessonByLessonNo(lesson_no)){
                 throw new LessonNotFoundException();
-
             }
             User user = userRepository.findByUserId(userId);
             if(user == null){
                 throw new UserNotFoundException();
-
             }
             Lesson lesson = lessonJpaDataRepository.findLessonByLessonNo(lesson_no);
             if(!lesson.getUser().getUserId().equals(userId)){
@@ -453,7 +451,6 @@ public class LessonServiceImpl implements LessonService {
         }
     }
 
-
     // 클래스 구매
     // 구매 정보 저장 + 구매 정보를 넘격줘야함
     @Override
@@ -486,7 +483,7 @@ public class LessonServiceImpl implements LessonService {
             pay.setPayPrice(lesson.getLessonPrice());
             // pay_code
             Long cntPay = payRepository.countAllByPayNoGreaterThan(-1L);
-            String pay_code = LocalDate.now().toString() + "_" + cntPay; // ex) 2019-09-19_lesson_no;
+            String pay_code = LocalDateTime.now().toString() + "_" + cntPay; // ex) 2019-09-19_lesson_no;
             pay.setPayCode(pay_code);
             System.out.println(pay.getLesson().getLessonNo());
 
@@ -518,21 +515,17 @@ public class LessonServiceImpl implements LessonService {
         }catch (LessonNotFoundException e){
             log.info("LessonService buyLesson Exception : {}", e.getMessage());
             throw new LessonNotFoundException();
-//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseDto("FA","해당하는 lesson_no을 가진 클래스가 없습니다."));
         }catch (UserNotFoundException e){
             log.info("LessonService buyLesson Exception : {}", e.getMessage());
             throw new UserNotFoundException();
-//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseDto("FA", "해당하는 user_id를 가진 유저가 없습니다."));
         }catch (LessonAlreadyPaidException e){
             log.info("LessonService buyLesson Exception : {}", e.getMessage());
             throw new LessonAlreadyPaidException();
-//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseDto("FA", "이미 구매한 클래스입니다."));
         }
         catch (Exception e){
             log.info("LessonService buyLesson Exception : {}", e.getMessage());
             log.info("getStackTrace()[0] : {}", e.getStackTrace()[0]);
             throw new RuntimeException();
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseDto("ISE", "Internal Server Error"));
         }
     }
 

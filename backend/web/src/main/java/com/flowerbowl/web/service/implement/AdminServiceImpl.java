@@ -93,7 +93,7 @@ public class AdminServiceImpl implements AdminService {
             return ResponseEntity.status(HttpStatus.OK).body(new ResponseDto());
         }catch (Exception e){
             log.info("exception");
-            e.printStackTrace();
+//            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseDto("ISE", "Internal Server Error"));
         }
     }
@@ -162,8 +162,5 @@ public class AdminServiceImpl implements AdminService {
             log.info("AdminService banner error : {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseDto("ISE", "Internal Server Error"));
         }
-//        catch (Exception e){
-//            System.out.println("Banner exception e");
-//        }
     }
 }
