@@ -8,7 +8,16 @@ import { editErrorType, openError } from "../persistStore";
 const { IMP } = window;
 
 const ClassPayment = ({ lesson_no }) => {
-    const [paymentData, setPaymentData] = useState({});
+    const [paymentData, setPaymentData] = useState({
+        amount: 123,
+        buyer_email: "khj4209k@naver.com",
+        buyer_name : "일반회원테스트",
+        buyer_tel: "01012345678",
+        merchant_uid: "2024-05-27_5",
+        name: "클래스제목",
+        pay_method: "card",
+        pg: "kakaopay.TC0ONETIME"
+    });
     const accessToken = useSelector(state => state.accessToken);
     const dispatch = useDispatch();
 
@@ -26,13 +35,13 @@ const ClassPayment = ({ lesson_no }) => {
             }
         })
         .then(res=>{
-                if (window.IMP) {
-                    window.IMP.init([res.data.store_id]); // 결제 데이터 정의
-                }
+            console.log(res);
+                window.IMP.init([res.data.store_id]); // 결제 데이터 정의
                 window.IMP.request_pay(res.data?.request_pay, callback);
             })
         .catch(err=>{
-            if(err.response.data.code==='FA'){
+            console.log(err);
+            if(err.response?.data.code==='FA'){
                 dispatch(editErrorType('BUYCOMPLETE'));
                 dispatch(openError());
             }
@@ -45,7 +54,35 @@ const ClassPayment = ({ lesson_no }) => {
         if (success) {
             console.log('결제 완료되었습니다.');
         } else {
-            console.log('실패');
+            if(error_msg === "[결제포기] 사용자가 결제를 취소하셨습니다"){
+                axios.get(`${url}/api/mypage/pays`, {
+                    headers: {
+                      Authorization: `Bearer ${accessToken}`,
+                    },
+                })
+                .then(res=>{
+                    console.log(res.data.pays[0].pay_no);
+                    axios.delete(`${url}/api/mypage/pays/${res.data.pays[0].pay_no}`,{
+                        headers:{
+                            Authorization : `Bearer ${accessToken}`,
+                        }
+                    })
+                    .then(res=>{
+                        dispatch(editErrorType('BUYCANCEL'));
+                        dispatch(openError());
+                    })
+                    .catch(err=>{
+                        console.log(err);
+                    })
+                })
+                .catch(err=>{
+                    console.log(err);
+                })
+                
+            }else{
+                console.log('실패');
+            }
+            
         }
     };
 
