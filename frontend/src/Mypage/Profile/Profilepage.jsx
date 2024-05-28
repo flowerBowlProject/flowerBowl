@@ -37,6 +37,7 @@ const Profile = () => {
   const [emailChange, setEmailChange] = useState(false);
   const [newPwChange, setNewPwChange] = useState(true);
   const [checkPwChange, setCheckPwChange] = useState(true);
+  const [imageChange, setImageChange] = useState(false);
   const [imageFile, setImageFile] = useState(null);
   const [imageUrl, setImageUrl] = useState(null);
   const [profileSName, setProfileSName] = useState("");
@@ -62,11 +63,14 @@ const Profile = () => {
       const reader = new FileReader();
       reader.onloadend = () => {
         setImageUrl(reader.result);
-        handleUploadImage(file);
+        //handleUploadImage(file);
       };
       reader.readAsDataURL(file);
+      setImageChange(true);
+      setButDisable(false);
     } else {
       setImageUrl(null);
+      setImageChange(false);
     }
   };
 
@@ -84,6 +88,7 @@ const Profile = () => {
       });
       if (response.data.code === "SU") {
         console.log("프로필 사진 변경이 완료되었습니다.", response.data);
+        setButDisable(true);
         setProfileOName(response.data.profile_oname);
         setProfileSName(response.data.profile_sname);
         dispatch(editErrorType("PROFILE SUCCESS"));
@@ -112,7 +117,7 @@ const Profile = () => {
       const reader = new FileReader();
       reader.onloadend = () => {
         setChefImageUrl(reader.result);
-        uploadChefImage(file);
+        //uploadChefImage(file);
       };
       reader.readAsDataURL(file);
     } else {
@@ -240,7 +245,7 @@ const Profile = () => {
         const isChef = response.data.user_role === "ROLE_CHEF";
         dispatch(setChefRole(isChef));
       } catch (error) {
-        dispatch(editErrorType(error.response.data.code));
+        dispatch(editErrorType(error.response?.data.code));
         dispatch(openError());
       }
     };
@@ -262,6 +267,7 @@ const Profile = () => {
         user_file_sname: "",
         user_file_oname: "",
       };
+
       if (nickNameChange) {
         reqeustData.new_nickname = user.memberName;
       }
@@ -271,25 +277,48 @@ const Profile = () => {
       } else {
         reqeustData.new_pw = user.memberPw;
       }
-      console.log(reqeustData);
-      try {
-        const response = await axios.patch(
-          `${url}/api/users/info`,
-          reqeustData,
-          {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
+
+      if (reqeustData.user_password == '') {
+        dispatch(editErrorType("PASSWORDBLANK"));
+        dispatch(openError());
+      } else {
+        console.log(reqeustData);
+        if(imageChange){ // 이미지 변경 시 
+          handleUploadImage(imageFile);
+        }else{
+        try {
+          const response = await axios.patch(
+            `${url}/api/users/info`,
+            reqeustData,
+            {
+              headers: {
+                Authorization: `Bearer ${accessToken}`,
+              },
+            }
+          );
+          // 리덕스에 있는 닉네임도 변경
+          if (nickNameChange) {
+            dispatch({ type: "nickname", payload: reqeustData.new_nickname });
           }
-        );
-        dispatch(editErrorType("suEdit"));
-        dispatch(openError());
-      } catch (error) {
-        dispatch(editErrorType(error.response.data.code));
-        dispatch(openError());
+          console.log(response);
+          dispatch(editErrorType("suEdit"));
+          dispatch(openError());
+          setButDisable(true);
+          // 비밀번호 입력란 비우기 >> 코드 재작성 필요. 
+          user.memberPw='';
+
+          // 변경버튼 비활성화
+          setButDisable(true);
+        } catch (error) {
+          console.log(error);
+          dispatch(editErrorType(error.response?.data.code));
+          dispatch(openError());
+        }
+      }
       }
     }
   };
+
   const handleCheckName = async (name) => {
     try {
       const response = await axios.post(`${url}/api/auth/checkNickname`, {
@@ -299,7 +328,7 @@ const Profile = () => {
       dispatch(setMemberName(name));
       dispatch(editErrorType("SUNAME"));
       dispatch(openError());
-      setButDisable(false);
+      setButDisable(false);  // 추가된 코드: 닉네임 중복 확인 후 변경 버튼 활성화
     } catch (error) {
       console.log(error);
       dispatch(editErrorType(error.response.data.code));
@@ -313,6 +342,7 @@ const Profile = () => {
     const newTel = e.target.value;
     dispatch(setMemberTel(newTel));
     handleBut("newTel", false); // 전화번호를 바꾸면 변경 버튼을 활성화
+    setButDisable(false); // 추가된 코드: 전화번호 변경 시 버튼 활성화
   };
 
   const hanldeSendEmail = async (mail) => {
@@ -342,16 +372,22 @@ const Profile = () => {
       const response = await axios.post(`${url}/api/auth/checkEmail`, {
         user_email: user.memberEmail,
         certification_num: emailCode,
+      }, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`
+        }
       });
       setEmailChange(true);
       dispatch(editErrorType("SUCertification"));
       dispatch(openError());
       dispatch(closeEmailCheck());
+      setButDisable(false); // 추가된 코드: 이메일 인증 후 변경 버튼 활성화
     } catch (error) {
       dispatch(editErrorType(error.response.data.code));
       dispatch(openError());
     }
   };
+
   const handleBut = (type, bool) => {
     switch (type) {
       case "new_nickname":
