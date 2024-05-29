@@ -21,9 +21,10 @@ const RecipeList = () => {
   const keyword = params.get('keyword');
   const [pageInfo, setPageInfo] = useState(1);
   const dispatch = useDispatch();
+  const popular = params.get('popular');
 
   {/* 정렬 구현 */ }
-  const [selectButton, setSelectButton] = useState('최신순');
+  const [selectButton, setSelectButton] = useState(popular!='인기순' ? '최신순' : '인기순');
   const handleClick = (selectButton) => {
     let sorted;
     setSelectButton(selectButton);

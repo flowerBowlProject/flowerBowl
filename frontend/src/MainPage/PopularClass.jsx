@@ -3,17 +3,13 @@ import {Grid,Typography,Skeleton,Container} from '@mui/material';
 import axios from 'axios';
 import { url } from '../url';
 import {useNavigate,Link,NavLink} from 'react-router-dom';
+import { Viewer } from '@toast-ui/react-editor';
 const ClassContent=({m,title,content,recipeNo})=>{
     return(
     <Grid container direction='column' xs>
         <Grid item ml={m} mb='1vw'>
             <Typography variant='h6' align='center' >
-                {title}
-            </Typography>
-        </Grid>
-        <Grid item ml={m} mb='1vw'>
-            <Typography align='center' style={{whiteSpace: 'pre-wrap'}}>
-                {content}
+                {title.length>=15?title.substr(0,10)+'...':title}
             </Typography>
         </Grid>
         <Grid item ml={m}>
