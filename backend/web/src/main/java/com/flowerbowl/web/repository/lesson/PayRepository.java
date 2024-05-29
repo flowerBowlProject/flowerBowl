@@ -12,4 +12,6 @@ public interface PayRepository extends JpaRepository<Pay, Long>{
     Pay findByPayNo(Long payNo);
     Boolean existsPayByLesson_LessonNoAndUser(Long lesson_no, User user);
 
+    Pay findPayByPayCodeAndUserUserId(String payCode, String userId);
+
 }
