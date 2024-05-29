@@ -24,8 +24,8 @@ jobs:
             
       - name: Build project
         env:
-          REACT_APP_KAKAO_MAP_API_KEY : '${{ secrets.REACT_APP_KAKAO_MAP_API_KEY }}'
-          REACT_APP_ADDRESS_KEY : '${{ secrets.REACT_APP_ADDRESS_KEY }}'
+          REACT_APP_KAKAO_MAP_API_KEY : ${{ secrets.REACT_APP_KAKAO_MAP_API_KEY }}
+          REACT_APP_ADDRESS_KEY : ${{ secrets.REACT_APP_ADDRESS_KEY }}
         run: |
             cd frontend
             CI=false npm run build
