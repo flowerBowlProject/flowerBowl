@@ -119,7 +119,13 @@ public class UserServiceImpl implements UserService {
     public ResponseEntity<? super PatchWdResponseDto> patchWd(String userId) {
 
         try {
-            userRepository.dateWd(userId);
+            int updateSuccessful = userRepository.dateWd(userId);
+
+            if (updateSuccessful == 1) {
+                recipeRepository.updateRecipeWriter(userId, "(Unknown)");
+                lessonRepository.updateLessonWriter(userId, "(Unknown)");
+                communityRepository.updateCommunityWriter(userId, "(Unknown)");
+            }
 
         } catch (Exception exception) {
             exception.printStackTrace();

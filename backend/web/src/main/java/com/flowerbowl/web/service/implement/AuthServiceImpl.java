@@ -141,19 +141,15 @@ public class AuthServiceImpl implements AuthService {
             String userPhone = dto.getUser_phone();
 
             boolean isMatchUserId = userRepository.existsByUserId(userId);
-            log.info("userId={}", isMatchUserId);
             if (isMatchUserId) return SignUpResponseDto.duplicatedId();
 
             boolean isMatchNickname = userRepository.existsByUserNickname(userNickname);
-            log.info("isMatchNickname={}", isMatchNickname);
             if (isMatchNickname) return SignUpResponseDto.duplicatedNickname();
 
             boolean isMatchPhone = userRepository.existsByUserPhone(userPhone);
-            log.info("isMatchPhone={}", isMatchPhone);
             if (isMatchPhone) return SignUpResponseDto.duplicatedIdPhone();
 
             boolean isMatchEmail = userRepository.existsByUserEmail(userEmail);
-            log.info("isMatchEmail={}", isMatchEmail);
             if (isMatchEmail) return SignUpResponseDto.duplicatedEmail();
 
             dto.setUser_password(encodePw);
