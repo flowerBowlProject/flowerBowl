@@ -96,6 +96,11 @@ const Profile = () => {
         //로컬스토리지 저장
         localStorage.setItem("profileImageUrl", response.data.profile_sname);
         setImageUrl(response.data.profile_sname);
+
+        return {
+          profileOName: response.data.profile_oname,
+          profileSName: response.data.profile_sname,
+        };
       } else {
         console.error(
           "프로필 사진 변경 실패: 응답 코드가 'SU'가 아닙니다.",
@@ -264,8 +269,6 @@ const Profile = () => {
       var reqeustData = {
         new_phone: user.memberTel,
         user_password: user.memberPw,
-        user_file_sname: "",
-        user_file_oname: "",
       };
 
       if (nickNameChange) {
@@ -277,15 +280,17 @@ const Profile = () => {
       } else {
         reqeustData.new_pw = user.memberPw;
       }
+      if(imageChange){ // 이미지 변경 시 
+          const {profileOName, profileSName} = await handleUploadImage(imageFile);
+          reqeustData.user_file_oname = profileOName;
+          reqeustData.user_file_sname = profileSName;
+        }
 
       if (reqeustData.user_password == '') {
         dispatch(editErrorType("PASSWORDBLANK"));
         dispatch(openError());
       } else {
         console.log(reqeustData);
-        if(imageChange){ // 이미지 변경 시 
-          handleUploadImage(imageFile);
-        }else{
         try {
           const response = await axios.patch(
             `${url}/api/users/info`,
@@ -305,7 +310,6 @@ const Profile = () => {
           dispatch(openError());
           setButDisable(true);
           // 비밀번호 입력란 비우기 >> 코드 재작성 필요. 
-          user.memberPw='';
 
           // 변경버튼 비활성화
           setButDisable(true);
@@ -314,7 +318,6 @@ const Profile = () => {
           dispatch(editErrorType(error.response?.data.code));
           dispatch(openError());
         }
-      }
       }
     }
   };
