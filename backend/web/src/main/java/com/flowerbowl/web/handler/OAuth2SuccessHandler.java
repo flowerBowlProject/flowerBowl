@@ -34,7 +34,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         boolean isMatchNickname = oAuth2User.isMatchNickname();
         String token = jwtProvider.create(userId);
 
-        response.sendRedirect("http://43.201.133.138:8080/auth/oauth-response?token=" +
+        response.sendRedirect("https://flowbowl.web.app/auth/oauth-response?token=" +
                 token + "&expirationTime=3600&isMatchNickname="+isMatchNickname);
     }
 }
