@@ -27,6 +27,7 @@ public interface ResponseCode {
     String NOT_MATCH_USER = "MU"; // 동일 유저 체크
     String WITHDRAWAL_USER = "WU"; // 회원 탈퇴한 유저가 로그인 시
     String DUPLICATE_LICENSE = "DL"; // 중복 쉐프 신청 시
+    String DUPLICATE_PHONE = "DP"; // 중복 번호 체크
 
 
     String WRONG_FILE_EXTENSION = "WF"; // 허용되지 않은 파일 확장자인 경우
