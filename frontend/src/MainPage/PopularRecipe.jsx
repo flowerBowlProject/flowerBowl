@@ -41,6 +41,10 @@ const PopularRecipe=()=>{
         }
         fetchData();
     },[])
+
+    const handleMore = () =>{
+        navigator('/recipeList?popular=인기순');
+    }
     
     return(
         <Grid container my='5vw' direction='row' alignContent='center' >
@@ -48,8 +52,7 @@ const PopularRecipe=()=>{
                 <Typography sx={{marginLeft:'2vw'}} variant='h6'>인기 레시피</Typography>
             </Grid>
             <Grid  justifyContent='flex-end'  sm={6} container  item>  
-                <Typography noWrap   color='main.or'>더보기 </Typography>
-                <ArrowForwardIosIcon  sx={{marginRight:'2vw',color:'main.or'}}></ArrowForwardIosIcon>
+                <Typography noWrap   color='main.or' onClick={handleMore} sx={{marginRight : '2vw', cursor:'pointer'}}>더보기 &gt;</Typography>
             </Grid>
             <Grid direction="row" sm={12} container  justifyContent="center" my='2vw' >
                 <Grid item sm ml='3vw'>

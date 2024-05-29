@@ -81,6 +81,19 @@ const ClassPayment = ({ lesson_no }) => {
                 
             }else{
                 console.log('실패');
+                axios.put(`${url}/user/lessons`,{
+                    response
+                },{
+                    headers:{
+                        Authorization : `Bearer ${accessToken}`
+                    }
+                })
+                .then(res=>{
+                    console.log(res);
+                })
+                .catch(err=>{
+                    console.log(err);
+                })
             }
             
         }
