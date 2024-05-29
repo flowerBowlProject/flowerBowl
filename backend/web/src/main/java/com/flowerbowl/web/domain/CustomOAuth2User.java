@@ -1,6 +1,7 @@
 package com.flowerbowl.web.domain;
 
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.core.user.OAuth2User;
@@ -13,6 +14,12 @@ import java.util.Map;
 public class CustomOAuth2User implements OAuth2User {
 
     private String userId;
+    private boolean isMatchNickname;
+
+
+    public boolean isMatchNickname() {
+        return isMatchNickname;
+    }
 
     @Override
     public Map<String, Object> getAttributes() {
