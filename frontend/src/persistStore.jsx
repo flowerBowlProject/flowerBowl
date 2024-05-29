@@ -1,4 +1,4 @@
-import { configureStore, current } from "@reduxjs/toolkit";
+import { configureStore } from "@reduxjs/toolkit"; // 'current' 제거
 import { persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 
@@ -45,6 +45,9 @@ export const setMemberNewPw = (newPw) => ({
   type: SETMEMBERNEWPW,
   payload: newPw,
 });
+export const clearMemberPassword = () => ({
+  type: "CLEAR_MEMBER_PASSWORD",
+});
 
 export const SETCHEFROLE = "SET/CHEFROLE";
 export const setChefRole = (isChef) => ({ type: SETCHEFROLE, payload: isChef });
@@ -66,6 +69,7 @@ export const initialState = {
   emailCheck: false,
   nickname: "",
   isChef: false,
+  memberPw: "",
 };
 
 const reducer = (currentState, action) => {
@@ -138,17 +142,27 @@ const reducer = (currentState, action) => {
         ...newState.member,
         memberNewPw: action.payload,
       };
+      break; // 'break' 추가
     case "nickname":
       newState.nickname = action.payload;
       break;
-
     case SETCHEFROLE:
       newState.isChef = action.payload;
       break;
+    case "CLEAR_MEMBER_PASSWORD":
+      return {
+        ...newState,
+        member: {
+          ...newState.member,
+          memberPw: "",
+        },
+      };
     default:
+      return newState; // default 케이스에 리턴 추가
   }
   return newState;
 };
+
 const persistConfig = {
   key: "root",
   storage,

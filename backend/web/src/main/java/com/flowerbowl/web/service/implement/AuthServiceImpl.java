@@ -133,15 +133,28 @@ public class AuthServiceImpl implements AuthService {
 
         try {
 
-//            String userId = dto.getUser_id();
+            String userId = dto.getUser_id();
             String userPw = dto.getUser_password();
             String encodePw = passwordEncoder.encode(userPw);
             String userEmail = dto.getUser_email();
-//            String userNickname = dto.getUser_nickname();
+            String userNickname = dto.getUser_nickname();
+            String userPhone = dto.getUser_phone();
 
-            // 중복된 아이디 검사
-            // 중복된 닉네임 검사
-            // 이메일 인증 여부 검사 이 3가지를 보내줘야 되는가?
+            boolean isMatchUserId = userRepository.existsByUserId(userId);
+            log.info("userId={}", isMatchUserId);
+            if (isMatchUserId) return SignUpResponseDto.duplicatedId();
+
+            boolean isMatchNickname = userRepository.existsByUserNickname(userNickname);
+            log.info("isMatchNickname={}", isMatchNickname);
+            if (isMatchNickname) return SignUpResponseDto.duplicatedNickname();
+
+            boolean isMatchPhone = userRepository.existsByUserPhone(userPhone);
+            log.info("isMatchPhone={}", isMatchPhone);
+            if (isMatchPhone) return SignUpResponseDto.duplicatedIdPhone();
+
+            boolean isMatchEmail = userRepository.existsByUserEmail(userEmail);
+            log.info("isMatchEmail={}", isMatchEmail);
+            if (isMatchEmail) return SignUpResponseDto.duplicatedEmail();
 
             dto.setUser_password(encodePw);
 

@@ -2,6 +2,7 @@ package com.flowerbowl.web.service.implement;
 
 import com.flowerbowl.web.domain.*;
 import com.flowerbowl.web.dto.object.lesson.*;
+import com.flowerbowl.web.dto.request.lesson.PayErrorRequestDto;
 import com.flowerbowl.web.dto.response.lesson.*;
 import com.flowerbowl.web.dto.request.lesson.CreateRequestDto;
 import com.flowerbowl.web.dto.request.lesson.LessonRequestDto;
@@ -337,12 +338,10 @@ public class LessonServiceImpl implements LessonService {
         try{
             if(!lessonJpaDataRepository.existsLessonByLessonNo(lesson_no)){
                 throw new LessonNotFoundException();
-
             }
             User user = userRepository.findByUserId(userId);
             if(user == null){
                 throw new UserNotFoundException();
-
             }
             Lesson lesson = lessonJpaDataRepository.findLessonByLessonNo(lesson_no);
             if(!lesson.getUser().getUserId().equals(userId)){
@@ -453,7 +452,6 @@ public class LessonServiceImpl implements LessonService {
         }
     }
 
-
     // 클래스 구매
     // 구매 정보 저장 + 구매 정보를 넘격줘야함
     @Override
@@ -486,7 +484,7 @@ public class LessonServiceImpl implements LessonService {
             pay.setPayPrice(lesson.getLessonPrice());
             // pay_code
             Long cntPay = payRepository.countAllByPayNoGreaterThan(-1L);
-            String pay_code = LocalDate.now().toString() + "_" + cntPay; // ex) 2019-09-19_lesson_no;
+            String pay_code = LocalDateTime.now().toString() + "_" + cntPay; // ex) 2019-09-19_lesson_no;
             pay.setPayCode(pay_code);
             System.out.println(pay.getLesson().getLessonNo());
 
@@ -518,22 +516,56 @@ public class LessonServiceImpl implements LessonService {
         }catch (LessonNotFoundException e){
             log.info("LessonService buyLesson Exception : {}", e.getMessage());
             throw new LessonNotFoundException();
-//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseDto("FA","해당하는 lesson_no을 가진 클래스가 없습니다."));
         }catch (UserNotFoundException e){
             log.info("LessonService buyLesson Exception : {}", e.getMessage());
             throw new UserNotFoundException();
-//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseDto("FA", "해당하는 user_id를 가진 유저가 없습니다."));
         }catch (LessonAlreadyPaidException e){
             log.info("LessonService buyLesson Exception : {}", e.getMessage());
             throw new LessonAlreadyPaidException();
-//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseDto("FA", "이미 구매한 클래스입니다."));
         }
         catch (Exception e){
             log.info("LessonService buyLesson Exception : {}", e.getMessage());
             log.info("getStackTrace()[0] : {}", e.getStackTrace()[0]);
             throw new RuntimeException();
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseDto("ISE", "Internal Server Error"));
         }
+    }
+    
+    // 잘못된 결제정보 삭제
+    @Override
+    @Transactional
+    public ResponseEntity<ResponseDto> LessonBuyErrorHandler(PayErrorRequestDto payErrorRequestDto, String userId){
+        User user = userRepository.findByUserId(userId);
+        if(user == null) {
+            log.info("LessonService LessonBuyErrorHandler error");
+            log.info("userNotFoundError");
+            throw new UserNotFoundException();
+        }
+
+        Pay pay = payRepository.findPayByPayCodeAndUserUserId(payErrorRequestDto.getMerchant_uid(), userId);
+        if(pay == null) {
+            log.info("LessonService LessonBuyErrorHandler error");
+            log.info("payNotFindException");
+            throw new PayNotFindException();
+        }
+
+        if(payErrorRequestDto.getPay_success()) {
+            log.info("pay success!");
+//            throw new RuntimeException();
+            return ResponseEntity.status(HttpStatus.OK).body(new ResponseDto("SU", "pay success"));
+        }
+
+        log.info("lessonBuyErrorHandler log");
+        log.info("pay_success : {}", payErrorRequestDto.getPay_success());
+        if(payErrorRequestDto.getPay_error_code() != null){
+            log.info("pay_error_code : {}, pay_error_msh : {}", payErrorRequestDto.getPay_error_code(), payErrorRequestDto.getPay_error_msg());
+        }else {
+            log.info("no pay_error_code");
+        }
+        log.info("merchant_uid : {}", payErrorRequestDto.getMerchant_uid());
+
+        payRepository.delete(pay);
+
+        return ResponseEntity.status(HttpStatus.OK).body(new ResponseDto("SU", "pay fail date deleted!"));
     }
 
     // 클래스 즐겨찾기 등록
