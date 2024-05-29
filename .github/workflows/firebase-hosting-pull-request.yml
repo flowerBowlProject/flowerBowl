@@ -3,6 +3,10 @@
 
 name: Deploy to Firebase Hosting on PR
 on: pull_request
+env:
+  REACT_APP_KAKAO_MAP_API_KEY : ${{ secrets.REACT_APP_KAKAO_MAP_API_KEY }}
+  REACT_APP_ADDRESS_KEY : ${{ secrets.REACT_APP_ADDRESS_KEY }}
+
 permissions:
   checks: write
   contents: read
