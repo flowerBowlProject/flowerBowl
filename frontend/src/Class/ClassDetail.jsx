@@ -56,9 +56,6 @@ const ClassDetail = () => {
     }, [lesson_no])
 
     useEffect(() => {
-
-        console.log('키 확인 : ' + process.env.REACT_APP_KAKAO_MAP_API_KEY);
-
         var mapContainer = document.getElementById('staticMap'), // 지도를 표시할 div 
             mapOption = {
                 center: new kakao.maps.LatLng(classData.lesson_latitude, classData.lesson_longitude), // 지도의 중심좌표
