@@ -1,1 +1,1 @@
-export const url = "http://43.201.133.138:8080";
+export const url = "https://flwoerbowl.shop";
