@@ -20,9 +20,7 @@ const Advertisement=()=>{
 
     return(
         <Grid container>
-            {banner?<img src={banner} style={{width:'100vw' ,height:'30vw',marginTop:'17vw',marginBottom:'10vw'}} />:<Skeleton width='100vw' height='70vw' /> }
-            
-            
+            {banner?<img src={banner} style={{width:'100vw' ,height:'30vw',marginTop:'2vw',marginBottom:'2vw'}} />:<Skeleton width='100vw' height='70vw' /> }
         </Grid>
     );
 }
