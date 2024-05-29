@@ -22,6 +22,7 @@ import {
   setMemberTel,
   setMemberNewPw,
   setChefRole,
+  clearMemberPassword,
 } from "../../persistStore";
 import ErrorConfirm from "../../Hook/ErrorConfirm";
 import ButtonOutlined from "../../Component/ButtonOutlined";
@@ -278,43 +279,44 @@ const Profile = () => {
         reqeustData.new_pw = user.memberPw;
       }
 
-      if (reqeustData.user_password == '') {
+      if (reqeustData.user_password == "") {
         dispatch(editErrorType("PASSWORDBLANK"));
         dispatch(openError());
       } else {
         console.log(reqeustData);
-        if(imageChange){ // 이미지 변경 시 
+        if (imageChange) {
+          // 이미지 변경 시
           handleUploadImage(imageFile);
-        }else{
-        try {
-          const response = await axios.patch(
-            `${url}/api/users/info`,
-            reqeustData,
-            {
-              headers: {
-                Authorization: `Bearer ${accessToken}`,
-              },
+        } else {
+          try {
+            const response = await axios.patch(
+              `${url}/api/users/info`,
+              reqeustData,
+              {
+                headers: {
+                  Authorization: `Bearer ${accessToken}`,
+                },
+              }
+            );
+            // 리덕스에 있는 닉네임도 변경
+            if (nickNameChange) {
+              dispatch({ type: "nickname", payload: reqeustData.new_nickname });
             }
-          );
-          // 리덕스에 있는 닉네임도 변경
-          if (nickNameChange) {
-            dispatch({ type: "nickname", payload: reqeustData.new_nickname });
-          }
-          console.log(response);
-          dispatch(editErrorType("suEdit"));
-          dispatch(openError());
-          setButDisable(true);
-          // 비밀번호 입력란 비우기 >> 코드 재작성 필요. 
-          user.memberPw='';
+            console.log(response);
+            dispatch(editErrorType("suEdit"));
+            dispatch(openError());
+            setButDisable(true);
+            dispatch(clearMemberPassword());
+            setButDisable(true);
 
-          // 변경버튼 비활성화
-          setButDisable(true);
-        } catch (error) {
-          console.log(error);
-          dispatch(editErrorType(error.response?.data.code));
-          dispatch(openError());
+            // 변경버튼 비활성화
+            setButDisable(true);
+          } catch (error) {
+            console.log(error);
+            dispatch(editErrorType(error.response?.data.code));
+            dispatch(openError());
+          }
         }
-      }
       }
     }
   };
@@ -328,7 +330,7 @@ const Profile = () => {
       dispatch(setMemberName(name));
       dispatch(editErrorType("SUNAME"));
       dispatch(openError());
-      setButDisable(false);  // 추가된 코드: 닉네임 중복 확인 후 변경 버튼 활성화
+      setButDisable(false); // 추가된 코드: 닉네임 중복 확인 후 변경 버튼 활성화
     } catch (error) {
       console.log(error);
       dispatch(editErrorType(error.response.data.code));
@@ -369,14 +371,18 @@ const Profile = () => {
   };
   const handleCertifiedEmail = async () => {
     try {
-      const response = await axios.post(`${url}/api/auth/checkEmail`, {
-        user_email: user.memberEmail,
-        certification_num: emailCode,
-      }, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`
+      const response = await axios.post(
+        `${url}/api/auth/checkEmail`,
+        {
+          user_email: user.memberEmail,
+          certification_num: emailCode,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
         }
-      });
+      );
       setEmailChange(true);
       dispatch(editErrorType("SUCertification"));
       dispatch(openError());
