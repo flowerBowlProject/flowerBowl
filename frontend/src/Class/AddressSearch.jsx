@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "./RegisterClassStyle.css";
 import { Button, TextField } from "@mui/material";
-import { address_key } from "../config";
 
 const AddressSearch = (props) => {
   const [address, setAddress] = useState({
@@ -23,7 +22,7 @@ const AddressSearch = (props) => {
           query: address.lesson_address,
         },
         headers: {
-          Authorization: "KakaoAK " + address_key,
+          Authorization: "KakaoAK " + process.env.REACT_APP_ADDRESS_KEY,
         },
       })
       .then((res) => {
