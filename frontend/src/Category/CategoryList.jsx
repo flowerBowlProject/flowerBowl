@@ -3,13 +3,8 @@ import './CategoryListStyle.css';
 import RecipeReviewCard from "../Component/CardComp";
 import { styled } from '@mui/material/styles';
 import Bookmark from "../Component/Bookmark";
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
 import TableCell, { tableCellClasses } from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
 import { useLocation, useNavigate } from 'react-router-dom';
 import axios from "axios";
 import { url } from "../url";
@@ -61,8 +56,6 @@ const CategoryList = () => {
                     console.log(err);
                 })
         }else{
-            const request1=axios.get(`${url}/api/recipes/list?category=${category}`)
-            const request2=axios.get(`${url}/api/user/lessons/category?category=밥&size=10`)
             axios.get(`${url}/api/recipes/list?category=${category}`,{
                 headers:{
                     Authorization: `Bearer ${accessToken}`
