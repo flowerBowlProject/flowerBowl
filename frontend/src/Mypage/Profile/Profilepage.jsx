@@ -22,7 +22,6 @@ import {
   setMemberTel,
   setMemberNewPw,
   setChefRole,
-  clearMemberPassword,
 } from "../../persistStore";
 import ErrorConfirm from "../../Hook/ErrorConfirm";
 import ButtonOutlined from "../../Component/ButtonOutlined";
@@ -97,6 +96,11 @@ const Profile = () => {
         //로컬스토리지 저장
         localStorage.setItem("profileImageUrl", response.data.profile_sname);
         setImageUrl(response.data.profile_sname);
+
+        return {
+          profileOName: response.data.profile_oname,
+          profileSName: response.data.profile_sname,
+        };
       } else {
         console.error(
           "프로필 사진 변경 실패: 응답 코드가 'SU'가 아닙니다.",
@@ -265,8 +269,6 @@ const Profile = () => {
       var reqeustData = {
         new_phone: user.memberTel,
         user_password: user.memberPw,
-        user_file_sname: "",
-        user_file_oname: "",
       };
 
       if (nickNameChange) {
@@ -278,44 +280,43 @@ const Profile = () => {
       } else {
         reqeustData.new_pw = user.memberPw;
       }
+      if(imageChange){ // 이미지 변경 시 
+          const {profileOName, profileSName} = await handleUploadImage(imageFile);
+          reqeustData.user_file_oname = profileOName;
+          reqeustData.user_file_sname = profileSName;
+        }
 
-      if (reqeustData.user_password == "") {
+      if (reqeustData.user_password == '') {
         dispatch(editErrorType("PASSWORDBLANK"));
         dispatch(openError());
       } else {
         console.log(reqeustData);
-        if (imageChange) {
-          // 이미지 변경 시
-          handleUploadImage(imageFile);
-        } else {
-          try {
-            const response = await axios.patch(
-              `${url}/api/users/info`,
-              reqeustData,
-              {
-                headers: {
-                  Authorization: `Bearer ${accessToken}`,
-                },
-              }
-            );
-            // 리덕스에 있는 닉네임도 변경
-            if (nickNameChange) {
-              dispatch({ type: "nickname", payload: reqeustData.new_nickname });
+        try {
+          const response = await axios.patch(
+            `${url}/api/users/info`,
+            reqeustData,
+            {
+              headers: {
+                Authorization: `Bearer ${accessToken}`,
+              },
             }
-            console.log(response);
-            dispatch(editErrorType("suEdit"));
-            dispatch(openError());
-            setButDisable(true);
-            dispatch(clearMemberPassword());
-            setButDisable(true);
-
-            // 변경버튼 비활성화
-            setButDisable(true);
-          } catch (error) {
-            console.log(error);
-            dispatch(editErrorType(error.response?.data.code));
-            dispatch(openError());
+          );
+          // 리덕스에 있는 닉네임도 변경
+          if (nickNameChange) {
+            dispatch({ type: "nickname", payload: reqeustData.new_nickname });
           }
+          console.log(response);
+          dispatch(editErrorType("suEdit"));
+          dispatch(openError());
+          setButDisable(true);
+          // 비밀번호 입력란 비우기 >> 코드 재작성 필요. 
+
+          // 변경버튼 비활성화
+          setButDisable(true);
+        } catch (error) {
+          console.log(error);
+          dispatch(editErrorType(error.response?.data.code));
+          dispatch(openError());
         }
       }
     }
@@ -330,7 +331,7 @@ const Profile = () => {
       dispatch(setMemberName(name));
       dispatch(editErrorType("SUNAME"));
       dispatch(openError());
-      setButDisable(false); // 추가된 코드: 닉네임 중복 확인 후 변경 버튼 활성화
+      setButDisable(false);  // 추가된 코드: 닉네임 중복 확인 후 변경 버튼 활성화
     } catch (error) {
       console.log(error);
       dispatch(editErrorType(error.response.data.code));
@@ -371,18 +372,14 @@ const Profile = () => {
   };
   const handleCertifiedEmail = async () => {
     try {
-      const response = await axios.post(
-        `${url}/api/auth/checkEmail`,
-        {
-          user_email: user.memberEmail,
-          certification_num: emailCode,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
+      const response = await axios.post(`${url}/api/auth/checkEmail`, {
+        user_email: user.memberEmail,
+        certification_num: emailCode,
+      }, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`
         }
-      );
+      });
       setEmailChange(true);
       dispatch(editErrorType("SUCertification"));
       dispatch(openError());
