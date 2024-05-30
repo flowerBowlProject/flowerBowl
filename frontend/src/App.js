@@ -42,7 +42,7 @@ const App = () => {
       <Header />
       <Routes>
       
-        <Route path="/auth/oauth-response" element={<OAuth2Success />} />
+        <Route path="/auth/response" element={<OAuth2Success />} />
 
         <Route path="/" element={<MainHomepage />} />
         <Route path="/categoryList" element={<CategoryList />} />
