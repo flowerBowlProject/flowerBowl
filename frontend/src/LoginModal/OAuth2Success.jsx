@@ -8,11 +8,16 @@ const OAuth2Success = () =>{
     const location = useLocation();
     const params = new URLSearchParams(location.search);
     const token = params.get('token');
+    const isMatchNickname = params.get('isMatchNickname');
+
+    console.log(token);
+    console.log(isMatchNickname);
+
 
     useEffect(()=>{
         dispatch({ type: "accessToken", payload: token });
         navigator('/');
-    },[token])
+    },[])
 }
 
 export default OAuth2Success;
