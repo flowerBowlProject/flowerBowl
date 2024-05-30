@@ -17,7 +17,11 @@ const OAuth2Success = () =>{
     useEffect(()=>{
         dispatch({ type: "accessToken", payload: token });
         navigator('/');
-    },[])
+    },[]);
+
+    return(
+        <></>
+    );
 }
 
 export default OAuth2Success;
