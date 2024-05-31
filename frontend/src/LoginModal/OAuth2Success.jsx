@@ -10,13 +10,19 @@ const OAuth2Success = () =>{
     const token = params.get('token');
     const isMatchNickname = params.get('isMatchNickname');
 
-    console.log(token);
-    console.log(isMatchNickname);
-
-
     useEffect(()=>{
         dispatch({ type: "accessToken", payload: token });
-        navigator('/');
+
+        if(isMatchNickname){
+            // 중복된 닉네임이 있다면
+            dispatch(editErrorType('DN'));
+            dispatch(openError());
+        }else{
+            dispatch(editErrorType('LOGIN'));
+            dispatch(openError());
+            navigator('/');
+        }
+        
     },[]);
 
     return(
