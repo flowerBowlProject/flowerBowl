@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
+import { editErrorType, openError } from "../persistStore";
 
 const OAuth2Success = () =>{
     const navigator = useNavigate();
