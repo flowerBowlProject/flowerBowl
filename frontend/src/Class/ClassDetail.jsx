@@ -11,7 +11,7 @@ import ButtonOutlined from "../Component/ButtonOutlined";
 import { Editor, Viewer } from "@toast-ui/react-editor";
 import ClassPayment from "./ClassPayment";
 import ErrorConfirm from "../Hook/ErrorConfirm";
-import {editErrorType, openError } from '../persistStore';
+import { editErrorType, openError } from '../persistStore';
 import DeleteModal from "../Hook/DeleteModal";
 
 const { kakao } = window;
@@ -19,7 +19,7 @@ const { kakao } = window;
 const ClassDetail = () => {
     const [classData, setClassData] = useState({});
     const { lesson_no } = useParams();
-    const writer= useSelector((state)=>state.nickname);
+    const writer = useSelector((state) => state.nickname);
     const accessToken = useSelector(state => state.accessToken);
 
     const navigator = useNavigate();
@@ -38,9 +38,9 @@ const ClassDetail = () => {
                     dispatch(openError());
                 })
         } else {
-            axios.get(`${url}/api/user/lessons/${lesson_no}`,{
-                headers:{
-                    Authorization : `Bearer ${accessToken}`
+            axios.get(`${url}/api/user/lessons/${lesson_no}`, {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`
                 }
             })
                 .then(res => {
@@ -55,76 +55,89 @@ const ClassDetail = () => {
         }
     }, [lesson_no])
 
+
     useEffect(() => {
-        var mapContainer = document.getElementById('staticMap'), // 지도를 표시할 div 
-            mapOption = {
-                center: new kakao.maps.LatLng(classData.lesson_latitude, classData.lesson_longitude), // 지도의 중심좌표
-                level: 3 // 지도의 확대 레벨
-            };
+        const apiKey = process.env.REACT_APP_KAKAO_MAP_API_KEY;
 
-        var map = new kakao.maps.Map(mapContainer, mapOption); // 지도를 생성합니다
+        const script = document.createElement('script');
+        script.type = "text/javascript";
+        script.src = `https://dapi.kakao.com/v2/maps/sdk.js?appkey=${apiKey}&autoload=false`;
+        document.head.appendChild(script);
 
-        // 마커가 표시될 위치입니다 
-        var markerPosition = new kakao.maps.LatLng(classData.lesson_latitude, classData.lesson_longitude);
+        script.onload = () => {
+            kakao.maps.load(() => {
+                var mapContainer = document.getElementById('staticMap'), // 지도를 표시할 div 
+                    mapOption = {
+                        center: new kakao.maps.LatLng(classData.lesson_latitude, classData.lesson_longitude), // 지도의 중심좌표
+                        level: 3 // 지도의 확대 레벨
+                    };
 
+                    console.log(classData.lesson_latitude);
 
-        // 마커를 생성합니다
-        var marker = new kakao.maps.Marker({
-            position: markerPosition
-        });
+                var map = new kakao.maps.Map(mapContainer, mapOption); // 지도를 생성합니다
 
-        // 마커가 지도 위에 표시되도록 설정합니다
-        marker.setMap(map);
+                // 마커가 표시될 위치입니다 
+                var markerPosition = new kakao.maps.LatLng(classData.lesson_latitude, classData.lesson_longitude);
+
+                // 마커를 생성합니다
+                var marker = new kakao.maps.Marker({
+                    position: markerPosition
+                });
+
+                // 마커가 지도 위에 표시되도록 설정합니다
+                marker.setMap(map);
+            })
+        }
 
     }, [classData])
 
-    {/* 즐겨찾기 등록 / 해제 */}
-    const clickBookmark = () =>{
-        if(accessToken === '') {
+    {/* 즐겨찾기 등록 / 해제 */ }
+    const clickBookmark = () => {
+        if (accessToken === '') {
             console.log('로그인 후 이용')
             dispatch(editErrorType('NT'));
             dispatch(openError());
-        }else{
-            if(classData.lesson_like_status){
-            console.log('북마크 해제')
-            axios.delete(`${url}/api/user/lessons/like/${lesson_no}`,{
-                headers:{
-                    Authorization : `Bearer ${accessToken}`
-                }
-            })
-            .then(res=>{
-                console.log('북마크 해제 성공')
-                setClassData((classData) => ({...classData, lesson_like_status : false}))
-            })
-            .catch(err=>{
-                console.log(err);
-                console.log('북마크 해제 실패')
-                dispatch(editErrorType(err.response.data.code));
-                dispatch(openError());
-            })
-        }else{
-            console.log('북마크 등록')
-            axios.post(`${url}/api/user/lessons/like`,{
-                "lesson_no" : lesson_no
-            },{
-                headers:{
-                    Authorization : `Bearer ${accessToken}`
-                }
-            })
-            .then(res=>{
-                console.log('북마크 등록 성공');
-                setClassData((classData) => ({...classData, lesson_like_status : true}))
+        } else {
+            if (classData.lesson_like_status) {
+                console.log('북마크 해제')
+                axios.delete(`${url}/api/user/lessons/like/${lesson_no}`, {
+                    headers: {
+                        Authorization: `Bearer ${accessToken}`
+                    }
+                })
+                    .then(res => {
+                        console.log('북마크 해제 성공')
+                        setClassData((classData) => ({ ...classData, lesson_like_status: false }))
+                    })
+                    .catch(err => {
+                        console.log(err);
+                        console.log('북마크 해제 실패')
+                        dispatch(editErrorType(err.response.data.code));
+                        dispatch(openError());
+                    })
+            } else {
+                console.log('북마크 등록')
+                axios.post(`${url}/api/user/lessons/like`, {
+                    "lesson_no": lesson_no
+                }, {
+                    headers: {
+                        Authorization: `Bearer ${accessToken}`
+                    }
+                })
+                    .then(res => {
+                        console.log('북마크 등록 성공');
+                        setClassData((classData) => ({ ...classData, lesson_like_status: true }))
 
-            })
-            .catch(err=>{
-                console.log(err);
-                console.log('북마크 등록 실패');
-                dispatch(editErrorType(err.response.data.code));
-                dispatch(openError());
-            })
+                    })
+                    .catch(err => {
+                        console.log(err);
+                        console.log('북마크 등록 실패');
+                        dispatch(editErrorType(err.response.data.code));
+                        dispatch(openError());
+                    })
+            }
         }
-        }
-        
+
     }
 
     {/* 클래스 수정 */ }
@@ -136,10 +149,10 @@ const ClassDetail = () => {
     return (
         <>
             <div className="classDetail-Box">
-            <ErrorConfirm error={useSelector(state=>state.errorType)}/>
+                <ErrorConfirm error={useSelector(state => state.errorType)} />
 
                 {/* 이미지 조회 */}
-                <img className="class-Img" src={classData.lesson_sname}/>
+                <img className="class-Img" src={classData.lesson_sname} />
                 <div className="class-element">
                     <div style={{ float: "left", textAlign: "center" }}>
                         <div className="class-title"> {classData.lesson_title} </div>
@@ -163,16 +176,16 @@ const ClassDetail = () => {
                 <div className='class-body'>{classData.lesson_contents && <Viewer initialValue={classData.lesson_contents} />}</div>
 
                 {/* 즐겨찾기 버튼 - 즐겨찾기 여부에 따른 true / false로 아이콘 표시 */}
-                <div className="class-bookmark" style={{cursor:'pointer'}} onClick={clickBookmark}>
+                <div className="class-bookmark" style={{ cursor: 'pointer' }} onClick={clickBookmark}>
                     {classData.lesson_like_status === true ? <TurnedInIcon sx={{ fontSize: '60px', color: 'main.or' }} /> :
                         <TurnedInNotIcon sx={{ fontSize: '60px', color: 'main.or' }} />} 스크랩 </div>
 
                 {/* 수정/삭제 버튼 - 작성자인 경우에만 true로 버튼 표시 + 구매하기 버튼 - 작성자가 아닌 경우 노출 */}
                 <div className="class-change">
                     가격 : {classData.lesson_price} &nbsp;&nbsp;&nbsp;
-                    {writer !== classData.lesson_writer && <ClassPayment lesson_no={lesson_no}/> }
-                    {writer === classData.lesson_writer && <ButtonOutlined size='large' text='수정' handleClick={(e)=>handleModify(e)} />} &nbsp;&nbsp;
-                    {writer === classData.lesson_writer && <DeleteModal checkType={'class'} no={lesson_no}/>}
+                    {writer !== classData.lesson_writer && <ClassPayment lesson_no={lesson_no} />}
+                    {writer === classData.lesson_writer && <ButtonOutlined size='large' text='수정' handleClick={(e) => handleModify(e)} />} &nbsp;&nbsp;
+                    {writer === classData.lesson_writer && <DeleteModal checkType={'class'} no={lesson_no} />}
                 </div>
             </div>
         </>
