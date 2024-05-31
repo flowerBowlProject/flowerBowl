@@ -20,7 +20,6 @@ import {
   closeEmailCheck,
   setMemberid,
   setMemberTel,
-  setMemberNewPw,
   setChefRole,
 } from "../../persistStore";
 import ErrorConfirm from "../../Hook/ErrorConfirm";
@@ -280,13 +279,16 @@ const Profile = () => {
       } else {
         reqeustData.new_pw = user.memberPw;
       }
-      if(imageChange){ // 이미지 변경 시 
-          const {profileOName, profileSName} = await handleUploadImage(imageFile);
-          reqeustData.user_file_oname = profileOName;
-          reqeustData.user_file_sname = profileSName;
-        }
+      if (imageChange) {
+        // 이미지 변경 시
+        const { profileOName, profileSName } = await handleUploadImage(
+          imageFile
+        );
+        reqeustData.user_file_oname = profileOName;
+        reqeustData.user_file_sname = profileSName;
+      }
 
-      if (reqeustData.user_password == '') {
+      if (reqeustData.user_password === "") {
         dispatch(editErrorType("PASSWORDBLANK"));
         dispatch(openError());
       } else {
@@ -309,10 +311,10 @@ const Profile = () => {
           dispatch(editErrorType("suEdit"));
           dispatch(openError());
           setButDisable(true);
-          // 비밀번호 입력란 비우기 >> 코드 재작성 필요. 
-
-          // 변경버튼 비활성화
-          setButDisable(true);
+          // 비밀번호 입력란 비우기
+          setTimeout(() => {
+            window.location.reload();
+          }, 1000); // 1초 후 새로고침
         } catch (error) {
           console.log(error);
           dispatch(editErrorType(error.response?.data.code));
@@ -331,7 +333,7 @@ const Profile = () => {
       dispatch(setMemberName(name));
       dispatch(editErrorType("SUNAME"));
       dispatch(openError());
-      setButDisable(false);  // 추가된 코드: 닉네임 중복 확인 후 변경 버튼 활성화
+      setButDisable(false); // 추가된 코드: 닉네임 중복 확인 후 변경 버튼 활성화
     } catch (error) {
       console.log(error);
       dispatch(editErrorType(error.response.data.code));
@@ -372,14 +374,18 @@ const Profile = () => {
   };
   const handleCertifiedEmail = async () => {
     try {
-      const response = await axios.post(`${url}/api/auth/checkEmail`, {
-        user_email: user.memberEmail,
-        certification_num: emailCode,
-      }, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`
+      const response = await axios.post(
+        `${url}/api/auth/checkEmail`,
+        {
+          user_email: user.memberEmail,
+          certification_num: emailCode,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
         }
-      });
+      );
       setEmailChange(true);
       dispatch(editErrorType("SUCertification"));
       dispatch(openError());
