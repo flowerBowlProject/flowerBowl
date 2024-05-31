@@ -59,37 +59,47 @@ const ClassDetail = () => {
     useEffect(() => {
         const apiKey = process.env.REACT_APP_KAKAO_MAP_API_KEY;
 
-        const script = document.createElement('script');
-        script.type = "text/javascript";
-        script.src = `https://dapi.kakao.com/v2/maps/sdk.js?appkey=${apiKey}&autoload=false`;
-        document.head.appendChild(script);
+        const loadKakaoMap = () => {
+            // 스크립트가 이미 로드된 경우, 초기화만 수행합니다.
+            if (window.kakao && window.kakao.maps) {
+                initializeMap();
+            } else {
+                const script = document.createElement('script');
+                script.src = `https://dapi.kakao.com/v2/maps/sdk.js?appkey=${apiKey}&autoload=false`;
+                script.async = true;
+                script.onload = () => {
+                    if (window.kakao && window.kakao.maps) {
+                        window.kakao.maps.load(initializeMap);
+                    }
+                };
+                document.head.appendChild(script);
+            }
+        };
 
-        script.onload = () => {
-            kakao.maps.load(() => {
-                var mapContainer = document.getElementById('staticMap'), // 지도를 표시할 div 
-                    mapOption = {
-                        center: new kakao.maps.LatLng(classData.lesson_latitude, classData.lesson_longitude), // 지도의 중심좌표
-                        level: 3 // 지도의 확대 레벨
-                    };
+        const initializeMap = () => {
+            const { lesson_latitude, lesson_longitude } = classData;
+            const mapContainer = document.getElementById('staticMap');
+            const mapOption = {
+                center: new window.kakao.maps.LatLng(lesson_latitude, lesson_longitude),
+                level: 3,
+            };
 
-                    console.log(classData.lesson_latitude);
+            const map = new window.kakao.maps.Map(mapContainer, mapOption);
+            const markerPosition = new window.kakao.maps.LatLng(lesson_latitude, lesson_longitude);
+            const marker = new window.kakao.maps.Marker({ position: markerPosition });
 
-                var map = new kakao.maps.Map(mapContainer, mapOption); // 지도를 생성합니다
+            marker.setMap(map);
+        };
 
-                // 마커가 표시될 위치입니다 
-                var markerPosition = new kakao.maps.LatLng(classData.lesson_latitude, classData.lesson_longitude);
-
-                // 마커를 생성합니다
-                var marker = new kakao.maps.Marker({
-                    position: markerPosition
-                });
-
-                // 마커가 지도 위에 표시되도록 설정합니다
-                marker.setMap(map);
-            })
+        if (document.readyState === 'complete') {
+            loadKakaoMap();
+        } else {
+            window.addEventListener('DOMContentLoaded', loadKakaoMap);
+            return () => {
+                window.removeEventListener('DOMContentLoaded', loadKakaoMap);
+            };
         }
-
-    }, [classData])
+    }, [classData]);
 
     {/* 즐겨찾기 등록 / 해제 */ }
     const clickBookmark = () => {
