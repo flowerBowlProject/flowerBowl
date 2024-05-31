@@ -64,6 +64,7 @@ const CommonModal = ({
     pw: "",
     email: "",
   });
+
   const handleLogin = async (user) => {
     try {
       const response = await axios.post(`${url}/api/auth/signIn`, {
@@ -145,11 +146,11 @@ const CommonModal = ({
 
   //카카오로그인
   const handleKaKaoLogin = async () => {
-    window.open(`${url}/api/oauth2/kakao`, '_blank');
+    window.location.href=`${url}/api/oauth2/kakao`;
   };
   //네이버로그인
   const handleNaverLogin = async () => {
-    window.open(`${url}/api/oauth2/naver`, '_blank');     
+    window.location.href=`${url}/api/oauth2/naver`;     
   };
 
   const [butDisable, setButDisable] = useState(true);
