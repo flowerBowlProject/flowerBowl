@@ -14,7 +14,7 @@ const OAuth2Success = () =>{
     useEffect(()=>{
         dispatch({ type: "accessToken", payload: token });
 
-        if(isMatchNickname){
+        if(isMatchNickname==='true'){
             // 중복된 닉네임이 있다면
             dispatch(editErrorType('DN'));
             dispatch(openError());
