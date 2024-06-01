@@ -18,13 +18,11 @@ const OAuth2Success = () =>{
             // 중복된 닉네임이 있다면
             dispatch(editErrorType('DN'));
             dispatch(openError());
-            console.log(isMatchNickname);
-            //navigator('/Mypage/profile');
+            navigator('/Mypage/profile');
         }else{
             dispatch(editErrorType('LOGIN'));
             dispatch(openError());
-            console.log(isMatchNickname);
-            //navigator('/');
+            navigator('/');
         }
         
     },[]);
