@@ -20,15 +20,16 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Modifying
     @Transactional
     @Query(value = "INSERT INTO " +
-            "   user (user_id, user_role, user_nickname, user_createdate, user_wd_status, user_pw_changed) " + // , user_wd_status
+            "   user (user_id, user_role, user_nickname, user_createdate, user_wd_status, user_pw_changed, user_type) " + // , user_wd_status
             "SELECT " +
-            "   :userId, :role, :userNickname, NOW(),  false, false " +
+            "   :userId, :role, :userNickname, NOW(),  false, false, :userType " +
             "WHERE " +
             "   NOT EXISTS (SELECT 1 FROM user WHERE user_id = :userId)", nativeQuery = true)
     void insertIfNotExists(
             @Param("userId") String userId,
             @Param("role") String role,
-            @Param("userNickname") String userNickname);
+            @Param("userNickname") String userNickname,
+            @Param("userType") String userType);
 
     User findByUserId(String userId);
 

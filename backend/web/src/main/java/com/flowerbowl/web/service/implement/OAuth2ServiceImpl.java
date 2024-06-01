@@ -38,12 +38,14 @@ public class OAuth2ServiceImpl extends DefaultOAuth2UserService {
 
         String userId = null;
         String userNickname = null;
+        String userType = null;
         boolean isMatchNickname = false;
 
         if (oauthClientName.equals("kakao")) {
             Map<String, String> responseMap = (Map<String, String>) oAuth2User.getAttributes().get("properties");
             userId = "kakao_" + oAuth2User.getAttributes().get("id");
             userNickname = responseMap.get("nickname");
+            userType = "kakao";
 
             boolean userExist = userRepository.existsByUserId(userId);
             if (!userExist) {
@@ -53,7 +55,7 @@ public class OAuth2ServiceImpl extends DefaultOAuth2UserService {
                     userNickname = RandomNameUtil.generateNickname();
                 }
 
-                userRepository.insertIfNotExists(userId, "ROLE_USER", userNickname);
+                userRepository.insertIfNotExists(userId, "ROLE_USER", userNickname, userType);
             }
 
         }
@@ -62,6 +64,7 @@ public class OAuth2ServiceImpl extends DefaultOAuth2UserService {
             Map<String, String> responseMap = (Map<String, String>) oAuth2User.getAttributes().get("response");
             userId = "naver_" + responseMap.get("id");
             userNickname = responseMap.get("nickname");
+            userType = "naver";
 
             boolean userExist = userRepository.existsByUserId(userId);
             if (!userExist) {
@@ -71,7 +74,7 @@ public class OAuth2ServiceImpl extends DefaultOAuth2UserService {
                     userNickname = RandomNameUtil.generateNickname();
                 }
 
-                userRepository.insertIfNotExists(userId, "ROLE_USER", userNickname);
+                userRepository.insertIfNotExists(userId, "ROLE_USER", userNickname, userType);
             }
 
         }

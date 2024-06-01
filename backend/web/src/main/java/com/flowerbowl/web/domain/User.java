@@ -57,6 +57,9 @@ public class User {
     @Column(name = "user_pw_changed")
     private Boolean userPwChanged;
 
+    @Column(name = "user_type")
+    private String userType;
+
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Recipe> recipes = new ArrayList<>();
@@ -101,6 +104,7 @@ public class User {
         this.userRole = Role.ROLE_USER;
         this.userWdStatus = false; // @ColumnDefault("false")이 안 먹음
         this.userPwChanged = false;
+        this.userType = "app";
     }
 
 
