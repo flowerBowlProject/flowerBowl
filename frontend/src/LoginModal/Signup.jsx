@@ -186,6 +186,7 @@ const Signup = ({ open,handleOpen,handleClose }) => {
             title="닉네임"
             but_text="중복확인"
             place_text="닉네임을 입력하세요"
+            helper_text="특수문자를 제외한 2~10자로 작성해 주세요."
             but_exis={true}
             size='towel'
             handleBut={handleBut}

@@ -53,6 +53,7 @@ const Profile = () => {
   const [emailCode, setEmailCode] = useState("");
   const CheckEmailOpen = useSelector((state) => state.emailCheck);
   const isChef = useSelector((state) => state.isChef);
+  const [isDisabled, setIsDisabled] = useState(false);
 
   //이미지 변경
   const handleChangeImage = async (event) => {
@@ -248,6 +249,7 @@ const Profile = () => {
         dispatch(setMermberEmail(response.data.user_email));
         const isChef = response.data.user_role === "ROLE_CHEF";
         dispatch(setChefRole(isChef));
+        setIsDisabled(response.data?.user_type===('kakao' || 'naver'));
       } catch (error) {
         dispatch(editErrorType(error.response?.data.code));
         dispatch(openError());
@@ -288,11 +290,8 @@ const Profile = () => {
         reqeustData.user_file_sname = profileSName;
       }
 
-      if (reqeustData.user_password === "") {
-        dispatch(editErrorType("PASSWORDBLANK"));
-        dispatch(openError());
-      } else {
-        console.log(reqeustData);
+      console.log(reqeustData)
+
         try {
           const response = await axios.patch(
             `${url}/api/users/info`,
@@ -320,7 +319,6 @@ const Profile = () => {
           dispatch(editErrorType(error.response?.data.code));
           dispatch(openError());
         }
-      }
     }
   };
 
@@ -544,6 +542,7 @@ const Profile = () => {
                   but_text="중복확인"
                   valueUser={user.memberName}
                   but_exis={true}
+                  helper_text="특수문자를 제외한 2~10자로 작성해 주세요."
                   vaild="name"
                   handleCheck={(name) => {
                     handleCheckName(name);
@@ -598,6 +597,7 @@ const Profile = () => {
               helper_text="영문,숫자,특수문자 포함 8~15자로 작성해 주세요."
               place_text="*****"
               pass_exis={true}
+              disable={isDisabled}
               vaild="pw"
             />
           </Grid>
@@ -610,6 +610,7 @@ const Profile = () => {
               pass_exis={true}
               vaild="newPw"
               setPass={setPassConfirm}
+              disable={isDisabled}
               handleBut={handleBut}
             />
           </Grid>
@@ -622,6 +623,7 @@ const Profile = () => {
               pass_exis={true}
               vaild={passConfirm}
               pass_confirm={true}
+              disable={isDisabled}
               handleBut={handleBut}
             />
           </Grid>
