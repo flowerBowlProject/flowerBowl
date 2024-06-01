@@ -260,6 +260,7 @@ const Profile = () => {
 
   //프로필수정
   const handleEditUser = async () => {
+    // 새로운 비밀번호 입력에 문제가 있는지 확인
     if (
       (user.memberNewPw.length >= 1 && newPwChange) ||
       (user.memberNewPw.length >= 1 && checkPwChange)
@@ -267,19 +268,23 @@ const Profile = () => {
       dispatch(editErrorType("vaildNewPw"));
       dispatch(openError());
     } else {
-      var reqeustData = {
-        new_phone: user.memberTel,
-        user_password: user.memberPw,
-      };
+      // requestData 객체 초기화
+      let reqeustData = {};
 
+      // 조건에 따라 필드를 requestData에 추가
       if (nickNameChange) {
         reqeustData.new_nickname = user.memberName;
       }
-      if (emailChange) reqeustData.new_email = user.memberEmail;
+      if (emailChange) {
+        reqeustData.new_email = user.memberEmail;
+      }
+      if (user.memberTel !== "") {
+        reqeustData.new_phone = user.memberTel;
+      }
       if (user.memberNewPw !== "") {
         reqeustData.new_pw = user.memberNewPw;
-      } else {
-        reqeustData.new_pw = user.memberPw;
+      } else if (user.memberPw !== "") {
+        reqeustData.user_password = user.memberPw;
       }
       if (imageChange) {
         // 이미지 변경 시
@@ -291,6 +296,7 @@ const Profile = () => {
       }
 
       console.log(reqeustData);
+
       try {
         const response = await axios.patch(
           `${url}/api/users/info`,
@@ -301,14 +307,17 @@ const Profile = () => {
             },
           }
         );
+
         // 리덕스에 있는 닉네임도 변경
         if (nickNameChange) {
           dispatch({ type: "nickname", payload: reqeustData.new_nickname });
         }
+
         console.log(response);
         dispatch(editErrorType("suEdit"));
         dispatch(openError());
         setButDisable(true);
+
         // 비밀번호 입력란 비우기
         setTimeout(() => {
           window.location.reload();
@@ -343,12 +352,11 @@ const Profile = () => {
   const handleTelChange = (e) => {
     const newTel = e.target.value;
     dispatch(setMemberTel(newTel));
-    console.log('3')
+    console.log("3");
     handleBut("newTel", false); // 전화번호를 바꾸면 변경 버튼을 활성화
-    console.log('1')
+    console.log("1");
     setButDisable(false); // 추가된 코드: 전화번호 변경 시 버튼 활성화
-    console.log('2')
-
+    console.log("2");
   };
 
   const hanldeSendEmail = async (mail) => {
