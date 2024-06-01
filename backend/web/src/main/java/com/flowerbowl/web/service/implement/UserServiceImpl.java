@@ -70,8 +70,8 @@ public class UserServiceImpl implements UserService {
 
             String userPw = dto.getUser_password();
             String encodePw = user.getUserPw();
-            boolean isMatch = passwordEncoder.matches(userPw, encodePw);
-            if (!isMatch) return PatchProfileResponseDto.invalidPw();
+//            boolean isMatch = passwordEncoder.matches(userPw, encodePw); 프로필 수정 시 현재 비밀번호 일치 여부 확인하는 로직 제외
+//            if (!isMatch) return PatchProfileResponseDto.invalidPw();
 
             // oauth2.0으로 로그인 시 닉네임, 이메일에 null 값이 들어온다
             if (StringUtils.hasText(dto.getNew_nickname())) {
@@ -96,6 +96,10 @@ public class UserServiceImpl implements UserService {
             if (StringUtils.hasText(dto.getUser_file_oname())) user.setUserFileOname(dto.getUser_file_oname());
             if (StringUtils.hasText(dto.getUser_file_sname())) user.setUserFileSname(dto.getUser_file_sname());
 
+
+            user.setUserPwChanged(false);
+            userRepository.save(user);
+
             // save전 인데 여기에 하는게 맞나? 오류가 있으면 catch문에 걸리니까 상관 없을 거 같다
             if (StringUtils.hasText(dto.getNew_nickname())) {
                 user.setUserNickname(dto.getNew_nickname());
@@ -103,9 +107,6 @@ public class UserServiceImpl implements UserService {
                 recipeRepository.updateRecipeWriter(userId, dto.getNew_nickname());
                 communityRepository.updateCommunityWriter(userId, dto.getNew_nickname());
             }
-
-            user.setUserPwChanged(false);
-            userRepository.save(user);
 
         } catch (Exception exception) {
             exception.printStackTrace();
