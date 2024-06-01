@@ -19,7 +19,8 @@ const FormSignup = ({
   handleBut=()=>{},
   handleCheck=()=>{},
   disable,
-  valueUser
+  valueUser,
+  handleChange: handleChangeProp
 }) => {
   const dispatch=useDispatch();
   const duplicationBoolean=useSelector(state=>state.duplicationBoolean[vaild])
@@ -33,6 +34,7 @@ const FormSignup = ({
     setPass(value);
     handleBut(vaild,pass_confirm?validationPassConfirm(value,vaild):validation(value,vaild))
     if(duplicationBoolean){dispatch(HideDuplication(vaild))}
+    if (handleChangeProp) handleChangeProp(e);
   }
   const handleBlur=(e)=>{
     const value=e.target.value;

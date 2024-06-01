@@ -249,7 +249,7 @@ const Profile = () => {
         dispatch(setMermberEmail(response.data.user_email));
         const isChef = response.data.user_role === "ROLE_CHEF";
         dispatch(setChefRole(isChef));
-        setIsDisabled(response.data?.user_type===('kakao' || 'naver'));
+        setIsDisabled(response.data?.user_type === ('kakao' || 'naver'));
       } catch (error) {
         dispatch(editErrorType(error.response?.data.code));
         dispatch(openError());
@@ -290,38 +290,33 @@ const Profile = () => {
         reqeustData.user_file_sname = profileSName;
       }
 
-      if (reqeustData.user_password === "") {
-        dispatch(editErrorType("PASSWORDBLANK"));
-        dispatch(openError());
-      } else {
-        console.log(reqeustData);
-        try {
-          const response = await axios.patch(
-            `${url}/api/users/info`,
-            reqeustData,
-            {
-              headers: {
-                Authorization: `Bearer ${accessToken}`,
-              },
-            }
-          );
-          // 리덕스에 있는 닉네임도 변경
-          if (nickNameChange) {
-            dispatch({ type: "nickname", payload: reqeustData.new_nickname });
+      console.log(reqeustData);
+      try {
+        const response = await axios.patch(
+          `${url}/api/users/info`,
+          reqeustData,
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
           }
-          console.log(response);
-          dispatch(editErrorType("suEdit"));
-          dispatch(openError());
-          setButDisable(true);
-          // 비밀번호 입력란 비우기
-          setTimeout(() => {
-            window.location.reload();
-          }, 1000); // 1초 후 새로고침
-        } catch (error) {
-          console.log(error);
-          dispatch(editErrorType(error.response?.data.code));
-          dispatch(openError());
+        );
+        // 리덕스에 있는 닉네임도 변경
+        if (nickNameChange) {
+          dispatch({ type: "nickname", payload: reqeustData.new_nickname });
         }
+        console.log(response);
+        dispatch(editErrorType("suEdit"));
+        dispatch(openError());
+        setButDisable(true);
+        // 비밀번호 입력란 비우기
+        setTimeout(() => {
+          window.location.reload();
+        }, 1000); // 1초 후 새로고침
+      } catch (error) {
+        console.log(error);
+        dispatch(editErrorType(error.response?.data.code));
+        dispatch(openError());
       }
     }
   };
@@ -348,8 +343,12 @@ const Profile = () => {
   const handleTelChange = (e) => {
     const newTel = e.target.value;
     dispatch(setMemberTel(newTel));
+    console.log('3')
     handleBut("newTel", false); // 전화번호를 바꾸면 변경 버튼을 활성화
+    console.log('1')
     setButDisable(false); // 추가된 코드: 전화번호 변경 시 버튼 활성화
+    console.log('2')
+
   };
 
   const hanldeSendEmail = async (mail) => {
@@ -562,7 +561,7 @@ const Profile = () => {
                   helper_text="올바른 휴대폰 번호를 입력해 주세요."
                   but_exis={false}
                   vaild="tel"
-                  onChange={handleTelChange}
+                  handleChange={handleTelChange}
                 />
               </Grid>
               <Grid item>
