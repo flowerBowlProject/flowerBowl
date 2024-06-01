@@ -290,8 +290,11 @@ const Profile = () => {
         reqeustData.user_file_sname = profileSName;
       }
 
-      console.log(reqeustData)
-
+      if (reqeustData.user_password === "") {
+        dispatch(editErrorType("PASSWORDBLANK"));
+        dispatch(openError());
+      } else {
+        console.log(reqeustData);
         try {
           const response = await axios.patch(
             `${url}/api/users/info`,
@@ -319,6 +322,7 @@ const Profile = () => {
           dispatch(editErrorType(error.response?.data.code));
           dispatch(openError());
         }
+      }
     }
   };
 
