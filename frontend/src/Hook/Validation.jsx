@@ -8,6 +8,7 @@ export const validation=(value,type)=>{
                 return !/^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@$!%*?&])[a-zA-Z\d@$!%*?&]{8,15}$/.test(value);
             case 'email': return !/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(value);
             case 'tel': return !/^[0-9]{11}$/.test(value);
+            case 'name' : return !/^[a-zA-Z0-9가-힣]{2,10}$/.test(value);
             
             default: return false;
         }
