@@ -243,6 +243,8 @@ const Profile = () => {
             Authorization: `Bearer ${accessToken}`,
           },
         });
+
+        console.log(response);
         dispatch(setMemberid(response.data.user_id));
         dispatch(setMemberName(response.data.user_nickname));
         dispatch(setMemberTel(response.data.user_phone));
