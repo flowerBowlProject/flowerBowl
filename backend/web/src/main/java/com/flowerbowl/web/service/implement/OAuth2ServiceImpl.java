@@ -52,6 +52,7 @@ public class OAuth2ServiceImpl extends DefaultOAuth2UserService {
                 isMatchNickname = userRepository.existsByUserNickname(userNickname);
 
                 if (isMatchNickname || userNickname.length() <= 1) {
+                    isMatchNickname = true;
                     userNickname = RandomNameUtil.generateNickname();
                 }
 
@@ -71,6 +72,7 @@ public class OAuth2ServiceImpl extends DefaultOAuth2UserService {
                 isMatchNickname = userRepository.existsByUserNickname(userNickname);
 
                 if (isMatchNickname || userNickname.length() <= 1) {
+                    isMatchNickname = true;
                     userNickname = RandomNameUtil.generateNickname();
                 }
 
