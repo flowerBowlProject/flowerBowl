@@ -38,22 +38,47 @@ public class OAuth2ServiceImpl extends DefaultOAuth2UserService {
 
         String userId = null;
         String userNickname = null;
+        String userType = null;
         boolean isMatchNickname = false;
 
         if (oauthClientName.equals("kakao")) {
-//            Map<String, String> responseMap = (Map<String, String>) oAuth2User.getAttributes().get("properties");
+            Map<String, String> responseMap = (Map<String, String>) oAuth2User.getAttributes().get("properties");
             userId = "kakao_" + oAuth2User.getAttributes().get("id");
-            userNickname = RandomNameUtil.generateNickname();
-            isMatchNickname = userRepository.existsByUserNickname(userNickname);
-            userRepository.insertIfNotExists(userId, "ROLE_USER", userNickname);
+            userNickname = responseMap.get("nickname");
+            userType = "kakao";
+
+            boolean userExist = userRepository.existsByUserId(userId);
+            if (!userExist) {
+                isMatchNickname = userRepository.existsByUserNickname(userNickname);
+
+                if (isMatchNickname || userNickname.length() <= 1) {
+                    isMatchNickname = true;
+                    userNickname = RandomNameUtil.generateNickname();
+                }
+
+                userRepository.insertIfNotExists(userId, "ROLE_USER", userNickname, userType);
+            }
+
         }
 
         if (oauthClientName.equals("naver")) {
             Map<String, String> responseMap = (Map<String, String>) oAuth2User.getAttributes().get("response");
             userId = "naver_" + responseMap.get("id");
-            userNickname = RandomNameUtil.generateNickname();
-            isMatchNickname = userRepository.existsByUserNickname(userNickname);
-            userRepository.insertIfNotExists(userId, "ROLE_USER", userNickname);
+            userNickname = responseMap.get("nickname");
+            userType = "naver";
+
+            boolean userExist = userRepository.existsByUserId(userId);
+            if (!userExist) {
+                isMatchNickname = userRepository.existsByUserNickname(userNickname);
+
+                if (isMatchNickname || userNickname.length() <= 1) {
+                    isMatchNickname = true;
+                    userNickname = RandomNameUtil.generateNickname();
+                }
+
+                userRepository.insertIfNotExists(userId, "ROLE_USER", userNickname, userType);
+            }
+
         }
 
         return new CustomOAuth2User(userId, isMatchNickname);
