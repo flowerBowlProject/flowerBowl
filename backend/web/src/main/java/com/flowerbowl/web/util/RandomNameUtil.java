@@ -27,7 +27,7 @@ public class RandomNameUtil {
         Random random = new Random();
         String adjective = ADJECTIVES[random.nextInt(ADJECTIVES.length)];
         String noun = NOUNS[random.nextInt(NOUNS.length)];
-        return adjective + " " + noun;
+        return adjective + noun;
     }
 
 }
