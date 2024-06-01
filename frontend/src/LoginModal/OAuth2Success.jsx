@@ -23,7 +23,8 @@ const OAuth2Success = () =>{
         }else{
             dispatch(editErrorType('LOGIN'));
             dispatch(openError());
-            navigator('/');
+            console.log(isMatchNickname);
+            //navigator('/');
         }
         
     },[]);
