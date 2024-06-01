@@ -41,19 +41,39 @@ public class OAuth2ServiceImpl extends DefaultOAuth2UserService {
         boolean isMatchNickname = false;
 
         if (oauthClientName.equals("kakao")) {
-//            Map<String, String> responseMap = (Map<String, String>) oAuth2User.getAttributes().get("properties");
+            Map<String, String> responseMap = (Map<String, String>) oAuth2User.getAttributes().get("properties");
             userId = "kakao_" + oAuth2User.getAttributes().get("id");
-            userNickname = RandomNameUtil.generateNickname();
-            isMatchNickname = userRepository.existsByUserNickname(userNickname);
-            userRepository.insertIfNotExists(userId, "ROLE_USER", userNickname);
+            userNickname = responseMap.get("nickname");
+
+            boolean userExist = userRepository.existsByUserId(userId);
+            if (!userExist) {
+                isMatchNickname = userRepository.existsByUserNickname(userNickname);
+
+                if (isMatchNickname || userNickname.length() <= 1) {
+                    userNickname = RandomNameUtil.generateNickname();
+                }
+
+                userRepository.insertIfNotExists(userId, "ROLE_USER", userNickname);
+            }
+
         }
 
         if (oauthClientName.equals("naver")) {
             Map<String, String> responseMap = (Map<String, String>) oAuth2User.getAttributes().get("response");
             userId = "naver_" + responseMap.get("id");
-            userNickname = RandomNameUtil.generateNickname();
-            isMatchNickname = userRepository.existsByUserNickname(userNickname);
-            userRepository.insertIfNotExists(userId, "ROLE_USER", userNickname);
+            userNickname = responseMap.get("nickname");
+
+            boolean userExist = userRepository.existsByUserId(userId);
+            if (!userExist) {
+                isMatchNickname = userRepository.existsByUserNickname(userNickname);
+
+                if (isMatchNickname || userNickname.length() <= 1) {
+                    userNickname = RandomNameUtil.generateNickname();
+                }
+
+                userRepository.insertIfNotExists(userId, "ROLE_USER", userNickname);
+            }
+
         }
 
         return new CustomOAuth2User(userId, isMatchNickname);
