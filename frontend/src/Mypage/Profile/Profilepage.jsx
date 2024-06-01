@@ -251,7 +251,7 @@ const Profile = () => {
         dispatch(setMermberEmail(response.data.user_email));
         const isChef = response.data.user_role === "ROLE_CHEF";
         dispatch(setChefRole(isChef));
-        setIsDisabled(response.data?.user_type === ('kakao' || 'naver'));
+        setIsDisabled(response.data?.user_type !== 'app');
       } catch (error) {
         dispatch(editErrorType(error.response?.data.code));
         dispatch(openError());
