@@ -34,7 +34,7 @@ jobs:
       run: ./gradlew clean build -x test
       working-directory: ${{ env.working-directory }}
     - name: Upload artifact
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: cicdsample
         path: build/libs/web-0.0.1-SNAPSHOT.jar
@@ -44,7 +44,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Download artifact
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4
         with:
           name: cicdsample
       - name: Setup SSH
