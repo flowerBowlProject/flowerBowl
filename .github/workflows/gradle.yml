@@ -16,6 +16,8 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      working-directory: ./backend/web
     permissions:
       contents: read
     steps:
@@ -30,3 +32,4 @@ jobs:
 
     - name: Build with Gradle Wrapper
       run: ./gradlew build
+      working-directory: ${{ env.working-directory }}
