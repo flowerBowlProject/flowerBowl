@@ -17,7 +17,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     env:
-      working-directory: ./backend/web
+      working-directory: ./backend/web/
     permissions:
       contents: read
     steps:
@@ -37,7 +37,7 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: cicdsample
-        path: /backend/web/build/libs/*.jar
+        path: build/libs/web-0.0.1-SNAPSHOT.jar
 
   deploy:
     needs: build
