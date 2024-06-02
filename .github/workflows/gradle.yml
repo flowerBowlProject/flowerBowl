@@ -59,7 +59,5 @@ jobs:
         run: scp web-0.0.1-SNAPSHOT.jar ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }}:~/cicd
       - name: Execute remote commands
         run: |
-          ssh ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} "sudo fuser -k 8080/tcp"
-          ssh ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} "sudo systemctl stop springboot"
-          ssh ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} "sudo nohup java -jar ~/cicd/*.jar &"
-          ssh ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} "sudo systemctl start springboot"
+          ssh ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} "sudo fuser -k 8080/tcp || true"
+	        ssh -v ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} "sudo nohup /home/ubuntu/usr/bin/java -jar ~/cicd/*.jar  > ~/cicd/nohup.log 2>&1 &"
