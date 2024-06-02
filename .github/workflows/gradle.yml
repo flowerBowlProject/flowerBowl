@@ -32,4 +32,3 @@ jobs:
 
     - name: Build with Gradle Wrapper
       run: ./gradlew clean build -x test
-      working-directory: ${{ env.working-directory }}
