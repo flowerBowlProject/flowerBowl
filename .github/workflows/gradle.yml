@@ -37,7 +37,7 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: cicdsample
-        path: build/libs/*.jar
+        path: /backend/web/build/libs/*.jar
 
   deploy:
     needs: build
