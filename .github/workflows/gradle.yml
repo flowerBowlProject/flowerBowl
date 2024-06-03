@@ -33,7 +33,7 @@ jobs:
       run: |
         mkdir -p src/main/resources
         echo "${{ secrets.APPLICATION_YML }}" | base64 --decode > src/main/resources/application.yml
-        find src/main/resources
+        find ${{ env.working-directory }}
     - name: Build with Gradle Wrapper
       run: ./gradlew clean build -x test
       working-directory: ${{ env.working-directory }}
