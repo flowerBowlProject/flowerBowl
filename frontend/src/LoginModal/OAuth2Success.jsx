@@ -14,6 +14,18 @@ const OAuth2Success = () =>{
     useEffect(()=>{
         dispatch({ type: "accessToken", payload: token });
 
+         axios.get(`${url}/api/users/info`, {
+              headers: {
+                Authorization: `Bearer ${response.data.access_token}`,
+              },
+        })
+        .then(res=>{
+            dispatch({ type: "nickname", payload: res.data.user_nickname });
+        })
+        .catch (err=> {
+            console.log(err);
+        })
+
         if(isMatchNickname==='true'){
             // 중복된 닉네임이 있다면
             dispatch(editErrorType('DN'));
