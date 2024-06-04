@@ -21,11 +21,11 @@ public class RecipeFile {
     @Column(name = "recipe_file_no")
     private Long recipeFileNo;
 
-    @Column(name = "recipe_file_oname")
+    @Column(name = "recipe_file_oname", columnDefinition = "TEXT")
     @Convert(converter = StringListConverter.class)
     private List<String> recipeFileOname;
 
-    @Column(name = "recipe_file_sname")
+    @Column(name = "recipe_file_sname", columnDefinition = "TEXT")
     @Convert(converter = StringListConverter.class)
     private List<String> recipeFileSname;
 
