@@ -21,11 +21,11 @@ public class CommunityFile {
     @Column(name = "community_file_no")
     private Long communityFileNo;
 
-    @Column(name = "community_file_oname")
+    @Column(name = "community_file_oname", columnDefinition = "TEXT")
     @Convert(converter = StringListConverter.class)
     private List<String> communityFileOname;
 
-    @Column(name = "community_file_sname")
+    @Column(name = "community_file_sname", columnDefinition = "TEXT")
     @Convert(converter = StringListConverter.class)
     private List<String> communityFileSname;
 

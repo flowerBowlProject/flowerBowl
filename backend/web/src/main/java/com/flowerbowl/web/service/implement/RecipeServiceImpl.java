@@ -45,6 +45,7 @@ public class RecipeServiceImpl implements RecipeService {
     private final ImageService imageService;
 
     @Override
+    @Transactional
     public ResponseEntity<? extends RecipeResponseDto> createRecipe(CrRecipeReqDto request, String userId) throws Exception {
         try {
             User user = userRepository.findByUserId(userId);

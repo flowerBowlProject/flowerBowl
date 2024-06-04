@@ -45,6 +45,7 @@ public class CommunityServiceImpl implements CommunityService {
     private final ImageService imageService;
 
     @Override
+    @Transactional
     public ResponseEntity<? extends CommunityResponseDto> createCommunity(CrCommunityReqDto request, String userId) throws Exception {
         try {
             User user = userRepository.findByUserId(userId);
