@@ -2,6 +2,8 @@ import React, { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 import { editErrorType, openError } from "../persistStore";
+import axios from "axios";
+import { url } from "../url";
 
 const OAuth2Success = () =>{
     const navigator = useNavigate();
@@ -16,7 +18,7 @@ const OAuth2Success = () =>{
 
         axios.get(`${url}/api/users/info`, {
             headers: {
-              Authorization: `Bearer ${response.data.access_token}`,
+              Authorization: `Bearer ${token}`,
             },
           })
           .then(res=>{
