@@ -254,4 +254,4 @@ $RECYCLE.BIN/
 # End of https://www.toptal.com/developers/gitignore/api/react,macos,windows,node
 **.DS_Store
 
-
+/backend/web/src/main/resources/application.yml
