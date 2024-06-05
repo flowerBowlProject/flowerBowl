@@ -24,4 +24,9 @@ public class DeletePayByUserResponseDto extends ResponseDto {
         ResponseDto body = new ResponseDto(ResponseCode.NOT_EXIST_NUM, ResponseMessage.NOT_EXIST_NUM);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
     }
+//
+//    public static ResponseEntity<? super ResponseDto> notMatchUser() {
+//        ResponseDto body = new ResponseDto(ResponseCode.DOES_NOT_MATCH, ResponseMessage.DOES_NOT_MATCH);
+//        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(body);
+//    }
 }
