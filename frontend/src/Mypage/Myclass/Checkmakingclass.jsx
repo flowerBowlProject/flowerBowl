@@ -7,7 +7,7 @@ import axios from "axios";
 import { url } from "../../url";
 import ErrorConfirm from "../../Hook/ErrorConfirm";
 import { useDispatch, useSelector } from "react-redux";
-import { editErrorType, openError } from "../../persistStore";
+import { editErrorType, openError, closeError } from "../../persistStore"; // Assuming closeError action is defined
 
 const Checkmakingclass = () => {
   const navigate = useNavigate();
@@ -22,11 +22,10 @@ const Checkmakingclass = () => {
   const [listData, setListData] = useState([]);
   const [refreshData, setRefreshData] = useState(false);
   const [slice, setSlice] = useState(8);
+
   const handleClickMoreDetail = () => {
     if (listData.length > slice) setSlice(slice + 8);
   };
-  //액세스토큰 확인
-  // console.log("Access Token:", accessToken);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -37,7 +36,6 @@ const Checkmakingclass = () => {
           },
         });
         setListData(response.data.myLessons);
-        //코드 확인
       } catch (error) {
         dispatch(editErrorType(error.response.data.code));
         dispatch(openError());
@@ -47,7 +45,13 @@ const Checkmakingclass = () => {
     fetchData();
   }, [accessToken, refreshData]);
 
-  // 상세페이지 이동
+  // Clear error when component unmounts or navigates away
+  useEffect(() => {
+    return () => {
+      dispatch(closeError());
+    };
+  }, [dispatch]);
+
   const clickDetail = (e, lesson_no) => {
     navigate(`/classDetail/${lesson_no}`);
   };
@@ -65,7 +69,7 @@ const Checkmakingclass = () => {
   const toggleSortDirection = () => {
     setSortDirection((prevDirection) => {
       const newDirection = prevDirection === "asc" ? "desc" : "asc";
-      sortTableDataByDate(newDirection); // sort the data after setting direction
+      sortTableDataByDate(newDirection);
       return newDirection;
     });
   };
@@ -78,7 +82,7 @@ const Checkmakingclass = () => {
   const toggleSortBookmark = () => {
     setSortBookmark((prevDirection) => {
       const newDirection = prevDirection === "asc" ? "desc" : "asc";
-      sortDataByAttribute("lesson_like_cnt", newDirection); // Sort data after updating the direction
+      sortDataByAttribute("lesson_like_cnt", newDirection);
       return newDirection;
     });
   };
@@ -87,7 +91,7 @@ const Checkmakingclass = () => {
   const toggleSortComment = () => {
     setSortComment((prevDirection) => {
       const newDirection = prevDirection === "asc" ? "desc" : "asc";
-      sortDataByAttribute("review_cnt", newDirection); // Sort data after updating the direction
+      sortDataByAttribute("review_cnt", newDirection);
       return newDirection;
     });
   };
@@ -108,12 +112,7 @@ const Checkmakingclass = () => {
     setListData(sortedData);
   };
 
-  // 삭제버튼 api연결
   const handleDelete = async (lessonNo) => {
-    console.log("Delete button clicked", lessonNo); // 로그: 함수 호출과 수업 번호 확인
-    // console.log("Request data:", { lesson_no: lessonNo });
-    // console.log("Headers:", { Authorization: `Bearer ${accessToken}` });
-
     try {
       const response = await axios.put(
         `${url}/api/lessons`,
@@ -128,17 +127,13 @@ const Checkmakingclass = () => {
         }
       );
 
-      // console.log("API Response", response); // 로그: API 응답 전체 확인
-
       if (response.status === 200) {
-        console.log("Success:", response.data.message);
         setListData((currentData) =>
           currentData.filter((lesson) => lesson.lesson_no !== lessonNo)
         );
         setRefreshData(!refreshData);
       }
     } catch (error) {
-      console.error("Failed to delete lesson:", error); // 로그: 에러 상황에서의 오류 메시지
       dispatch(editErrorType(error.response.data.code));
       dispatch(openError());
     }
@@ -152,7 +147,6 @@ const Checkmakingclass = () => {
     <>
       <ErrorConfirm error={errorType} />
 
-      {/* 내용 */}
       <section className="table-content">
         <table className="custom-table">
           <thead>
@@ -235,7 +229,6 @@ const Checkmakingclass = () => {
         </table>
       </section>
 
-      {/* 더보기 버튼    */}
       <section className="bottom-add">
         <ButtonContain
           size="medium"

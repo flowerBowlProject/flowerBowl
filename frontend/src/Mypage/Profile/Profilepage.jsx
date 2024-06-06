@@ -122,7 +122,7 @@ const Profile = () => {
       const reader = new FileReader();
       reader.onloadend = () => {
         setChefImageUrl(reader.result);
-        //uploadChefImage(file);
+        uploadChefImage(file);
       };
       reader.readAsDataURL(file);
     } else {

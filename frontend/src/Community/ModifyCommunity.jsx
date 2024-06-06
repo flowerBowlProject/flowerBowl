@@ -74,7 +74,6 @@ const RegisterCommunity = () =>{
           
             // 모든 필드를 순회하면서 변경 여부 확인
             Object.values(registerData).forEach((value) => {
-              // 빈 값이거나 초기값이 아닌 경우 변경된 것으로 간주
               if (value !== '' && value !== 0  ) {
                 isChanged = true;
               }

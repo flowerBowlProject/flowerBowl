@@ -79,7 +79,7 @@ const RegisterCommunity = () => {
     {/* 취소 버튼 클릭 */ }
     const handleCancel = () => {
         // 뒤로가기 - 리스트 페이지로 이동
-        navigator('/classList');
+        navigator('/communityList');
     }
 
     return (

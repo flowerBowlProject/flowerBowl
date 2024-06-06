@@ -74,7 +74,7 @@ const EditReview = () => {
 
         <div className="division-line-or"></div>
         <div className="text-content">
-          클래스 / 레시피는 어떠셨나요?
+          클래스는 어떠셨나요?
           <br />
           솔직한 리뷰를 남겨주세요.
         </div>

@@ -97,7 +97,7 @@ const RegisterReview = () => {
       <section className="teachingclass">
         <div className="division-line-or"></div>
         <div className="text-title" onClick={() => setExpanded(!expanded)}>
-          {selectedTitle ? selectedTitle.lesson_title : "클래스 / 레시피 선택"}
+          {selectedTitle ? selectedTitle.lesson_title : "클래스 선택"}
           &emsp;
           <span>{expanded ? "▲" : "▼"}</span>
         </div>
@@ -118,7 +118,7 @@ const RegisterReview = () => {
 
         <div className="division-line-or"></div>
         <div className="text-content">
-          클래스 / 레시피는 어떠셨나요?
+          클래스는 어떠셨나요?
           <br />
           솔직한 리뷰를 남겨주세요.
         </div>
