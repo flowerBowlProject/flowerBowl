@@ -19,6 +19,7 @@ const RecipeList = () => {
   const location = useLocation();
   const params = new URLSearchParams(location.search);
   const keyword = params.get('keyword');
+  const category = params.get('category');
   const [pageInfo, setPageInfo] = useState(1);
   const dispatch = useDispatch();
   const popular = params.get('popular');
@@ -78,7 +79,35 @@ const RecipeList = () => {
             dispatch(openError());
           })
       }
-    } else {
+    }else if(category !== null){
+      if (accessToken === '') {
+        axios.get(`${url}/api/recipes/guest/list?category=${category}&page=1&size=${pageInfo}*8`)
+          .then(res => {
+            setListData(res.data.posts);
+            console.log(res);
+          })
+          .catch(err => {
+            console.log(err);
+            dispatch(editErrorType(err.response.data.code));
+            dispatch(openError());
+
+          })
+      } else {
+        axios.get(`${url}/api/recipes/list?category=${category}&page=1&size=${pageInfo}*8`, {
+          headers: {
+            Authorization: `Bearer ${accessToken}`
+          }
+        })
+          .then(res => {
+            setListData(res.data.posts);
+          })
+          .catch(err => {
+            console.log(err);
+            dispatch(editErrorType(err.response.data.code));
+            dispatch(openError());
+          })
+      }
+    }else {
       { /* 로그인 여부에 따른 정보 호출 */ }
       if (accessToken === "") {
         axios

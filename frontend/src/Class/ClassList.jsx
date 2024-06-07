@@ -19,6 +19,7 @@ const ViewList = () => {
     const location = useLocation();
     const params = new URLSearchParams(location.search);
     const keyword = params.get('keyword');
+    const category = params.get('category');
     const [pageInfo, setPageInfo] = useState(1);
     const dispatch = useDispatch();
 
@@ -81,7 +82,34 @@ const ViewList = () => {
                         dispatch(openError());
                     })
             }
-        } else {
+        }else if(category !== null){
+            if (accessToken === '') {
+                axios.get(`${url}/api/guest/lessons/category?category=${category}&size=${pageInfo*8}`)
+                    .then(res => {
+                        setListData(res.data.lessons);
+                    })
+                    .catch(err => {
+                        console.log(err);
+                        dispatch(editErrorType(err.response.data.code));
+                        dispatch(openError());
+                    })
+            } else {
+                console.log(keyword)
+                axios.get(`${url}/api/user/lessons/category?category=${category}&page=1&size=${pageInfo*8}`, {
+                    headers: {
+                        Authorization: `Bearer ${accessToken}`
+                    }
+                })
+                    .then(res => {
+                        setListData(res.data.lessons);
+                    })
+                    .catch(err => {
+                        console.log(err);
+                        dispatch(editErrorType(err.response.data.code));
+                        dispatch(openError());
+                    })
+            }
+        }else {
             {/* 로그인에 따른 조회 */ }
             if (accessToken == '') {
                 axios.get(`${url}/api/guest/lessons?page=1&size=${pageInfo*8}`)
