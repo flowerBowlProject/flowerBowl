@@ -49,15 +49,7 @@ const ViewList = () => {
                 axios.get(`${url}/api/search/lessons?keyword=${keyword}&page=1&size=${pageInfo*8}`)
                     .then(res => {
                         console.log(res);
-                        let sorted;
-                        switch (selectButton) {
-                            case "인기순":
-                                sorted = [...res.data.lesson].sort((a, b) => b.lesson_like_cnt - a.lesson_like_cnt);
-                                break;
-                            default:
-                                sorted = res.data.lesson; // 기본값은 변경하지 않음
-                        }
-                        setListData(sorted);
+                        setListData(res.data.lessons);
                     })
                     .catch(err => {
                         console.log(err);

@@ -35,6 +35,7 @@ const CommunityList = () => {
             axios.get(`${url}/api/search/communities?keyword=${keyword}&page=1&size=10`)
             .then(res => {
                 setListData(res.data.communities);
+                setPageInfo(res.data.pageInfo);
                 console.log(res);
             })
             .catch(err => {

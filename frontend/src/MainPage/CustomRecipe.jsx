@@ -21,9 +21,7 @@ const  CustomRecipe=()=>{
                 const response=await axios.get(`${url}/api/recipes/admin`)
                 setAdminData(response.data.posts)
                 if(response.data.posts.length<5){
-                    setAdminData(data=>[...data,...Array(5).fill({ recipe_title: '', recipe_content: '',recipe_no:'',recipe_sname:'' })]
-                    
-                    )
+                    setAdminData(data=>[...data,...Array(5).fill({ recipe_title: '', recipe_content: '',recipe_no:'',recipe_sname:'' })])
                 }
                 console.log(typeof response.data.posts.recipe_content)
             }catch(error){
@@ -33,6 +31,7 @@ const  CustomRecipe=()=>{
         fetchData();
        
     },[])
+
     const handleClick=(event)=>{
         const name=event.currentTarget.id;
         switch(name){
@@ -62,8 +61,8 @@ const  CustomRecipe=()=>{
                 <Typography  variant='h4' mb='3vw' >  
                     {adminData?(adminData[number].recipe_title.length >= 20 ? adminData[number].recipe_title.substr(0, 19)+'...0' : adminData[number].recipe_title):null}
                 </Typography>
-                    {adminData[number].recipe_content?(adminData[number].recipe_content.length>=150 ? <Viewer initialValue={adminData[number].recipe_content.substr(0, 149)+'...'} /> 
-                        : <Viewer initialValue={adminData[number].recipe_content} />):null}
+                    {adminData[number].recipe_content?(adminData[number].recipe_content.length>=150 ? <Viewer key={number} initialValue={adminData[number].recipe_content.substr(0, 149)+'...'} /> 
+                        : <Viewer key={number} initialValue={adminData[number].recipe_content} />):null}
             </Grid>
             <Grid xs={6.5}   item container direction='column' alignItems='center'>
                 <Grid item>
