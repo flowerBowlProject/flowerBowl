@@ -48,11 +48,12 @@ const RecipeList = () => {
     }
     setListData(sorted);
   }
+  console.log(pageInfo);
 
   useEffect(() => {
     if (keyword !== null) {
       if (accessToken === '') {
-        axios.get(`${url}/api/search/recipes?keyword=${keyword}&page=1&size=${pageInfo}*8`)
+        axios.get(`${url}/api/search/recipes?keyword=${keyword}&page=1&size=${pageInfo*8}`)
           .then(res => {
             setListData(res.data.recipes);
             console.log(res);
@@ -64,7 +65,7 @@ const RecipeList = () => {
 
           })
       } else {
-        axios.get(`${url}/api/user/search/recipes?keyword=${keyword}&page=1&size=${pageInfo}*8`, {
+        axios.get(`${url}/api/user/search/recipes?keyword=${keyword}&page=1&size=${pageInfo*8}`, {
           headers: {
             Authorization: `Bearer ${accessToken}`
           }
@@ -81,7 +82,7 @@ const RecipeList = () => {
       }
     }else if(category !== null){
       if (accessToken === '') {
-        axios.get(`${url}/api/recipes/guest/list?category=${category}&page=1&size=${pageInfo}*8`)
+        axios.get(`${url}/api/recipes/guest/list?category=${category}&page=1&size=${pageInfo*8}`)
           .then(res => {
             setListData(res.data.posts);
             console.log(res);
@@ -93,7 +94,7 @@ const RecipeList = () => {
 
           })
       } else {
-        axios.get(`${url}/api/recipes/list?category=${category}&page=1&size=${pageInfo}*8`, {
+        axios.get(`${url}/api/recipes/list?category=${category}&page=1&size=${pageInfo*8}`, {
           headers: {
             Authorization: `Bearer ${accessToken}`
           }
@@ -139,7 +140,7 @@ const RecipeList = () => {
           });
       }
     }
-  }, [keyword, accessToken]);
+  }, [keyword, accessToken, pageInfo]);
 
   {
     /* 북마크 동작 */

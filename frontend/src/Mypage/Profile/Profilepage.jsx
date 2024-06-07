@@ -63,7 +63,7 @@ const Profile = () => {
       const reader = new FileReader();
       reader.onloadend = () => {
         setImageUrl(reader.result);
-        handleUploadImage(file);
+        //handleUploadImage(file);
       };
       reader.readAsDataURL(file);
       setImageChange(true);
@@ -87,16 +87,16 @@ const Profile = () => {
         },
       });
       if (response.data.code === "SU") {
-        console.log("프로필 사진 변경이 완료되었습니다.", response.data);
+        //console.log("프로필 사진 변경이 완료되었습니다.", response.data);
         setButDisable(true);
         setProfileOName(response.data.profile_oname);
         setProfileSName(response.data.profile_sname);
-        dispatch(editErrorType("PROFILE SUCCESS"));
-        dispatch(openError());
+        //dispatch(editErrorType("PROFILE SUCCESS"));
+        //dispatch(openError());
         //로컬스토리지 저장
         localStorage.setItem("profileImageUrl", response.data.profile_sname);
         setImageUrl(response.data.profile_sname);
-
+        setButDisable(false);
         return {
           profileOName: response.data.profile_oname,
           profileSName: response.data.profile_sname,
@@ -243,6 +243,7 @@ const Profile = () => {
             Authorization: `Bearer ${accessToken}`,
           },
         });
+        console.log(response)
         dispatch(setMemberid(response.data.user_id));
         dispatch(setMemberName(response.data.user_nickname));
         dispatch(setMemberTel(response.data.user_phone));
@@ -250,6 +251,7 @@ const Profile = () => {
         const isChef = response.data.user_role === "ROLE_CHEF";
         dispatch(setChefRole(isChef));
         setIsDisabled(response.data?.user_type !== 'app');
+        setImageUrl(response.data.user_file_sname);
       } catch (error) {
         dispatch(editErrorType(error.response?.data.code));
         dispatch(openError());
@@ -320,7 +322,7 @@ const Profile = () => {
 
         // 비밀번호 입력란 비우기
         setTimeout(() => {
-          window.location.reload();
+         // window.location.reload();
         }, 1000); // 1초 후 새로고침
       } catch (error) {
         console.log(error);
