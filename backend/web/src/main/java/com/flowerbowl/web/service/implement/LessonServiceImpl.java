@@ -135,8 +135,7 @@ public class LessonServiceImpl implements LessonService {
                 throw new FileSizeNotMatchException();
             }
 
-            LessonFile lessonFile = new LessonFile();
-            lessonFile.setLesson(lessonResult);
+
             int iterNum = 0;
             if (file_oname == null) {
                 iterNum = 0;
@@ -146,6 +145,8 @@ public class LessonServiceImpl implements LessonService {
                 log.info("file_oname1 : {}", iterNum);
             }
             for (int i = 0; i < iterNum; i++) {
+                LessonFile lessonFile = new LessonFile();
+                lessonFile.setLesson(lessonResult);
                 lessonFile.setLessonFileSname(file_sname.get(i));
                 lessonFile.setLessonFileOname(file_oname.get(i));
                 lessonFileRepository.save(lessonFile);
