@@ -1,12 +1,30 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import PopularRecipe from './PopularRecipe'
 import CustomRecipe from './CustomRecipe';
 import MenuRecipe from './MenuRecipe';
 import PopularClass from './PopularClass';
 import Advertisement from './Advertisement';
 import ErrorConfirm from '../Hook/ErrorConfirm';
-import { useSelector } from 'react-redux';
+import { editErrorType, closeError } from '../persistStore';
+import { useDispatch, useSelector } from 'react-redux';
 const MainHomepage =()=> {
+  const dispatch = useDispatch();
+  const errorType = useSelector(state=>state.errorType);
+  console.log(errorType)
+
+
+  useEffect(()=>{
+    if(errorType === 'NE' || errorType === 'NT' || errorType === 'IT'){
+      setTimeout(() => {
+        dispatch(closeError());
+        setTimeout(()=>{
+          dispatch(editErrorType(''));
+        }, 100)
+
+      }, 2000);
+    }
+  },[])
+
   return (  
     <>
     <CustomRecipe/>

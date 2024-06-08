@@ -31,16 +31,24 @@ const ViewList = () => {
 
         switch (selectButton) {
             case '최신순':
-                sorted = [...listData].sort((a, b) => new Date(b.lesson_date) - new Date(a.lesson_date));
+                sorted = [...listData].sort((a, b) =>{
+                  const dateSort = new Date(b.lesson_date) - new Date(a.lesson_date);
+                  if(dateSort !== 0) return dateSort;
+                  else return b.lesson_no - a.lesson_no;
+                })
                 setPageInfo(1);
                 break;
-            case "인기순":
-                sorted = [...listData].sort((a, b) => b.lesson_like_cnt - a.lesson_like_cnt);
+              case "인기순":
+                sorted = [...listData].sort((a, b) => {
+                  const likeSort = b.lesson_like_cnt - a.lesson_like_cnt;
+                  if(likeSort !== 0) return likeSort;
+                  else return b.lesson_no - a.lesson_no;
+                });
                 setPageInfo(1);
                 break;
-            default:
+              default:
                 sorted = listData; // 기본값은 변경하지 않음
-        }
+            }
         setListData(sorted);
     }
 
@@ -50,7 +58,19 @@ const ViewList = () => {
                 axios.get(`${url}/api/search/lessons?keyword=${keyword}&page=1&size=${pageInfo*8}`)
                     .then(res => {
                         console.log(res);
-                        setListData(res.data.lessons);
+                        let sorted;
+                        switch (selectButton) {
+                            case "인기순":
+                                sorted = [...res.data.lessons].sort((a, b) => {
+                                    const likeSort = b.lesson_like_cnt - a.lesson_like_cnt;
+                                    if(likeSort !== 0) return likeSort;
+                                    else return b.lesson_no - a.lesson_no;
+                                  });
+                                break;
+                            default:
+                                sorted = res.data.lessons; // 기본값은 변경하지 않음
+                        }
+                        setListData(sorted);
                     })
                     .catch(err => {
                         console.log(err);
@@ -69,7 +89,11 @@ const ViewList = () => {
                         let sorted;
                         switch (selectButton) {
                             case "인기순":
-                                sorted = [...res.data.lessons].sort((a, b) => b.lesson_like_cnt - a.lesson_like_cnt);
+                                sorted = [...res.data.lessons].sort((a, b) => {
+                                    const likeSort = b.lesson_like_cnt - a.lesson_like_cnt;
+                                    if(likeSort !== 0) return likeSort;
+                                    else return b.lesson_no - a.lesson_no;
+                                  });
                                 break;
                             default:
                                 sorted = res.data.lessons; // 기본값은 변경하지 않음
@@ -86,7 +110,19 @@ const ViewList = () => {
             if (accessToken === '') {
                 axios.get(`${url}/api/guest/lessons/category?category=${category}&size=${pageInfo*8}`)
                     .then(res => {
-                        setListData(res.data.lessons);
+                        let sorted;
+                        switch (selectButton) {
+                            case "인기순":
+                                sorted = [...res.data.lessons].sort((a, b) => {
+                                    const likeSort = b.lesson_like_cnt - a.lesson_like_cnt;
+                                    if(likeSort !== 0) return likeSort;
+                                    else return b.lesson_no - a.lesson_no;
+                                  });
+                                break;
+                            default:
+                                sorted = res.data.lessons; // 기본값은 변경하지 않음
+                        }
+                        setListData(sorted);
                     })
                     .catch(err => {
                         console.log(err);
@@ -101,7 +137,19 @@ const ViewList = () => {
                     }
                 })
                     .then(res => {
-                        setListData(res.data.lessons);
+                        let sorted;
+                        switch (selectButton) {
+                            case "인기순":
+                                sorted = [...res.data.lessons].sort((a, b) => {
+                                    const likeSort = b.lesson_like_cnt - a.lesson_like_cnt;
+                                    if(likeSort !== 0) return likeSort;
+                                    else return b.lesson_no - a.lesson_no;
+                                  });
+                                break;
+                            default:
+                                sorted = res.data.lessons; // 기본값은 변경하지 않음
+                        }
+                        setListData(sorted);
                     })
                     .catch(err => {
                         console.log(err);
@@ -118,12 +166,16 @@ const ViewList = () => {
                         let sorted;
                         switch (selectButton) {
                             case "인기순":
-                                sorted = [...res.data.lessons].sort((a, b) => b.lesson_like_cnt - a.lesson_like_cnt);
+                                sorted = [...res.data.lessons].sort((a, b) => {
+                                    const likeSort = b.lesson_like_cnt - a.lesson_like_cnt;
+                                    if(likeSort !== 0) return likeSort;
+                                    else return b.lesson_no - a.lesson_no;
+                                  });
                                 break;
                             default:
-                                sorted = listData; // 기본값은 변경하지 않음
+                                sorted = res.data.lessons; // 기본값은 변경하지 않음
                         }
-                        setListData(res.data.lessons);
+                        setListData(sorted);
                     })
                     .catch(err => {
                         console.log(err);
@@ -141,7 +193,11 @@ const ViewList = () => {
                         let sorted;
                         switch (selectButton) {
                             case "인기순":
-                                sorted = [...res.data.lessons].sort((a, b) => b.lesson_like_cnt - a.lesson_like_cnt);
+                                sorted = [...res.data.lessons].sort((a, b) => {
+                                    const likeSort = b.lesson_like_cnt - a.lesson_like_cnt;
+                                    if(likeSort !== 0) return likeSort;
+                                    else return b.lesson_no - a.lesson_no;
+                                  });
                                 break;
                             default:
                                 sorted = res.data.lessons; // 기본값은 변경하지 않음

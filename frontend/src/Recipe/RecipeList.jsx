@@ -32,15 +32,27 @@ const RecipeList = () => {
 
     switch (selectButton) {
       case '최신순':
-        sorted = [...listData].sort((a, b) => new Date(b.recipe_date) - new Date(a.recipe_date));
+        sorted = [...listData].sort((a, b) =>{
+          const dateSort = new Date(b.recipe_date) - new Date(a.recipe_date);
+          if(dateSort !== 0) return dateSort;
+          else return b.recipe_no - a.recipe_no;
+        })
         setPageInfo(1);
         break;
       case "인기순":
-        sorted = [...listData].sort((a, b) => b.recipe_like_cnt - a.recipe_like_cnt);
+        sorted = [...listData].sort((a, b) => {
+          const likeSort = b.recipe_like_cnt - a.recipe_like_cnt;
+          if(likeSort !== 0) return likeSort;
+          else return b.recipe_no - a.recipe_no;
+        });
         setPageInfo(1);
         break;
       case "댓글순":
-        sorted = [...listData].sort((a, b) => b.comment_cnt - a.comment_cnt);
+        sorted = [...listData].sort((a, b) => {
+          const commentSort = b.comment_cnt - a.comment_cnt;
+          if(commentSort !== 0 ) return commentSort;
+          else return b.recipe_no - a.recipe_no;
+        });
         setPageInfo(1);
         break;
       default:
@@ -48,14 +60,44 @@ const RecipeList = () => {
     }
     setListData(sorted);
   }
-  console.log(pageInfo);
 
+  const moreHandle = (listData) =>{
+    let sorted;
+
+    switch (selectButton) {
+      case '최신순':
+        sorted = [...listData].sort((a, b) =>{
+          const dateSort = new Date(b.recipe_date) - new Date(a.recipe_date);
+          if(dateSort !== 0) return dateSort;
+          else return b.recipe_no - a.recipe_no;
+        })
+        break;
+      case "인기순":
+        sorted = [...listData].sort((a, b) => {
+          const likeSort = b.recipe_like_cnt - a.recipe_like_cnt;
+          if(likeSort !== 0) return likeSort;
+          else return b.recipe_no - a.recipe_no;
+        });
+        break;
+      case "댓글순":
+        sorted = [...listData].sort((a, b) => {
+          const commentSort = b.comment_cnt - a.comment_cnt;
+          if(commentSort !== 0 ) return commentSort;
+          else return b.recipe_no - a.recipe_no;
+        });
+        break;
+      default:
+        sorted = listData; // 기본값은 변경하지 않음
+    }
+    setListData(sorted);
+  }
   useEffect(() => {
     if (keyword !== null) {
       if (accessToken === '') {
         axios.get(`${url}/api/search/recipes?keyword=${keyword}&page=1&size=${pageInfo*8}`)
           .then(res => {
             setListData(res.data.recipes);
+            moreHandle(res.data.posts);
             console.log(res);
           })
           .catch(err => {
@@ -72,6 +114,7 @@ const RecipeList = () => {
         })
           .then(res => {
             setListData(res.data.recipes);
+            moreHandle(res.data.posts);
             console.log(res);
           })
           .catch(err => {
@@ -85,6 +128,7 @@ const RecipeList = () => {
         axios.get(`${url}/api/recipes/guest/list?category=${category}&page=1&size=${pageInfo*8}`)
           .then(res => {
             setListData(res.data.posts);
+            moreHandle(res.data.posts);
             console.log(res);
           })
           .catch(err => {
@@ -101,6 +145,8 @@ const RecipeList = () => {
         })
           .then(res => {
             setListData(res.data.posts);
+            moreHandle(res.data.posts);
+            console.log(res);
           })
           .catch(err => {
             console.log(err);
@@ -116,6 +162,7 @@ const RecipeList = () => {
           .then((res) => {
             console.log(res);
             setListData(res.data.posts);
+            moreHandle(res.data.posts);
           })
           .catch((err) => {
             console.log(err);
@@ -132,6 +179,7 @@ const RecipeList = () => {
           .then((res) => {
             console.log(res);
             setListData(res.data.posts);
+            moreHandle(res.data.posts);
           })
           .catch((err) => {
             console.log(err);

@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Alert, Snackbar } from "@mui/material";
 import { useSelector, useDispatch } from "react-redux";
-import { closeError } from "../persistStore";
+import { closeError, editErrorType } from "../persistStore";
 import { useNavigate } from "react-router-dom";
 
 const ErrorConfirm = ({ error }) => {
@@ -12,6 +12,9 @@ const ErrorConfirm = ({ error }) => {
     if (reason === "clickaway") {
       return;
     }
+    setTimeout(()=>{
+      dispatch(editErrorType(''));
+    },100)
     dispatch(closeError());
   };
   const [confirm, setConfirm] = useState({
@@ -124,8 +127,8 @@ const ErrorConfirm = ({ error }) => {
       case "NE":
         severity = "warning";
         content = "로그인이 필요한 서비스입니다.";
+        navigate('/');
         break;
-
       case "TITLE":
         severity = "warning";
         content = "제목을 작성해 주세요.";
@@ -277,7 +280,7 @@ const ErrorConfirm = ({ error }) => {
   return (
     <Snackbar
       open={open}
-      autoHideDuration={3000}
+      autoHideDuration={2000}
       onClose={handleClose}
       anchorOrigin={{ vertical: "top", horizontal: "center" }}
     >
