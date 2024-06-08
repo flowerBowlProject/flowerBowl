@@ -14,7 +14,7 @@ const MainHomepage =()=> {
 
 
   useEffect(()=>{
-    if(errorType === 'NE' || errorType === 'NT' || errorType === 'IT'){
+    if(errorType === 'ET'){
       setTimeout(() => {
         dispatch(closeError());
         setTimeout(()=>{
