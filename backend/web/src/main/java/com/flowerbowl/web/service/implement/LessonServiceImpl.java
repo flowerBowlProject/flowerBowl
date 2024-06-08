@@ -135,8 +135,6 @@ public class LessonServiceImpl implements LessonService {
                 throw new FileSizeNotMatchException();
             }
 
-            LessonFile lessonFile = new LessonFile();
-            lessonFile.setLesson(lessonResult);
             int iterNum = 0;
             if (file_oname == null) {
                 iterNum = 0;
@@ -145,12 +143,14 @@ public class LessonServiceImpl implements LessonService {
                 iterNum = file_oname.size();
                 log.info("file_oname1 : {}", iterNum);
             }
+
             for (int i = 0; i < iterNum; i++) {
+                LessonFile lessonFile = new LessonFile();
+                lessonFile.setLesson(lessonResult);
                 lessonFile.setLessonFileSname(file_sname.get(i));
                 lessonFile.setLessonFileOname(file_oname.get(i));
                 lessonFileRepository.save(lessonFile);
             }
-
 //            //
 //            for(int i = 0; i < file_oname.size(); i++){
 //                String temp_file_oname = file_oname.get(i);
@@ -162,7 +162,6 @@ public class LessonServiceImpl implements LessonService {
 //                        .build()
 //                );
 //            }
-
             return ResponseEntity.status(HttpStatus.OK).body(new ResponseDto());
         }catch (UserNotFoundException e){
             log.info("userId에 해당하는 user가 없습니다.");
