@@ -104,8 +104,19 @@ const RegisterClass = () => {
     }
 
     const getToastImg = contentImg =>{
-        setRegisterData(prevState => ({...prevState, lesson_file_oname: [...prevState.lesson_file_oname, contentImg.oname]}));
-        setRegisterData(prevState => ({...prevState, lesson_file_sname: [...prevState.lesson_file_sname, contentImg.sname]}));
+        setRegisterData(prevState => ({
+            ...prevState,
+            lesson_file_oname: Array.isArray(prevState.lesson_file_oname) 
+              ? [...prevState.lesson_file_oname, contentImg.oname] 
+              : [contentImg.oname]
+          }));
+    
+          setRegisterData(prevState => ({
+            ...prevState,
+            lesson_file_sname: Array.isArray(prevState.lesson_file_sname) 
+              ? [...prevState.lesson_file_sname, contentImg.sname] 
+              : [contentImg.sname]
+          }));
     }
 
     {/* 그 외의 변경사항 적용 */ }

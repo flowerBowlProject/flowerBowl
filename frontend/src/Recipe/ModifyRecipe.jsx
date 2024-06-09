@@ -85,8 +85,19 @@ const RegisterRecipe = () => {
     }
 
     const getToastImg = contentImg =>{
-        setRegisterData(prevState => ({...prevState, recipe_file_oname: [...prevState.recipe_file_oname, contentImg.oname]}));
-        setRegisterData(prevState => ({...prevState, recipe_file_sname: [...prevState.recipe_file_sname, contentImg.sname]}));
+        setRegisterData(prevState => ({
+            ...prevState,
+            recipe_file_oname: Array.isArray(prevState.recipe_file_oname) 
+              ? [...prevState.recipe_file_oname, contentImg.oname] 
+              : [contentImg.oname]
+          }));
+    
+          setRegisterData(prevState => ({
+            ...prevState,
+            recipe_file_sname: Array.isArray(prevState.recipe_file_sname) 
+              ? [...prevState.recipe_file_sname, contentImg.sname] 
+              : [contentImg.sname]
+          }));
     }
 
     {/* 재료 입력 값 받아와서 저장 */ }
