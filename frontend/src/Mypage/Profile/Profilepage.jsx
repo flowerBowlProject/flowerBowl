@@ -54,6 +54,8 @@ const Profile = () => {
   const CheckEmailOpen = useSelector((state) => state.emailCheck);
   const isChef = useSelector((state) => state.isChef);
   const [isDisabled, setIsDisabled] = useState(false);
+  const [telChange, setTelChange] = useState(false);
+  const [userData, setUserData] = useState({});
 
   //이미지 변경
   const handleChangeImage = async (event) => {
@@ -222,6 +224,30 @@ const Profile = () => {
     }
   };
 
+  //유저 정보
+  const fetchData = async () => {
+    try {
+      const response = await axios.get(`${url}/api/users/info`, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+      console.log(response)
+      dispatch(setMemberid(response.data.user_id));
+      dispatch(setMemberName(response.data.user_nickname));
+      dispatch(setMemberTel(response.data.user_phone));
+      dispatch(setMermberEmail(response.data.user_email));
+      const isChef = response.data.user_role === "ROLE_CHEF";
+      dispatch(setChefRole(isChef));
+      setIsDisabled(response.data?.user_type !== 'app');
+      setImageUrl(response.data.user_file_sname);
+      setUserData(response.data);
+    } catch (error) {
+      dispatch(editErrorType(error.response?.data.code));
+      dispatch(openError());
+    }
+  };
+
   //변경사진 마운트
   useEffect(() => {
     // Retrieve image URLs from local storage
@@ -234,29 +260,6 @@ const Profile = () => {
     if (savedChefImageUrl) {
       setChefImageUrl(savedChefImageUrl);
     }
-
-    //유저 정보
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(`${url}/api/users/info`, {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        });
-        console.log(response)
-        dispatch(setMemberid(response.data.user_id));
-        dispatch(setMemberName(response.data.user_nickname));
-        dispatch(setMemberTel(response.data.user_phone));
-        dispatch(setMermberEmail(response.data.user_email));
-        const isChef = response.data.user_role === "ROLE_CHEF";
-        dispatch(setChefRole(isChef));
-        setIsDisabled(response.data?.user_type !== 'app');
-        setImageUrl(response.data.user_file_sname);
-      } catch (error) {
-        dispatch(editErrorType(error.response?.data.code));
-        dispatch(openError());
-      }
-    };
     fetchData();
   }, [accessToken, dispatch]);
 
@@ -273,61 +276,71 @@ const Profile = () => {
       // requestData 객체 초기화
       let reqeustData = {};
 
-      // 조건에 따라 필드를 requestData에 추가
-      if (nickNameChange) {
-        reqeustData.new_nickname = user.memberName;
-      }
-      if (emailChange) {
-        reqeustData.new_email = user.memberEmail;
-      }
-      if (user.memberTel !== "") {
-        reqeustData.new_phone = user.memberTel;
-      }
-      if (user.memberNewPw !== "") {
-        reqeustData.new_pw = user.memberNewPw;
-      } else if (user.memberPw !== "") {
-        reqeustData.user_password = user.memberPw;
-      }
-      if (imageChange) {
-        // 이미지 변경 시
-        const { profileOName, profileSName } = await handleUploadImage(
-          imageFile
-        );
-        reqeustData.user_file_oname = profileOName;
-        reqeustData.user_file_sname = profileSName;
-      }
-
-      console.log(reqeustData);
-
-      try {
-        const response = await axios.patch(
-          `${url}/api/users/info`,
-          reqeustData,
-          {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-          }
-        );
-
-        // 리덕스에 있는 닉네임도 변경
-        if (nickNameChange) {
-          dispatch({ type: "nickname", payload: reqeustData.new_nickname });
+      if (userData.user_nickname !== user.memberName && !nickNameChange) {
+        dispatch(editErrorType("checkNickname"));
+        dispatch(openError());
+      } else if (userData.user_email !== user.memberEmail && !emailChange) {
+        dispatch(editErrorType("checkEmail"));
+        dispatch(openError());
+      } else {
+        // 조건에 따라 필드를 requestData에 추가
+        if (userData.user_nickname !== user.memberName) {
+          reqeustData.new_nickname = user.memberName;
+        }
+        if (userData.user_email !== user.memberEmail) {
+          reqeustData.new_email = user.memberEmail;
+        }
+        if (userData.user_phone !== user.memberTel) {
+          reqeustData.new_phone = user.memberTel;
+        }
+        if (user.memberNewPw !== "") {
+          reqeustData.new_pw = user.memberNewPw;
+        } else if (user.memberPw !== "") {
+          reqeustData.user_password = user.memberPw;
+        }
+        if (imageChange) {
+          // 이미지 변경 시
+          const { profileOName, profileSName } = await handleUploadImage(
+            imageFile
+          );
+          reqeustData.user_file_oname = profileOName;
+          reqeustData.user_file_sname = profileSName;
         }
 
-        console.log(response);
-        dispatch(editErrorType("suEdit"));
-        dispatch(openError());
-        setButDisable(true);
+        console.log(reqeustData);
 
-        // 비밀번호 입력란 비우기
-        setTimeout(() => {
-         // window.location.reload();
-        }, 1000); // 1초 후 새로고침
-      } catch (error) {
-        console.log(error);
-        dispatch(editErrorType(error.response?.data.code));
-        dispatch(openError());
+        try {
+          const response = await axios.patch(
+            `${url}/api/users/info`,
+            reqeustData,
+            {
+              headers: {
+                Authorization: `Bearer ${accessToken}`,
+              },
+            }
+          );
+
+          // 리덕스에 있는 닉네임도 변경
+          if (nickNameChange) {
+            dispatch({ type: "nickname", payload: reqeustData.new_nickname });
+          }
+
+          console.log(response);
+          dispatch(editErrorType("suEdit"));
+          dispatch(openError());
+          setButDisable(true);
+
+          fetchData();
+
+          // 비밀번호 입력란 비우기
+          setTimeout(() => {
+            // window.location.reload();
+          }, 1000); // 1초 후 새로고침
+        } catch (error) {
+          console.log(error);
+          dispatch(editErrorType(error.response?.data.code));
+          dispatch(openError());
+        }
       }
     }
   };
@@ -354,12 +367,20 @@ const Profile = () => {
   const handleTelChange = (e) => {
     const newTel = e.target.value;
     dispatch(setMemberTel(newTel));
-    console.log("3");
     handleBut("newTel", false); // 전화번호를 바꾸면 변경 버튼을 활성화
-    console.log("1");
     setButDisable(false); // 추가된 코드: 전화번호 변경 시 버튼 활성화
-    console.log("2");
+    setTelChange(true);
   };
+
+  const handleNameChange = (e) =>{
+    const newName = e.target.value;
+    dispatch(setMemberName(newName));
+  }
+
+  const handleEmailChange = (e) =>{
+    const newEmail= e.target.value;
+    dispatch(setMermberEmail(newEmail));
+  }
 
   const hanldeSendEmail = async (mail) => {
     if (user.memberId === "") {
@@ -561,6 +582,7 @@ const Profile = () => {
                     handleCheckName(name);
                     handleBut("new_nickname", false);
                   }}
+                  handleChange={handleNameChange}
                 />
               </Grid>
               <Grid item>
@@ -584,6 +606,7 @@ const Profile = () => {
                   helper_text="올바른 이메일을 입력해 주세요."
                   vaild="email"
                   handleCheck={hanldeSendEmail}
+                  handleChange={handleEmailChange}
                 />
               </Grid>
             </Grid>

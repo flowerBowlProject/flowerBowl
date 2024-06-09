@@ -91,6 +91,14 @@ const ErrorConfirm = ({ error }) => {
         severity = "warning";
         content = "아이디 중복확인을 해야 합니다.";
         break;
+        case "checkNickname":
+          severity = "warning";
+          content = "닉네임 중복확인을 해야 합니다.";
+          break;
+          case "checkEmail":
+            severity = "warning";
+            content = "이메일 인증을 해야 합니다.";
+            break;
       case "SUNAME":
         severity = "success";
         content = "사용가능한 닉네임입니다.";
