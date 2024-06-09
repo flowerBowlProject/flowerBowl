@@ -67,8 +67,19 @@ const RegisterCommunity = () =>{
     }
 
     const getToastImg = contentImg =>{
-        setRegisterData(prevState => ({...prevState, community_file_oname: [...prevState.community_file_oname, contentImg.oname]}));
-        setRegisterData(prevState => ({...prevState, community_file_sname: [...prevState.community_file_sname, contentImg.sname]}));
+        setRegisterData(prevState => ({
+            ...prevState,
+            community_file_oname: Array.isArray(prevState.community_file_oname) 
+              ? [...prevState.community_file_oname, contentImg.oname] 
+              : [contentImg.oname]
+          }));
+          
+          setRegisterData(prevState => ({
+            ...prevState,
+            community_file_sname: Array.isArray(prevState.community_file_sname) 
+              ? [...prevState.community_file_sname, contentImg.sname] 
+              : [contentImg.sname]
+          }));
     }
 
     {/* 커뮤니티 등록 */}
