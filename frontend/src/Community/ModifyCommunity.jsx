@@ -66,6 +66,11 @@ const RegisterCommunity = () =>{
         setRegisterData((registerData) => ({ ...registerData, community_content: content}));
     }
 
+    const getToastImg = contentImg =>{
+        setRegisterData(prevState => ({...prevState, community_file_oname: [...prevState.community_file_oname, contentImg.oname]}));
+        setRegisterData(prevState => ({...prevState, community_file_sname: [...prevState.community_file_sname, contentImg.sname]}));
+    }
+
     {/* 커뮤니티 등록 */}
     const handleModify = () =>{
         const isFormDataChanged = () => {
@@ -126,7 +131,7 @@ const RegisterCommunity = () =>{
             <input className="communityregister-title" type='text' placeholder="제목을 작성해 주세요." name="community_title" value={registerData.community_title} onChange={(e)=>setValue(e)}/>
             
             <div className="communityText-Box">
-                <ToastEditor getToastEditor={getToastEditor} setContent={toastContent}/>
+                <ToastEditor getToastEditor={getToastEditor} getToastImg={getToastImg} setContent={toastContent}/>
             </div>
 
             {/* 등록 + 취소 버튼 컴포넌트 위치 */}
