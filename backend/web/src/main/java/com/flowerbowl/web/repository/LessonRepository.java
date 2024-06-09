@@ -23,7 +23,7 @@ public interface LessonRepository extends JpaRepository<Lesson, Long> {
 
     Boolean existsLessonByLessonNo(Long lesson_no);
 
-    Page<Lesson> findAllByLessonCategory(Category category, Pageable pageable);
+    Page<Lesson> findAllByLessonCategoryAndLessonDeleteStatus(Category category, Boolean deleteStatus, Pageable pageable);
 
     @Query(value = "select l.*, " +
             "(select count(*) " +
