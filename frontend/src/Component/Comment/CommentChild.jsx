@@ -17,7 +17,7 @@ const CommentChild = ({ data, isLast, change, setChange }) => {
 
     {/* 수정 버튼 클릭 시 */ }
     const changeComment = () => {
-        const commentContent = document.getElementById("childcomment-content");
+        const commentContent = document.getElementById("childcomment-content"+data.comment_no);
         if (commentContent.disabled) {
             setCommentModify(false);
             commentContent.disabled = false;
@@ -30,7 +30,7 @@ const CommentChild = ({ data, isLast, change, setChange }) => {
 
     {/* 수정 버튼 클릭 시 수정 요청 */ }
     const modifyComment = () => {
-        const commentContent = document.getElementById('childcomment-content');
+        const commentContent = document.getElementById('childcomment-content'+data.comment_no);
         console.log(commentContent);
         console.log(childData);
 
@@ -94,7 +94,7 @@ const CommentChild = ({ data, isLast, change, setChange }) => {
                         {data.comment_writer}&nbsp;&nbsp;&nbsp;
                         <div style={{ fontSize: '0.8rem', color: "#B0A695" }}>{data.comment_date}</div>
                     </div>
-                    <textarea className="comment-content" id="childcomment-content" placeholder="대댓글을 작성해 주세요." 
+                    <textarea className="comment-content" id={"childcomment-content"+data.comment_no} placeholder="대댓글을 작성해 주세요." 
                     onChange={(e)=>setChildData((childData)=>({...childData, comment_content : e.target.value}))} disabled>
                         {data.comment_content}
                     </textarea>

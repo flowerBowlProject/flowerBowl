@@ -29,7 +29,7 @@ const CommentParent = ({ data, isLast, typeString, no, change, setChange }) => {
 
     {/* 수정 버튼 클릭 시 */}
     const changeComment = () =>{
-        const commentContent = document.getElementById('comment-content')
+        const commentContent = document.getElementById('comment-content'+data.comment_no)
         if(commentContent.disabled){
             setCommentModify(false);
             commentContent.disabled = false;
@@ -42,7 +42,7 @@ const CommentParent = ({ data, isLast, typeString, no, change, setChange }) => {
 
     {/* 수정 버튼 클릭 시 수정 요청 */}
     const modifyComment = () =>{
-        const commentContent = document.getElementById('comment-content')
+        const commentContent = document.getElementById('comment-content'+data.comment_no)
 
         axios.put(`${url}/api/comments/${parentData.comment_no}`,{
             comment_content : parentData.comment_content
@@ -103,7 +103,7 @@ const CommentParent = ({ data, isLast, typeString, no, change, setChange }) => {
                         {data.comment_writer}&nbsp;&nbsp;&nbsp;
                         <div style={{ fontSize: '0.8rem', color: "#B0A695" }}>{data.comment_date}</div>
                     </div>
-                    <textarea className="comment-content" id="comment-content" placeholder="대댓글을 작성해 주세요." disabled
+                    <textarea className="comment-content" id={"comment-content"+data.comment_no} placeholder="대댓글을 작성해 주세요." disabled
                          onChange={(e)=>setParentData((parentData)=>({...parentData, comment_content : e.target.value}))}>
                         {data.comment_content}
                     </textarea>
