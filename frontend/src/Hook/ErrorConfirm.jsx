@@ -275,6 +275,10 @@ const ErrorConfirm = ({ error }) => {
         severity="warning";
         content="비밀번호를 입력해야 변경이 가능합니다.";
         break;
+        case "IP":
+        severity="error";
+        content="기존 비밀번호가 틀렸습니다";
+        break;
       default:
         severity = "error";
         content = "알 수 없는 오류가 발생했습니다.";
