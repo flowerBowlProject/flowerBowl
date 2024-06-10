@@ -108,7 +108,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         boolean hasAuthorization = StringUtils.hasText(authorization); // null, 길이가 0, 공백으로 이루어 있는 지 검사
         if (!hasAuthorization) {
             request.setAttribute("exception", JwtError.NOT_EXIST_TOKEN.getCode());
-            log.error("Jwt Exception [Err_Msg]: JWT token is null");
+//            log.error("Jwt Exception [Err_Msg]: JWT token is null");
             return null;
         }
 

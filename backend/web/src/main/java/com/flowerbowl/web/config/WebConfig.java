@@ -123,7 +123,7 @@ class FailedAuthenticationEntryPoint implements AuthenticationEntryPoint {
                          AuthenticationException authException) throws IOException, ServletException {
 
         String exception = (String) request.getAttribute("exception");
-        log.info("requestURL={}", request.getRequestURL());
+//        log.info("requestURL={}", request.getRequestURL());
 //        log.info("exception Values={}", exception);
 
         if (exception != null && exception.equals("IT")) {
