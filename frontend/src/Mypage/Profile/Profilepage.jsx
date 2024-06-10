@@ -232,14 +232,14 @@ const Profile = () => {
           Authorization: `Bearer ${accessToken}`,
         },
       });
-      console.log(response)
+      console.log(response);
       dispatch(setMemberid(response.data.user_id));
       dispatch(setMemberName(response.data.user_nickname));
       dispatch(setMemberTel(response.data.user_phone));
       dispatch(setMermberEmail(response.data.user_email));
       const isChef = response.data.user_role === "ROLE_CHEF";
       dispatch(setChefRole(isChef));
-      setIsDisabled(response.data?.user_type !== 'app');
+      setIsDisabled(response.data?.user_type !== "app");
       setImageUrl(response.data.user_file_sname);
       setUserData(response.data);
     } catch (error) {
@@ -272,6 +272,9 @@ const Profile = () => {
     ) {
       dispatch(editErrorType("vaildNewPw"));
       dispatch(openError());
+    } else if (user.memberNewPw && !user.memberPw) {
+      dispatch(editErrorType("PASSWORDBLANK"));
+      dispatch(openError());
     } else {
       // requestData 객체 초기화
       let reqeustData = {};
@@ -295,8 +298,9 @@ const Profile = () => {
         }
         if (user.memberNewPw !== "") {
           reqeustData.new_pw = user.memberNewPw;
-        } else if (user.memberPw !== "") {
-          reqeustData.user_password = user.memberPw;
+          if (user.memberPw !== "") {
+            reqeustData.user_password = user.memberPw;
+          }
         }
         if (imageChange) {
           // 이미지 변경 시
@@ -334,7 +338,7 @@ const Profile = () => {
 
           // 비밀번호 입력란 비우기
           setTimeout(() => {
-            // window.location.reload();
+            window.location.reload();
           }, 1000); // 1초 후 새로고침
         } catch (error) {
           console.log(error);
@@ -372,15 +376,15 @@ const Profile = () => {
     setTelChange(true);
   };
 
-  const handleNameChange = (e) =>{
+  const handleNameChange = (e) => {
     const newName = e.target.value;
     dispatch(setMemberName(newName));
-  }
+  };
 
-  const handleEmailChange = (e) =>{
-    const newEmail= e.target.value;
+  const handleEmailChange = (e) => {
+    const newEmail = e.target.value;
     dispatch(setMermberEmail(newEmail));
-  }
+  };
 
   const hanldeSendEmail = async (mail) => {
     if (user.memberId === "") {
