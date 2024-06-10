@@ -70,8 +70,12 @@ public class UserServiceImpl implements UserService {
 
             String userPw = dto.getUser_password();
             String encodePw = user.getUserPw();
-//            boolean isMatch = passwordEncoder.matches(userPw, encodePw); 프로필 수정 시 현재 비밀번호 일치 여부 확인하는 로직 제외
-//            if (!isMatch) return PatchProfileResponseDto.invalidPw();
+
+//            프로필 수정 시 현재 비밀번호 일치 여부 확인하는 로직 다시 추가
+            if (StringUtils.hasText(dto.getUser_password())) {
+                boolean isMatch = passwordEncoder.matches(userPw, encodePw);
+                if (!isMatch) return PatchProfileResponseDto.invalidPw();
+            }
 
             // oauth2.0으로 로그인 시 닉네임, 이메일에 null 값이 들어온다
             if (StringUtils.hasText(dto.getNew_nickname())) {
