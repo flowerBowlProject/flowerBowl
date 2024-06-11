@@ -43,7 +43,7 @@
     + [제목에 있는 키워드 검색](#제목에-있는-키워드-검색)
     + [내용에 있는 키워드 검색](#내용에-있는-키워드-검색)
     + [재료에 있는 키워드 검색](#재료에-있는-키워드-검색)
-    + [제목/내용/재료에 있는 키워드 총 검색](#제목내용재료에-있는-키워드-총-검색)
+    + [검색 더보기](#검색-더보기)
 
 </br><br>
 ## 프로젝트 소개
@@ -127,7 +127,7 @@ _매일 3번의 끼니, 저희 **화반**과 함께 건강하고 즐거운 식�
 
 ## [메인페이지 기능]
 
-https://github.com/flowerBowlProject/flowerBowl/assets/95160590/cae3e6d0-a186-447d-94ff-b40de53684e5
+https://github.com/flowerBowlProject/flowerBowl/assets/95160590/bad28e8d-3945-4ff0-b4fc-23663c4bfa95
 
 ### 카테고리별 조회
 - 각 카테고리에 해당되는 레시피와 클래스 조회가 가능합니다. <br></aside>
@@ -158,7 +158,7 @@ https://github.com/flowerBowlProject/flowerBowl/assets/95160590/b68a03a2-c94d-4c
 ## [회원 관련 기능]
 ### 회원가입 및 로그인
 
-https://github.com/flowerBowlProject/flowerBowl/assets/95160590/cb5d253f-d1e9-4866-8cc4-816f51691894
+https://github.com/flowerBowlProject/flowerBowl/assets/95160590/f7bd0d2b-1413-48e0-90d7-c17e852e6f35
 
 - 홈페이지 자체 회원가입 및 로그인 / 소셜 회원가입 및 로그인을 구현했습니다. <br>
 - 소셜 로그인 시 닉네임이 중복되는 경우 랜덤으로 닉네임이 부여되며 변경가능하도록 마이페이지로 이동합니다. </aside>
@@ -167,7 +167,7 @@ https://github.com/flowerBowlProject/flowerBowl/assets/95160590/cb5d253f-d1e9-48
 
 ### 아이디 및 비밀번호 찾기
 
-https://github.com/flowerBowlProject/flowerBowl/assets/95160590/c98a4804-0b3e-4a34-9ec4-38d3beb7f913
+https://github.com/flowerBowlProject/flowerBowl/assets/95160590/94ed8048-52d8-41df-913c-cb262666d414
 
 - 아이디 및 비밀번호 찾기 기능을 구현했습니다. <br>
 - 비밀번호 찾기는 랜덤 비밀번호가 이메일로 발송되며, 해당 비밀번호로 로그인 가능합니다. </aside>
@@ -178,11 +178,11 @@ https://github.com/flowerBowlProject/flowerBowl/assets/95160590/c98a4804-0b3e-4a
 
 #### 유저
 
-https://github.com/flowerBowlProject/flowerBowl/assets/95160590/c83e8758-7cbe-4169-bf95-c2720c2e7f3f
+https://github.com/flowerBowlProject/flowerBowl/assets/95160590/7511c827-2a1a-4aef-a556-728025f179c4
 
 #### 쉐프
 
-https://github.com/flowerBowlProject/flowerBowl/assets/95160590/eb2b5461-682c-4f44-9675-142e7a9a6e76
+https://github.com/flowerBowlProject/flowerBowl/assets/95160590/47d9b585-3276-44ba-ac93-d355640cceed
 
 - 로그인 시 마이페이지의 항목은 위와 같습니다. <br>
 - 유저는 쉐프 신청 기능이 존재하며, 이미 쉐프 신청이 완료되었다면 쉐프 표시만 나타납니다. <br>
@@ -242,13 +242,13 @@ https://github.com/flowerBowlProject/flowerBowl/assets/95160590/b87b25e7-8410-46
 - 모든 정보를 입력해야 등록 가능합니다. </aside>
 <br>
 
+### 레시피 조회
+- 작성된 레시피 리스트와 상세 레시피를 볼 수 있습니다. <br></aside>
+<br>
+
 ### 레시피 수정
 - 레시피 수정이 가능합니다. <br>
 - 글 작성자에게만 수정 버튼이 노출됩니다. </aside>
-<br>
-
-### 레시피 조회
-- 작성된 레시피 리스트와 상세 레시피를 볼 수 있습니다. <br></aside>
 <br>
 
 ### 레시피 삭제
@@ -271,13 +271,13 @@ https://github.com/flowerBowlProject/flowerBowl/assets/95160590/46b5fd25-2869-4c
 - 모든 정보를 입력해야 등록 가능합니다. </aside>
 <br>
 
+### 커뮤니티 조회
+- 작성된 커뮤니티 리스트와 상세 내용을 볼 수 있습니다. <br></aside>
+<br>
+
 ### 커뮤니티 수정
 - 커뮤니티 수정이 가능합니다. <br>
 - 글 작성자에게만 수정 버튼이 노출됩니다. </aside>
-<br>
-
-### 커뮤니티 조회
-- 작성된 커뮤니티 리스트와 상세 내용을 볼 수 있습니다. <br></aside>
 <br>
 
 ### 커뮤니티 삭제
@@ -298,7 +298,7 @@ https://github.com/flowerBowlProject/flowerBowl/assets/95160590/afd85a58-52b9-45
 
 ## [검색 기능]
 
-https://github.com/flowerBowlProject/flowerBowl/assets/95160590/5ba61342-eddd-4e3e-b0e1-babb71fe978e
+https://github.com/flowerBowlProject/flowerBowl/assets/95160590/66aa38aa-685c-4e0d-bdc5-d1e28706f562
 
 ### 제목에 있는 키워드 검색
 - 키워드 검색 시 제목에 키워드가 포함되어 있는 글을 조회 가능합니다. <br></aside>
@@ -312,6 +312,7 @@ https://github.com/flowerBowlProject/flowerBowl/assets/95160590/5ba61342-eddd-4e
 - 키워드 검색 시 재료에 키워드가 포함되어 있는 글을 조회 가능합니다. <br></aside>
 <br>
 
-### 제목/내용/재료에 있는 키워드 총 검색
-- 키워드 검색 시  제목/내용/재료에 키워드가 포함되어 있는 글을 조회 가능합니다. <br></aside>
+### 검색 더보기
+- 키워드 검색 시  제목/내용/재료에 키워드가 포함되어 있는 글을 조회 가능합니다. <br>
+- 각 글이 4개 이상일 경우 더보기를 클릭하여 더 많은 글 조회가 가능합니다. </aside>
 <br>
