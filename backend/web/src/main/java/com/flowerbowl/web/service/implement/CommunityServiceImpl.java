@@ -108,7 +108,7 @@ public class CommunityServiceImpl implements CommunityService {
             // 생성된 community를 db에 저장 후 객체 반환
             Community result = communityRepository.save(createCommunityDto.toEntity());
 
-            if (fileOname != null) {
+            if (!CollectionUtils.isEmpty(fileOname)) {
                 CreateCommunityFileDto createCommunityFileDto = new CreateCommunityFileDto(fileOname, fileSname, result);
                 communityFileRepository.save(createCommunityFileDto.toEntity());
             }
@@ -246,7 +246,7 @@ public class CommunityServiceImpl implements CommunityService {
             // 수정된 커뮤니티 데이터 DB에 저장
             Community result = communityRepository.save(community);
 
-            if (fileOname != null) {
+            if (!CollectionUtils.isEmpty(fileOname)) {
                 if (communityFile != null) {
                     communityFile.updateFileOname(fileOname);
                     communityFile.updateFileSname(fileSname);
