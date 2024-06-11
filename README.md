@@ -127,7 +127,7 @@ _매일 3번의 끼니, 저희 **화반**과 함께 건강하고 즐거운 식�
 
 ## [메인페이지 기능]
 
-https://github.com/flowerBowlProject/flowerBowl/assets/95160590/ca703176-e4ed-4188-8d67-1aa2f359ee99
+https://github.com/flowerBowlProject/flowerBowl/assets/95160590/cae3e6d0-a186-447d-94ff-b40de53684e5
 
 ### 카테고리별 조회
 - 각 카테고리에 해당되는 레시피와 클래스 조회가 가능합니다. <br></aside>
@@ -178,7 +178,7 @@ https://github.com/flowerBowlProject/flowerBowl/assets/95160590/c98a4804-0b3e-4a
 
 #### 유저
 
-https://github.com/flowerBowlProject/flowerBowl/assets/95160590/3949d267-582b-4bb4-8ee2-7a6945b92510
+https://github.com/flowerBowlProject/flowerBowl/assets/95160590/c83e8758-7cbe-4169-bf95-c2720c2e7f3f
 
 #### 쉐프
 
@@ -201,7 +201,7 @@ https://github.com/flowerBowlProject/flowerBowl/assets/95160590/b15569e9-8a64-41
 
 ## [클래스 기능]
 
-https://github.com/flowerBowlProject/flowerBowl/assets/95160590/f5431ae6-0a9e-4798-9221-ec63e4febfbe
+https://github.com/flowerBowlProject/flowerBowl/assets/95160590/9f3da4dc-e3a1-4b8c-b81d-01b8a9ca851f
 
 ### 클래스 등록
 - 클래스 등록은 쉐프만 가능합니다. <br>
@@ -235,7 +235,7 @@ https://github.com/flowerBowlProject/flowerBowl/assets/95160590/f5431ae6-0a9e-47
 
 ## [레시피 관련 기능]
 
-https://github.com/flowerBowlProject/flowerBowl/assets/95160590/fad3372b-b02b-402e-8594-dc0a8a081196
+https://github.com/flowerBowlProject/flowerBowl/assets/95160590/b87b25e7-8410-465e-8928-b5904a013b7f
 
 ### 레시피 등록
 - 모든 회원은 레시피를 등록 가능합니다. <br>
@@ -264,7 +264,7 @@ https://github.com/flowerBowlProject/flowerBowl/assets/95160590/fad3372b-b02b-40
 
 ## [커뮤니티 관련 기능]
 
-https://github.com/flowerBowlProject/flowerBowl/assets/95160590/f11034ac-51a3-4466-b9d4-bc69c91b3c71
+https://github.com/flowerBowlProject/flowerBowl/assets/95160590/46b5fd25-2869-4c5f-85b4-21563ecd695d
 
 ### 커뮤니티 등록
 - 모든 회원은 커뮤니티 글 등록이 가능합니다. <br>
@@ -298,7 +298,7 @@ https://github.com/flowerBowlProject/flowerBowl/assets/95160590/afd85a58-52b9-45
 
 ## [검색 기능]
 
-https://github.com/flowerBowlProject/flowerBowl/assets/95160590/c2812578-2f75-45ed-9342-a48f35e546ec
+https://github.com/flowerBowlProject/flowerBowl/assets/95160590/5ba61342-eddd-4e3e-b0e1-babb71fe978e
 
 ### 제목에 있는 키워드 검색
 - 키워드 검색 시 제목에 키워드가 포함되어 있는 글을 조회 가능합니다. <br></aside>
