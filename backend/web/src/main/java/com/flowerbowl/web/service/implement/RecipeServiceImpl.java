@@ -134,7 +134,7 @@ public class RecipeServiceImpl implements RecipeService {
             // 생성된 recipe를 db에 저장후 객체 반환
             Recipe result = recipeRepository.save(createRecipeDto.toEntity());
 
-            if (fileOname != null) {
+            if (!CollectionUtils.isEmpty(fileOname)) {
                 CreateRecipeFileDto createRecipeFileDto = new CreateRecipeFileDto(fileOname, fileSname, result);
                 recipeFileRepository.save(createRecipeFileDto.toEntity());
             }
@@ -311,7 +311,7 @@ public class RecipeServiceImpl implements RecipeService {
             // 수정된 레시피 데이터 DB에 저장
             Recipe result = recipeRepository.save(recipe);
 
-            if (fileOname != null) {
+            if (!CollectionUtils.isEmpty(fileOname)) {
                 if (recipeFile != null) {
                     recipeFile.updateFileOname(fileOname);
                     recipeFile.updateFileSname(fileSname);
